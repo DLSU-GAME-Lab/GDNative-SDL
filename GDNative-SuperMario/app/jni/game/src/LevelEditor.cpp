@@ -1,6 +1,6 @@
 #include "LevelEditor.h"
 #include "CFG.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -16,16 +16,16 @@ LevelEditor::~LevelEditor(void) {
 /* ******************************************** */
 
 void LevelEditor::Update() {
-	if(CCore::mouseRightPressed) {
-		rDrag.w = CCore::mouseX - rDrag.x;
-		rDrag.h = CCore::mouseY - rDrag.y;
+	if(GDCore::mouseRightPressed) {
+		rDrag.w = GDCore::mouseX - rDrag.x;
+		rDrag.h = GDCore::mouseY - rDrag.y;
 	} else {
-		rBlock.x = CCore::mouseX - (-(int)CCore::getMap()->getXPos() + CCore::mouseX)%32;
-		rBlock.y = CCore::mouseY - (CCore::mouseY - 16)%32;
+		rBlock.x = GDCore::mouseX - (-(int)GDCore::getMap()->getXPos() + GDCore::mouseX)%32;
+		rBlock.y = GDCore::mouseY - (GDCore::mouseY - 16)%32;
 		rBlock.w = rBlock.h = 32;
 
-		rDrag.x = CCore::mouseX;
-		rDrag.y = CCore::mouseY;
+		rDrag.x = GDCore::mouseX;
+		rDrag.y = GDCore::mouseY;
 	}
 
 	editMap();
@@ -34,9 +34,9 @@ void LevelEditor::Update() {
 void LevelEditor::Draw(SDL_Renderer* rR) {
 	SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(rR, 255, 255, 255, 128);
-	SDL_SetTextureAlphaMod(CCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->getIMG(), 225);
+	SDL_SetTextureAlphaMod(GDCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->getIMG(), 225);
 	
-	if(CCore::mouseRightPressed) {
+	if(GDCore::mouseRightPressed) {
 		drawStruct(rR);
 
 		SDL_SetRenderDrawColor(rR, 242, 242, 242, 78);
@@ -44,11 +44,11 @@ void LevelEditor::Draw(SDL_Renderer* rR) {
 		SDL_SetRenderDrawColor(rR, 255, 255, 255, 235);
 		SDL_RenderDrawRect(rR, &rDrag);
 	} else {
-		CCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->Draw(rR, rBlock.x, rBlock.y);
+		GDCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->Draw(rR, rBlock.x, rBlock.y);
 		SDL_RenderDrawRect(rR, &rBlock);
 	}
 
-	SDL_SetTextureAlphaMod(CCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->getIMG(), 255);
+	SDL_SetTextureAlphaMod(GDCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->getIMG(), 255);
 	SDL_SetRenderDrawColor(rR, 255, 255, 255, 255);
 	SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_NONE);
 }
@@ -68,22 +68,22 @@ void LevelEditor::mouseWheel(int Y) {
 }
 
 void LevelEditor::editMap() {
-	if(CCore::mouseLeftPressed) {
-		CCore::getMap()->getMapBlock((int)(((-CCore::getMap()->getXPos() + CCore::mouseX) - (int)((-CCore::getMap()->getXPos() + CCore::mouseX))%32)/32), (CCFG::GAME_HEIGHT - CCore::mouseY + 16)/32)->setBlockID(currentBlockID);
+	if(GDCore::mouseLeftPressed) {
+		GDCore::getMap()->getMapBlock((int)(((-GDCore::getMap()->getXPos() + GDCore::mouseX) - (int)((-GDCore::getMap()->getXPos() + GDCore::mouseX))%32)/32), (CCFG::GAME_HEIGHT - GDCore::mouseY + 16)/32)->setBlockID(currentBlockID);
 	}
 }
 
 /* ******************************************** */
 
 void LevelEditor::drawStruct(SDL_Renderer* rR) {
-	int W = CCore::mouseX - CCore::mouseX%32 - rDrag.x + rDrag.x%32;
-	int H = CCore::mouseY - (CCore::mouseY - 16)%32 - rDrag.y + rDrag.y%32;
+	int W = GDCore::mouseX - GDCore::mouseX%32 - rDrag.x + rDrag.x%32;
+	int H = GDCore::mouseY - (GDCore::mouseY - 16)%32 - rDrag.y + rDrag.y%32;
 	W += W > 0 ? 32 : 0;
 	H += H > 0 ? 32 : -32;
 
 	for(int i = 0, k = 0; k < (W > 0 ? W : -W); k += 32, i += W > 0 ? 32 : -32) {
 		for(int j = 0, m = 0; m < (H > 0 ? H : -H); m += 32, j += H > 0 ? 32 : -32) {
-			CCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->Draw(rR, rBlock.x + i, rBlock.y + j);
+			GDCore::getMap()->getBlock(currentBlockID)->getSprite()->getTexture()->Draw(rR, rBlock.x + i, rBlock.y + j);
 		}
 	}
 }

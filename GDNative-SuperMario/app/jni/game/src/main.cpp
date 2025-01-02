@@ -1,7 +1,6 @@
 #include "header.h"
 #include <memory>
-//#include "Core.h"
-
+//#include "GDCore.h"
 #include "GDCore.h"
 
 int main(int argc, char *argv[])

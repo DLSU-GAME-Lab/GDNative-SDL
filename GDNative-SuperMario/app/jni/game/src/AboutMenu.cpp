@@ -1,6 +1,6 @@
 #include "AboutMenu.h"
 #include "CFG.h"
-#include "Core.h"
+#include "GDCore.h"
 #include "stdlib.h"
 #include "time.h"
 
@@ -47,20 +47,20 @@ void AboutMenu::Update() {
 			++colorStepID;
 		}
 
-		CCore::getMap()->setLevelType(rand()%4);
+		GDCore::getMap()->setLevelType(rand()%4);
 		
 		if(rand()%10 < 6) {
-			CCore::getMap()->addGoombas(-(int)CCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, rand()%2 == 0);
-			CCore::getMap()->addGoombas(-(int)CCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, rand()%2 == 0);
+			GDCore::getMap()->addGoombas(-(int)GDCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, rand()%2 == 0);
+			GDCore::getMap()->addGoombas(-(int)GDCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, rand()%2 == 0);
 		} else if(rand()%10 < 8) {
-			CCore::getMap()->addKoppa(-(int)CCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, 0, rand()%2 == 0);
-			CCore::getMap()->addKoppa(-(int)CCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, 0, rand()%2 == 0);
+			GDCore::getMap()->addKoppa(-(int)GDCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, 0, rand()%2 == 0);
+			GDCore::getMap()->addKoppa(-(int)GDCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128), -32, 0, rand()%2 == 0);
 		} else if(rand()%6 < 4) {
-			CCore::getMap()->addFire(-CCore::getMap()->getXPos() + CCFG::GAME_WIDTH + 128, CCFG::GAME_HEIGHT - 16.0f - rand()%16*32, CCFG::GAME_HEIGHT - 16 - rand()%16*32);
+			GDCore::getMap()->addFire(-GDCore::getMap()->getXPos() + CCFG::GAME_WIDTH + 128, CCFG::GAME_HEIGHT - 16.0f - rand()%16*32, CCFG::GAME_HEIGHT - 16 - rand()%16*32);
 		} else if(rand()%6 < 4) {
-			CCore::getMap()->addBulletBill((int)(-CCore::getMap()->getXPos() + CCFG::GAME_WIDTH + 128), CCFG::GAME_HEIGHT - 16 - rand()%16*32, true, 1);
+			GDCore::getMap()->addBulletBill((int)(-GDCore::getMap()->getXPos() + CCFG::GAME_WIDTH + 128), CCFG::GAME_HEIGHT - 16 - rand()%16*32, true, 1);
 		} else {
-			CCore::getMap()->addFireBall(-(int)CCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128) + 8, CCFG::GAME_HEIGHT - 16 - rand()%16 * 32, rand()%8 + 4 + 8, rand()%360, rand()%2 == 0);
+			GDCore::getMap()->addFireBall(-(int)GDCore::getMap()->getXPos() + rand() % (CCFG::GAME_WIDTH + 128) + 8, CCFG::GAME_HEIGHT - 16 - rand()%16 * 32, rand()%8 + 4 + 8, rand()%360, rand()%2 == 0);
 		}
 
 		//iNumOfUnits += 2;
@@ -68,14 +68,14 @@ void AboutMenu::Update() {
 		iTime = SDL_GetTicks();
 	}
 	
-	if(moveDirection && CCFG::GAME_WIDTH - CCore::getMap()->getXPos() >= (CCore::getMap()->getMapWidth() - 20) * 32) {
+	if(moveDirection && CCFG::GAME_WIDTH - GDCore::getMap()->getXPos() >= (GDCore::getMap()->getMapWidth() - 20) * 32) {
 		moveDirection = !moveDirection;
-	} else if(!moveDirection && -CCore::getMap()->getXPos() <= 0) {
+	} else if(!moveDirection && -GDCore::getMap()->getXPos() <= 0) {
 		moveDirection = !moveDirection;
 	}
 
-	CCore::getMap()->setXPos(CCore::getMap()->getXPos() + 4 * (moveDirection ? -1 : 1));
-	//CCore::getMap()->getPlayer()->setXPos((float)CCore::getMap()->getPlayer()->getXPos() + 4 * (moveDirection ? -1 : 1));
+	GDCore::getMap()->setXPos(GDCore::getMap()->getXPos() + 4 * (moveDirection ? -1 : 1));
+	//GDCore::getMap()->getPlayer()->setXPos((float)GDCore::getMap()->getPlayer()->getXPos() + 4 * (moveDirection ? -1 : 1));
 }
 
 void AboutMenu::Draw(SDL_Renderer* rR) {
@@ -114,8 +114,8 @@ void AboutMenu::launch() {
 }
 
 void AboutMenu::reset() {
-	CCore::getMap()->setXPos(0);
-	CCore::getMap()->loadLVL();
+	GDCore::getMap()->setXPos(0);
+	GDCore::getMap()->loadLVL();
 }
 
 /* ******************************************** */

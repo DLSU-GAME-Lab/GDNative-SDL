@@ -1,6 +1,6 @@
 #include "BlockDebris.h"
 #include "CFG.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -55,10 +55,10 @@ void BlockDebris::Update() {
 }
 
 void BlockDebris::Draw(SDL_Renderer* rR) {
-	CCore::getMap()->getBlock(CCore::getMap()->getLevelType() == 0 || CCore::getMap()->getLevelType() == 4 ? 64 : CCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionL->getX() + (int)CCore::getMap()->getXPos(), vPositionL->getY(), bRotate);
-	CCore::getMap()->getBlock(CCore::getMap()->getLevelType() == 0 || CCore::getMap()->getLevelType() == 4 ? 64 : CCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionR->getX() + (int)CCore::getMap()->getXPos(), vPositionR->getY(), bRotate);
-	CCore::getMap()->getBlock(CCore::getMap()->getLevelType() == 0 || CCore::getMap()->getLevelType() == 4 ? 64 : CCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionL2->getX() + (int)CCore::getMap()->getXPos(), vPositionL2->getY(), bRotate);
-	CCore::getMap()->getBlock(CCore::getMap()->getLevelType() == 0 || CCore::getMap()->getLevelType() == 4 ? 64 : CCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionR2->getX() + (int)CCore::getMap()->getXPos(), vPositionR2->getY(), bRotate);
+	GDCore::getMap()->getBlock(GDCore::getMap()->getLevelType() == 0 || GDCore::getMap()->getLevelType() == 4 ? 64 : GDCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionL->getX() + (int)GDCore::getMap()->getXPos(), vPositionL->getY(), bRotate);
+	GDCore::getMap()->getBlock(GDCore::getMap()->getLevelType() == 0 || GDCore::getMap()->getLevelType() == 4 ? 64 : GDCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionR->getX() + (int)GDCore::getMap()->getXPos(), vPositionR->getY(), bRotate);
+	GDCore::getMap()->getBlock(GDCore::getMap()->getLevelType() == 0 || GDCore::getMap()->getLevelType() == 4 ? 64 : GDCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionL2->getX() + (int)GDCore::getMap()->getXPos(), vPositionL2->getY(), bRotate);
+	GDCore::getMap()->getBlock(GDCore::getMap()->getLevelType() == 0 || GDCore::getMap()->getLevelType() == 4 ? 64 : GDCore::getMap()->getLevelType() == 1 ? 65 : 66)->getSprite()->getTexture()->Draw(rR, vPositionR2->getX() + (int)GDCore::getMap()->getXPos(), vPositionR2->getY(), bRotate);
 }
 
 /* ******************************************** */

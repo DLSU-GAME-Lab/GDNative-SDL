@@ -1,4 +1,5 @@
 #include "IMG.h"
+#include "SDL_system.h"
 
 /* ******************************************** */
 
@@ -46,9 +47,17 @@ void CIMG::Draw(SDL_Renderer* rR, SDL_Rect rCrop, SDL_Rect rRect) {
 /* ******************************************** */
 
 void CIMG::setIMG(std::string fileName, SDL_Renderer* rR) {
-	fileName = "files/images/" + fileName + ".bmp";
+//    const char* internalStoragePath = SDL_GetAndroidCachePath();
+//    std::string internalStoragePathStr = internalStoragePath;
+//    fileName = internalStoragePathStr + "/images/" + fileName + ".bmp";
+
+    fileName = "files/images/" + fileName + ".bmp";
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Attempting to load asset: %s", fileName.c_str());
+
 	SDL_Surface* loadedSurface = SDL_LoadBMP(fileName.c_str());
 	SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 255, 0, 255));
+
+    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Success! Loaded asset: %s", fileName.c_str());
 
 	tIMG = SDL_CreateTextureFromSurface(rR, loadedSurface);
 	int iWidth, iHeight;

@@ -8529,11 +8529,11 @@ bool Map::blockUse(int nX, int nY, int iBlockID, int POS) {
 					} else {
 						lMinion[getListID(32 * nX)].push_back(new Mushroom(32 * nX, CCFG::GAME_HEIGHT - 16 - 32 * nY, false, nX, nY));
 					}
-					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
+//					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
 				} else {
 					lCoin.push_back(new Coin(nX * 32 + 7, CCFG::GAME_HEIGHT - nY * 32 - 48));
 					oPlayer->setScore(oPlayer->getScore() + 200);
-					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
+//					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
 					oPlayer->setCoins(oPlayer->getCoins() + 1);
 				}
 
@@ -8552,7 +8552,7 @@ bool Map::blockUse(int nX, int nY, int iBlockID, int POS) {
 					lMap[nX][nY]->setBlockID(iLevelType == 0 || iLevelType == 4 ? 9 : iLevelType == 1 ? 56 : 80);
 					lMinion[getListID(32 * nX)].push_back(new Star(32 * nX, CCFG::GAME_HEIGHT - 16 - 32 * nY, nX, nY));
 					lMap[nX][nY]->startBlockAnimation();
-					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
+//					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
 				} else if(lMap[nX][nY]->getSpawnMushroom()) {
 					lMap[nX][nY]->setBlockID(iLevelType == 0 || iLevelType == 4 ? 9 : iLevelType == 1 ? 56 : 80);
 					if(lMap[nX][nY]->getPowerUP()) {
@@ -8565,7 +8565,7 @@ bool Map::blockUse(int nX, int nY, int iBlockID, int POS) {
 						lMinion[getListID(32 * nX)].push_back(new Mushroom(32 * nX, CCFG::GAME_HEIGHT - 16 - 32 * nY, false, nX, nY));
 					}
 					lMap[nX][nY]->startBlockAnimation();
-					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
+//					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
 				} else if(lMap[nX][nY]->getNumOfUse() > 0) {
 					lCoin.push_back(new Coin(nX * 32 + 7, CCFG::GAME_HEIGHT - nY * 32 - 48));
 					oPlayer->setScore(oPlayer->getScore() + 200);
@@ -8576,17 +8576,17 @@ bool Map::blockUse(int nX, int nY, int iBlockID, int POS) {
 						lMap[nX][nY]->setBlockID(iLevelType == 0 || iLevelType == 4 ? 9 : iLevelType == 1 ? 56 : 80);
 					}
 
-					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
+//					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
 
 					lMap[nX][nY]->startBlockAnimation();
 				} else {
 					if(oPlayer->getPowerLVL() > 0) {
 						lMap[nX][nY]->setBlockID(0);
 						lBlockDebris.push_back(new BlockDebris(nX * 32, CCFG::GAME_HEIGHT - 48 - nY * 32));
-						CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cBLOCKBREAK);
+//						CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cBLOCKBREAK);
 					} else {
 						lMap[nX][nY]->startBlockAnimation();
-						CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cBLOCKHIT);
+//						CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cBLOCKHIT);
 					}
 				}
 
@@ -8603,12 +8603,12 @@ bool Map::blockUse(int nX, int nY, int iBlockID, int POS) {
 					} else {
 						lMinion[getListID(32 * nX)].push_back(new Mushroom(32 * nX, CCFG::GAME_HEIGHT - 16 - 32 * nY, false, nX, nY));
 					}
-					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
+//					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMAPPER);
 				} else {
 					lCoin.push_back(new Coin(nX * 32 + 7, CCFG::GAME_HEIGHT - nY * 32 - 48));
 					oPlayer->setCoins(oPlayer->getCoins() + 1);
 					oPlayer->setScore(oPlayer->getScore() + 200);
-					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
+//					CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
 
 					lMap[nX][nY]->startBlockAnimation();
 				}
@@ -8644,7 +8644,7 @@ bool Map::blockUse(int nX, int nY, int iBlockID, int POS) {
 		case 29: case 71: case 72: case 73:// COIN
 			lMap[nX][nY]->setBlockID(iLevelType == 2 ? 94 : 0);
 			oPlayer->addCoin();
-			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
+//			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
 			return false;
 			break;
 		case 36: case 38: case 60: case 62: case 103: case 105: case 118: case 120: // Pipe
@@ -8684,8 +8684,8 @@ void Map::EndUse() {
 
 	oEvent->newUnderWater = false;
 
-	CCFG::getMusic()->StopMusic();
-	CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cLEVELEND);
+//	CCFG::getMusic()->StopMusic();
+//	CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cLEVELEND);
 
 	oEvent->eventTypeID = oEvent->eEnd;
 
@@ -9374,8 +9374,8 @@ void Map::EndBoss() {
 			oEvent->endGame = true;
 			break;
 		default:
-			CCFG::getMusic()->StopMusic();
-			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCASTLEEND);
+//			CCFG::getMusic()->StopMusic();
+//			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCASTLEEND);
 			break;
 	}
 
@@ -9448,8 +9448,8 @@ void Map::EndBoss() {
 	oEvent->vOLDLength.push_back(90);
 
 	if(currentLevelID == 31) {
-		CCFG::getMusic()->StopMusic();
-		CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPRINCESSMUSIC);
+//		CCFG::getMusic()->StopMusic();
+//		CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPRINCESSMUSIC);
 	}
 
 	oEvent->vOLDDir.push_back(oEvent->eBOTRIGHTBOSS);
@@ -9596,16 +9596,16 @@ void Map::playerDeath(bool animation, bool instantDeath) {
 
 			oPlayer->setNumOfLives(oPlayer->getNumOfLives() - 1);
 
-			CCFG::getMusic()->StopMusic();
-			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cDEATH);
+//			CCFG::getMusic()->StopMusic();
+//			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cDEATH);
 		} else {
 			oEvent->vOLDDir.push_back(oEvent->eGAMEOVER);
 			oEvent->vOLDLength.push_back(90);
 
 			oPlayer->setNumOfLives(oPlayer->getNumOfLives() - 1);
 
-			CCFG::getMusic()->StopMusic();
-			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cDEATH);
+//			CCFG::getMusic()->StopMusic();
+//			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cDEATH);
 		}
 	} else if(!oPlayer->getUnkillAble()) {
 		oPlayer->setPowerLVL(oPlayer->getPowerLVL() - 1);

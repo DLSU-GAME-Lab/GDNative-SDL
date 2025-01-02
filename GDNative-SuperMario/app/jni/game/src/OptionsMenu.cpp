@@ -1,6 +1,6 @@
 #include "OptionsMenu.h"
 #include "CFG.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -118,7 +118,7 @@ void OptionsMenu::Draw(SDL_Renderer* rR) {
 	}
 
 	SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_NONE);
-	CCore::getMap()->setBackgroundColor(rR);
+	GDCore::getMap()->setBackgroundColor(rR);
 }
 
 /* ******************************************** */
@@ -135,7 +135,7 @@ void OptionsMenu::enter() {
 			CCFG::canMoveBackward = !CCFG::canMoveBackward;
 			break;
 		case 7:
-			CCore::getMap()->resetGameData();
+			GDCore::getMap()->resetGameData();
 			CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
 			break;
 	}
@@ -146,7 +146,7 @@ void OptionsMenu::escape() {
 		resetSetKey = true;
 	} else {
 		if(escapeToMainMenu) {
-			CCore::getMap()->resetGameData();
+			GDCore::getMap()->resetGameData();
 			CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
 		} else {
 			CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);

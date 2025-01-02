@@ -1,5 +1,5 @@
 #include "Star.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -73,7 +73,7 @@ void Star::minionPhysics() {
 			}
 		}
 	} else {
-		if (!CCore::getMap()->checkCollisionLB((int)fXPos + 2, (int)fYPos + 2, iHitBoxY, true) && !CCore::getMap()->checkCollisionRB((int)fXPos - 2, (int)fYPos + 2, iHitBoxX, iHitBoxY, true)) {
+		if (!GDCore::getMap()->checkCollisionLB((int)fXPos + 2, (int)fYPos + 2, iHitBoxY, true) && !GDCore::getMap()->checkCollisionRB((int)fXPos - 2, (int)fYPos + 2, iHitBoxX, iHitBoxY, true)) {
 			Minion::physicsState2();
 		} else {
 			jumpState = 0;
@@ -82,9 +82,9 @@ void Star::minionPhysics() {
 }
 
 void Star::Draw(SDL_Renderer* rR, CIMG* iIMG) {
-	iIMG->Draw(rR, (int)fXPos + (int)CCore::getMap()->getXPos(), (int)fYPos + 2, false);
+	iIMG->Draw(rR, (int)fXPos + (int)GDCore::getMap()->getXPos(), (int)fYPos + 2, false);
 	if (inSpawnState) {
-		CCore::getMap()->getBlock(CCore::getMap()->getLevelType() == 0 || CCore::getMap()->getLevelType() == 4 ? 9 : 56)->getSprite()->getTexture()->Draw(rR, (int)fXPos + (int)CCore::getMap()->getXPos() - 2, (int)fYPos + (32 - inSpawnY) - CCore::getMap()->getMapBlock(iX, iY)->getYPos(), false);
+		GDCore::getMap()->getBlock(GDCore::getMap()->getLevelType() == 0 || GDCore::getMap()->getLevelType() == 4 ? 9 : 56)->getSprite()->getTexture()->Draw(rR, (int)fXPos + (int)GDCore::getMap()->getXPos() - 2, (int)fYPos + (32 - inSpawnY) - GDCore::getMap()->getMapBlock(iX, iY)->getYPos(), false);
 	}
 }
 
@@ -92,7 +92,7 @@ void Star::Draw(SDL_Renderer* rR, CIMG* iIMG) {
 
 void Star::collisionWithPlayer(bool TOP) {
 	if(!inSpawnState) {
-		CCore::getMap()->getPlayer()->setStarEffect(true);
+		GDCore::getMap()->getPlayer()->setStarEffect(true);
 		minionState = -1;
 	}
 }

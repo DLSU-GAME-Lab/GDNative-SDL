@@ -1,5 +1,5 @@
 #include "FireBall.h"
-#include "Core.h"
+#include "GDCore.h"
 #include <math.h>
 
 /* ******************************************** */
@@ -61,7 +61,7 @@ void FireBall::Update() {
 }
 
 void FireBall::Draw(SDL_Renderer* rR, CIMG* iIMG) {
-	iIMG->Draw(rR, (int)(fXPos + CCore::getMap()->getXPos()), (int)fYPos);
+	iIMG->Draw(rR, (int)(fXPos + GDCore::getMap()->getXPos()), (int)fYPos);
 }
 
 void FireBall::minionPhysics() {
@@ -75,5 +75,5 @@ void FireBall::updateXPos() {
 /* ******************************************** */
 
 void FireBall::collisionWithPlayer(bool TOP) {
-	CCore::getMap()->playerDeath(true, false);
+	GDCore::getMap()->playerDeath(true, false);
 }

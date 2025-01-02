@@ -1,5 +1,5 @@
 #include "Plant.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -22,8 +22,8 @@ Plant::Plant(int fXPos, int fYPos, int iBlockID) {
 
 	this->iLength = 50;
 
-	this->X = CCore::getMap()->getBlockIDX((int)fXPos);
-	this->Y = CCore::getMap()->getBlockIDY((int)fYPos);
+	this->X = GDCore::getMap()->getBlockIDX((int)fXPos);
+	this->Y = GDCore::getMap()->getBlockIDY((int)fYPos);
 }
 
 Plant::~Plant(void) {
@@ -33,7 +33,7 @@ Plant::~Plant(void) {
 /* ******************************************** */
 
 void Plant::Update() {
-	lockPlant = CCore::getMap()->getPlayer()->getXPos() - CCore::getMap()->getXPos() >= fXPos - 48 && CCore::getMap()->getPlayer()->getXPos() - CCore::getMap()->getXPos() <= fXPos + iHitBoxX + 48;
+	lockPlant = GDCore::getMap()->getPlayer()->getXPos() - GDCore::getMap()->getXPos() >= fXPos - 48 && GDCore::getMap()->getPlayer()->getXPos() - GDCore::getMap()->getXPos() <= fXPos + iHitBoxX + 48;
 
 	if(bWait) {
 		if((!lockPlant || !moveDirection) && iTime + (moveDirection ? 1000 : 985) <= SDL_GetTicks()) {
@@ -65,11 +65,11 @@ void Plant::Update() {
 }
 
 void Plant::Draw(SDL_Renderer* rR, CIMG* iIMG) {
-	iIMG->Draw(rR, (int)(fXPos + CCore::getMap()->getXPos()) - 2, (int)fYPos - 6, false);
+	iIMG->Draw(rR, (int)(fXPos + GDCore::getMap()->getXPos()) - 2, (int)fYPos - 6, false);
 
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
-			CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(X + j, Y - i)->getBlockID())->Draw(rR, (int)((X + j) * 32 + CCore::getMap()->getXPos()), CCFG::GAME_HEIGHT - 32 * (Y - i) - 16);
+			GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(X + j, Y - i)->getBlockID())->Draw(rR, (int)((X + j) * 32 + GDCore::getMap()->getXPos()), CCFG::GAME_HEIGHT - 32 * (Y - i) - 16);
 		}
 	}
 }
@@ -81,11 +81,11 @@ void Plant::minionPhysics() {
 /* ******************************************** */
 
 void Plant::collisionWithPlayer(bool onTOP) {
-	if(CCore::getMap()->getPlayer()->getStarEffect()) {
+	if(GDCore::getMap()->getPlayer()->getStarEffect()) {
 		minionState = -1;
 		points(200);
 	} else {
-		CCore::getMap()->playerDeath(true, false);
+		GDCore::getMap()->playerDeath(true, false);
 	}
 }
 

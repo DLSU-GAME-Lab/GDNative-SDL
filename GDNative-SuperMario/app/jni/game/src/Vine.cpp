@@ -1,5 +1,5 @@
 #include "Vine.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -48,14 +48,14 @@ void Vine::Update() {
 
 void Vine::Draw(SDL_Renderer* rR, CIMG* iIMG) {
 	if(jumpDistance < 32) {
-		CCore::getMap()->getMinionBlock(iBlockID - 1)->Draw(rR, (int)(iX*32 + CCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT - 16 - iY*32 - jumpDistance));
+		GDCore::getMap()->getMinionBlock(iBlockID - 1)->Draw(rR, (int)(iX*32 + GDCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT - 16 - iY*32 - jumpDistance));
 	} else {
-		CCore::getMap()->getMinionBlock(iBlockID - 1)->Draw(rR, (int)(iX*32 + CCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT - 16 - iY*32 - jumpDistance));
+		GDCore::getMap()->getMinionBlock(iBlockID - 1)->Draw(rR, (int)(iX*32 + GDCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT - 16 - iY*32 - jumpDistance));
 		for(int i = 0; i < jumpDistance/32 - 1; i++) {
-			iIMG->Draw(rR, (int)(iX*32 + CCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT + 16 - iY*32 + i*32 - jumpDistance), false);
+			iIMG->Draw(rR, (int)(iX*32 + GDCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT + 16 - iY*32 + i*32 - jumpDistance), false);
 		}
 	}
-	CCore::getMap()->getBlock(CCore::getMap()->getMapBlock((int)iX, (int)iY)->getBlockID())->getSprite()->getTexture()->Draw(rR, (int)(iX*32 + CCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT - iY*32 - 16 - CCore::getMap()->getMapBlock((int)iX, (int)iY)->getYPos()));
+	GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock((int)iX, (int)iY)->getBlockID())->getSprite()->getTexture()->Draw(rR, (int)(iX*32 + GDCore::getMap()->getXPos()), (int)(CCFG::GAME_HEIGHT - iY*32 - 16 - GDCore::getMap()->getMapBlock((int)iX, (int)iY)->getYPos()));
 }
 
 void Vine::minionPhysics() { }
@@ -64,99 +64,99 @@ void Vine::minionPhysics() { }
 
 void Vine::collisionWithPlayer(bool TOP) {
 	if(minionState == 0) {
-		CCore::getMap()->setInEvent(true);
+		GDCore::getMap()->setInEvent(true);
 
-		CCore::getMap()->getEvent()->resetData();
-		CCore::getMap()->getPlayer()->resetJump();
-		CCore::getMap()->getPlayer()->stopMove();
+		GDCore::getMap()->getEvent()->resetData();
+		GDCore::getMap()->getPlayer()->resetJump();
+		GDCore::getMap()->getPlayer()->stopMove();
 
-		CCore::getMap()->getEvent()->eventTypeID = CCore::getMap()->getEvent()->eNormal;
+		GDCore::getMap()->getEvent()->eventTypeID = GDCore::getMap()->getEvent()->eNormal;
 
-		CCore::getMap()->getEvent()->iSpeed = 2;
+		GDCore::getMap()->getEvent()->iSpeed = 2;
 
-		CCore::getMap()->getEvent()->newLevelType = CCore::getMap()->getLevelType();
-		CCore::getMap()->getEvent()->newCurrentLevel = CCore::getMap()->getCurrentLevelID();
-		CCore::getMap()->getEvent()->newMoveMap = true;
-		CCore::getMap()->getEvent()->iDelay = 0;
-		CCore::getMap()->getEvent()->inEvent = false;
+		GDCore::getMap()->getEvent()->newLevelType = GDCore::getMap()->getLevelType();
+		GDCore::getMap()->getEvent()->newCurrentLevel = GDCore::getMap()->getCurrentLevelID();
+		GDCore::getMap()->getEvent()->newMoveMap = true;
+		GDCore::getMap()->getEvent()->iDelay = 0;
+		GDCore::getMap()->getEvent()->inEvent = false;
 
-		CCore::getMap()->getEvent()->newMoveMap = true;
-		CCore::getMap()->getEvent()->newUnderWater = false;
+		GDCore::getMap()->getEvent()->newMoveMap = true;
+		GDCore::getMap()->getEvent()->newUnderWater = false;
 
-		if(fXPos + iHitBoxX/2 > CCore::getMap()->getPlayer()->getXPos() - CCore::getMap()->getXPos()) {
-			CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eRIGHT);
-			CCore::getMap()->getEvent()->vOLDLength.push_back(CCore::getMap()->getPlayer()->getHitBoxX() - 4);
+		if(fXPos + iHitBoxX/2 > GDCore::getMap()->getPlayer()->getXPos() - GDCore::getMap()->getXPos()) {
+			GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eRIGHT);
+			GDCore::getMap()->getEvent()->vOLDLength.push_back(GDCore::getMap()->getPlayer()->getHitBoxX() - 4);
 		} else {
-			CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eLEFT);
-			CCore::getMap()->getEvent()->vOLDLength.push_back(CCore::getMap()->getPlayer()->getHitBoxX() - 4);
+			GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eLEFT);
+			GDCore::getMap()->getEvent()->vOLDLength.push_back(GDCore::getMap()->getPlayer()->getHitBoxX() - 4);
 		}
 
-		for(int i = 0; i < CCore::getMap()->getPlayer()->getYPos() + CCore::getMap()->getPlayer()->getHitBoxY(); i += 32) {
-			CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eVINE1);
-			CCore::getMap()->getEvent()->vOLDLength.push_back(16);
-			CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eVINE2);
-			CCore::getMap()->getEvent()->vOLDLength.push_back(16);
+		for(int i = 0; i < GDCore::getMap()->getPlayer()->getYPos() + GDCore::getMap()->getPlayer()->getHitBoxY(); i += 32) {
+			GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eVINE1);
+			GDCore::getMap()->getEvent()->vOLDLength.push_back(16);
+			GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eVINE2);
+			GDCore::getMap()->getEvent()->vOLDLength.push_back(16);
 		}
 
-		switch(CCore::getMap()->getCurrentLevelID()) {
+		switch(GDCore::getMap()->getCurrentLevelID()) {
 			case 4: {
-				CCore::getMap()->getEvent()->newMapXPos = -270*32;
-				CCore::getMap()->getEvent()->newPlayerXPos = 128;
-				CCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - CCore::getMap()->getPlayer()->getHitBoxY();
-				CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eVINESPAWN);
-				CCore::getMap()->getEvent()->vOLDLength.push_back(274);
+				GDCore::getMap()->getEvent()->newMapXPos = -270*32;
+				GDCore::getMap()->getEvent()->newPlayerXPos = 128;
+				GDCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - GDCore::getMap()->getPlayer()->getHitBoxY();
+				GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eVINESPAWN);
+				GDCore::getMap()->getEvent()->vOLDLength.push_back(274);
 
 				break;
 			}
 			case 8: {
-				CCore::getMap()->getEvent()->newMapXPos = -270*32;
-				CCore::getMap()->getEvent()->newPlayerXPos = 128;
-				CCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - CCore::getMap()->getPlayer()->getHitBoxY();
-				CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eVINESPAWN);
-				CCore::getMap()->getEvent()->vOLDLength.push_back(274);
+				GDCore::getMap()->getEvent()->newMapXPos = -270*32;
+				GDCore::getMap()->getEvent()->newPlayerXPos = 128;
+				GDCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - GDCore::getMap()->getPlayer()->getHitBoxY();
+				GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eVINESPAWN);
+				GDCore::getMap()->getEvent()->vOLDLength.push_back(274);
 
 				break;
 			}
 			case 13: {
-				CCore::getMap()->getEvent()->newMapXPos = -310*32;
-				CCore::getMap()->getEvent()->newPlayerXPos = 128;
-				CCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - CCore::getMap()->getPlayer()->getHitBoxY();
-				CCore::getMap()->getEvent()->newLevelType = 0;
+				GDCore::getMap()->getEvent()->newMapXPos = -310*32;
+				GDCore::getMap()->getEvent()->newPlayerXPos = 128;
+				GDCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - GDCore::getMap()->getPlayer()->getHitBoxY();
+				GDCore::getMap()->getEvent()->newLevelType = 0;
 
-				CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eVINESPAWN);
-				CCore::getMap()->getEvent()->vOLDLength.push_back(314);
+				GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eVINESPAWN);
+				GDCore::getMap()->getEvent()->vOLDLength.push_back(314);
 				break;
 			}
 			case 17: {
-				CCore::getMap()->getEvent()->newMapXPos = -325*32;
-				CCore::getMap()->getEvent()->newPlayerXPos = 128;
-				CCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - CCore::getMap()->getPlayer()->getHitBoxY();
-				CCore::getMap()->getEvent()->newLevelType = 0;
+				GDCore::getMap()->getEvent()->newMapXPos = -325*32;
+				GDCore::getMap()->getEvent()->newPlayerXPos = 128;
+				GDCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - GDCore::getMap()->getPlayer()->getHitBoxY();
+				GDCore::getMap()->getEvent()->newLevelType = 0;
 
-				CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eVINESPAWN);
-				CCore::getMap()->getEvent()->vOLDLength.push_back(329);
+				GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eVINESPAWN);
+				GDCore::getMap()->getEvent()->vOLDLength.push_back(329);
 				break;
 			}
 			case 21: {
-				CCore::getMap()->getEvent()->newMapXPos = -390*32;
-				CCore::getMap()->getEvent()->newPlayerXPos = 128;
-				CCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - CCore::getMap()->getPlayer()->getHitBoxY();
-				CCore::getMap()->getEvent()->newLevelType = 4;
+				GDCore::getMap()->getEvent()->newMapXPos = -390*32;
+				GDCore::getMap()->getEvent()->newPlayerXPos = 128;
+				GDCore::getMap()->getEvent()->newPlayerYPos = CCFG::GAME_HEIGHT - GDCore::getMap()->getPlayer()->getHitBoxY();
+				GDCore::getMap()->getEvent()->newLevelType = 4;
 
-				CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eVINESPAWN);
-				CCore::getMap()->getEvent()->vOLDLength.push_back(394);
+				GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eVINESPAWN);
+				GDCore::getMap()->getEvent()->vOLDLength.push_back(394);
 				break;
 			}
 		}
 
-		CCore::getMap()->getEvent()->vOLDDir.push_back(CCore::getMap()->getEvent()->eNOTHING);
-		CCore::getMap()->getEvent()->vOLDLength.push_back(60);
+		GDCore::getMap()->getEvent()->vOLDDir.push_back(GDCore::getMap()->getEvent()->eNOTHING);
+		GDCore::getMap()->getEvent()->vOLDLength.push_back(60);
 
 		for(int i = 0; i < 64; i += 32) {
-			CCore::getMap()->getEvent()->vNEWDir.push_back(CCore::getMap()->getEvent()->eVINE1);
-			CCore::getMap()->getEvent()->vNEWLength.push_back(16);
-			CCore::getMap()->getEvent()->vNEWDir.push_back(CCore::getMap()->getEvent()->eVINE2);
-			CCore::getMap()->getEvent()->vNEWLength.push_back(16);
+			GDCore::getMap()->getEvent()->vNEWDir.push_back(GDCore::getMap()->getEvent()->eVINE1);
+			GDCore::getMap()->getEvent()->vNEWLength.push_back(16);
+			GDCore::getMap()->getEvent()->vNEWDir.push_back(GDCore::getMap()->getEvent()->eVINE2);
+			GDCore::getMap()->getEvent()->vNEWLength.push_back(16);
 		}
 		
 	} else {

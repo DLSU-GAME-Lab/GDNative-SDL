@@ -1,7 +1,7 @@
 #include "Platform.h"
 
 #include "CFG.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -104,12 +104,12 @@ void Platform::Update() {
 void Platform::Draw(SDL_Renderer* rR) {
 	if(iType == 6 || iType == 7) { // -- iXStart = YPos 2
 		for(int i = 1; i < (iXStart - iYEnd)/16 + 2; i++) {
-			CCore::getMap()->getBlock(CCore::getMap()->getCurrentLevelID() == 22 ? 165 : 135)->getSprite()->getTexture()->Draw(rR, (int)(iXEnd + (int)CCore::getMap()->getXPos() + (iSize*8)/2 + 16 - (iSize/2%2 == 0 ? 8 : 0)), (int)(iXStart - 16*i));
+			GDCore::getMap()->getBlock(GDCore::getMap()->getCurrentLevelID() == 22 ? 165 : 135)->getSprite()->getTexture()->Draw(rR, (int)(iXEnd + (int)GDCore::getMap()->getXPos() + (iSize*8)/2 + 16 - (iSize/2%2 == 0 ? 8 : 0)), (int)(iXStart - 16*i));
 		}
 	}
 
 	for(int i = 0; i < iSize; i++) {
-		CCore::getMap()->getBlock(iType != 4 ? 74 : 126)->Draw(rR, (int)fXPos + i*16 + (int)CCore::getMap()->getXPos(), (int)fYPos);
+		GDCore::getMap()->getBlock(iType != 4 ? 74 : 126)->Draw(rR, (int)fXPos + i*16 + (int)GDCore::getMap()->getXPos(), (int)fYPos);
 	}
 }
 
@@ -178,10 +178,10 @@ void Platform::moveY() {
 		case 6:
 			fYPos += 2;
 			iXStart = (int)fYPos;
-			CCore::getMap()->getPlatform(seesawPlatformID)->moveYReverse();
+			GDCore::getMap()->getPlatform(seesawPlatformID)->moveYReverse();
 			if(fYPos < iYEnd) {
 				iType = 7;
-				CCore::getMap()->getPlatform(seesawPlatformID)->setTypeID(7);
+				GDCore::getMap()->getPlatform(seesawPlatformID)->setTypeID(7);
 			}
 			break;
 
@@ -195,7 +195,7 @@ void Platform::moveYReverse() {
 			iXStart = (int)fYPos;
 			if(fYPos < iYEnd) {
 				iType = 7;
-				CCore::getMap()->getPlatform(seesawPlatformID)->setTypeID(7);
+				GDCore::getMap()->getPlatform(seesawPlatformID)->setTypeID(7);
 			}
 			break;
 

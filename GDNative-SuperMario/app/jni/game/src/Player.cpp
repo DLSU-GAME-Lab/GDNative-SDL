@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "Core.h"
+#include "GDCore.h"
 #include "stdlib.h"
 #include "time.h"
 
@@ -377,7 +377,7 @@ void Player::Update() {
 }
 
 void Player::playerPhysics() {
-	if(!CCore::getMap()->getUnderWater()) {
+	if(!GDCore::getMap()->getUnderWater()) {
 		if (jumpState == 1) {
 			updateYPos(-(int)currentJumpSpeed);
 			currentJumpDistance += (int)currentJumpSpeed;
@@ -399,36 +399,36 @@ void Player::playerPhysics() {
 			}
 		} else {
 			if(onPlatformID == -1) {
-				onPlatformID = CCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, getHitBoxX(), getHitBoxY());
+				onPlatformID = GDCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, getHitBoxX(), getHitBoxY());
 				if(onPlatformID >= 0) {
-					if (CCore::getMap()->checkCollisionLB((int)(fXPos - CCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) || CCore::getMap()->checkCollisionRB((int)(fXPos - CCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
+					if (GDCore::getMap()->checkCollisionLB((int)(fXPos - GDCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) || GDCore::getMap()->checkCollisionRB((int)(fXPos - GDCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
 						onPlatformID = -1;
 						resetJump();
 					} else {
-						fYPos = (float)CCore::getMap()->getPlatform(onPlatformID)->getYPos() - getHitBoxY();
+						fYPos = (float)GDCore::getMap()->getPlatform(onPlatformID)->getYPos() - getHitBoxY();
 						resetJump();
-						CCore::getMap()->getPlatform(onPlatformID)->turnON();
+						GDCore::getMap()->getPlatform(onPlatformID)->turnON();
 					}
 				}
 			} else {
-				onPlatformID = CCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, getHitBoxX(), getHitBoxY());
+				onPlatformID = GDCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, getHitBoxX(), getHitBoxY());
 			}
 		
 			if(onPlatformID >= 0) {
-				if (CCore::getMap()->checkCollisionLB((int)(fXPos - CCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) || CCore::getMap()->checkCollisionRB((int)(fXPos - CCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
+				if (GDCore::getMap()->checkCollisionLB((int)(fXPos - GDCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) || GDCore::getMap()->checkCollisionRB((int)(fXPos - GDCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
 					onPlatformID = -1;
 					resetJump();
 				} else {
-					fYPos += CCore::getMap()->getPlatform(onPlatformID)->getMoveY();
-					CCore::getMap()->getPlatform(onPlatformID)->moveY();
+					fYPos += GDCore::getMap()->getPlatform(onPlatformID)->getMoveY();
+					GDCore::getMap()->getPlatform(onPlatformID)->moveY();
 					//if(moveSpeed == 0)
-					CCore::getMap()->setXPos(CCore::getMap()->getXPos() - CCore::getMap()->getPlatform(onPlatformID)->getMoveX());
+					GDCore::getMap()->setXPos(GDCore::getMap()->getXPos() - GDCore::getMap()->getPlatform(onPlatformID)->getMoveX());
 			
 					jumpState = 0;
 				}
 			}
-			else if (!CCore::getMap()->checkCollisionLB((int)(fXPos - CCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) &&
-				!CCore::getMap()->checkCollisionRB((int)(fXPos - CCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
+			else if (!GDCore::getMap()->checkCollisionLB((int)(fXPos - GDCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) &&
+				!GDCore::getMap()->checkCollisionRB((int)(fXPos - GDCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
 
 				if(nextFallFrameID > 0) {
 					--nextFallFrameID;
@@ -454,7 +454,7 @@ void Player::playerPhysics() {
 		}
 	} else {
 		if(nextBubbleTime + 685 < SDL_GetTicks()) {
-			CCore::getMap()->addBubble((int)(fXPos - CCore::getMap()->getXPos() + (moveDirection ? getHitBoxX() - rand()%8 : rand()%8)), (int)fYPos + 4);
+			GDCore::getMap()->addBubble((int)(fXPos - GDCore::getMap()->getXPos() + (moveDirection ? getHitBoxX() - rand()%8 : rand()%8)), (int)fYPos + 4);
 			nextBubbleTime = SDL_GetTicks() + rand()%715;
 		}
 
@@ -476,8 +476,8 @@ void Player::playerPhysics() {
 				currentJumpDistance = 0;
 			}
 		} else {
-			if (!CCore::getMap()->checkCollisionLB((int)(fXPos - CCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) &&
-				!CCore::getMap()->checkCollisionRB((int)(fXPos - CCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
+			if (!GDCore::getMap()->checkCollisionLB((int)(fXPos - GDCore::getMap()->getXPos() + 2), (int)fYPos + 2, getHitBoxY(), true) &&
+				!GDCore::getMap()->checkCollisionRB((int)(fXPos - GDCore::getMap()->getXPos() - 2), (int)fYPos + 2, getHitBoxX(), getHitBoxY(), true)) {
 
 				if(nextFallFrameID > 0) {
 					--nextFallFrameID;
@@ -516,7 +516,7 @@ void Player::movePlayer() {
 		if (SDL_GetTicks() - (50 + 15 * (currentMaxMove - moveSpeed) * (bSquat && powerLVL > 0 ? 6 : 1)) > iTimePassed && moveSpeed != 0) {
 			--moveSpeed;
 			iTimePassed = SDL_GetTicks();
-			if (jumpState == 0 && !CCore::getMap()->getUnderWater()) setMarioSpriteID(6);
+			if (jumpState == 0 && !GDCore::getMap()->getUnderWater()) setMarioSpriteID(6);
 		}
 		
 		if (changeMoveDirection && moveSpeed <= 1) {
@@ -535,7 +535,7 @@ void Player::movePlayer() {
 		}
 
 		// ----- SPRITE ANIMATION
-		if(CCore::getMap()->getUnderWater()) {
+		if(GDCore::getMap()->getUnderWater()) {
 			swimingAnimation();
 		} else if (!changeMoveDirection && jumpState == 0 && bMove) {
 			moveAnimation();
@@ -549,7 +549,7 @@ void Player::movePlayer() {
 		updateXPos(0);
 	}
 
-	if(bSquat && !CCore::getMap()->getUnderWater() && powerLVL > 0) {
+	if(bSquat && !GDCore::getMap()->getUnderWater() && powerLVL > 0) {
 		setMarioSpriteID(7);
 	}
 }
@@ -662,7 +662,7 @@ void Player::startMove() {
 	iTimePassed = SDL_GetTicks();
 	moveSpeed = 1;
 	bMove = true;
-	if(CCore::getMap()->getUnderWater()) {
+	if(GDCore::getMap()->getUnderWater()) {
 		setMarioSpriteID(8);
 	}
 }
@@ -681,7 +681,7 @@ void Player::stopMove() {
 }
 
 void Player::startRun() {
-	currentMaxMove = maxMove + (CCore::getMap()->getUnderWater() ? 0 : 2);
+	currentMaxMove = maxMove + (GDCore::getMap()->getUnderWater() ? 0 : 2);
 
 	createFireBall();
 }
@@ -693,7 +693,7 @@ void Player::resetRun() {
 void Player::createFireBall() {
 	if(powerLVL == 2) {
 		if(nextFireBallFrameID <= 0) {
-			CCore::getMap()->addPlayerFireBall((int)(fXPos - CCore::getMap()->getXPos() + (moveDirection ? getHitBoxX() : -32)), (int)(fYPos + getHitBoxY()/2), !moveDirection);
+			GDCore::getMap()->addPlayerFireBall((int)(fXPos - GDCore::getMap()->getXPos() + (moveDirection ? getHitBoxX() : -32)), (int)(fYPos + getHitBoxY()/2), !moveDirection);
 			nextFireBallFrameID = 16;
 			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cFIREBALL);
 		}
@@ -703,7 +703,7 @@ void Player::createFireBall() {
 /* ******************************************** */
 
 void Player::jump() {
-	if(CCore::getMap()->getUnderWater()) {
+	if(GDCore::getMap()->getUnderWater()) {
 		startJump(1);
 		nextBubbleTime -= 65;
 	} else if(jumpState == 0) {
@@ -716,7 +716,7 @@ void Player::startJump(int iH) {
 	jumpDistance = 32 * iH + 24.0f;
 	currentJumpDistance = 0;
 
-	if(!CCore::getMap()->getUnderWater()) {
+	if(!GDCore::getMap()->getUnderWater()) {
 		setMarioSpriteID(5);
 	} else {
 		if(jumpState == 0) {
@@ -753,11 +753,11 @@ void Player::updateXPos(int iN) {
 	checkCollisionBot(iN, 0);
 	checkCollisionCenter(iN, 0);
 	if (iN > 0) {
-		if (!CCore::getMap()->checkCollisionRB((int)(fXPos - CCore::getMap()->getXPos() + iN), (int)fYPos - 2, getHitBoxX(), getHitBoxY(), true) && !CCore::getMap()->checkCollisionRT((int)(fXPos - CCore::getMap()->getXPos() + iN), (int)fYPos + 2, getHitBoxX(), true) &&
-			(powerLVL == 0 ? true : (!CCore::getMap()->checkCollisionRC((int)(fXPos - CCore::getMap()->getXPos() + iN), (int)fYPos, getHitBoxX(), getHitBoxY() / 2, true))))
+		if (!GDCore::getMap()->checkCollisionRB((int)(fXPos - GDCore::getMap()->getXPos() + iN), (int)fYPos - 2, getHitBoxX(), getHitBoxY(), true) && !GDCore::getMap()->checkCollisionRT((int)(fXPos - GDCore::getMap()->getXPos() + iN), (int)fYPos + 2, getHitBoxX(), true) &&
+			(powerLVL == 0 ? true : (!GDCore::getMap()->checkCollisionRC((int)(fXPos - GDCore::getMap()->getXPos() + iN), (int)fYPos, getHitBoxX(), getHitBoxY() / 2, true))))
 		{
-			if (fXPos >= 416 && CCore::getMap()->getMoveMap()) {
-				CCore::getMap()->moveMap(-iN, 0);
+			if (fXPos >= 416 && GDCore::getMap()->getMoveMap()) {
+				GDCore::getMap()->moveMap(-iN, 0);
 			}
 			else {
 				fXPos += iN;
@@ -768,14 +768,14 @@ void Player::updateXPos(int iN) {
 			if (moveSpeed > 1 && jumpState == 0) --moveSpeed;
 		}
 	} else if (iN < 0) {
-		if (!CCore::getMap()->checkCollisionLB((int)(fXPos - CCore::getMap()->getXPos() + iN), (int)fYPos - 2, getHitBoxY(), true) && !CCore::getMap()->checkCollisionLT((int)(fXPos - CCore::getMap()->getXPos() + iN), (int)fYPos + 2, true) &&
-				(powerLVL == 0 ? true : (!CCore::getMap()->checkCollisionLC((int)(fXPos - CCore::getMap()->getXPos() + iN), (int)fYPos, getHitBoxY() / 2, true))))
+		if (!GDCore::getMap()->checkCollisionLB((int)(fXPos - GDCore::getMap()->getXPos() + iN), (int)fYPos - 2, getHitBoxY(), true) && !GDCore::getMap()->checkCollisionLT((int)(fXPos - GDCore::getMap()->getXPos() + iN), (int)fYPos + 2, true) &&
+				(powerLVL == 0 ? true : (!GDCore::getMap()->checkCollisionLC((int)(fXPos - GDCore::getMap()->getXPos() + iN), (int)fYPos, getHitBoxY() / 2, true))))
 			{
-			if (fXPos <= 192 && CCore::getMap()->getXPos() && CCore::getMap()->getMoveMap() && CCFG::canMoveBackward) {
+			if (fXPos <= 192 && GDCore::getMap()->getXPos() && GDCore::getMap()->getMoveMap() && CCFG::canMoveBackward) {
 
-				CCore::getMap()->moveMap(-iN, 0);
+				GDCore::getMap()->moveMap(-iN, 0);
 			}
-			else if(fXPos - CCore::getMap()->getXPos() + iN >= 0 && fXPos >= 0) {
+			else if(fXPos - GDCore::getMap()->getXPos() + iN >= 0 && fXPos >= 0) {
 				fXPos += iN;
 			} else if(CCFG::canMoveBackward && fXPos >= 0) {
 				updateXPos(iN + 1);
@@ -792,8 +792,8 @@ void Player::updateYPos(int iN) {
 	bool bLEFT, bRIGHT;
 	
 	if (iN > 0) {
-		bLEFT  = CCore::getMap()->checkCollisionLB((int)(fXPos - CCore::getMap()->getXPos() + 2), (int)fYPos + iN, getHitBoxY(), true);
-		bRIGHT = CCore::getMap()->checkCollisionRB((int)(fXPos - CCore::getMap()->getXPos() - 2), (int)fYPos + iN, getHitBoxX(), getHitBoxY(), true);
+		bLEFT  = GDCore::getMap()->checkCollisionLB((int)(fXPos - GDCore::getMap()->getXPos() + 2), (int)fYPos + iN, getHitBoxY(), true);
+		bRIGHT = GDCore::getMap()->checkCollisionRB((int)(fXPos - GDCore::getMap()->getXPos() - 2), (int)fYPos + iN, getHitBoxX(), getHitBoxY(), true);
 
 		if (!bLEFT && !bRIGHT) {
 			fYPos += iN;
@@ -804,10 +804,10 @@ void Player::updateYPos(int iN) {
 			updateYPos(iN - 1);
 		}
 	} else if(iN < 0) {
-		bLEFT  = CCore::getMap()->checkCollisionLT((int)(fXPos - CCore::getMap()->getXPos() + 2), (int)fYPos + iN, false);
-		bRIGHT = CCore::getMap()->checkCollisionRT((int)(fXPos - CCore::getMap()->getXPos() - 2), (int)fYPos + iN, getHitBoxX(), false);
+		bLEFT  = GDCore::getMap()->checkCollisionLT((int)(fXPos - GDCore::getMap()->getXPos() + 2), (int)fYPos + iN, false);
+		bRIGHT = GDCore::getMap()->checkCollisionRT((int)(fXPos - GDCore::getMap()->getXPos() - 2), (int)fYPos + iN, getHitBoxX(), false);
 
-		if(CCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, 0, 0) >= 0 || CCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, getHitBoxX(), 0) >= 0) {
+		if(GDCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, 0, 0) >= 0 || GDCore::getMap()->checkCollisionWithPlatform((int)fXPos, (int)fYPos, getHitBoxX(), 0) >= 0) {
 			jumpState = 2;
 		}
 		else if (!bLEFT && !bRIGHT) {
@@ -815,18 +815,18 @@ void Player::updateYPos(int iN) {
 		} else  {
 			if (jumpState == 1) {
 				if (!bLEFT && bRIGHT) {
-					Vector2* vRT = getBlockRT(fXPos - CCore::getMap()->getXPos(), fYPos + iN);
+					Vector2* vRT = getBlockRT(fXPos - GDCore::getMap()->getXPos(), fYPos + iN);
 
-					if(!CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID())->getVisible()) {
-						if(CCore::getMap()->blockUse(vRT->getX(), vRT->getY(), CCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID(), 0)) {
+					if(!GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID())->getVisible()) {
+						if(GDCore::getMap()->blockUse(vRT->getX(), vRT->getY(), GDCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID(), 0)) {
 							jumpState = 2;
 						} else {
 							fYPos += iN;
 						}
-					} else if((int)(fXPos + getHitBoxX() - CCore::getMap()->getXPos()) % 32 <= 8) {
-						updateXPos((int)-((int)(fXPos + getHitBoxX() - CCore::getMap()->getXPos()) % 32));
-					} else if(CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID())->getUse()) {
-						if(CCore::getMap()->blockUse(vRT->getX(), vRT->getY(), CCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID(), 0)) {
+					} else if((int)(fXPos + getHitBoxX() - GDCore::getMap()->getXPos()) % 32 <= 8) {
+						updateXPos((int)-((int)(fXPos + getHitBoxX() - GDCore::getMap()->getXPos()) % 32));
+					} else if(GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID())->getUse()) {
+						if(GDCore::getMap()->blockUse(vRT->getX(), vRT->getY(), GDCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID(), 0)) {
 							jumpState = 2;
 						} else {
 							fYPos += iN;
@@ -837,17 +837,17 @@ void Player::updateYPos(int iN) {
 
 					delete vRT;
 				} else if (bLEFT && !bRIGHT) {
-					Vector2* vLT = getBlockLT(fXPos - CCore::getMap()->getXPos(), fYPos + iN);
-					if(!CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getVisible()) {
-						if(CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 0)) {
+					Vector2* vLT = getBlockLT(fXPos - GDCore::getMap()->getXPos(), fYPos + iN);
+					if(!GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getVisible()) {
+						if(GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 0)) {
 							jumpState = 2;
 						} else {
 							fYPos += iN;
 						}
-					} else if ((int)(fXPos - CCore::getMap()->getXPos()) % 32 >= 24) {
-						updateXPos((int)(32 - (int)(fXPos - CCore::getMap()->getXPos()) % 32));
-					} else if(CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-						if(CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 0)) {
+					} else if ((int)(fXPos - GDCore::getMap()->getXPos()) % 32 >= 24) {
+						updateXPos((int)(32 - (int)(fXPos - GDCore::getMap()->getXPos()) % 32));
+					} else if(GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+						if(GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 0)) {
 							jumpState = 2;
 						} else {
 							fYPos += iN;
@@ -858,11 +858,11 @@ void Player::updateYPos(int iN) {
 
 					delete vLT;
 				} else {
-					if ((int)(fXPos + getHitBoxX() - CCore::getMap()->getXPos()) % 32 > 32 - (int)(fXPos - CCore::getMap()->getXPos()) % 32) {
-						Vector2* vRT = getBlockRT(fXPos - CCore::getMap()->getXPos(), fYPos + iN);
+					if ((int)(fXPos + getHitBoxX() - GDCore::getMap()->getXPos()) % 32 > 32 - (int)(fXPos - GDCore::getMap()->getXPos()) % 32) {
+						Vector2* vRT = getBlockRT(fXPos - GDCore::getMap()->getXPos(), fYPos + iN);
 
-						if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID())->getUse()) {
-							if(CCore::getMap()->blockUse(vRT->getX(), vRT->getY(), CCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID(), 0)) {
+						if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID())->getUse()) {
+							if(GDCore::getMap()->blockUse(vRT->getX(), vRT->getY(), GDCore::getMap()->getMapBlock(vRT->getX(), vRT->getY())->getBlockID(), 0)) {
 								jumpState = 2;
 							}
 						} else {
@@ -871,10 +871,10 @@ void Player::updateYPos(int iN) {
 
 						delete vRT;
 					} else {
-						Vector2* vLT = getBlockLT(fXPos - CCore::getMap()->getXPos(), fYPos + iN);
+						Vector2* vLT = getBlockLT(fXPos - GDCore::getMap()->getXPos(), fYPos + iN);
 
-						if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-							if(CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 0)) {
+						if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+							if(GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 0)) {
 								jumpState = 2;
 							}
 						} else {
@@ -894,8 +894,8 @@ void Player::updateYPos(int iN) {
 		fYPos += 1;
 	}
 
-	if(!CCore::getMap()->getInEvent() && fYPos - getHitBoxY() > CCFG::GAME_HEIGHT) {
-		CCore::getMap()->playerDeath(false, true);
+	if(!GDCore::getMap()->getInEvent() && fYPos - getHitBoxY() > CCFG::GAME_HEIGHT) {
+		GDCore::getMap()->playerDeath(false, true);
 		fYPos = -80;
 	}
 }
@@ -903,18 +903,18 @@ void Player::updateYPos(int iN) {
 /* ******************************************** */
 
 bool Player::checkCollisionBot(int nX, int nY) {
-	Vector2* vLT = getBlockLB(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY);
+	Vector2* vLT = getBlockLB(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY);
 
-	if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-		CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 1);
+	if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+		GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 1);
 	}
 
 	delete vLT;
 
-	vLT = getBlockRB(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY);
+	vLT = getBlockRB(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY);
 
-	if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-		CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 1);
+	if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+		GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 1);
 	}
 
 	delete vLT;
@@ -923,50 +923,50 @@ bool Player::checkCollisionBot(int nX, int nY) {
 
 bool Player::checkCollisionCenter(int nX, int nY) {
 	if(powerLVL == 0) {
-		Vector2* vLT = getBlockLC(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY);
+		Vector2* vLT = getBlockLC(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY);
 
-		if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-			CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
+		if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+			GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
 		}
 
 		delete vLT;
 
-		vLT = getBlockRC(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY);
+		vLT = getBlockRC(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY);
 
-		if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-			CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
+		if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+			GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
 		}
 
 		delete vLT;
 	} else {
-		Vector2* vLT = getBlockLC(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY + (powerLVL > 0 ? 16 : 0));
+		Vector2* vLT = getBlockLC(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY + (powerLVL > 0 ? 16 : 0));
 
-		if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-			CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
+		if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+			GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
 		}
 
 		delete vLT;
 
-		vLT = getBlockRC(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY + (powerLVL > 0 ? 16 : 0));
+		vLT = getBlockRC(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY + (powerLVL > 0 ? 16 : 0));
 
-		if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-			CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
+		if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+			GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
 		}
 
 		delete vLT;
 
-		vLT = getBlockLC(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY - (powerLVL > 0 ? 16 : 0));
+		vLT = getBlockLC(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY - (powerLVL > 0 ? 16 : 0));
 
-		if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-			CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
+		if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+			GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
 		}
 
 		delete vLT;
 
-		vLT = getBlockRC(fXPos - CCore::getMap()->getXPos() + nX, fYPos + nY - (powerLVL > 0 ? 16 : 0));
+		vLT = getBlockRC(fXPos - GDCore::getMap()->getXPos() + nX, fYPos + nY - (powerLVL > 0 ? 16 : 0));
 
-		if (CCore::getMap()->getBlock(CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
-			CCore::getMap()->blockUse(vLT->getX(), vLT->getY(), CCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
+		if (GDCore::getMap()->getBlock(GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID())->getUse()) {
+			GDCore::getMap()->blockUse(vLT->getX(), vLT->getY(), GDCore::getMap()->getMapBlock(vLT->getX(), vLT->getY())->getBlockID(), 2);
 		}
 
 		delete vLT;
@@ -978,37 +978,37 @@ bool Player::checkCollisionCenter(int nX, int nY) {
 /* ******************************************** */
 
 Vector2* Player::getBlockLB(float nX, float nY) {
-	return CCore::getMap()->getBlockID((int)nX + 1, (int)nY + getHitBoxY() + 2);
+	return GDCore::getMap()->getBlockID((int)nX + 1, (int)nY + getHitBoxY() + 2);
 }
 
 Vector2* Player::getBlockRB(float nX, float nY) {
-	return CCore::getMap()->getBlockID((int)nX + getHitBoxX() - 1, (int)nY + getHitBoxY() + 2);
+	return GDCore::getMap()->getBlockID((int)nX + getHitBoxX() - 1, (int)nY + getHitBoxY() + 2);
 }
 
 Vector2* Player::getBlockLC(float nX, float nY) {
-	return CCore::getMap()->getBlockID((int)nX - 1, (int)nY + getHitBoxY()/2);
+	return GDCore::getMap()->getBlockID((int)nX - 1, (int)nY + getHitBoxY()/2);
 }
 
 Vector2* Player::getBlockRC(float nX, float nY) {
-	return CCore::getMap()->getBlockID((int)nX + getHitBoxX() + 1, (int)nY + getHitBoxY()/2);
+	return GDCore::getMap()->getBlockID((int)nX + getHitBoxX() + 1, (int)nY + getHitBoxY()/2);
 }
 
 Vector2* Player::getBlockLT(float nX, float nY) {
-	return CCore::getMap()->getBlockID((int)nX + 1, (int)nY);
+	return GDCore::getMap()->getBlockID((int)nX + 1, (int)nY);
 }
 
 Vector2* Player::getBlockRT(float nX, float nY) {
-	return CCore::getMap()->getBlockID((int)nX + getHitBoxX() - 1, (int)nY);
+	return GDCore::getMap()->getBlockID((int)nX + getHitBoxX() - 1, (int)nY);
 }
 
 /* ******************************************** */
 
 void Player::Draw(SDL_Renderer* rR) {
-	if(!inLevelDownAnimation || CCore::getMap()->getInEvent()) {
-		sMario[getMarioSpriteID()]->getTexture()->Draw(rR, (int)fXPos, (int)fYPos + (CCore::getMap()->getInEvent() ? 0 : 2), !moveDirection);
+	if(!inLevelDownAnimation || GDCore::getMap()->getInEvent()) {
+		sMario[getMarioSpriteID()]->getTexture()->Draw(rR, (int)fXPos, (int)fYPos + (GDCore::getMap()->getInEvent() ? 0 : 2), !moveDirection);
 	} else {
 		if(inLevelDownAnimationFrameID%15 < (inLevelDownAnimationFrameID > 120 ? 7 : inLevelDownAnimationFrameID > 90 ? 9 : inLevelDownAnimationFrameID > 60 ? 11 : inLevelDownAnimationFrameID > 30 ? 13 : 14)) {
-			sMario[getMarioSpriteID()]->getTexture()->Draw(rR, (int)fXPos, (int)fYPos + (CCore::getMap()->getInEvent() ? 0 : 2), !moveDirection);
+			sMario[getMarioSpriteID()]->getTexture()->Draw(rR, (int)fXPos, (int)fYPos + (GDCore::getMap()->getInEvent() ? 0 : 2), !moveDirection);
 		}
 	}
 }
@@ -1022,7 +1022,7 @@ int Player::getMarioSpriteID() {
 		}
 
 		if(unKillAbleTimeFrameID == 35) {
-			CCFG::getMusic()->changeMusic(true, true);
+//			CCFG::getMusic()->changeMusic(true, true);
 		}
 
 		++unKillAbleFrameID;
@@ -1114,16 +1114,16 @@ int Player::getPowerLVL() {
 void Player::setPowerLVL(int powerLVL) {
 	if(powerLVL <= 2) {
 		if(this->powerLVL < powerLVL) {
-			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMMEAT);
+//			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cMUSHROOMMEAT);
 			setScore(getScore() + 1000);
-			CCore::getMap()->addPoints((int)(fXPos - CCore::getMap()->getXPos() + getHitBoxX() / 2), (int)fYPos + 16, "1000", 8, 16);
+			GDCore::getMap()->addPoints((int)(fXPos - GDCore::getMap()->getXPos() + getHitBoxX() / 2), (int)fYPos + 16, "1000", 8, 16);
 			inLevelAnimation = true;
 			inLevelAnimationFrameID = 0;
 			inLevelDownAnimationFrameID = 0;
 			inLevelDownAnimation = false;
 			this->powerLVL = powerLVL;
 		} else if(this->powerLVL > 0) {
-			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cSHRINK);
+//			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cSHRINK);
 			inLevelDownAnimation = true;
 			inLevelDownAnimationFrameID = 180;
 			inLevelAnimation = true;
@@ -1133,8 +1133,8 @@ void Player::setPowerLVL(int powerLVL) {
 		}
 	} else {
 		++iNumOfLives;
-		CCore::getMap()->addPoints((int)(fXPos - CCore::getMap()->getXPos() + getHitBoxX() / 2), (int)fYPos + 16, "1UP", 10, 14);
-		CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cONEUP);
+		GDCore::getMap()->addPoints((int)(fXPos - GDCore::getMap()->getXPos() + getHitBoxX() / 2), (int)fYPos + 16, "1UP", 10, 14);
+//		CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cONEUP);
 	}
 }
 
@@ -1153,7 +1153,7 @@ bool Player::getStarEffect() {
 
 void Player::setStarEffect(bool starEffect) {
 	if(starEffect && this->starEffect != starEffect) {
-		CCFG::getMusic()->PlayMusic(CCFG::getMusic()->mSTAR);
+//		CCFG::getMusic()->PlayMusic(CCFG::getMusic()->mSTAR);
 	}
 	this->starEffect = starEffect;
 	this->unKillAble = starEffect;
@@ -1213,7 +1213,7 @@ void Player::setSquat(bool bSquat) {
 			fYPos += 20;
 		}
 		this->bSquat = bSquat;
-	} else if(this->bSquat != bSquat && !CCore::getMap()->getUnderWater()) {
+	} else if(this->bSquat != bSquat && !GDCore::getMap()->getUnderWater()) {
 		if(powerLVL > 0) {
 			fYPos -= 20;
 		}

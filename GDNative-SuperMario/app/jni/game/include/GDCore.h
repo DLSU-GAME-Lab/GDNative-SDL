@@ -5,7 +5,7 @@
 #ifndef GDNATIVE_SUPERMARIO_GDCORE_H
 #define GDNATIVE_SUPERMARIO_GDCORE_H
 
-#include "header.h"
+#include "Map.h"
 
 class GDCore
 {
@@ -32,6 +32,9 @@ private:
     static bool keyAPressed, keyDPressed;
     // ----- true = RIGHT, false = LEFT
     bool firstDir;
+    // ----- INPUT
+
+    static Map* oMap;
 
     // ----- Methods
 
@@ -56,6 +59,9 @@ public:
 
     static bool mouseLeftPressed, mouseRightPressed;
     static int mouseX, mouseY;
+
+    /* ----- get & set ----- */
+    static Map* getMap();
 };
 
 #endif //GDNATIVE_SUPERMARIO_GDCORE_H

@@ -1,6 +1,6 @@
 #include "PauseMenu.h"
 #include "CFG.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -53,7 +53,7 @@ void PauseMenu::Draw(SDL_Renderer* rR) {
 	}
 
 	SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_NONE);
-	CCore::getMap()->setBackgroundColor(rR);
+	GDCore::getMap()->setBackgroundColor(rR);
 }
 
 /* ******************************************** */
@@ -71,11 +71,11 @@ void PauseMenu::enter() {
 			CCFG::getMM()->setViewID(CCFG::getMM()->eOptions);
 			break;
 		case 2:
-			CCore::getMap()->resetGameData();
+			GDCore::getMap()->resetGameData();
 			CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
 			break;
 		case 3:
-			CCore::quitGame = true;
+			GDCore::quitGame = true;
 			break;
 	}
 }

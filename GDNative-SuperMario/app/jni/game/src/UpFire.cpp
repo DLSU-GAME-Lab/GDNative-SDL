@@ -1,5 +1,5 @@
 #include "UpFire.h"
-#include "Core.h"
+#include "GDCore.h"
 #include "stdlib.h"
 #include "time.h"
 
@@ -77,9 +77,9 @@ void UpFire::Update() {
 
 void UpFire::Draw(SDL_Renderer* rR, CIMG* iIMG) {
 	if(moveDirection) {
-		iIMG->Draw(rR, (int)fXPos + (int)CCore::getMap()->getXPos(), (int)fYPos, false);
+		iIMG->Draw(rR, (int)fXPos + (int)GDCore::getMap()->getXPos(), (int)fYPos, false);
 	} else {
-		iIMG->DrawVert(rR, (int)fXPos + (int)CCore::getMap()->getXPos(), (int)fYPos);
+		iIMG->DrawVert(rR, (int)fXPos + (int)GDCore::getMap()->getXPos(), (int)fYPos);
 	}
 }
 
@@ -88,5 +88,5 @@ void UpFire::minionPhysics() { }
 /* ******************************************** */
 
 void UpFire::collisionWithPlayer(bool TOP) {
-	CCore::getMap()->playerDeath(true, false);
+	GDCore::getMap()->playerDeath(true, false);
 }

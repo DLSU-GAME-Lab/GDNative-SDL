@@ -1,5 +1,5 @@
 #include "Fire.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -40,7 +40,7 @@ void Fire::Update() {
 }
 
 void Fire::Draw(SDL_Renderer* rR, CIMG* iIMG) {
-	iIMG->Draw(rR, (int)(fXPos + CCore::getMap()->getXPos()), (int)fYPos - 4);
+	iIMG->Draw(rR, (int)(fXPos + GDCore::getMap()->getXPos()), (int)fYPos - 4);
 }
 
 void Fire::minionPhysics() {
@@ -50,5 +50,5 @@ void Fire::minionPhysics() {
 /* ******************************************** */
 
 void Fire::collisionWithPlayer(bool TOP) {
-	CCore::getMap()->playerDeath(true, false);
+	GDCore::getMap()->playerDeath(true, false);
 }

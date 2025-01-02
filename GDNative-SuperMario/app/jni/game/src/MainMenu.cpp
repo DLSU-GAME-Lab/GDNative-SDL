@@ -1,6 +1,6 @@
 #include "MainMenu.h"
 #include "CFG.h"
-#include "Core.h"
+#include "GDCore.h"
 
 /* ******************************************** */
 
@@ -29,12 +29,11 @@ MainMenu::~MainMenu(void) {
 
 void MainMenu::Update() {
 	CCFG::getMusic()->StopMusic();
-	
 	Menu::Update();
 }
 
 void MainMenu::Draw(SDL_Renderer* rR) {
-	CCFG::getSMBLOGO()->Draw(rR, 80, 48);
+//	CCFG::getSMBLOGO()->Draw(rR, 80, 48); TODO: Crash bug due to null error
 	Menu::Draw(rR);
 	CCFG::getText()->Draw(rR, "WWW.LUKASZJAKOWSKI.PL", 4, CCFG::GAME_HEIGHT - 4 - 8, 8, 0, 0, 0);
 	CCFG::getText()->Draw(rR, "WWW.LUKASZJAKOWSKI.PL", 5, CCFG::GAME_HEIGHT - 5 - 8, 8, 255, 255, 255);
@@ -75,7 +74,7 @@ void MainMenu::Draw(SDL_Renderer* rR) {
 		}
 
 		SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_NONE);
-		CCore::getMap()->setBackgroundColor(rR);
+		GDCore::getMap()->setBackgroundColor(rR);
 	}
 }
 
@@ -88,11 +87,11 @@ void MainMenu::enter() {
 				selectWorld = true;
 			} else {
 				CCFG::getMM()->getLoadingMenu()->updateTime();
-				CCore::getMap()->resetGameData();
-				CCore::getMap()->setCurrentLevelID(activeWorldID * 4 + activeSecondWorldID);
+				GDCore::getMap()->resetGameData();
+				GDCore::getMap()->setCurrentLevelID(activeWorldID * 4 + activeSecondWorldID);
 				CCFG::getMM()->setViewID(CCFG::getMM()->eGameLoading);
 				CCFG::getMM()->getLoadingMenu()->loadingType = true;
-				CCore::getMap()->setSpawnPointID(0);
+				GDCore::getMap()->setSpawnPointID(0);
 				selectWorld = false;
 			}
 			break;

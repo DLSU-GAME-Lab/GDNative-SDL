@@ -1,0 +1,3 @@
+python generate-source-files.py X:\GithubProjects\SuperMario-SDL2\src
+python create-android-project.py "com.dlsugamelabnative.mariomobilesdl" --output X:\GithubProjects\GDNative-SDL\GDNative-SuperMario
+python create-android-mk-from-source.py

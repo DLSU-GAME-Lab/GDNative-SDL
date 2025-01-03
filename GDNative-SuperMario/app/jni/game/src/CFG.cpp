@@ -12,11 +12,11 @@ CCFG::~CCFG(void) {
 
 /* ******************************************** */
 
-//int CCFG::GAME_WIDTH  = 800;
-//int CCFG::GAME_HEIGHT = 448;
+int CCFG::GAME_WIDTH  = 800;
+int CCFG::GAME_HEIGHT = 448;
 
-int CCFG::GAME_WIDTH  = 1920;
-int CCFG::GAME_HEIGHT = 1080;
+//int CCFG::GAME_WIDTH  = 1920;
+//int CCFG::GAME_HEIGHT = 1080;
 
 
 Text* CCFG::oText = new Text();

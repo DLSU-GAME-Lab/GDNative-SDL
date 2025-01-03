@@ -78,6 +78,7 @@ public:
 	void PauseMusic();
 
 	void PlayChunk(eChunk chunkID);
+    void LoadAllMusic();
 
 	Mix_Music* loadMusic(std::string fileName);
 	Mix_Chunk* loadChunk(std::string fileName);

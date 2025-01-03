@@ -33,14 +33,32 @@ GDCore::GDCore(void) {
 
 //    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_AUDIO);
 
-    window = SDL_CreateWindow("uMario - DLSU GAME LAB", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, CCFG::GAME_WIDTH, CCFG::GAME_HEIGHT, SDL_WINDOW_SHOWN);
-    //window = SDL_CreateWindow("uMario-Mobile - DLSU GAME LAB", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 448, SDL_WINDOW_SHOWN);
+    // Get screen dimensions
+    int screenWidth, screenHeight;
+    SDL_DisplayMode displayMode;
+    SDL_GetDesktopDisplayMode(0, &displayMode);
+    screenWidth = displayMode.w;
+    screenHeight = displayMode.h;
+
+    // Calculate scale factors
+    float scaleX = (float)screenWidth / CCFG::GAME_WIDTH;
+    float scaleY = (float)screenHeight / CCFG::GAME_HEIGHT;
+    float scale = std::min(scaleX, scaleY);
+
+    // Calculate window dimensions
+    int windowWidth = CCFG::GAME_WIDTH * scale;
+    int windowHeight = CCFG::GAME_HEIGHT * scale;
+
+    window = SDL_CreateWindow("uMario - DLSU GAME LAB", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
 
     if(window == NULL) {
         quitGame = true;
     }
 
     rR = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_RenderSetLogicalSize(rR, CCFG::GAME_WIDTH, CCFG::GAME_HEIGHT);
+//    SDL_RenderSetScale(rR, 2.4f, 2.4f);
+
 
 //     ----- ICO
     std::string fileName = "files/images/ico.bmp";
@@ -48,7 +66,6 @@ GDCore::GDCore(void) {
     SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 255, 0, 255));
 
     SDL_SetWindowIcon(window, loadedSurface);
-
     SDL_FreeSurface(loadedSurface);
 
     mainEvent = new SDL_Event();
@@ -71,6 +88,8 @@ GDCore::GDCore(void) {
     CCFG::keyIDD = SDLK_d;
     CCFG::keyIDSpace = SDLK_SPACE;
     CCFG::keyIDShift = SDLK_LSHIFT;
+
+    CCFG::getMusic()->LoadAllMusic();
 }
 
 GDCore::~GDCore(void) {

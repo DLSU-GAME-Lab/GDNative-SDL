@@ -208,6 +208,51 @@ void GDCore::InputMenu() {
                 break;
         }
     }
+
+    if(mainEvent->type == SDL_FINGERDOWN) {
+        //temporarily stores finger coords
+        float touchX = mainEvent->tfinger.x;
+        float touchY = mainEvent->tfinger.y;
+
+        //convert to screen coords
+        int windowWidth, windowHeight;
+        SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+        int screenX = (int)(touchX * windowWidth);
+        int screenY = (int)(touchY * windowHeight);
+
+        //the check to see if touch is within bounds of the buttons
+        //where x as lower bound and (x + width) as upper bound, same for y and height
+        /*
+        if(screenX >= dpad_left.x && screenX <= (dpad_left.x + dpad_left.w) && screenY >= dpad_left.y && screenY <= (dpad_left.y + dpad_left.h)) {
+            //call func to move left
+            CCFG::getMM()->keyPressed(3);
+        }
+        else if(screenX >= dpad_right.x && screenX <= (dpad_right.x + dpad_right.w) && screenY >= dpad_right.y && screenY <= (dpad_right.y + dpad_right.h)) {
+            //call func to move right
+            CCFG::getMM()->keyPressed(1);
+        }
+        else if(screenX >= dpad_up.x && screenX <= (dpad_up.x + dpad_up.w) && screenY >= dpad_up.y && screenY <= (dpad_up.y + dpad_up.h)) {
+            //call func to move up
+            CCFG::getMM()->keyPressed(4);
+        }
+        else if(screenX >= dpad_down.x && screenX <= (dpad_down.x + dpad_down.w) && screenY >= dpad_down.y && screenY <= (dpad_down.y + dpad_down.h)) {
+            //call func to move down
+            CCFG::getMM()->keyPressed(2);
+        }
+        else if(screenX >= aButton.x && screenX <= (aButton_right.x + aButton.w) && screenY >= aButton.y && screenY <= (aButton.y + aButton.h)) {
+            CCFG::getMM()->enter();
+            //call enter
+        }
+        else if(screenX >= bButton.x && screenX <= (bButton.x + bButton.w) && screenY >= bButton.y && screenY <= (bButton.y + bButton.h)) {
+            CCFG::getMM()->escape();
+            //call escape
+        }
+        */
+    }
+
+    if(mainEvent->type == SDL_FINGERUP) {
+        //when finger is lifted to stop movement, funcs, etc
+    }
 }
 
 void GDCore::InputPlayer() {

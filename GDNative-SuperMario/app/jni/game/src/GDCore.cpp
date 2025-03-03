@@ -223,27 +223,27 @@ void GDCore::InputMenu() {
         //the check to see if touch is within bounds of the buttons
         //where x as lower bound and (x + width) as upper bound, same for y and height
         /*
-        if(screenX >= dpad_left.x && screenX <= (dpad_left.x + dpad_left.w) && screenY >= dpad_left.y && screenY <= (dpad_left.y + dpad_left.h)) {
+        if(this->CheckIfWithinBounds(screenX, screenY, dpad_left)) {
             //call func to move left
             CCFG::getMM()->keyPressed(3);
         }
-        else if(screenX >= dpad_right.x && screenX <= (dpad_right.x + dpad_right.w) && screenY >= dpad_right.y && screenY <= (dpad_right.y + dpad_right.h)) {
+        else if(this->CheckIfWithinBounds(screenX, screenY, dpad_right)) {
             //call func to move right
             CCFG::getMM()->keyPressed(1);
         }
-        else if(screenX >= dpad_up.x && screenX <= (dpad_up.x + dpad_up.w) && screenY >= dpad_up.y && screenY <= (dpad_up.y + dpad_up.h)) {
+        else if(this->CheckIfWithinBounds(screenX, screenY, dpad_up)) {
             //call func to move up
             CCFG::getMM()->keyPressed(4);
         }
-        else if(screenX >= dpad_down.x && screenX <= (dpad_down.x + dpad_down.w) && screenY >= dpad_down.y && screenY <= (dpad_down.y + dpad_down.h)) {
+        else if(this->CheckIfWithinBounds(screenX, screenY, dpad_down)) {
             //call func to move down
             CCFG::getMM()->keyPressed(2);
         }
-        else if(screenX >= aButton.x && screenX <= (aButton_right.x + aButton.w) && screenY >= aButton.y && screenY <= (aButton.y + aButton.h)) {
+        else if(this->CheckIfWithinBounds(screenX, screenY, aButton)) {
             CCFG::getMM()->enter();
             //call enter
         }
-        else if(screenX >= bButton.x && screenX <= (bButton.x + bButton.w) && screenY >= bButton.y && screenY <= (bButton.y + bButton.h)) {
+        else if(this->CheckIfWithinBounds(screenX, screenY, bButton)) {
             CCFG::getMM()->escape();
             //call escape
         }
@@ -253,6 +253,13 @@ void GDCore::InputMenu() {
     if(mainEvent->type == SDL_FINGERUP) {
         //when finger is lifted to stop movement, funcs, etc
     }
+}
+
+bool GDCore::CheckIfWithinBounds(int ScreenX, int ScreenY, Button button) {
+    if(screenX >= button.GetXPos() && screenX <= (button.GetXPos() + button.GetWidth()) && screenY >= button.GetYPos() && screenY <= (button.GetYPos() + button.GetHeight())) {
+        return true;
+    }
+    return false;
 }
 
 void GDCore::InputPlayer() {

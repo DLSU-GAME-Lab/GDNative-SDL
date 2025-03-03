@@ -27,7 +27,7 @@ SUPPORT_MP3_MPG123 ?= false
 MPG123_LIBRARY_PATH := external/mpg123
 
 # Enable this if you want to support loading WavPack music via libwavpack
-SUPPORT_WAVPACK ?= true
+SUPPORT_WAVPACK ?= false
 WAVPACK_LIBRARY_PATH := external/wavpack
 
 # Enable this if you want to support loading MOD music via XMP-lite

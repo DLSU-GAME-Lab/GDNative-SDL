@@ -2381,6 +2381,51 @@ void Map::loadGameData(SDL_Renderer* rR) {
 
 	iBlockSize = vBlock.size();
 	iMinionSize = vMinion.size();
+
+    // BUTTONS
+
+    //DPAD
+
+    tSprite.push_back("dpad_down");
+    iDelay.push_back(0);
+    Sprite* downSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(0, 400, 400, 250, 250, downSprite, Button::eDPAD_DOWN));
+
+    //dpad down constructor
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("dpad_up");
+    iDelay.push_back(0);
+    //dpad up constructor
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("dpad_left");
+    iDelay.push_back(0);
+    //dpad left constructor
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("dpad_right");
+    iDelay.push_back(0);
+    //dpad right constructor
+    tSprite.clear();
+    iDelay.clear();
+
+    //  A and B
+    tSprite.push_back("aButton");
+    iDelay.push_back(0);
+    //a button constructor
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("bButton");
+    iDelay.push_back(0);
+    //b button constructor
+    tSprite.clear();
+    iDelay.clear();
+
 }
 
 /* ******************************************** */

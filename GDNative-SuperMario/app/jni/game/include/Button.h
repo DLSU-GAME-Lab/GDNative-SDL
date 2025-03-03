@@ -10,8 +10,11 @@
 
 class Button {
     private:
+        int iButtonID;
         bool bPressedDown;
         bool bVisible;
+        int xPos, yPos;
+        float fWidth, fHeight;
         Sprite* pSprite;
 
         enum eButtonType{
@@ -28,9 +31,13 @@ class Button {
 
 
     public:
-        Button();
-        Button(eButtonType eType);
+        Button(int iButtonID, int xPos, int yPos, float fWidth, float fHeight, Sprite* pSprite, eButtonType eType);
         void OnGameStart();
+
+        void Draw(SDL_Renderer* rR, int iOffsetX, int iOffsetY);
+        void ToggleVisibility();
+        eButtonType GetType() { return eType; }
+
 };
 
 #endif //GDNATIVE_SUPERMARIO_BUTTON_H

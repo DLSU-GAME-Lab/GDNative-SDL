@@ -33,7 +33,7 @@ private:
     // ----- true = RIGHT, false = LEFT
     bool firstDir;
 
-    //add array of buttons here
+    private vector<Button*> vButtons;
     // ----- INPUT
 
     static Map* oMap;

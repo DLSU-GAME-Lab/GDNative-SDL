@@ -233,7 +233,7 @@ void GDCore::InputMenu() {
         }
         else if(this->CheckIfWithinBounds(screenX, screenY, dpad_up)) {
             //call func to move up
-            CCFG::getMM()->keyPressed(4);
+            CCFG::getMM()->keyPressed(0);
         }
         else if(this->CheckIfWithinBounds(screenX, screenY, dpad_down)) {
             //call func to move down

@@ -46,6 +46,7 @@ class Button {
         int GetYPos() const;
         int GetWidth() const;
         int GetHeight() const;
+        void SetSprite(Sprite sSprite);
 };
 
 #endif //GDNATIVE_SUPERMARIO_BUTTON_H

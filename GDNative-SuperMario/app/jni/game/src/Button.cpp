@@ -62,3 +62,9 @@ int Button::GetWidth() const {
 int Button::GetHeight() const {
     return (int)(this->fHeight);
 }
+
+void Button::SetSprite(Sprite sSprite) {
+    if(sSprite != NULLPTR) {
+
+    }
+}

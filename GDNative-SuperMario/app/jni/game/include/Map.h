@@ -43,6 +43,7 @@
 #include "BlockDebris.h"
 #include "Bubble.h"
 #include <vector>
+#include "Button.h"
 
 /* ******************************************** */
 
@@ -67,6 +68,8 @@ private:
 	std::vector<LevelText*> vLevelText;
 
 	std::vector<Bubble*> lBubble;
+
+    std::vector<Button*> vButtons;
 
 	int currentLevelID;
 	int iLevelType; // 0, 1, 2;

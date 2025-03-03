@@ -32,6 +32,8 @@ private:
     static bool keyAPressed, keyDPressed;
     // ----- true = RIGHT, false = LEFT
     bool firstDir;
+
+    //add array of buttons here
     // ----- INPUT
 
     static Map* oMap;

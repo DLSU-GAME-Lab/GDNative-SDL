@@ -220,6 +220,58 @@ void GDCore::InputMenu() {
                 break;
         }
     }
+
+    if(mainEvent->type == SDL_FINGERDOWN) {
+        //temporarily stores finger coords
+        float touchX = mainEvent->tfinger.x;
+        float touchY = mainEvent->tfinger.y;
+
+        //convert to screen coords
+        int windowWidth, windowHeight;
+        SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+        int screenX = (int)(touchX * windowWidth);
+        int screenY = (int)(touchY * windowHeight);
+
+        //the check to see if touch is within bounds of the buttons
+        //where x as lower bound and (x + width) as upper bound, same for y and height
+        /*
+        if(this->CheckIfWithinBounds(screenX, screenY, dpad_left)) {
+            //call func to move left
+            CCFG::getMM()->keyPressed(3);
+        }
+        else if(this->CheckIfWithinBounds(screenX, screenY, dpad_right)) {
+            //call func to move right
+            CCFG::getMM()->keyPressed(1);
+        }
+        else if(this->CheckIfWithinBounds(screenX, screenY, dpad_up)) {
+            //call func to move up
+            CCFG::getMM()->keyPressed(4);
+        }
+        else if(this->CheckIfWithinBounds(screenX, screenY, dpad_down)) {
+            //call func to move down
+            CCFG::getMM()->keyPressed(2);
+        }
+        else if(this->CheckIfWithinBounds(screenX, screenY, aButton)) {
+            CCFG::getMM()->enter();
+            //call enter
+        }
+        else if(this->CheckIfWithinBounds(screenX, screenY, bButton)) {
+            CCFG::getMM()->escape();
+            //call escape
+        }
+        */
+    }
+
+    if(mainEvent->type == SDL_FINGERUP) {
+        //when finger is lifted to stop movement, funcs, etc
+    }
+}
+
+bool GDCore::CheckIfWithinBounds(int ScreenX, int ScreenY, Button button) {
+    if(screenX >= button.GetXPos() && screenX <= (button.GetXPos() + button.GetWidth()) && screenY >= button.GetYPos() && screenY <= (button.GetYPos() + button.GetHeight())) {
+        return true;
+    }
+    return false;
 }
 
 void GDCore::InputPlayer() {

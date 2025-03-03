@@ -27,6 +27,18 @@ private:
 
     bool firstDir;
 
+    //add array of buttons here
+    // ----- INPUT
+
+    static Map* oMap;
+
+    // ----- Methods
+
+    void Input();
+    void MouseInput();
+    void InputPlayer();
+    void InputMenu();
+
 public:
     // Existing static members
     static Map* oMap;
@@ -67,6 +79,12 @@ public:
     void resetMove();
     static void resetKeys();
 
+    static bool mouseLeftPressed, mouseRightPressed;
+    static int mouseX, mouseY;
+
+    bool CheckIfWithinBounds(int ScreenX, int ScreenY, Button button);
+
+    /* ----- get & set ----- */
     static Map* getMap();
 
     // Touch control methods

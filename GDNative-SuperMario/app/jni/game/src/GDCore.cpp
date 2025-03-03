@@ -498,6 +498,20 @@ Map* GDCore::getMap() {
 // Initialize touch controls
 void GDCore::initTouchControls()
 {
+    //dpad
+    //up
+    vButtons.push_back(new Button(0, CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 200, 150, 200, new Sprite(), Button::eDPAD_UP));
+    //right
+    vButtons.push_back(new Button(1, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 150, 200, 150, new Sprite(), Button::eDPAD_RIGHT));
+    //down
+    vButtons.push_back(new Button(2, CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 200, 150, 200, new Sprite(), Button::eDPAD_DOWN));
+    //left
+    vButtons.push_back(new Button(3, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 150, 200, 150, new Sprite(), Button::eDPAD_LEFT));
+
+    //a b buttons
+    vButtons.push_back(new Button(4, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eA));
+    vButtons.push_back(new Button(5, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eB));
+
     // D-pad
     int dpadSize = 50;
     int dpadSpacing = 125;

@@ -9,14 +9,7 @@
 #include "Sprite.h"
 
 class Button {
-    private:
-        int iButtonID;
-        bool bPressedDown;
-        bool bVisible;
-        int xPos, yPos;
-        float fWidth, fHeight;
-        Sprite* pSprite;
-
+    public:
         enum eButtonType{
             eDPAD_UP,
             eDPAD_DOWN,
@@ -26,6 +19,15 @@ class Button {
             eB,
             eNone
         };
+    protected:
+        int iButtonID;
+        bool bPressedDown;
+        bool bVisible;
+        int xPos, yPos;
+        float fWidth, fHeight;
+        Sprite* pSprite;
+
+
 
         eButtonType eType;
 

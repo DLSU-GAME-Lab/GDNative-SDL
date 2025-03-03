@@ -27,7 +27,7 @@ private:
 
     bool firstDir;
 
-    private vector<Button*> vButtons;
+    static std::vector<Button*> vButtons;
     // ----- INPUT
 
     static Map* oMap;

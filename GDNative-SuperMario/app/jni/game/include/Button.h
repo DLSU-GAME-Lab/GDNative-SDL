@@ -42,11 +42,10 @@ class Button {
         void ToggleVisibility();
         eButtonType GetType() { return eType; }
 
-        int GetXPos();
-        int GetYPos();
-        int GetWidth();
-        int GetHeight();
-
+        int GetXPos() const;
+        int GetYPos() const;
+        int GetWidth() const;
+        int GetHeight() const;
 };
 
 #endif //GDNATIVE_SUPERMARIO_BUTTON_H

@@ -47,18 +47,18 @@ void Button::ToggleVisibility() {
     this->bVisible = !this->bVisible;
 }
 
-int Button::GetXPos() {
+int Button::GetXPos() const {
     return this->xPos;
 }
 
-int Button::GetYPos() {
+int Button::GetYPos() const {
     return this->yPos;
 }
 
-int Button::GetWidth() {
+int Button::GetWidth() const {
     return (int)(this->fWidth);
 }
 
-int Button::GetHeight() {
+int Button::GetHeight() const {
     return (int)(this->fHeight);
 }

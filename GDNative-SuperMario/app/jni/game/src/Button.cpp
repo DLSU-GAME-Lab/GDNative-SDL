@@ -62,3 +62,7 @@ int Button::GetWidth() {
 int Button::GetHeight() {
     return (int)(this->fHeight);
 }
+
+Button::eButtonType Button::GetType() {
+    return this->eType; // Changed from "etype" to "eType"
+}

@@ -267,13 +267,6 @@ void GDCore::InputMenu() {
     }
 }
 
-bool GDCore::CheckIfWithinBounds(int ScreenX, int ScreenY, Button button) {
-    if(screenX >= button.GetXPos() && screenX <= (button.GetXPos() + button.GetWidth()) && screenY >= button.GetYPos() && screenY <= (button.GetYPos() + button.GetHeight())) {
-        return true;
-    }
-    return false;
-}
-
 void GDCore::InputPlayer() {
     if(mainEvent->type == SDL_WINDOWEVENT) {
         switch(mainEvent->window.event) {

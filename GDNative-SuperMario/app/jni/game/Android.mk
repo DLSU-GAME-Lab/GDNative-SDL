@@ -20,6 +20,7 @@ LOCAL_SRC_FILES :=  $(LOCAL_PATH)/src/main.cpp \
     $(LOCAL_PATH)/src/Bowser.cpp \
     $(LOCAL_PATH)/src/Bubble.cpp \
     $(LOCAL_PATH)/src/BulletBill.cpp \
+    $(LOCAL_PATH)/src/Button.cpp \
     $(LOCAL_PATH)/src/BulletBillSpawner.cpp \
     $(LOCAL_PATH)/src/CFG.cpp \
     $(LOCAL_PATH)/src/Cheep.cpp \

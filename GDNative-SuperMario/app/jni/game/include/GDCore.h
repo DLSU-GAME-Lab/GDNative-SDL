@@ -5,7 +5,6 @@
 #include "header.h"
 #include "Map.h"
 
-// Touch control definitions
 struct TouchControl {
     SDL_Rect bounds;
     const char* name;
@@ -27,27 +26,12 @@ private:
 
     bool firstDir;
 
-    //add array of buttons here
-    // ----- INPUT
-
-    static Map* oMap;
-
-    // ----- Methods
-
-    void Input();
-    void MouseInput();
-    void InputPlayer();
-    void InputMenu();
-
 public:
-    // Existing static members
     static Map* oMap;
-
     static bool mouseLeftPressed;
     static bool mouseRightPressed;
     static int mouseX, mouseY;
     static bool quitGame;
-
     static bool movePressed;
     static bool keyMenuPressed;
     static bool keyS, keyW;
@@ -79,15 +63,9 @@ public:
     void resetMove();
     static void resetKeys();
 
-    static bool mouseLeftPressed, mouseRightPressed;
-    static int mouseX, mouseY;
-
-    bool CheckIfWithinBounds(int ScreenX, int ScreenY, Button button);
-
     /* ----- get & set ----- */
     static Map* getMap();
 
-    // Touch control methods
     void initTouchControls();
     void drawTouchControls(SDL_Renderer* renderer);
     void handleTouchEvents(int touchX, int touchY, bool isTouching);

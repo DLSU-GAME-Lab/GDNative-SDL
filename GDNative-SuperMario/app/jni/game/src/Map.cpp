@@ -2385,8 +2385,12 @@ void Map::loadGameData(SDL_Renderer* rR) {
     // BUTTONS
 
     //DPAD
+
     tSprite.push_back("dpad_down");
     iDelay.push_back(0);
+    Sprite* downSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(0, 400, 400, 250, 250, downSprite, Button::eDPAD_DOWN));
+
     //dpad down constructor
     tSprite.clear();
     iDelay.clear();

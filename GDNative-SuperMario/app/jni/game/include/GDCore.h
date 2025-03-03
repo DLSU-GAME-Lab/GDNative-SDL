@@ -1,55 +1,65 @@
-//
-// Created by delgallegon on 02/01/2025.
-//
+// GDCore.h
+#ifndef GDCORE_H
+#define GDCORE_H
 
-#ifndef GDNATIVE_SUPERMARIO_GDCORE_H
-#define GDNATIVE_SUPERMARIO_GDCORE_H
-
+#include "header.h"
 #include "Map.h"
 
-class GDCore
-{
+// Touch control definitions
+struct TouchControl {
+    SDL_Rect bounds;
+    const char* name;
+    bool pressed;
+};
+
+class GDCore {
 private:
     SDL_Window* window;
     SDL_Renderer* rR;
     SDL_Event* mainEvent;
 
-    uint64_t ticks;
+    unsigned int ticks;
+    unsigned int iFPS, iNumOfFPS;
+    long lFPSTime;
 
-    // ----- FPS -----
-
+    int MIN_FRAME_TIME = 16;
     long frameTime;
-    static const int MIN_FRAME_TIME = 16;
 
-    unsigned long lFPSTime;
-    int iNumOfFPS, iFPS;
-
-    // ----- FPS -----
-
-    // ----- INPUT
-    static bool movePressed, keyMenuPressed, keyS, keyW, keyA, keyD, keyShift;
-
-    static bool keyAPressed, keyDPressed;
-    // ----- true = RIGHT, false = LEFT
     bool firstDir;
-    // ----- INPUT
-
-    static Map* oMap;
-
-    // ----- Methods
-
-    void Input();
-    void MouseInput();
-    void InputPlayer();
-    void InputMenu();
 
 public:
+    // Existing static members
+    static Map* oMap;
+
+    static bool mouseLeftPressed;
+    static bool mouseRightPressed;
+    static int mouseX, mouseY;
+    static bool quitGame;
+
+    static bool movePressed;
+    static bool keyMenuPressed;
+    static bool keyS, keyW;
+    static bool keyA, keyD;
+    static bool keyShift;
+    static bool keyAPressed, keyDPressed;
+
+    // Touch controls
+    static TouchControl dpadUp;
+    static TouchControl dpadDown;
+    static TouchControl dpadLeft;
+    static TouchControl dpadRight;
+    static TouchControl buttonA;
+    static TouchControl buttonB;
+    static TouchControl pauseButton;
+
     GDCore(void);
     ~GDCore(void);
 
-    static bool quitGame;
-
     void mainLoop();
+    void Input();
+    void InputPlayer();
+    void InputMenu();
+    void MouseInput();
 
     void Update();
     void Draw();
@@ -57,11 +67,12 @@ public:
     void resetMove();
     static void resetKeys();
 
-    static bool mouseLeftPressed, mouseRightPressed;
-    static int mouseX, mouseY;
-
-    /* ----- get & set ----- */
     static Map* getMap();
+
+    // Touch control methods
+    void initTouchControls();
+    void drawTouchControls(SDL_Renderer* renderer);
+    void handleTouchEvents(int touchX, int touchY, bool isTouching);
 };
 
-#endif //GDNATIVE_SUPERMARIO_GDCORE_H
+#endif

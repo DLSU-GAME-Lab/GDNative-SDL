@@ -62,6 +62,8 @@ public:
     static bool mouseLeftPressed, mouseRightPressed;
     static int mouseX, mouseY;
 
+    bool CheckIfWithinBounds(int ScreenX, int ScreenY, Button button);
+
     /* ----- get & set ----- */
     static Map* getMap();
 };

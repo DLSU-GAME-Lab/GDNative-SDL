@@ -2385,40 +2385,40 @@ void Map::loadGameData(SDL_Renderer* rR) {
     // BUTTONS
 
     //DPAD
-    tSprite.push_back("dpad_down");
-    iDelay.push_back(0);
-    vButtons[0]
-    tSprite.clear();
-    iDelay.clear();
-
     tSprite.push_back("dpad_up");
     iDelay.push_back(0);
-    //dpad up constructor
-    tSprite.clear();
-    iDelay.clear();
-
-    tSprite.push_back("dpad_left");
-    iDelay.push_back(0);
-    //dpad left constructor
+    vButtons[0]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
     tSprite.clear();
     iDelay.clear();
 
     tSprite.push_back("dpad_right");
     iDelay.push_back(0);
-    //dpad right constructor
+    vButtons[1]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("dpad_down");
+    iDelay.push_back(0);
+    vButtons[2]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("dpad_left");
+    iDelay.push_back(0);
+    vButtons[3]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
     tSprite.clear();
     iDelay.clear();
 
     //  A and B
     tSprite.push_back("aButton");
     iDelay.push_back(0);
-    //a button constructor
+    vButtons[4]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
     tSprite.clear();
     iDelay.clear();
 
     tSprite.push_back("bButton");
     iDelay.push_back(0);
-    //b button constructor
+    vButtons[5]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
     tSprite.clear();
     iDelay.clear();
 
@@ -10387,6 +10387,10 @@ bool Map::getInEvent() {
 
 void Map::setInEvent(bool inEvent) {
 	this->inEvent = inEvent;
+}
+
+void Map::setvButtons(std::vector<Button*> vButtons) {
+    this->vButtons = vButtons;
 }
 
 /* ******************************************** */

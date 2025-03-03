@@ -512,10 +512,13 @@ void GDCore::initTouchControls()
     vButtons.push_back(new Button(4, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eA));
     vButtons.push_back(new Button(5, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eB));
 
+    oMap->setvButtons(vButtons);
+
     // D-pad
     int dpadSize = 50;
     int dpadSpacing = 125;
     int dpadY = CCFG::GAME_HEIGHT - 140;
+
 
     dpadLeft.bounds = {20, dpadY, dpadSize, dpadSize};
     dpadRight.bounds = {20 + dpadSpacing, dpadY, dpadSize, dpadSize};
@@ -531,6 +534,7 @@ void GDCore::initTouchControls()
 
     // Pause button
     pauseButton.bounds = {CCFG::GAME_WIDTH - 50, 20, 40, 40};
+
 }
 
 // Draw touch controls
@@ -585,6 +589,9 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
     if (CCFG::getMM()->getViewID() != 2 && CCFG::getMM()->getViewID() != 7)
     {
         // Reset all touch controls when not in gameplay
+        for(int i = 0; i < vButtons.size(); i++) {
+            vButtons[i]->SetPressed() = false;
+        }
         dpadUp.pressed = dpadDown.pressed = dpadLeft.pressed = dpadRight.pressed =
         buttonA.pressed = buttonB.pressed = pauseButton.pressed = false;
         return;
@@ -593,6 +600,13 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
     // Check each control
     if (isTouching) {
         // D-pad Up
+        if(this->CheckIfWithinBounds(touchX, touchY, *vButtons[0])) {
+            vButtons[0]->SetPressed(true);
+            if(!CCFG::keySpace) {
+                oMap->getPlayer()->jump();
+                CCFG::keySpace = true;
+            }
+        }
         if (touchX >= dpadUp.bounds.x && touchX <= dpadUp.bounds.x + dpadUp.bounds.w &&
             touchY >= dpadUp.bounds.y && touchY <= dpadUp.bounds.y + dpadUp.bounds.h)
         {

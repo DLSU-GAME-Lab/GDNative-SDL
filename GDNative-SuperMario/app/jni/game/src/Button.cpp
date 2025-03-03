@@ -63,8 +63,12 @@ int Button::GetHeight() const {
     return (int)(this->fHeight);
 }
 
-void Button::SetSprite(Sprite sSprite) {
-    if(sSprite != NULLPTR) {
-
+void Button::SetSprite(Sprite* pSprite) {
+    if(pSprite != nullptr) {
+        this->pSprite = pSprite;
     }
+}
+
+bool Button::GetPressed() {
+    return this->bPressedDown;
 }

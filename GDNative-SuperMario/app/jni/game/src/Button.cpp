@@ -28,3 +28,19 @@ void Button::Draw(SDL_Renderer* rR, int iOffsetX, int iOffsetY) {
 void Button::ToggleVisibility() {
     this->bVisible = !this->bVisible;
 }
+
+int Button::GetXPos() {
+    return this->xPos;
+}
+
+int Button::GetYPos() {
+    return this->yPos;
+}
+
+int Button::GetWidth() {
+    return (int)(this->fWidth);
+}
+
+int Button::GetHeight() {
+    return (int)(this->fHeight);
+}

@@ -32,9 +32,13 @@ class Button {
 
     public:
         Button(int iButtonID, int xPos, int yPos, float fWidth, float fHeight, Sprite* pSprite, eButtonType eType);
+        ~Button(void);
         void OnGameStart();
 
         void Draw(SDL_Renderer* rR, int iOffsetX, int iOffsetY);
+        void SetPressed(bool pressed);
+        bool IsPressed() const;
+        void SetVisible(bool visible);
         void ToggleVisibility();
         eButtonType GetType() { return eType; }
 

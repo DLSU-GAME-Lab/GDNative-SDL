@@ -16,6 +16,10 @@ Button::Button(int iButtonID, int xPos, int yPos, float fWidth, float fHeight, S
     this->eType = eType;
 }
 
+Button::~Button(void) {
+    delete pSprite;
+}
+
 void Button::OnGameStart() {
     this->bVisible = true;
     this->bPressedDown = false;
@@ -23,6 +27,20 @@ void Button::OnGameStart() {
 
 void Button::Draw(SDL_Renderer* rR, int iOffsetX, int iOffsetY) {
     this->pSprite->getTexture()->Draw(rR, iOffsetX, iOffsetY);
+    this->xPos = iOffsetX;
+    this->yPos = iOffsetY;
+}
+
+void Button::SetPressed(bool pressed) {
+    this->bPressedDown = pressed;
+}
+
+bool Button::IsPressed() const {
+    return bPressedDown;
+}
+
+void Button::SetVisible(bool visible) {
+    this->bVisible = visible;
 }
 
 void Button::ToggleVisibility() {

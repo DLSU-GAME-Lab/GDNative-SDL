@@ -493,19 +493,19 @@ void GDCore::initTouchControls()
 {
     //dpad
     //up
-    vButtons.push_back(new Button(0, CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 200, 150, 200, new Sprite(), Button::eDPAD_UP));
+    //vButtons.push_back(new Button(0, CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 200, 150, 200, new Sprite(), Button::eDPAD_UP));
     //right
-    vButtons.push_back(new Button(1, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 150, 200, 150, new Sprite(), Button::eDPAD_RIGHT));
+    //vButtons.push_back(new Button(1, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 150, 200, 150, new Sprite(), Button::eDPAD_RIGHT));
     //down
-    vButtons.push_back(new Button(2, CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 200, 150, 200, new Sprite(), Button::eDPAD_DOWN));
+    //vButtons.push_back(new Button(2, CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 200, 150, 200, new Sprite(), Button::eDPAD_DOWN));
     //left
-    vButtons.push_back(new Button(3, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 150, 200, 150, new Sprite(), Button::eDPAD_LEFT));
+    //vButtons.push_back(new Button(3, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 150, 200, 150, new Sprite(), Button::eDPAD_LEFT));
 
     //a b buttons
-    vButtons.push_back(new Button(4, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eA));
-    vButtons.push_back(new Button(5, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eB));
+    //vButtons.push_back(new Button(4, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eA));
+    //vButtons.push_back(new Button(5, CCFG::GAME_WIDTH - 200, CCFG::GAME_HEIGHT - 200, 200, 200, new Sprite(), Button::eB));
 
-    oMap->setvButtons(vButtons);
+    //oMap->setvButtons(vButtons);
 
     // D-pad
     int dpadSize = 50;
@@ -582,9 +582,9 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
     if (CCFG::getMM()->getViewID() != 2 && CCFG::getMM()->getViewID() != 7)
     {
         // Reset all touch controls when not in gameplay
-        for(int i = 0; i < vButtons.size(); i++) {
-            vButtons[i]->SetPressed() = false;
-        }
+        //for(int i = 0; i < vButtons.size(); i++) {
+        //    vButtons[i]->SetPressed() = false;
+        //}
         dpadUp.pressed = dpadDown.pressed = dpadLeft.pressed = dpadRight.pressed =
         buttonA.pressed = buttonB.pressed = pauseButton.pressed = false;
         return;
@@ -593,13 +593,13 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
     // Check each control
     if (isTouching) {
         // D-pad Up
-        if(this->CheckIfWithinBounds(touchX, touchY, *vButtons[0])) {
+        /*if(this->CheckIfWithinBounds(touchX, touchY, *vButtons[0])) {
             vButtons[0]->SetPressed(true);
             if(!CCFG::keySpace) {
                 oMap->getPlayer()->jump();
                 CCFG::keySpace = true;
             }
-        }
+        }*/
         if (touchX >= dpadUp.bounds.x && touchX <= dpadUp.bounds.x + dpadUp.bounds.w &&
             touchY >= dpadUp.bounds.y && touchY <= dpadUp.bounds.y + dpadUp.bounds.h)
         {
@@ -623,6 +623,7 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (!keyS)
             {
                 keyS = true;
+                if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) oMap->getPlayer()->setSquat(true);
                 oMap->getPlayer()->jump();
             }
         }
@@ -640,10 +641,11 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             touchY >= dpadLeft.bounds.y && touchY <= dpadLeft.bounds.y + dpadLeft.bounds.h)
         {
             dpadLeft.pressed = true;
+            keyAPressed = true;
             if (!keyDPressed)
             {
                 firstDir = false;
-                oMap->getPlayer()->jump();
+                //oMap->getPlayer()->jump();
             }
         }
         else
@@ -651,7 +653,8 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (dpadLeft.pressed)
             {
                 dpadLeft.pressed = false;
-                oMap->getPlayer()->jump();
+                keyAPressed = false;
+                //oMap->getPlayer()->jump();
             }
         }
 
@@ -660,10 +663,11 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             touchY >= dpadRight.bounds.y && touchY <= dpadRight.bounds.y + dpadRight.bounds.h)
         {
             dpadRight.pressed = true;
+            keyDPressed = true;
             if (!keyAPressed)
             {
                 firstDir = true;
-                oMap->getPlayer()->jump();
+                //oMap->getPlayer()->jump();
             }
 
         }
@@ -672,7 +676,8 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (dpadRight.pressed)
             {
                 dpadRight.pressed = false;
-                oMap->getPlayer()->jump();
+                keyDPressed = false;
+                //oMap->getPlayer()->jump();
             }
         }
 

@@ -42,8 +42,8 @@
 #include "Points.h"
 #include "BlockDebris.h"
 #include "Bubble.h"
-#include <vector>
 #include "Button.h"
+#include <vector>
 
 /* ******************************************** */
 
@@ -69,7 +69,7 @@ private:
 
 	std::vector<Bubble*> lBubble;
 
-    std::vector<Button*> vButtons;
+    std::vector<Button*> vButton;
 
 	int currentLevelID;
 	int iLevelType; // 0, 1, 2;
@@ -286,6 +286,8 @@ public:
 	void addBulletBillSpawner(int X, int Y, int minionState);
 	void addBulletBill(int X, int Y, bool moveDirection, int minionState);
 
+    void addButton(int iButtonID, int xPos, int yPos, float fWidth, float fHeight, Button::eButtonType eType);
+
 	void lockMinions();
 	void clearPlatforms();
 	void clearBubbles();
@@ -408,7 +410,7 @@ public:
 	bool getInEvent();
 	void setInEvent(bool inEvent);
 
-    void setvButtons(std::vector<Button*> vButtons);
+    std::vector<Button*>& getButtons();
 };
 
 #endif

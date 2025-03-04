@@ -25,8 +25,26 @@ void Button::OnGameStart() {
     this->bPressedDown = false;
 }
 
-void Button::Draw(SDL_Renderer* rR, int iOffsetX, int iOffsetY) {
-    this->pSprite->getTexture()->Draw(rR, iOffsetX, iOffsetY);
+void Button::Draw(SDL_Renderer* rR, int iOffsetX, int iOffsetY)
+{
+    CIMG* texture = this->pSprite->getTexture();
+
+    // This is made to adjust for overriding the scale of buttons
+    SDL_Rect srcRect;
+    srcRect.x = 0;
+    srcRect.y = 0;
+    srcRect.w = texture->getRect().w;
+    srcRect.h = texture->getRect().h;
+
+    SDL_Rect dstRect;
+    dstRect.x = iOffsetX;
+    dstRect.y = iOffsetY;
+    dstRect.w = (int)this->fWidth;
+    dstRect.h = (int)this->fHeight;
+
+    // Render the texture with scaling
+    SDL_RenderCopy(rR, texture->getIMG(), &srcRect, &dstRect);
+
     this->xPos = iOffsetX;
     this->yPos = iOffsetY;
 }
@@ -47,28 +65,22 @@ void Button::ToggleVisibility() {
     this->bVisible = !this->bVisible;
 }
 
-int Button::GetXPos() const {
+int Button::GetXPos() {
     return this->xPos;
 }
 
-int Button::GetYPos() const {
+int Button::GetYPos() {
     return this->yPos;
 }
 
-int Button::GetWidth() const {
+int Button::GetWidth() {
     return (int)(this->fWidth);
 }
 
-int Button::GetHeight() const {
+int Button::GetHeight() {
     return (int)(this->fHeight);
 }
 
-void Button::SetSprite(Sprite* pSprite) {
-    if(pSprite != nullptr) {
-        this->pSprite = pSprite;
-    }
-}
-
-bool Button::GetPressed() {
-    return this->bPressedDown;
+Button::eButtonType Button::GetType() {
+    return this->eType; // Changed from "etype" to "eType"
 }

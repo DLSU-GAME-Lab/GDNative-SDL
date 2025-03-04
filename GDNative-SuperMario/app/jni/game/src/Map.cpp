@@ -388,6 +388,10 @@ void Map::Draw(SDL_Renderer* rR) {
 		lBubble[i]->Draw(rR, vBlock[lBubble[i]->getBlockID()]->getSprite()->getTexture());
 	}
 
+    for (unsigned int i = 0; i < vButton.size(); i++) {
+        vButton[i]->Draw(rR, vButton[i]->GetXPos(), vButton[i]->GetYPos());
+    }
+
 	oPlayer->Draw(rR);
 
 	if(inEvent) {
@@ -600,6 +604,38 @@ void Map::addPoints(int X, int Y, std::string sText, int iW, int iH) {
 
 void Map::addGoombas(int iX, int iY, bool moveDirection) {
 	lMinion[getListID(iX)].push_back(new Goombas(iX, iY, iLevelType == 0 || iLevelType == 4 ? 0 : iLevelType == 1 ? 8 : 10, moveDirection));
+}
+
+void Map::addButton(int iButtonID, int xPos, int yPos, float fWidth, float fHeight, Button::eButtonType eType)
+{
+    std::vector<std::string> tSprite;
+    std::vector<int> iDelay;
+
+
+    switch(eType)
+    {
+        case Button::eDPAD_UP:
+            tSprite.push_back("button_up");
+            break;
+        case Button::eDPAD_DOWN:
+            tSprite.push_back("button_down");
+            break;
+        case Button::eDPAD_LEFT:
+            tSprite.push_back("button_left");
+            break;
+        case Button::eDPAD_RIGHT:
+            tSprite.push_back("button_right");
+            break;
+        case Button::eA:
+            tSprite.push_back("button_a");
+            break;
+        case Button::eB:
+            tSprite.push_back("button_b");
+            break;
+        default:
+            tSprite.push_back("button_default");
+            break;
+    }
 }
 
 void Map::addKoppa(int iX, int iY, int minionState, bool moveDirection) {
@@ -2385,40 +2421,50 @@ void Map::loadGameData(SDL_Renderer* rR) {
     // BUTTONS
 
     //DPAD
-    tSprite.push_back("dpad_up");
-    iDelay.push_back(0);
-    vButtons[0]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
-    tSprite.clear();
-    iDelay.clear();
 
-    tSprite.push_back("dpad_right");
-    iDelay.push_back(0);
-    vButtons[1]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
-    tSprite.clear();
-    iDelay.clear();
-
+    // DPAD with fixed positioning
     tSprite.push_back("dpad_down");
     iDelay.push_back(0);
-    vButtons[2]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
+    Sprite* downSprite = new Sprite(rR, tSprite, iDelay, false);
+// Position at the bottom left with fixed coordinates
+    vButton.push_back(new Button(0, 100, CCFG::GAME_HEIGHT - 100, 50, 50, downSprite, Button::eDPAD_DOWN));
+
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("dpad_up");
+    iDelay.push_back(0);
+    Sprite* upSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(1, 100, CCFG::GAME_HEIGHT - 200, 50, 50, upSprite, Button::eDPAD_UP));
     tSprite.clear();
     iDelay.clear();
 
     tSprite.push_back("dpad_left");
     iDelay.push_back(0);
-    vButtons[3]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
+    Sprite* leftSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(2, 50, CCFG::GAME_HEIGHT - 150, 50, 50, leftSprite, Button::eDPAD_LEFT));
     tSprite.clear();
     iDelay.clear();
 
-    //  A and B
+    tSprite.push_back("dpad_right");
+    iDelay.push_back(0);
+    Sprite* rightSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(3, 150, CCFG::GAME_HEIGHT - 150, 50, 50, rightSprite, Button::eDPAD_RIGHT));
+    tSprite.clear();
+    iDelay.clear();
+
+// A and B
     tSprite.push_back("aButton");
     iDelay.push_back(0);
-    vButtons[4]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
+    Sprite* aSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(4, CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 150, 50, 50, aSprite, Button::eA));
     tSprite.clear();
     iDelay.clear();
 
     tSprite.push_back("bButton");
     iDelay.push_back(0);
-    vButtons[5]->SetSprite(new Sprite(rR, tSprite, iDelay, false));
+    Sprite* bSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(5, CCFG::GAME_WIDTH - 80, CCFG::GAME_HEIGHT - 150, 50, 50, bSprite, Button::eB));
     tSprite.clear();
     iDelay.clear();
 
@@ -10389,10 +10435,6 @@ void Map::setInEvent(bool inEvent) {
 	this->inEvent = inEvent;
 }
 
-void Map::setvButtons(std::vector<Button*> vButtons) {
-    this->vButtons = vButtons;
-}
-
 /* ******************************************** */
 
 Block* Map::getBlock(int iID) {
@@ -10409,4 +10451,9 @@ MapLevel* Map::getMapBlock(int iX, int iY) {
 
 Flag* Map::getFlag() {
 	return oFlag;
+}
+
+std::vector<Button*>& Map::getButtons()
+{
+    return this->vButton;
 }

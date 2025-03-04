@@ -475,7 +475,7 @@ void GDCore::Draw() {
     CCFG::getMM()->Draw(rR);
 
     // Draw touch controls after everything else
-    drawTouchControls(rR);
+    //drawTouchControls(rR);
 }
 
 /* ******************************************** */

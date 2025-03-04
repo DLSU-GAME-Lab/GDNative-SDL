@@ -286,6 +286,8 @@ public:
 	void addBulletBillSpawner(int X, int Y, int minionState);
 	void addBulletBill(int X, int Y, bool moveDirection, int minionState);
 
+    void addButton(int iButtonID, int xPos, int yPos, float fWidth, float fHeight, Button::eButtonType eType);
+
 	void lockMinions();
 	void clearPlatforms();
 	void clearBubbles();

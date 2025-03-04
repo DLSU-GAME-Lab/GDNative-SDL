@@ -688,12 +688,27 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             buttonA.pressed = true;
             if (!CCFG::keySpace)
             {
-                oMap->getPlayer()->jump();
+                //oMap->getPlayer()->jump();
                 CCFG::keySpace = true;
+                if(!keyMenuPressed) {
+                    CCFG::getMM()->enter();
+                    keyMenuPressed = true;
+                }
             }
         } else {
             buttonA.pressed = false;
         }
+
+        //exit the menu
+        /*
+         * if(!keyMenuPressed && CCFG::getMM()->getViewID() == CCFG::getMM()->eGame) {
+                CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePasue);
+                CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
+                CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
+                CCFG::getMusic()->PauseMusic();
+                keyMenuPressed = true;
+            }
+         * */
 
         // B Button
         if (touchX >= buttonB.bounds.x && touchX <= buttonB.bounds.x + buttonB.bounds.w &&

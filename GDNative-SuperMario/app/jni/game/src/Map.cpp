@@ -10452,3 +10452,8 @@ MapLevel* Map::getMapBlock(int iX, int iY) {
 Flag* Map::getFlag() {
 	return oFlag;
 }
+
+std::vector<Button*>& Map::getButtons()
+{
+    return this->vButton;
+}

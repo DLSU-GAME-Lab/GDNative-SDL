@@ -409,6 +409,8 @@ public:
 	Event* getEvent();
 	bool getInEvent();
 	void setInEvent(bool inEvent);
+
+    std::vector<Button*>& getButtons();
 };
 
 #endif

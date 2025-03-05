@@ -577,200 +577,166 @@ void GDCore::drawTouchControls(SDL_Renderer* renderer)
 }
 
 //Touch inputs
-void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
-{
-    if (CCFG::getMM()->getViewID() != 2 && CCFG::getMM()->getViewID() != 7)
-    {
-        // Reset all touch controls when not in gameplay
-        //for(int i = 0; i < vButtons.size(); i++) {
-        //    vButtons[i]->SetPressed() = false;
-        //}
+void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching) {
+    if (CCFG::getMM()->getViewID() != 2 && CCFG::getMM()->getViewID() != 7) {
         dpadUp.pressed = dpadDown.pressed = dpadLeft.pressed = dpadRight.pressed =
         buttonA.pressed = buttonB.pressed = pauseButton.pressed = false;
+
+        keyAPressed = keyDPressed = keyS = keyMenuPressed = CCFG::keySpace = keyShift = false;
+
+        if (oMap->getPlayer()->getMove()) {
+            oMap->getPlayer()->resetMove();
+        }
         return;
     }
 
-    // Check each control
-    if (isTouching) {
-        // D-pad Up
-        /*if(this->CheckIfWithinBounds(touchX, touchY, *vButtons[0])) {
-            vButtons[0]->SetPressed(true);
-            if(!CCFG::keySpace) {
-                oMap->getPlayer()->jump();
-                CCFG::keySpace = true;
-            }
-        }*/
-        if (touchX >= dpadUp.bounds.x && touchX <= dpadUp.bounds.x + dpadUp.bounds.w &&
-            touchY >= dpadUp.bounds.y && touchY <= dpadUp.bounds.y + dpadUp.bounds.h)
-        {
-            dpadUp.pressed = true;
-            if (!CCFG::keySpace)
-            {
-                oMap->getPlayer()->jump();
-                CCFG::keySpace = true;
-            }
+    bool wasLeftPressed = dpadLeft.pressed;
+    bool wasRightPressed = dpadRight.pressed;
+    bool wasUpPressed = dpadUp.pressed;
+    bool wasDownPressed = dpadDown.pressed;
+    bool wasAPressed = buttonA.pressed;
+    bool wasBPressed = buttonB.pressed;
+    bool wasPausePressed = pauseButton.pressed;
+
+    dpadUp.pressed = dpadDown.pressed = dpadLeft.pressed = dpadRight.pressed =
+    buttonA.pressed = buttonB.pressed = pauseButton.pressed = false;
+
+    if (!isTouching) {
+        if (wasLeftPressed) keyAPressed = false;
+        if (wasRightPressed) keyDPressed = false;
+        if (wasUpPressed) CCFG::keySpace = false;
+        if (wasDownPressed) {
+            keyS = false;
+            oMap->getPlayer()->setSquat(false);
         }
-        else
-        {
-            dpadUp.pressed = false;
+        if (wasAPressed) {
+            CCFG::keySpace = false;
+            keyMenuPressed = false;
+        }
+        if (wasBPressed) {
+            keyShift = false;
+            oMap->getPlayer()->resetRun();
+        }
+        if (wasPausePressed) {
+            keyMenuPressed = false;
         }
 
-        // D-pad Down
-        if (touchX >= dpadDown.bounds.x && touchX <= dpadDown.bounds.x + dpadDown.bounds.w &&
-            touchY >= dpadDown.bounds.y && touchY <= dpadDown.bounds.y + dpadDown.bounds.h)
-        {
-            dpadDown.pressed = true;
-            if (!keyS)
-            {
-                keyS = true;
-                if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) oMap->getPlayer()->setSquat(true);
-                oMap->getPlayer()->jump();
-            }
+        if (oMap->getPlayer()->getMove() && !keyAPressed && !keyDPressed) {
+            oMap->getPlayer()->resetMove();
         }
-        else
-        {
-            if (keyS && dpadDown.pressed)
-            {
-                keyS = false;
-            }
-            dpadDown.pressed = false;
-        }
+        return;
+    }
 
-        // D-pad Left
-        if (touchX >= dpadLeft.bounds.x && touchX <= dpadLeft.bounds.x + dpadLeft.bounds.w &&
-            touchY >= dpadLeft.bounds.y && touchY <= dpadLeft.bounds.y + dpadLeft.bounds.h)
-        {
-            dpadLeft.pressed = true;
-            keyAPressed = true;
-            if (!keyDPressed)
-            {
-                firstDir = false;
-                //oMap->getPlayer()->jump();
-            }
+    if (touchX >= dpadUp.bounds.x && touchX <= dpadUp.bounds.x + dpadUp.bounds.w &&
+        touchY >= dpadUp.bounds.y && touchY <= dpadUp.bounds.y + dpadUp.bounds.h) {
+        dpadUp.pressed = true;
+        if (!CCFG::keySpace) {
+            oMap->getPlayer()->jump();
+            CCFG::keySpace = true;
         }
-        else
-        {
-            if (dpadLeft.pressed)
-            {
-                dpadLeft.pressed = false;
-                keyAPressed = false;
-                //oMap->getPlayer()->jump();
-            }
-        }
+    } else if (wasUpPressed) {
+        CCFG::keySpace = false;
+    }
 
-        // D-pad Right
-        if (touchX >= dpadRight.bounds.x && touchX <= dpadRight.bounds.x + dpadRight.bounds.w &&
-            touchY >= dpadRight.bounds.y && touchY <= dpadRight.bounds.y + dpadRight.bounds.h)
-        {
-            dpadRight.pressed = true;
-            keyDPressed = true;
-            if (!keyAPressed)
-            {
-                firstDir = true;
-                //oMap->getPlayer()->jump();
-            }
-
-        }
-        else
-        {
-            if (dpadRight.pressed)
-            {
-                dpadRight.pressed = false;
-                keyDPressed = false;
-                //oMap->getPlayer()->jump();
+    if (touchX >= dpadDown.bounds.x && touchX <= dpadDown.bounds.x + dpadDown.bounds.w &&
+        touchY >= dpadDown.bounds.y && touchY <= dpadDown.bounds.y + dpadDown.bounds.h) {
+        dpadDown.pressed = true;
+        if (!keyS) {
+            keyS = true;
+            if (!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) {
+                oMap->getPlayer()->setSquat(true);
             }
         }
+    } else if (wasDownPressed) {
+        keyS = false;
+        oMap->getPlayer()->setSquat(false);
+    }
 
-        // Button A
-        if (touchX >= buttonA.bounds.x && touchX <= buttonA.bounds.x + buttonA.bounds.w &&
-            touchY >= buttonA.bounds.y && touchY <= buttonA.bounds.y + buttonA.bounds.h)
-        {
-            buttonA.pressed = true;
-            if (!CCFG::keySpace)
-            {
-                //oMap->getPlayer()->jump();
-                CCFG::keySpace = true;
-                if(!keyMenuPressed) {
-                    CCFG::getMM()->enter();
-                    keyMenuPressed = true;
-                }
-            }
-        } else {
-            buttonA.pressed = false;
+    if (touchX >= dpadLeft.bounds.x && touchX <= dpadLeft.bounds.x + dpadLeft.bounds.w &&
+        touchY >= dpadLeft.bounds.y && touchY <= dpadLeft.bounds.y + dpadLeft.bounds.h) {
+        dpadLeft.pressed = true;
+        keyAPressed = true;
+        if (!keyDPressed) {
+            firstDir = false;
         }
+    } else if (wasLeftPressed) {
+        keyAPressed = false;
+    }
 
-        //exit the menu
-        /*
-         * if(!keyMenuPressed && CCFG::getMM()->getViewID() == CCFG::getMM()->eGame) {
-                CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePasue);
-                CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
-                CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
-                CCFG::getMusic()->PauseMusic();
-                keyMenuPressed = true;
-            }
-         * */
-
-        // B Button
-        if (touchX >= buttonB.bounds.x && touchX <= buttonB.bounds.x + buttonB.bounds.w &&
-            touchY >= buttonB.bounds.y && touchY <= buttonB.bounds.y + buttonB.bounds.h)
-        {
-            buttonB.pressed = true;
-            if (!keyShift)
-            {
-                keyShift = true;
-            }
+    if (touchX >= dpadRight.bounds.x && touchX <= dpadRight.bounds.x + dpadRight.bounds.w &&
+        touchY >= dpadRight.bounds.y && touchY <= dpadRight.bounds.y + dpadRight.bounds.h) {
+        dpadRight.pressed = true;
+        keyDPressed = true;
+        if (!keyAPressed) {
+            firstDir = true;
         }
-        else
-        {
-            if (buttonB.pressed)
-            {
-                if (keyShift)
-                {
-                    keyShift = false;
-                }
-                buttonB.pressed = false;
-            }
+    } else if (wasRightPressed) {
+        keyDPressed = false;
+    }
+
+    if (touchX >= buttonA.bounds.x && touchX <= buttonA.bounds.x + buttonA.bounds.w &&
+        touchY >= buttonA.bounds.y && touchY <= buttonA.bounds.y + buttonA.bounds.h) {
+        buttonA.pressed = true;
+        if (!CCFG::keySpace) {
+            oMap->getPlayer()->jump();
+            CCFG::keySpace = true;
+        }
+        if (!keyMenuPressed) {
+            CCFG::getMM()->enter();
+            keyMenuPressed = true;
+        }
+    } else if (wasAPressed) {
+        CCFG::keySpace = false;
+        keyMenuPressed = false;
+    }
+
+    if (touchX >= buttonB.bounds.x && touchX <= buttonB.bounds.x + buttonB.bounds.w &&
+        touchY >= buttonB.bounds.y && touchY <= buttonB.bounds.y + buttonB.bounds.h) {
+        buttonB.pressed = true;
+        if (!keyShift) {
+            oMap->getPlayer()->startRun();
+            keyShift = true;
+        }
+    } else if (wasBPressed) {
+        if (keyShift) {
+            oMap->getPlayer()->resetRun();
+            keyShift = false;
         }
     }
-    else
-    {
-        //Reset controls
-        if (dpadUp.pressed) {
-            dpadUp.pressed = false;
-            CCFG::keySpace = false;
-        }
 
-        if (dpadDown.pressed)
-        {
-            keyS = false;
-            dpadDown.pressed = false;
+    if (touchX >= pauseButton.bounds.x && touchX <= pauseButton.bounds.x + pauseButton.bounds.w &&
+        touchY >= pauseButton.bounds.y && touchY <= pauseButton.bounds.y + pauseButton.bounds.h) {
+        pauseButton.pressed = true;
+        if (!keyMenuPressed && CCFG::getMM()->getViewID() == CCFG::getMM()->eGame) {
+            CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePasue);
+            CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
+            CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
+            CCFG::getMusic()->PauseMusic();
+            keyMenuPressed = true;
         }
+    } else if (wasPausePressed) {
+        keyMenuPressed = false;
+    }
 
-        if (dpadLeft.pressed)
-        {
-            keyAPressed = false;
-            dpadLeft.pressed = false;
+    if (keyAPressed) {
+        if (!oMap->getPlayer()->getMove() && !keyDPressed && !oMap->getPlayer()->getChangeMoveDirection() && !oMap->getPlayer()->getSquat()) {
+            oMap->getPlayer()->startMove();
+            oMap->getPlayer()->setMoveDirection(false);
+        } else if (!keyDPressed && oMap->getPlayer()->getMoveSpeed() > 0 && firstDir != oMap->getPlayer()->getMoveDirection()) {
+            oMap->getPlayer()->setChangeMoveDirection();
         }
+    }
 
-        if (dpadRight.pressed)
-        {
-            keyDPressed = false;
-            dpadRight.pressed = false;
+    if (keyDPressed) {
+        if (!oMap->getPlayer()->getMove() && !keyAPressed && !oMap->getPlayer()->getChangeMoveDirection() && !oMap->getPlayer()->getSquat()) {
+            oMap->getPlayer()->startMove();
+            oMap->getPlayer()->setMoveDirection(true);
+        } else if (!keyAPressed && oMap->getPlayer()->getMoveSpeed() > 0 && firstDir != oMap->getPlayer()->getMoveDirection()) {
+            oMap->getPlayer()->setChangeMoveDirection();
         }
+    }
 
-        if (buttonA.pressed)
-        {
-            CCFG::keySpace = false;
-            buttonA.pressed = false;
-        }
-
-        if (buttonB.pressed)
-        {
-            if (keyShift)
-            {
-                keyShift = false;
-            }
-            buttonB.pressed = false;
-        }
+    if (oMap->getPlayer()->getMove() && !keyAPressed && !keyDPressed) {
+        oMap->getPlayer()->resetMove();
     }
 }

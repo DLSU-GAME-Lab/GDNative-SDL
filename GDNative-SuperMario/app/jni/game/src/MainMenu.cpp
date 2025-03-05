@@ -4,13 +4,9 @@
 #include "TouchManager.h"
 
 // Define touch area IDs
-const std::string MainMenu::TOUCH_1PLAYER = "mainmenu_1player";
-const std::string MainMenu::TOUCH_OPTIONS = "mainmenu_options";
-const std::string MainMenu::TOUCH_ABOUT = "mainmenu_about";
-const std::string MainMenu::TOUCH_WORLD_PREFIX = "world_";
-const std::string MainMenu::TOUCH_LEVEL_PREFIX = "level_";
-const std::string MainMenu::TOUCH_WORLD_START = "world_start";
-const std::string MainMenu::TOUCH_WORLD_BACK = "world_back";
+const std::string MainMenu::TOUCH_1PLAYER = "menu_1player";
+const std::string MainMenu::TOUCH_OPTIONS = "menu_options";
+const std::string MainMenu::TOUCH_ABOUT = "menu_about";
 
 /* ******************************************** */
 
@@ -39,72 +35,77 @@ MainMenu::~MainMenu(void) {
     TouchManager::getInstance()->removeTouchArea(TOUCH_1PLAYER);
     TouchManager::getInstance()->removeTouchArea(TOUCH_OPTIONS);
     TouchManager::getInstance()->removeTouchArea(TOUCH_ABOUT);
-    clearWorldSelectionTouchAreas();
 }
 
 /* ******************************************** */
 
 void MainMenu::setupMenuTouchAreas() {
-    // Create touch areas with appropriate dimensions
-    const int TOUCH_WIDTH = 200;   // Wide enough for the text
-    const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
+    // Only create touch areas if the manager exists
+    if (!TouchManager::getInstance()) {
+        return;
+    }
+
+    // Calculate touch area dimensions based on menu options
+    // Make touch areas a bit larger than the text for easier touching
+    const int TOUCH_PADDING = 10;  // Padding around text for touch area
+    const int TOUCH_HEIGHT = 30;   // Fixed height for touch areas
 
     // Create touch area for "1 PLAYER GAME" option
     MenuOption* option1 = lMO[0];
+    int width1 = CCFG::getText()->getTextWidth("1 PLAYER GAME", 16) + TOUCH_PADDING * 2;
     SDL_Rect bounds1 = {
-            option1->getXPos() - 20,
-            option1->getYPos() - 15,
-            TOUCH_WIDTH,
+            option1->getXPos() - TOUCH_PADDING,
+            option1->getYPos() - TOUCH_PADDING,
+            width1,
             TOUCH_HEIGHT
     };
 
     // Create touch area for "OPTIONS" option
     MenuOption* option2 = lMO[1];
+    int width2 = CCFG::getText()->getTextWidth("OPTIONS", 16) + TOUCH_PADDING * 2;
     SDL_Rect bounds2 = {
-            option2->getXPos() - 20,
-            option2->getYPos() - 15,
-            TOUCH_WIDTH,
+            option2->getXPos() - TOUCH_PADDING,
+            option2->getYPos() - TOUCH_PADDING,
+            width2,
             TOUCH_HEIGHT
     };
 
     // Create touch area for "ABOUT" option
     MenuOption* option3 = lMO[2];
+    int width3 = CCFG::getText()->getTextWidth("ABOUT", 16) + TOUCH_PADDING * 2;
     SDL_Rect bounds3 = {
-            option3->getXPos() - 20,
-            option3->getYPos() - 15,
-            TOUCH_WIDTH,
+            option3->getXPos() - TOUCH_PADDING,
+            option3->getYPos() - TOUCH_PADDING,
+            width3,
             TOUCH_HEIGHT
     };
 
-    // Create touch areas with callbacks
+    // Create touch areas with callbacks to select the appropriate option
     TouchManager::getInstance()->addTouchArea(TOUCH_1PLAYER, bounds1,
                                               [this](bool pressed) {
                                                   if (pressed) {
-                                                      activeMenuOption = 0;
-                                                      enter();
+                                                      selectMenuOption(0);
                                                   }
                                               });
 
     TouchManager::getInstance()->addTouchArea(TOUCH_OPTIONS, bounds2,
                                               [this](bool pressed) {
                                                   if (pressed) {
-                                                      activeMenuOption = 1;
-                                                      enter();
+                                                      selectMenuOption(1);
                                                   }
                                               });
 
     TouchManager::getInstance()->addTouchArea(TOUCH_ABOUT, bounds3,
                                               [this](bool pressed) {
                                                   if (pressed) {
-                                                      activeMenuOption = 2;
-                                                      enter();
+                                                      selectMenuOption(2);
                                                   }
                                               });
 
-    // Set semi-transparent colors for the touch areas
-    SDL_Color normalColor = {200, 200, 200, 60};   // Light gray, semi-transparent
-    SDL_Color pressedColor = {255, 255, 255, 100}; // White, more visible when pressed
-    SDL_Color borderColor = {255, 255, 255, 80};   // White border, semi-transparent
+    // Set semi-transparent colors for touch areas (for debugging)
+    SDL_Color normalColor = {200, 200, 200, 40};  // Very transparent gray
+    SDL_Color pressedColor = {255, 255, 255, 80}; // Slightly more visible when pressed
+    SDL_Color borderColor = {255, 255, 255, 60};  // Semi-transparent border
 
     // Apply colors to all menu touch areas
     for (const auto& id : {TOUCH_1PLAYER, TOUCH_OPTIONS, TOUCH_ABOUT}) {
@@ -116,118 +117,12 @@ void MainMenu::setupMenuTouchAreas() {
     }
 }
 
-void MainMenu::setupWorldSelectionTouchAreas() {
-    // Clear any existing world selection touch areas
-    clearWorldSelectionTouchAreas();
+void MainMenu::selectMenuOption(int optionIndex) {
+    // Change active menu option
+    activeMenuOption = optionIndex;
 
-    // Create touch areas for world selection (1-8)
-    for (int i = 0; i < 8; i++) {
-        // Calculate position based on the drawing logic
-        int extraX = (i == activeWorldID) ? 32 : 0;
-        int x = rSelectWorld.x + 16*(i + 1) + 16*i + extraX;
-        int y = rSelectWorld.y + 16 + 24;
-
-        // Create touch area
-        std::string touchId = TOUCH_WORLD_PREFIX + std::to_string(i);
-        SDL_Rect bounds = {x - 10, y - 10, 30, 30};  // Make it a bit larger for easier touching
-
-        TouchManager::getInstance()->addTouchArea(touchId, bounds,
-                                                  [this, i](bool pressed) {
-                                                      if (pressed) {
-                                                          // Set the active world ID
-                                                          activeWorldID = i;
-                                                      }
-                                                  });
-
-        // Set colors
-        if (TouchArea* area = TouchManager::getInstance()->getTouchArea(touchId)) {
-            area->normalColor = {200, 200, 200, 60};
-            area->pressedColor = {255, 255, 255, 100};
-            area->borderColor = {255, 255, 255, 80};
-        }
-    }
-
-    // Add touch areas for level selection (1-4)
-    for (int j = 0; j < 4; j++) {
-        std::string touchId = TOUCH_LEVEL_PREFIX + std::to_string(j);
-        // Position based on where these would be shown in the UI
-        SDL_Rect bounds = {
-                rSelectWorld.x + 150,
-                rSelectWorld.y + 40 + 24*j,
-                30, 30
-        };
-
-        TouchManager::getInstance()->addTouchArea(touchId, bounds,
-                                                  [this, j](bool pressed) {
-                                                      if (pressed) {
-                                                          // Set the active secondary world ID
-                                                          activeSecondWorldID = j;
-                                                      }
-                                                  });
-
-        // Set colors
-        if (TouchArea* area = TouchManager::getInstance()->getTouchArea(touchId)) {
-            area->normalColor = {200, 200, 200, 60};
-            area->pressedColor = {255, 255, 255, 100};
-            area->borderColor = {255, 255, 255, 80};
-        }
-    }
-
-    // Add a "Start Game" touch area
-    SDL_Rect startBounds = {
-            rSelectWorld.x + rSelectWorld.w/2 - 60,
-            rSelectWorld.y + rSelectWorld.h - 30,
-            120, 25
-    };
-
-    TouchManager::getInstance()->addTouchArea(TOUCH_WORLD_START, startBounds,
-                                              [this](bool pressed) {
-                                                  if (pressed) {
-                                                      // Do the same thing as pressing Enter on the world selection screen
-                                                      CCFG::getMM()->getLoadingMenu()->updateTime();
-                                                      GDCore::getMap()->resetGameData();
-                                                      GDCore::getMap()->setCurrentLevelID(activeWorldID * 4 + activeSecondWorldID);
-                                                      CCFG::getMM()->setViewID(CCFG::getMM()->eGameLoading);
-                                                      CCFG::getMM()->getLoadingMenu()->loadingType = true;
-                                                      GDCore::getMap()->setSpawnPointID(0);
-                                                      selectWorld = false;
-
-                                                      // Clear the touch areas when leaving this screen
-                                                      clearWorldSelectionTouchAreas();
-                                                  }
-                                              });
-
-    // Add a "Back" touch area
-    SDL_Rect backBounds = {
-            rSelectWorld.x + 10,
-            rSelectWorld.y + rSelectWorld.h - 30,
-            50, 25
-    };
-
-    TouchManager::getInstance()->addTouchArea(TOUCH_WORLD_BACK, backBounds,
-                                              [this](bool pressed) {
-                                                  if (pressed) {
-                                                      // Go back to main menu
-                                                      selectWorld = false;
-
-                                                      // Clear the touch areas when leaving this screen
-                                                      clearWorldSelectionTouchAreas();
-                                                  }
-                                              });
-}
-
-void MainMenu::clearWorldSelectionTouchAreas() {
-    // Remove all world selection touch areas
-    for (int i = 0; i < 8; i++) {
-        TouchManager::getInstance()->removeTouchArea(TOUCH_WORLD_PREFIX + std::to_string(i));
-    }
-
-    for (int j = 0; j < 4; j++) {
-        TouchManager::getInstance()->removeTouchArea(TOUCH_LEVEL_PREFIX + std::to_string(j));
-    }
-
-    TouchManager::getInstance()->removeTouchArea(TOUCH_WORLD_START);
-    TouchManager::getInstance()->removeTouchArea(TOUCH_WORLD_BACK);
+    // Execute the action as if enter was pressed
+    enter();
 }
 
 void MainMenu::Update() {
@@ -236,14 +131,13 @@ void MainMenu::Update() {
 }
 
 void MainMenu::Draw(SDL_Renderer* rR) {
-    // Call the parent Draw method
+//	CCFG::getSMBLOGO()->Draw(rR, 80, 48); TODO: Crash bug due to null error
     Menu::Draw(rR);
-
-    // Render the copyright text
     CCFG::getText()->Draw(rR, "WWW.LUKASZJAKOWSKI.PL", 4, CCFG::GAME_HEIGHT - 4 - 8, 8, 0, 0, 0);
     CCFG::getText()->Draw(rR, "WWW.LUKASZJAKOWSKI.PL", 5, CCFG::GAME_HEIGHT - 5 - 8, 8, 255, 255, 255);
 
-    // Handle world selection screen drawing
+    //TouchManager::getInstance()->drawTouchAreas(rR);
+
     if(selectWorld) {
         SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(rR, 4, 4, 4, 235);
@@ -266,6 +160,14 @@ void MainMenu::Draw(SDL_Renderer* rR) {
                 CCFG::getText()->Draw(rR, std::to_string(i + 1) + "-" + std::to_string(activeSecondWorldID + 1), rSelectWorld.x + 16*(i + 1) + 16*i + extraX, rSelectWorld.y + 16 + 24, 16, 255, 255, 255);
 
                 extraX = 32;
+
+                /*for(int j = 0; j < 4; j++) {
+                    if(j == activeSecondWorldID) {
+                        CCFG::getText()->Draw(rR, std::to_string(j + 1), rSelectWorld.x + 16*(i + 1) + 16*i, rSelectWorld.y + 40 + 24*j, 16, 255, 255, 255);
+                    } else {
+                        CCFG::getText()->Draw(rR, std::to_string(j + 1), rSelectWorld.x + 16*(i + 1) + 16*i, rSelectWorld.y + 40 + 24*j, 16, 90, 90, 90);
+                    }
+                }*/
             } else {
                 CCFG::getText()->Draw(rR, std::to_string(i + 1), rSelectWorld.x + 16*(i + 1) + 16*i + extraX, rSelectWorld.y + 16 + 24, 16, 90, 90, 90);
             }
@@ -274,10 +176,6 @@ void MainMenu::Draw(SDL_Renderer* rR) {
         SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_NONE);
         GDCore::getMap()->setBackgroundColor(rR);
     }
-
-    // CRITICAL FIX: Explicitly draw touch areas
-    SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_BLEND);
-    TouchManager::getInstance()->drawTouchAreas(rR);
 }
 
 /* ******************************************** */
@@ -287,8 +185,6 @@ void MainMenu::enter() {
         case 0:
             if(!selectWorld) {
                 selectWorld = true;
-                // Create touch areas for world selection when entering this screen
-                setupWorldSelectionTouchAreas();
             } else {
                 CCFG::getMM()->getLoadingMenu()->updateTime();
                 GDCore::getMap()->resetGameData();
@@ -297,8 +193,6 @@ void MainMenu::enter() {
                 CCFG::getMM()->getLoadingMenu()->loadingType = true;
                 GDCore::getMap()->setSpawnPointID(0);
                 selectWorld = false;
-                // Clear world selection touch areas
-                clearWorldSelectionTouchAreas();
             }
             break;
         case 1:
@@ -317,8 +211,6 @@ void MainMenu::enter() {
 
 void MainMenu::escape() {
     selectWorld = false;
-    // Clear world selection touch areas when escaping
-    clearWorldSelectionTouchAreas();
 }
 
 void MainMenu::updateActiveButton(int iDir) {

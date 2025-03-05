@@ -509,32 +509,42 @@ void GDCore::initTouchControls()
 
     //oMap->setvButtons(vButtons);
 
+    //all button touch bounds are based on their settings in map
+
     // D-pad
     int dpadSize = 50;
     int dpadSpacing = 125;
     int dpadY = CCFG::GAME_HEIGHT - 140;
 
-
+    dpadDown.bounds = {oMap->getButtons()[0]->GetXPos(), oMap->getButtons()[0]->GetYPos(), oMap->getButtons()[0]->GetWidth(), oMap->getButtons()[0]->GetHeight()};
+    dpadUp.bounds = {oMap->getButtons()[1]->GetXPos(), oMap->getButtons()[1]->GetYPos(), oMap->getButtons()[1]->GetWidth(), oMap->getButtons()[1]->GetHeight()};
+    dpadLeft.bounds = {oMap->getButtons()[2]->GetXPos(), oMap->getButtons()[2]->GetYPos(), oMap->getButtons()[2]->GetWidth(), oMap->getButtons()[2]->GetHeight()};
+    dpadRight.bounds = {oMap->getButtons()[3]->GetXPos(), oMap->getButtons()[3]->GetYPos(), oMap->getButtons()[3]->GetWidth(), oMap->getButtons()[3]->GetHeight()};
+    /*
     dpadLeft.bounds = {20, dpadY, dpadSize, dpadSize};
     dpadRight.bounds = {20 + dpadSpacing, dpadY, dpadSize, dpadSize};
     dpadUp.bounds = {20 + dpadSpacing/2, dpadY - dpadSize, dpadSize, dpadSize};
     dpadDown.bounds = {20 + dpadSpacing/2, dpadY + dpadSize, dpadSize, dpadSize};
+    */
 
     // A and B Buttons
     int buttonSize = 35;
     int buttonY = CCFG::GAME_HEIGHT - 140;
 
-    buttonA.bounds = {CCFG::GAME_WIDTH - 100, buttonY, buttonSize, buttonSize};
-    buttonB.bounds = {CCFG::GAME_WIDTH - 190, buttonY, buttonSize, buttonSize};
+    buttonA.bounds = {oMap->getButtons()[4]->GetXPos(), oMap->getButtons()[4]->GetYPos(), oMap->getButtons()[4]->GetWidth(), oMap->getButtons()[4]->GetHeight()};
+    buttonB.bounds = {oMap->getButtons()[5]->GetXPos(), oMap->getButtons()[5]->GetYPos(), oMap->getButtons()[5]->GetWidth(), oMap->getButtons()[5]->GetHeight()};
+
+    //buttonA.bounds = {CCFG::GAME_WIDTH - 150, CCFG::GAME_HEIGHT - 150, 50, 50};
+    //buttonB.bounds = {CCFG::GAME_WIDTH - 80, CCFG::GAME_HEIGHT - 150, 50, 50};
 
     // Pause button
     pauseButton.bounds = {CCFG::GAME_WIDTH - 50, 20, 40, 40};
 
     //Start and Select Buttons
-    int startButtonSize = 50;
+    startButton.bounds = {oMap->getButtons()[6]->GetXPos(), oMap->getButtons()[6]->GetYPos(), oMap->getButtons()[6]->GetWidth(), oMap->getButtons()[6]->GetHeight()};
 
-    startButton.bounds = {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, startButtonSize, startButtonSize};
-    selectButton.bounds = {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 100, startButtonSize, startButtonSize - 30};
+    //startButton.bounds = {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, startButtonSize, startButtonSize};
+    //selectButton.bounds = {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 100, startButtonSize, startButtonSize - 30};
 
 }
 
@@ -590,10 +600,12 @@ void GDCore::drawTouchControls(SDL_Renderer* renderer)
     SDL_RenderDrawRect(renderer, &startButton.bounds);
 
     // Select button
+    /*
     SDL_SetRenderDrawColor(renderer, 50, 50, 255, selectButton.pressed ? 180 : 120);
     SDL_RenderFillRect(renderer, &selectButton.bounds);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
     SDL_RenderDrawRect(renderer, &selectButton.bounds);
+    */
 }
 
 //Touch inputs
@@ -627,8 +639,8 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             dpadUp.pressed = true;
             if (!CCFG::keySpace)
             {
-                oMap->getPlayer()->jump();
-                CCFG::keySpace = true;
+                //oMap->getPlayer()->jump();
+                //CCFG::keySpace = true;
             }
         }
         else
@@ -644,8 +656,12 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (!keyS)
             {
                 keyS = true;
+                keyAPressed = false;
+                dpadLeft.pressed = false;
+                keyDPressed = false;
+                dpadRight.pressed = false;
                 if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) oMap->getPlayer()->setSquat(true);
-                oMap->getPlayer()->jump();
+                //oMap->getPlayer()->jump();
             }
         }
         else
@@ -709,12 +725,8 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             buttonA.pressed = true;
             if (!CCFG::keySpace)
             {
-                //oMap->getPlayer()->jump();
+                oMap->getPlayer()->jump();
                 CCFG::keySpace = true;
-                if(!keyMenuPressed) {
-                    CCFG::getMM()->enter();
-                    keyMenuPressed = true;
-                }
             }
         } else {
             buttonA.pressed = false;
@@ -728,6 +740,7 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (!keyShift)
             {
                 keyShift = true;
+                if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) oMap->getPlayer()->createFireBall();
             }
         }
         else

@@ -44,13 +44,6 @@ void PauseMenu::Draw(SDL_Renderer* rR) {
 	rPause.h += 2;
 	rPause.w += 2;
 
-    int startButtonSize = 50;
-    GDCore::startButton.bounds = {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, startButtonSize, startButtonSize};
-    SDL_SetRenderDrawColor(rR, 50, 50, 255, GDCore::startButton.pressed ? 180 : 120);
-    SDL_RenderFillRect(rR, &GDCore::startButton.bounds);
-    SDL_SetRenderDrawColor(rR, 255, 255, 255, 200);
-    SDL_RenderDrawRect(rR, &GDCore::startButton.bounds);
-
 	for(unsigned int i = 0; i < lMO.size(); i++) {
 		if(i == activeMenuOption) {
 			CCFG::getText()->DrawCenterX(rR, lMO[i]->getText(), lMO[i]->getYPos(), 16, 255, 255, 255);

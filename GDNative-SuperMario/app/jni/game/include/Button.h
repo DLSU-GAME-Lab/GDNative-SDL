@@ -17,6 +17,8 @@ public:
         eDPAD_RIGHT,
         eA,
         eB,
+        eStart,
+        eSelect,
         eNone
     };
 

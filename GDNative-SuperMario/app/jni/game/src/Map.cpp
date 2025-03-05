@@ -2468,6 +2468,20 @@ void Map::loadGameData(SDL_Renderer* rR) {
     tSprite.clear();
     iDelay.clear();
 
+    tSprite.push_back("start_button");
+    iDelay.push_back(0);
+    Sprite* startSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(6, (CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, 50, 50, startSprite, Button::eStart));
+    tSprite.clear();
+    iDelay.clear();
+
+    tSprite.push_back("select_button");
+    iDelay.push_back(0);
+    Sprite* selectSprite = new Sprite(rR, tSprite, iDelay, false);
+    vButton.push_back(new Button(7, (CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 100, 50, 20, selectSprite, Button::eSelect));
+    tSprite.clear();
+    iDelay.clear();
+
 }
 
 /* ******************************************** */

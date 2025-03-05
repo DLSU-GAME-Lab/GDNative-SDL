@@ -33,6 +33,8 @@ TouchControl GDCore::dpadRight = {{0, 0, 0, 0}, "dpad_right", false};
 TouchControl GDCore::buttonA = {{0, 0, 0, 0}, "button_a", false};
 TouchControl GDCore::buttonB = {{0, 0, 0, 0}, "button_b", false};
 TouchControl GDCore::pauseButton = {{0, 0, 0, 0}, "pause", false};
+TouchControl GDCore::startButton = {{0, 0, 0, 0}, "start", false};
+TouchControl GDCore::selectButton = {{0, 0, 0, 0}, "select", false};
 
 GDCore::GDCore(void) {
     this->quitGame = false;
@@ -528,6 +530,12 @@ void GDCore::initTouchControls()
     // Pause button
     pauseButton.bounds = {CCFG::GAME_WIDTH - 50, 20, 40, 40};
 
+    //Start and Select Buttons
+    int startButtonSize = 50;
+
+    startButton.bounds = {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, startButtonSize, startButtonSize};
+    selectButton.bounds = {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 100, startButtonSize, startButtonSize - 30};
+
 }
 
 // Draw touch controls
@@ -574,6 +582,18 @@ void GDCore::drawTouchControls(SDL_Renderer* renderer)
     SDL_RenderFillRect(renderer, &buttonB.bounds);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
     SDL_RenderDrawRect(renderer, &buttonB.bounds);
+
+    // Start button
+    SDL_SetRenderDrawColor(renderer, 50, 50, 255, startButton.pressed ? 180 : 120);
+    SDL_RenderFillRect(renderer, &startButton.bounds);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
+    SDL_RenderDrawRect(renderer, &startButton.bounds);
+
+    // Select button
+    SDL_SetRenderDrawColor(renderer, 50, 50, 255, selectButton.pressed ? 180 : 120);
+    SDL_RenderFillRect(renderer, &selectButton.bounds);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
+    SDL_RenderDrawRect(renderer, &selectButton.bounds);
 }
 
 //Touch inputs
@@ -586,7 +606,8 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
         //    vButtons[i]->SetPressed() = false;
         //}
         dpadUp.pressed = dpadDown.pressed = dpadLeft.pressed = dpadRight.pressed =
-        buttonA.pressed = buttonB.pressed = pauseButton.pressed = false;
+        buttonA.pressed = buttonB.pressed = pauseButton.pressed =
+        startButton.pressed = selectButton.pressed = false;
         return;
     }
 
@@ -699,17 +720,6 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             buttonA.pressed = false;
         }
 
-        //exit the menu
-        /*
-         * if(!keyMenuPressed && CCFG::getMM()->getViewID() == CCFG::getMM()->eGame) {
-                CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePasue);
-                CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
-                CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
-                CCFG::getMusic()->PauseMusic();
-                keyMenuPressed = true;
-            }
-         * */
-
         // B Button
         if (touchX >= buttonB.bounds.x && touchX <= buttonB.bounds.x + buttonB.bounds.w &&
             touchY >= buttonB.bounds.y && touchY <= buttonB.bounds.y + buttonB.bounds.h)
@@ -729,6 +739,26 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
                     keyShift = false;
                 }
                 buttonB.pressed = false;
+            }
+        }
+
+        //Start button
+        if(touchX >= startButton.bounds.x && touchX <= startButton.bounds.x + startButton.bounds.w &&
+           touchY >= startButton.bounds.y && touchY <= startButton.bounds.y + startButton.bounds.h) {
+            if(!keyMenuPressed && CCFG::getMM()->getViewID() == CCFG::getMM()->eGame) {
+                CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePasue);
+                CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
+                CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
+                CCFG::getMusic()->PauseMusic();
+                keyMenuPressed = true;
+            }
+        }
+
+        if(touchX >= selectButton.bounds.x && touchX <= selectButton.bounds.x + selectButton.bounds.w &&
+           touchY >= selectButton.bounds.y && touchY <= selectButton.bounds.y + selectButton.bounds.h) {
+            if(!keyMenuPressed) {
+                CCFG::getMM()->enter();
+                keyMenuPressed = true;
             }
         }
     }

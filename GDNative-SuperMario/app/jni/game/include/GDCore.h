@@ -47,6 +47,8 @@ public:
     static TouchControl buttonA;
     static TouchControl buttonB;
     static TouchControl pauseButton;
+    static TouchControl startButton;
+    static TouchControl selectButton;
 
     GDCore(void);
     ~GDCore(void);

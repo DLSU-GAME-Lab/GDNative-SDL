@@ -124,18 +124,18 @@ void MenuManager::updateTouchControlsForGameState(gameState state) {
             TouchManager::getInstance()->setAllTouchAreasEnabled(false);
 
             // Enable D-pad for menu navigation
-            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_UP, true);
-            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_DOWN, true);
-            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_LEFT, true);
-            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_RIGHT, true);
-            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_UP, true);
-            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_DOWN, true);
-            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_LEFT, true);
-            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_RIGHT, true);
+            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_UP, false);
+            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_DOWN, false);
+            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_LEFT, false);
+            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::DPAD_RIGHT, false);
+            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_UP, false);
+            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_DOWN, false);
+            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_LEFT, false);
+            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::DPAD_RIGHT, false);
 
             // Enable A button for selection
-            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::BUTTON_A, true);
-            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::BUTTON_A, true);
+            TouchManager::getInstance()->setTouchAreaVisible(TouchControlID::BUTTON_A, false);
+            TouchManager::getInstance()->setTouchAreaEnabled(TouchControlID::BUTTON_A, false);
             break;
 
         case ePasue:

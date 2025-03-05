@@ -12,6 +12,8 @@ MenuManager::MenuManager(void) {
     this->oAboutMenu = new AboutMenu();
     this->oOptionsMenu = new OptionsMenu();
     this->oPauseMenu = new PauseMenu();
+
+    TouchManager::getInstance()->setActiveScene("main_menu");
 }
 
 
@@ -268,11 +270,38 @@ int MenuManager::getViewID() {
     return currentGameState;
 }
 
-void MenuManager::setViewID(gameState viewID) {
+void MenuManager::setViewID(gameState viewID)
+{
+    if (this->currentGameState == eMainMenu && viewID != eMainMenu) {
+        oMainMenu->clearMenuTouchAreas();
+    }
+
     this->currentGameState = viewID;
 
-    // Update touch controls for the new game state
-    updateTouchControlsForGameState(viewID);
+    // Set the appropriate touch scene based on game state
+    switch (viewID) {
+        case eMainMenu:
+            TouchManager::getInstance()->setActiveScene("main_menu");
+            break;
+        case eGame:
+            TouchManager::getInstance()->setActiveScene("gameplay");
+            break;
+        case ePasue:
+            TouchManager::getInstance()->setActiveScene("pause_menu");
+            break;
+        case eOptions:
+            TouchManager::getInstance()->setActiveScene("options_menu");
+            break;
+        case eAbout:
+            TouchManager::getInstance()->setActiveScene("about_menu");
+            break;
+        case eGameLoading:
+            TouchManager::getInstance()->setActiveScene("loading");
+            break;
+        default:
+            TouchManager::getInstance()->setActiveScene("global");
+            break;
+    }
 }
 
 CIMG* MenuManager::getActiveOption() {

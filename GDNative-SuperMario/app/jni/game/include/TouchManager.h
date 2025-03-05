@@ -38,7 +38,9 @@ public:
     void initialize(int screenWidth, int screenHeight);
 
     // Add a touch area
-    void addTouchArea(const std::string& id, SDL_Rect bounds, TouchArea::TouchCallback callback = nullptr);
+    void addTouchArea(const std::string& id, SDL_Rect bounds,
+                      TouchArea::TouchCallback callback = nullptr,
+                      const std::string& scene = "global");
 
     // Remove a touch area
     void removeTouchArea(const std::string& id);
@@ -78,6 +80,14 @@ public:
     // Update touch area bounds (useful for screen resizing)
     void updateTouchAreaBounds(const std::string& id, const SDL_Rect& bounds);
 
+    // Scene management methods
+    void setActiveScene(const std::string& sceneName);
+    std::string getActiveScene() const { return activeScene; }
+
+    // Visibility/enabled state based on scene
+    void setSceneVisibility(const std::string& scene, bool visible);
+    void setSceneEnabled(const std::string& scene, bool enabled);
+
 private:
     // Private constructor for singleton
     TouchManager() = default;
@@ -91,6 +101,9 @@ private:
     // Cached screen dimensions
     int screenWidth = 0;
     int screenHeight = 0;
+
+    // Current active scene
+    std::string activeScene = "global";
 };
 
 #endif //GDNATIVE_SUPERMARIO_TOUCHMANAGER_H

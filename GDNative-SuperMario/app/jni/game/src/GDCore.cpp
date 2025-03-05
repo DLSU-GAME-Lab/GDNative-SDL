@@ -89,6 +89,7 @@ GDCore::GDCore(void) {
     // Initialize TouchManager
     TouchManager::getInstance()->initialize(CCFG::GAME_WIDTH, CCFG::GAME_HEIGHT);
     TouchManager::getInstance()->setAllTouchAreasOpacity(0.5f);
+    TouchManager::getInstance()->setActiveScene("main_menu");
     // DPAD LEFT callback
     if (TouchArea* left = TouchManager::getInstance()->getTouchArea(TouchControlID::DPAD_LEFT)) {
         left->setCallback([this](bool pressed) {

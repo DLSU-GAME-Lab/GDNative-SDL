@@ -4,12 +4,7 @@
 
 #include "header.h"
 #include "Map.h"
-
-struct TouchControl {
-    SDL_Rect bounds;
-    const char* name;
-    bool pressed;
-};
+#include "TouchManager.h"
 
 class GDCore {
 private:
@@ -39,15 +34,6 @@ public:
     static bool keyShift;
     static bool keyAPressed, keyDPressed;
 
-    // Touch controls
-    static TouchControl dpadUp;
-    static TouchControl dpadDown;
-    static TouchControl dpadLeft;
-    static TouchControl dpadRight;
-    static TouchControl buttonA;
-    static TouchControl buttonB;
-    static TouchControl pauseButton;
-
     GDCore(void);
     ~GDCore(void);
 
@@ -65,10 +51,6 @@ public:
 
     /* ----- get & set ----- */
     static Map* getMap();
-
-    void initTouchControls();
-    void drawTouchControls(SDL_Renderer* renderer);
-    void handleTouchEvents(int touchX, int touchY, bool isTouching);
 };
 
 #endif

@@ -69,6 +69,8 @@ LOCAL_SRC_FILES :=  $(LOCAL_PATH)/src/main.cpp \
         $(LOCAL_PATH)/src/Text.cpp \
         $(LOCAL_PATH)/src/Texture.cpp \
         $(LOCAL_PATH)/src/Toad.cpp \
+        $(LOCAL_PATH)/src/TouchManager.cpp \
+        $(LOCAL_PATH)/src/TouchArea.cpp \
         $(LOCAL_PATH)/src/UpFire.cpp \
         $(LOCAL_PATH)/src/Vector2.cpp \
         $(LOCAL_PATH)/src/Vine.cpp

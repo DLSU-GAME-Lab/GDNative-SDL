@@ -640,7 +640,7 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (!CCFG::keySpace)
             {
                 //oMap->getPlayer()->jump();
-                //CCFG::keySpace = true;
+                CCFG::keySpace = true;
             }
         }
         else
@@ -656,12 +656,9 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (!keyS)
             {
                 keyS = true;
-                keyAPressed = false;
-                dpadLeft.pressed = false;
-                keyDPressed = false;
-                dpadRight.pressed = false;
-                if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) oMap->getPlayer()->setSquat(true);
-                //oMap->getPlayer()->jump();
+                if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) {
+                    oMap->getPlayer()->setSquat(true);
+                }
             }
         }
         else
@@ -682,7 +679,6 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (!keyDPressed)
             {
                 firstDir = false;
-                //oMap->getPlayer()->jump();
             }
         }
         else
@@ -691,7 +687,6 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             {
                 dpadLeft.pressed = false;
                 keyAPressed = false;
-                //oMap->getPlayer()->jump();
             }
         }
 
@@ -704,7 +699,6 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             if (!keyAPressed)
             {
                 firstDir = true;
-                //oMap->getPlayer()->jump();
             }
 
         }
@@ -714,7 +708,6 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
             {
                 dpadRight.pressed = false;
                 keyDPressed = false;
-                //oMap->getPlayer()->jump();
             }
         }
 
@@ -787,6 +780,7 @@ void GDCore::handleTouchEvents(int touchX, int touchY, bool isTouching)
         {
             keyS = false;
             dpadDown.pressed = false;
+            oMap->getPlayer()->setSquat(false);
         }
 
         if (dpadLeft.pressed)

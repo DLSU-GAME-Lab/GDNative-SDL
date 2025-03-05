@@ -25,6 +25,8 @@ private:
     static const std::string TOUCH_WORLD_START;
     static const std::string TOUCH_WORLD_BACK;
 
+    bool touchAreasInitialized = false;
+
 public:
     MainMenu(void);
     ~MainMenu(void);
@@ -36,6 +38,7 @@ public:
     void escape();
 
     void updateActiveButton(int iDir);
+    void clearMenuTouchAreas();
 
     // Touch control methods
     void setupMenuTouchAreas();

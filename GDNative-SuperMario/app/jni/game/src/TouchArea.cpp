@@ -3,13 +3,15 @@
 //
 #include "TouchArea.h"
 
-TouchArea::TouchArea(const std::string& id, SDL_Rect bounds, TouchCallback callback)
+TouchArea::TouchArea(const std::string& id, SDL_Rect bounds,
+                     TouchCallback callback, const std::string& scene)
         : id(id),
           bounds(bounds),
           pressed(false),
           enabled(true),
           visible(true),
-          callback(callback)
+          callback(callback),
+          scene(scene)
 {
 }
 

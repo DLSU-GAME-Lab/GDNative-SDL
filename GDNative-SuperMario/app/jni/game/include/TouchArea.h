@@ -1,13 +1,6 @@
-//
-// Created by nalyr on 3/5/2025.
-//
-
+// TouchArea.h
 #ifndef GDNATIVE_SUPERMARIO_TOUCHAREA_H
 #define GDNATIVE_SUPERMARIO_TOUCHAREA_H
-
-// TouchArea.h
-#ifndef TOUCH_AREA_H
-#define TOUCH_AREA_H
 
 #include "SDL.h"
 #include <string>
@@ -19,10 +12,15 @@ public:
     using TouchCallback = std::function<void(bool)>;
 
     // Constructor
-    TouchArea(const std::string& id, SDL_Rect bounds, TouchCallback callback = nullptr);
+    TouchArea(const std::string& id, SDL_Rect bounds,
+              TouchCallback callback = nullptr,
+              const std::string& scene = "global");
 
     // Destructor
     ~TouchArea() = default;
+
+    // Add a scene identifier
+    std::string scene;
 
     // Check if point is inside this touch area
     bool containsPoint(int x, int y) const;
@@ -49,6 +47,9 @@ public:
 
     void setCallback(TouchCallback newCallback) { callback = newCallback; }
 
+    const std::string& getScene() const { return scene; }
+    void setScene(const std::string& newScene) { scene = newScene; }
+
     // Color settings
     SDL_Color normalColor{200, 200, 200, 120};   // Color when not pressed
     SDL_Color pressedColor{200, 200, 200, 180};  // Color when pressed
@@ -62,7 +63,5 @@ private:
     bool visible;         // Should the touch area be drawn?
     TouchCallback callback; // Function to call when touch state changes
 };
-
-#endif // TOUCH_AREA_H
 
 #endif //GDNATIVE_SUPERMARIO_TOUCHAREA_H

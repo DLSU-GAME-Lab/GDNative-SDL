@@ -46,13 +46,13 @@ MainMenu::~MainMenu(void) {
 
 void MainMenu::setupMenuTouchAreas() {
     // Create touch areas with appropriate dimensions
-    const int TOUCH_WIDTH = 200;   // Wide enough for the text
+    const int TOUCH_WIDTH = 220;   // Wide enough for the text
     const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
 
     // Create touch area for "1 PLAYER GAME" option
     MenuOption* option1 = lMO[0];
     SDL_Rect bounds1 = {
-            option1->getXPos() - 20,
+            option1->getXPos(),
             option1->getYPos() - 15,
             TOUCH_WIDTH,
             TOUCH_HEIGHT
@@ -61,7 +61,7 @@ void MainMenu::setupMenuTouchAreas() {
     // Create touch area for "OPTIONS" option
     MenuOption* option2 = lMO[1];
     SDL_Rect bounds2 = {
-            option2->getXPos() - 20,
+            option2->getXPos(),
             option2->getYPos() - 15,
             TOUCH_WIDTH,
             TOUCH_HEIGHT
@@ -70,7 +70,7 @@ void MainMenu::setupMenuTouchAreas() {
     // Create touch area for "ABOUT" option
     MenuOption* option3 = lMO[2];
     SDL_Rect bounds3 = {
-            option3->getXPos() - 20,
+            option3->getXPos(),
             option3->getYPos() - 15,
             TOUCH_WIDTH,
             TOUCH_HEIGHT
@@ -232,6 +232,12 @@ void MainMenu::clearWorldSelectionTouchAreas() {
 
 void MainMenu::Update() {
     CCFG::getMusic()->StopMusic();
+
+    if (!touchAreasInitialized) {
+        setupMenuTouchAreas();
+        touchAreasInitialized = true;
+    }
+
     Menu::Update();
 }
 
@@ -364,4 +370,11 @@ void MainMenu::updateActiveButton(int iDir) {
             }
             break;
     }
+}
+
+void MainMenu::clearMenuTouchAreas() {
+    TouchManager::getInstance()->removeTouchArea(TOUCH_1PLAYER);
+    TouchManager::getInstance()->removeTouchArea(TOUCH_OPTIONS);
+    TouchManager::getInstance()->removeTouchArea(TOUCH_ABOUT);
+    touchAreasInitialized = false; // Reset the flag
 }

@@ -34,16 +34,16 @@ void TouchManager::initialize(int screenWidth, int screenHeight) {
 
     // Create D-pad controls
     addTouchArea(TouchControlID::DPAD_LEFT,
-                 {50, dpadY, dpadSize, dpadSize});
+                 {50, dpadY, dpadSize, dpadSize}, nullptr, "gameplay");
 
     addTouchArea(TouchControlID::DPAD_RIGHT,
-                 {50 + dpadSpacing, dpadY, dpadSize, dpadSize});
+                 {50 + dpadSpacing, dpadY, dpadSize, dpadSize}, nullptr, "gameplay");
 
     addTouchArea(TouchControlID::DPAD_UP,
-                 {50 + dpadSpacing/2, dpadY - dpadSize, dpadSize, dpadSize});
+                 {50 + dpadSpacing/2, dpadY - dpadSize, dpadSize, dpadSize}, nullptr, "gameplay");
 
     addTouchArea(TouchControlID::DPAD_DOWN,
-                 {50 + dpadSpacing/2, dpadY + dpadSize, dpadSize, dpadSize});
+                 {50 + dpadSpacing/2, dpadY + dpadSize, dpadSize, dpadSize}, nullptr, "gameplay");
 
     // Action buttons
     int buttonSize = 50;
@@ -51,7 +51,7 @@ void TouchManager::initialize(int screenWidth, int screenHeight) {
 
     // Create A and B buttons
     addTouchArea(TouchControlID::BUTTON_A,
-                 {CCFG::GAME_WIDTH - 80, buttonY, buttonSize, buttonSize});
+                 {CCFG::GAME_WIDTH - 80, buttonY, buttonSize, buttonSize}, nullptr, "gameplay");
 
     // Set A button color to red
     if (TouchArea* aButton = getTouchArea(TouchControlID::BUTTON_A)) {
@@ -60,7 +60,7 @@ void TouchManager::initialize(int screenWidth, int screenHeight) {
     }
 
     addTouchArea(TouchControlID::BUTTON_B,
-                 {CCFG::GAME_WIDTH - 150, buttonY, buttonSize, buttonSize});
+                 {CCFG::GAME_WIDTH - 150, buttonY, buttonSize, buttonSize}, nullptr, "gameplay");
 
     // Set B button color to blue
     if (TouchArea* bButton = getTouchArea(TouchControlID::BUTTON_B)) {
@@ -70,12 +70,19 @@ void TouchManager::initialize(int screenWidth, int screenHeight) {
 
     // Pause button
     addTouchArea(TouchControlID::PAUSE,
-                 {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, 50, 50});
+                 {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, 50, 50}, nullptr, "gameplay");
 }
 
-void TouchManager::addTouchArea(const std::string& id, SDL_Rect bounds, TouchArea::TouchCallback callback) {
-    // Create the touch area
-    auto touchArea = std::make_unique<TouchArea>(id, bounds, callback);
+void TouchManager::addTouchArea(const std::string& id, SDL_Rect bounds,
+                                TouchArea::TouchCallback callback,
+                                const std::string& scene) {
+    // Create the touch area with scene info
+    auto touchArea = std::make_unique<TouchArea>(id, bounds, callback, scene);
+
+    // Only enable if it belongs to the active scene or is global
+    if (scene != activeScene && scene != "global") {
+        touchArea->setEnabled(false);
+    }
 
     // Add to map and draw order
     touchAreas[id] = std::move(touchArea);
@@ -140,7 +147,12 @@ void TouchManager::drawTouchAreas(SDL_Renderer* renderer) {
     for (const auto& id : drawOrder) {
         auto it = touchAreas.find(id);
         if (it != touchAreas.end()) {
-            it->second->draw(renderer);
+            TouchArea* area = it->second.get();
+
+            // Only draw if area belongs to active scene or is global
+            if (area->getScene() == activeScene || area->getScene() == "global") {
+                area->draw(renderer);
+            }
         }
     }
 }
@@ -183,5 +195,43 @@ void TouchManager::setTouchAreaColors(const std::string& id,
 void TouchManager::updateTouchAreaBounds(const std::string& id, const SDL_Rect& bounds) {
     if (TouchArea* area = getTouchArea(id)) {
         area->setBounds(bounds);
+    }
+}
+
+void TouchManager::setActiveScene(const std::string& sceneName) {
+    // Only if scene changes
+    if (activeScene != sceneName) {
+        // Store previous scene
+        std::string oldScene = activeScene;
+
+        // Update active scene
+        activeScene = sceneName;
+
+        // Disable touch areas from previous scene
+        setSceneEnabled(oldScene, false);
+
+        // Enable touch areas for new scene
+        setSceneEnabled(sceneName, true);
+
+        // Also enable global touch areas that work across scenes
+        if (sceneName != "global") {
+            setSceneEnabled("global", true);
+        }
+    }
+}
+
+void TouchManager::setSceneVisibility(const std::string& scene, bool visible) {
+    for (auto& [id, touchArea] : touchAreas) {
+        if (touchArea->getScene() == scene) {
+            touchArea->setVisible(visible);
+        }
+    }
+}
+
+void TouchManager::setSceneEnabled(const std::string& scene, bool enabled) {
+    for (auto& [id, touchArea] : touchAreas) {
+        if (touchArea->getScene() == scene) {
+            touchArea->setEnabled(enabled);
+        }
     }
 }

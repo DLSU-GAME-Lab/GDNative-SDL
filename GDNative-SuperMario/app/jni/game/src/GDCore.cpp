@@ -143,6 +143,10 @@ GDCore::GDCore(void) {
             if (pressed && !CCFG::keySpace) {
                 oMap->getPlayer()->jump();
                 CCFG::keySpace = true;
+                if (!keyMenuPressed) {
+                    CCFG::getMM()->keyPressed(0);
+                    keyMenuPressed = true;
+                }
             } else if (!pressed) {
                 CCFG::keySpace = false;
             }
@@ -156,6 +160,10 @@ GDCore::GDCore(void) {
             if (pressed) {
                 if (!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation()) {
                     oMap->getPlayer()->setSquat(true);
+                }
+                if (!keyMenuPressed) {
+                    CCFG::getMM()->keyPressed(2);
+                    keyMenuPressed = true;
                 }
             } else {
                 oMap->getPlayer()->setSquat(false);

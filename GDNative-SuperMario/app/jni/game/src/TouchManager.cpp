@@ -133,6 +133,9 @@ void TouchManager::handleTouchEvent(int x, int y, bool isPressed) {
 }
 
 void TouchManager::drawTouchAreas(SDL_Renderer* renderer) {
+    // IMPORTANT: Enable blend mode for transparency
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
     // Draw in the order specified by drawOrder
     for (const auto& id : drawOrder) {
         auto it = touchAreas.find(id);

@@ -19,6 +19,12 @@ private:
     static const std::string TOUCH_OPTIONS;
     static const std::string TOUCH_ABOUT;
 
+    // Touch area IDs for world selection
+    static const std::string TOUCH_WORLD_PREFIX;
+    static const std::string TOUCH_LEVEL_PREFIX;
+    static const std::string TOUCH_WORLD_START;
+    static const std::string TOUCH_WORLD_BACK;
+
 public:
     MainMenu(void);
     ~MainMenu(void);
@@ -31,11 +37,10 @@ public:
 
     void updateActiveButton(int iDir);
 
-    // New function to create touch areas for menu options
+    // Touch control methods
     void setupMenuTouchAreas();
-
-    // Helper function to select a menu option by index
-    void selectMenuOption(int optionIndex);
+    void setupWorldSelectionTouchAreas();
+    void clearWorldSelectionTouchAreas();
 };
 
 #endif

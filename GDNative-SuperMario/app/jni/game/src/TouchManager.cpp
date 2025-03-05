@@ -29,21 +29,21 @@ void TouchManager::initialize(int screenWidth, int screenHeight) {
 
     // D-pad controls
     int dpadSize = 50;
-    int dpadSpacing = 150;
-    int dpadY = CCFG::GAME_HEIGHT - 140;
+    int dpadSpacing = 100;
+    int dpadY = CCFG::GAME_HEIGHT - 150;
 
     // Create D-pad controls
     addTouchArea(TouchControlID::DPAD_LEFT,
-                 {20, dpadY, dpadSize, dpadSize});
+                 {50, dpadY, dpadSize, dpadSize});
 
     addTouchArea(TouchControlID::DPAD_RIGHT,
-                 {20 + dpadSpacing, dpadY, dpadSize, dpadSize});
+                 {50 + dpadSpacing, dpadY, dpadSize, dpadSize});
 
     addTouchArea(TouchControlID::DPAD_UP,
-                 {20 + dpadSpacing/2, dpadY - dpadSize, dpadSize, dpadSize});
+                 {50 + dpadSpacing/2, dpadY - dpadSize, dpadSize, dpadSize});
 
     addTouchArea(TouchControlID::DPAD_DOWN,
-                 {20 + dpadSpacing/2, dpadY + dpadSize, dpadSize, dpadSize});
+                 {50 + dpadSpacing/2, dpadY + dpadSize, dpadSize, dpadSize});
 
     // Action buttons
     int buttonSize = 50;
@@ -70,7 +70,7 @@ void TouchManager::initialize(int screenWidth, int screenHeight) {
 
     // Pause button
     addTouchArea(TouchControlID::PAUSE,
-                 {CCFG::GAME_WIDTH - 50, 20, 40, 40});
+                 {(CCFG::GAME_WIDTH - 50)/2, (CCFG::GAME_HEIGHT/2) - 150, 50, 50});
 }
 
 void TouchManager::addTouchArea(const std::string& id, SDL_Rect bounds, TouchArea::TouchCallback callback) {

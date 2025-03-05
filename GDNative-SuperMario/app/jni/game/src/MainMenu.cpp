@@ -136,6 +136,8 @@ void MainMenu::Draw(SDL_Renderer* rR) {
     CCFG::getText()->Draw(rR, "WWW.LUKASZJAKOWSKI.PL", 4, CCFG::GAME_HEIGHT - 4 - 8, 8, 0, 0, 0);
     CCFG::getText()->Draw(rR, "WWW.LUKASZJAKOWSKI.PL", 5, CCFG::GAME_HEIGHT - 5 - 8, 8, 255, 255, 255);
 
+    //TouchManager::getInstance()->drawTouchAreas(rR);
+
     if(selectWorld) {
         SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(rR, 4, 4, 4, 235);

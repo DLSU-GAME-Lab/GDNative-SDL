@@ -4,6 +4,7 @@
 #define ABOUTMENU_H
 
 #include "Menu.h"
+#include "TouchManager.h"
 
 class AboutMenu : public Menu
 {
@@ -17,6 +18,9 @@ private:
 	bool moveDirection;
 
 	int iNumOfUnits;
+
+    // Touch area IDs for return to menu
+    static const std::string TOUCH_MENU;
 public:
 	AboutMenu(void);
 	~AboutMenu(void);
@@ -34,6 +38,10 @@ public:
 
 	void setBackgroundColor(SDL_Renderer* rR);
 	void updateTime();
+
+    // Touch control methods
+    void setupMenuTouchArea();
+    void setupWorldSelectionTouchAreas();
 };
 
 #endif

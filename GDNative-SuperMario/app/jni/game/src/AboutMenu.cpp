@@ -3,6 +3,7 @@
 #include "GDCore.h"
 #include "stdlib.h"
 #include "time.h"
+#include "TouchManager.h"
 
 /* ******************************************** */
 
@@ -25,11 +26,13 @@ AboutMenu::AboutMenu(void) {
 	this->iNumOfUnits = 0;
 
 	srand((unsigned)time(NULL));
+
+    setupMenuTouchArea();
 }
 
 
 AboutMenu::~AboutMenu(void) {
-
+    TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
 }
 
 /* ******************************************** */
@@ -94,6 +97,9 @@ void AboutMenu::Draw(SDL_Renderer* rR) {
 	}
 
 	CCFG::getMM()->getActiveOption()->Draw(rR, lMO[activeMenuOption]->getXPos() - 32, lMO[activeMenuOption]->getYPos());
+
+    SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_BLEND);
+    TouchManager::getInstance()->drawTouchAreas(rR);
 }
 
 /* ******************************************** */
@@ -225,4 +231,42 @@ void AboutMenu::setBackgroundColor(SDL_Renderer* rR) {
 
 void AboutMenu::updateTime() {
 	this->iTime = SDL_GetTicks();
+}
+
+/* ******************************************** */
+
+void AboutMenu::setupMenuTouchArea() {
+    // Create touch areas with appropriate dimensions
+    const int TOUCH_WIDTH = 220;   // Wide enough for the text
+    const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
+
+    // Create touch area for "1 PLAYER GAME" option
+    MenuOption* option = lMO[0];
+    SDL_Rect bounds = {
+            option->getXPos(),
+            option->getYPos() - 15,
+            TOUCH_WIDTH,
+            TOUCH_HEIGHT
+    };
+
+    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds,
+                                              [this](bool pressed) {
+                                                  if (pressed) {
+                                                      activeMenuOption = 0;
+                                                      enter();
+                                                  }
+                                              });
+
+    SDL_Color normalColor = {200, 200, 200, 60};   // Light gray, semi-transparent
+    SDL_Color pressedColor = {255, 255, 255, 100}; // White, more visible when pressed
+    SDL_Color borderColor = {255, 255, 255, 80};   // White border, semi-transparent
+
+    // Apply colors to all menu touch areas
+    for (const auto& id : {TOUCH_MENU}) {
+        if (TouchArea* area = TouchManager::getInstance()->getTouchArea(id)) {
+            area->normalColor = normalColor;
+            area->pressedColor = pressedColor;
+            area->borderColor = borderColor;
+        }
+    }
 }

@@ -4,11 +4,15 @@
 #define PAUSEMENU_H
 
 #include "Menu.h"
+#include "TouchManager.h"
 
 class PauseMenu : public Menu
 {
 private:
 	SDL_Rect rPause;
+    static const std::string TOUCH_GAME;
+    static const std::string TOUCH_OPTIONS;
+    static const std::string TOUCH_MENU;
 public:
 	PauseMenu(void);
 	~PauseMenu(void);
@@ -20,6 +24,8 @@ public:
 	void escape();
 
 	void updateActiveButton(int iDir);
+
+    void setupPauseMenuTouchAreas();
 };
 
 #endif

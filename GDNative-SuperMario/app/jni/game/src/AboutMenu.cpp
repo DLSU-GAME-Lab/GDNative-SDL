@@ -244,7 +244,7 @@ void AboutMenu::setupMenuTouchArea() {
     const int TOUCH_WIDTH = 160;   // Wide enough for the text
     const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
 
-    // Create touch area for "1 PLAYER GAME" option
+    // Create touch area for "MAIN MENU" option
     MenuOption* option = lMO[0];
     SDL_Rect bounds = {
             option->getXPos(),

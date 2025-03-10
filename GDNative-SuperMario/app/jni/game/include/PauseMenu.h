@@ -13,6 +13,7 @@ private:
     static const std::string TOUCH_GAME;
     static const std::string TOUCH_OPTIONS;
     static const std::string TOUCH_MENU;
+    static const std::string TOUCH_DESKTOP;
 public:
 	PauseMenu(void);
 	~PauseMenu(void);

@@ -6,6 +6,7 @@
 const std::string PauseMenu::TOUCH_GAME = "pause_menu_game";
 const std::string PauseMenu::TOUCH_OPTIONS = "pause_menu_options";
 const std::string PauseMenu::TOUCH_MENU = "pause_menu_menu";
+const std::string PauseMenu::TOUCH_DESKTOP = "pause_menu_desktop";
 
 PauseMenu::PauseMenu(void) {
 	rPause.x = 220;
@@ -28,6 +29,7 @@ PauseMenu::~PauseMenu(void) {
     TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
     TouchManager::getInstance()->removeTouchArea(TOUCH_GAME);
     TouchManager::getInstance()->removeTouchArea(TOUCH_OPTIONS);
+    TouchManager::getInstance()->removeTouchArea(TOUCH_DESKTOP);
 }
 
 /* ******************************************** */
@@ -68,32 +70,37 @@ void PauseMenu::Draw(SDL_Renderer* rR) {
 /* ******************************************** */
 
 void PauseMenu::enter() {
-	switch(activeMenuOption) {
-		case 0:
-			CCFG::getMM()->setViewID(CCFG::getMM()->eGame);
-			CCFG::getMusic()->PlayMusic();
-			break;
-		case 1:
-			CCFG::getMM()->getOptions()->setEscapeToMainMenu(false);
-			CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->eOptions);
-			CCFG::getMM()->getOptions()->updateVolumeRect();
-			CCFG::getMM()->setViewID(CCFG::getMM()->eOptions);
-			break;
-		case 2:
-			GDCore::getMap()->resetGameData();
-			CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
-			break;
-		case 3:
-			GDCore::quitGame = true;
-			break;
-	}
+    switch(activeMenuOption) {
+        case 0:
+            CCFG::getMM()->setViewID(CCFG::getMM()->eGame);
+            CCFG::getMusic()->PlayMusic();
+            // Switch back to gameplay scene
+            TouchManager::getInstance()->setActiveScene("gameplay");
+            break;
+        case 1:
+            CCFG::getMM()->getOptions()->setEscapeToMainMenu(false);
+            CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->eOptions);
+            CCFG::getMM()->getOptions()->updateVolumeRect();
+            CCFG::getMM()->setViewID(CCFG::getMM()->eOptions);
+            break;
+        case 2:
+            GDCore::getMap()->resetGameData();
+            CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
+            // Switch to main menu scene
+            TouchManager::getInstance()->setActiveScene("main_menu");
+            break;
+        case 3:
+            GDCore::quitGame = true;
+            break;
+    }
 }
 
 void PauseMenu::escape() {
-	CCFG::getMM()->setViewID(CCFG::getMM()->eGame);
-	CCFG::getMusic()->PauseMusic();
+    CCFG::getMM()->setViewID(CCFG::getMM()->eGame);
+    CCFG::getMusic()->PauseMusic();
+    // Switch back to gameplay scene
+    TouchManager::getInstance()->setActiveScene("gameplay");
 }
-
 void PauseMenu::updateActiveButton(int iDir) {
 	Menu::updateActiveButton(iDir);
 }
@@ -102,57 +109,79 @@ void PauseMenu::setupPauseMenuTouchAreas() {
     const int TOUCH_WIDTH = 220;   // Wide enough for the text
     const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
 
-    // Create touch area for "1 PLAYER GAME" option
-    MenuOption* option1 = lMO[0];
-    SDL_Rect bounds1 = {
-            option1->getXPos(),
-            option1->getYPos() - 15,
+    // Center the touch areas horizontally
+    int centerX = 400; // Center of the screen horizontally
+
+    // Define the four touch areas
+    // RESUME
+    SDL_Rect resumeBounds = {
+            centerX - TOUCH_WIDTH/2,  // Center horizontally
+            lMO[0]->getYPos() - 15,   // Positioned based on text Y position
             TOUCH_WIDTH,
             TOUCH_HEIGHT
     };
 
-    // Create touch area for "OPTIONS" option
-    MenuOption* option2 = lMO[1];
-    SDL_Rect bounds2 = {
-            option2->getXPos(),
-            option2->getYPos() - 15,
+    // OPTIONS
+    SDL_Rect optionsBounds = {
+            centerX - TOUCH_WIDTH/2,
+            lMO[1]->getYPos() - 15,
             TOUCH_WIDTH,
             TOUCH_HEIGHT
     };
 
-    // Create touch area for "ABOUT" option
-    MenuOption* option3 = lMO[2];
-    SDL_Rect bounds3 = {
-            option3->getXPos(),
-            option3->getYPos() - 15,
+    // QUIT TO MENU
+    SDL_Rect menuBounds = {
+            centerX - TOUCH_WIDTH/2,
+            lMO[2]->getYPos() - 15,
             TOUCH_WIDTH,
             TOUCH_HEIGHT
     };
 
-    // Create touch areas with callbacks
-    TouchManager::getInstance()->addTouchArea(TOUCH_GAME, bounds1,
+    // QUIT TO DESKTOP
+    SDL_Rect desktopBounds = {
+            centerX - TOUCH_WIDTH/2,
+            lMO[3]->getYPos() - 15,
+            TOUCH_WIDTH,
+            TOUCH_HEIGHT
+    };
+
+    // Create touch areas with callbacks and assign to "pause_menu" scene
+    TouchManager::getInstance()->addTouchArea(TOUCH_GAME, resumeBounds,
                                               [this](bool pressed) {
                                                   if (pressed) {
                                                       activeMenuOption = 0;
                                                       enter();
                                                   }
-                                              });
+                                              },
+                                              "pause_menu");
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_OPTIONS, bounds2,
+    TouchManager::getInstance()->addTouchArea(TOUCH_OPTIONS, optionsBounds,
                                               [this](bool pressed) {
                                                   if (pressed) {
                                                       activeMenuOption = 1;
                                                       enter();
                                                   }
-                                              });
+                                              },
+                                              "pause_menu");
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds3,
+    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, menuBounds,
                                               [this](bool pressed) {
                                                   if (pressed) {
                                                       activeMenuOption = 2;
                                                       enter();
                                                   }
-                                              });
+                                              },
+                                              "pause_menu");
+
+    // Add new touch area for QUIT TO DESKTOP
+    TouchManager::getInstance()->addTouchArea(TOUCH_DESKTOP, desktopBounds,
+                                              [this](bool pressed) {
+                                                  if (pressed) {
+                                                      activeMenuOption = 3;
+                                                      enter();
+                                                  }
+                                              },
+                                              "pause_menu");
 
     // Set semi-transparent colors for the touch areas
     SDL_Color normalColor = {200, 200, 200, 60};   // Light gray, semi-transparent
@@ -160,11 +189,14 @@ void PauseMenu::setupPauseMenuTouchAreas() {
     SDL_Color borderColor = {255, 255, 255, 80};   // White border, semi-transparent
 
     // Apply colors to all menu touch areas
-    for (const auto& id : {TOUCH_GAME, TOUCH_OPTIONS, TOUCH_MENU}) {
+    for (const auto& id : {TOUCH_GAME, TOUCH_OPTIONS, TOUCH_MENU, TOUCH_DESKTOP}) {
         if (TouchArea* area = TouchManager::getInstance()->getTouchArea(id)) {
             area->normalColor = normalColor;
             area->pressedColor = pressedColor;
             area->borderColor = borderColor;
         }
     }
+
+    // Set pause_menu as the active scene when this is called
+    TouchManager::getInstance()->setActiveScene("pause_menu");
 }

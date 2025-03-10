@@ -212,6 +212,9 @@ GDCore::GDCore(void) {
                 CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
                 CCFG::getMusic()->PauseMusic();
                 keyMenuPressed = true;
+
+                // Switch to pause_menu scene
+                TouchManager::getInstance()->setActiveScene("pause_menu");
             } else if (!pressed) {
                 keyMenuPressed = false;
             }
@@ -575,10 +578,12 @@ void GDCore::Update() {
 void GDCore::Draw() {
     CCFG::getMM()->Draw(rR);
 
-    // Only draw touch controls during gameplay
-    if (CCFG::getMM()->getViewID() == 2 || CCFG::getMM()->getViewID() == 7)
+    // Draw touch controls during gameplay OR when in pause menu
+    if (CCFG::getMM()->getViewID() == CCFG::getMM()->eGame ||
+        CCFG::getMM()->getViewID() == CCFG::getMM()->ePasue ||
+        CCFG::getMM()->getViewID() == 2 ||
+        CCFG::getMM()->getViewID() == 7)
     {
-
         TouchManager::getInstance()->drawTouchAreas(rR);
     }
 }

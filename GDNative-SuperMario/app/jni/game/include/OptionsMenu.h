@@ -4,6 +4,7 @@
 #define OPTIONSMENU_H
 
 #include "Menu.h"
+#include "TouchManager.h"
 
 class OptionsMenu : public Menu
 {
@@ -16,6 +17,13 @@ private:
 	bool inSetKey, resetSetKey;
 
 	bool escapeToMainMenu;
+
+    // Touch area IDs for options
+    static const std::string TOUCH_PAUSE;
+    static const std::string TOUCH_MENU;
+
+    //to check if touch areas were initialized or not
+    bool touchAreasInitialized = false;
 public:
 	OptionsMenu(void);
 	~OptionsMenu(void);
@@ -32,6 +40,9 @@ public:
 	void updateVolumeRect();
 
 	void setEscapeToMainMenu(bool escapeToMainMenu);
+
+    void setupOptionsMenuTouchAreas();
+    void clearTouchAreas();
 };
 
 #endif

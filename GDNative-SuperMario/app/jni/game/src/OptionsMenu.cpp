@@ -1,8 +1,11 @@
 #include "OptionsMenu.h"
 #include "CFG.h"
 #include "GDCore.h"
+#include "TouchManager.h"
 
 /* ******************************************** */
+const std::string OptionsMenu::TOUCH_PAUSE = "options_menu_pause";
+const std::string OptionsMenu::TOUCH_MENU = "options_menu_main_menu";
 
 OptionsMenu::OptionsMenu(void) {
 	rRect.x = 58;
@@ -39,10 +42,12 @@ OptionsMenu::OptionsMenu(void) {
 	rVolume.w = 100;
 
 	this->escapeToMainMenu = true;
+
+    this->setupOptionsMenuTouchAreas();
 }
 
 OptionsMenu::~OptionsMenu(void) {
-
+    this->clearTouchAreas();
 }
 
 /* ******************************************** */
@@ -52,6 +57,11 @@ void OptionsMenu::Update() {
 		inSetKey = false;
 		resetSetKey = false;
 	}
+
+    if(!touchAreasInitialized) {
+        this->setupOptionsMenuTouchAreas();
+        touchAreasInitialized = true;
+    }
 }
 
 void OptionsMenu::Draw(SDL_Renderer* rR) {
@@ -233,4 +243,57 @@ void OptionsMenu::updateVolumeRect() {
 
 void OptionsMenu::setEscapeToMainMenu(bool escapeToMainMenu) {
 	this->escapeToMainMenu = escapeToMainMenu;
+}
+
+/* ******************************************** */
+
+void OptionsMenu::setupOptionsMenuTouchAreas() {
+    // Create touch areas with appropriate dimensions
+    const int TOUCH_WIDTH = 160;   // Wide enough for the text
+    const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
+
+    // Create touch area for "PAUSE" option
+    //MenuOption* option = lMO[0];
+    //SDL_Rect bounds = {
+    //        option->getXPos(),
+    //        option->getYPos() - 15,
+    //        TOUCH_WIDTH,
+    //        TOUCH_HEIGHT
+    //};
+
+    // Create touch area for "PAUSE" option
+    MenuOption* option8 = lMO[7];
+    SDL_Rect bounds8 = {
+            option8->getXPos(),
+            option8->getYPos() - 15,
+            TOUCH_WIDTH,
+            TOUCH_HEIGHT
+    };
+
+    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds8,
+                                              [this](bool pressed) {
+                                                  if (pressed) {
+                                                      this->activeMenuOption = 7;
+                                                      this->enter();
+                                                      this->clearTouchAreas();
+                                                  }
+                                              });
+
+    SDL_Color normalColor = {200, 200, 200, 60};   // Light gray, semi-transparent
+    SDL_Color pressedColor = {255, 255, 255, 100}; // White, more visible when pressed
+    SDL_Color borderColor = {255, 255, 255, 80};   // White border, semi-transparent
+
+    // Apply colors to all menu touch areas
+    for (const auto& id : {TOUCH_MENU}) {
+        if (TouchArea* area = TouchManager::getInstance()->getTouchArea(id)) {
+            area->normalColor = normalColor;
+            area->pressedColor = pressedColor;
+            area->borderColor = borderColor;
+        }
+    }
+}
+
+void OptionsMenu::clearTouchAreas() {
+    TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
+    touchAreasInitialized = false;
 }

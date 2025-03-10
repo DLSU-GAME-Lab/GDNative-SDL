@@ -21,6 +21,9 @@ private:
 
     // Touch area IDs for return to menu
     static const std::string TOUCH_MENU;
+
+    //to check if touch areas were initialized or not
+    bool touchAreasInitialized = false;
 public:
 	AboutMenu(void);
 	~AboutMenu(void);

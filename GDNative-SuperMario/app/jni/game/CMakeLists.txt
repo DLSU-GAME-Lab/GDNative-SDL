@@ -8,6 +8,6 @@ add_library(main SHARED)
 
 target_sources(main PRIVATE main.cpp)
 
-target_link_libraries(main SDL2)
+target_link_libraries(main SDL2 imgui)
 
 

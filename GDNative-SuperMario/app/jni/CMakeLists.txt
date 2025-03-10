@@ -15,6 +15,9 @@ add_subdirectory(SDL)
 #add_subdirectory(SDL_mixer)
 #add_subdirectory(SDL_ttf)
 
+# ImGui sources are in subfolder named "ImGui"
+add_subdirectory(ImGui)
+
 # Your game and its CMakeLists.txt are in a subfolder named "src"
 add_subdirectory(src)
 

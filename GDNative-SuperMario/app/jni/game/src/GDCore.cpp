@@ -8,6 +8,11 @@
 #include "Text.h"
 #include "SDL_mixer.h"
 
+//----- ImGui -----
+#include "../ImGui/include/imgui.h"
+#include "../ImGui/include/imgui_impl_sdl2.h"
+#include "../ImGui/include/imgui_impl_sdlrenderer2.h"
+
 #include <android/log.h>
 
 Map* GDCore::oMap = new Map();
@@ -92,6 +97,12 @@ GDCore::GDCore(void) {
     CCFG::keyIDShift = SDLK_LSHIFT;
 
     CCFG::getMusic()->LoadAllMusic();
+
+    // ImGui Initialization
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui_ImplSDL2_InitForSDLRenderer(window, rR);
+    ImGui_ImplSDLRenderer2_Init(rR);
 }
 
 GDCore::~GDCore(void) {

@@ -110,6 +110,11 @@ GDCore::~GDCore(void) {
     delete mainEvent;
     SDL_DestroyRenderer(rR);
     SDL_DestroyWindow(window);
+
+    // Destroy ImGui
+    ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
 }
 
 /* ******************************************** */
@@ -436,6 +441,38 @@ void GDCore::Update() {
 
 void GDCore::Draw() {
     CCFG::getMM()->Draw(rR);
+
+    //Start ImGui Frame
+    ImGui_ImplSDLRenderer2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    // Draw UI Buttons
+    ImGui::Begin("Game Controls");
+
+    if (ImGui::Button("Up")) {
+        //TODO
+    }
+    if (ImGui::Button("Down")) {
+        //TODO
+    }
+    if (ImGui::Button("Left")) {
+        //TODO
+    }
+    if (ImGui::Button("Right")) {
+        //TODO
+    }
+    if (ImGui::Button("A")) {
+        //TODO
+    }
+    if (ImGui::Button("B")) {
+        //TODO
+    }
+
+    ImGui::End();
+
+    ImGui::Render();
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), rR);
 }
 
 /* ******************************************** */

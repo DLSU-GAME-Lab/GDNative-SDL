@@ -96,11 +96,8 @@ GDCore::GDCore(void) {
 
     CCFG::getMusic()->LoadAllMusic();
 
-    // ImGui Initialization
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui_ImplSDL2_InitForSDLRenderer(window, rR);
-    ImGui_ImplSDLRenderer2_Init(rR);
+    // ----- ImGui
+    InitializeImGui();
 }
 
 GDCore::~GDCore(void) {
@@ -397,11 +394,66 @@ void GDCore::MouseInput() {
 //==================================================================================================
 
 void GDCore::InitializeImGui() {
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
 
+    // ImGui style
+    ImGui::StyleColorsDark();
+
+    // Initialize SDL2 bindings
+    ImGui_ImplSDL2_InitForSDLRenderer(window, rR);
+    ImGui_ImplSDLRenderer2_Init(rR);
 }
 
 void GDCore::RenderGameUI() {
+    // Start ImGui frame
+    ImGui_ImplSDLRenderer2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
 
+    // --- D-Pad ---
+    ImGui::SetNextWindowPos(ImVec2(50, 300));
+    ImGui::SetNextWindowSize(ImVec2(100, 100));
+    ImGui::Begin("D-Pad", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+
+    if (ImGui::Button("Up", ImVec2(40, 40))) {
+        //TODO
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Down", ImVec2(40, 40))) {
+        //TODO
+    }
+
+    if (ImGui::Button("Left", ImVec2(40, 40))) {
+        //TODO
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Right", ImVec2(40, 40))) {
+        //TODO
+    }
+
+    ImGui::End();
+
+    // --- A/B Buttons
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 25.0f);
+    ImGui::SetNextWindowPos(ImVec2(750, 300));
+    ImGui::SetNextWindowSize(ImVec2(175, 100));
+    ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+
+    if (ImGui::Button("A", ImVec2(50, 50))) {
+        //TODO
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("B", ImVec2(50, 50))) {
+        //TODO
+    }
+    ImGui::PopStyleVar();
+
+    ImGui::End();
+
+    // Render ImGui
+    ImGui::Render();
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), rR);
 }
 
 //==================================================================================================
@@ -417,6 +469,9 @@ void GDCore::Update() {
 
 void GDCore::Draw() {
     CCFG::getMM()->Draw(rR);
+
+    // Render ImGui
+    RenderGameUI();
 }
 
 /* ******************************************** */

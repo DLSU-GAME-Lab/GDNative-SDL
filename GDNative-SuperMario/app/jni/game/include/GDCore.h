@@ -44,7 +44,8 @@ private:
     void InputMenu();
 
     //==============================================================================================
-    void HandleTouchInput(float x, float y, bool isPressed);
+    void InitializeImGui();
+    void RenderGameUI();
 
 public:
     GDCore(void);

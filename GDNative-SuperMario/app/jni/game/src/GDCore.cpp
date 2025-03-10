@@ -13,8 +13,6 @@
 #include "../ImGui/include/imgui_impl_sdl2.h"
 #include "../ImGui/include/imgui_impl_sdlrenderer2.h"
 
-#include <android/log.h>
-
 Map* GDCore::oMap = new Map();
 bool GDCore::mouseLeftPressed = false;
 bool GDCore::mouseRightPressed = false;
@@ -393,40 +391,18 @@ void GDCore::MouseInput() {
             }
             break;
         }
-        case SDL_FINGERDOWN: {
-            HandleTouchInput(mainEvent->tfinger.x, mainEvent->tfinger.y, true);
-            __android_log_print(ANDROID_LOG_DEBUG, "DebugLogz", "SDL_FINGERDOWN Detected");
-            break;
-        }
-
-        case SDL_FINGERUP: {
-            HandleTouchInput(mainEvent->tfinger.x, mainEvent->tfinger.y, false);
-            __android_log_print(ANDROID_LOG_DEBUG, "DebugLogz", "SDL_FINGERUP Detected");
-            break;
-        }
     }
 }
 
 //==================================================================================================
 
-void GDCore::HandleTouchInput(float x, float y, bool isPressed) {
-    int screenWidth, screenHeight;
-    SDL_GetRendererOutputSize(rR, &screenWidth, &screenHeight);
+void GDCore::InitializeImGui() {
 
-    int touchX = x * screenWidth;
-    int touchY = y * screenHeight;
-
-    int dpadSize = screenWidth / 4;
-    int buttonSize = screenWidth / 6;
-    int dpadY = screenHeight - dpadSize - 50;
-    int buttonY = screenHeight - buttonSize - 50;
-
-    if (touchX < dpadSize && touchY > dpadY) { keyA = isPressed; } // Left
-    else if (touchX < dpadSize * 2 && touchY > dpadY) { keyD = isPressed;} // Right
-    else if (touchX > screenWidth - buttonSize * 2 && touchY > buttonY) { keyAPressed = isPressed; } // A (Jump)
-    else if (touchX > screenWidth - buttonSize && touchY > buttonY) { keyDPressed = isPressed; } // B (Run/Fire)
 }
 
+void GDCore::RenderGameUI() {
+
+}
 
 //==================================================================================================
 
@@ -441,38 +417,6 @@ void GDCore::Update() {
 
 void GDCore::Draw() {
     CCFG::getMM()->Draw(rR);
-
-    //Start ImGui Frame
-    ImGui_ImplSDLRenderer2_NewFrame();
-    ImGui_ImplSDL2_NewFrame();
-    ImGui::NewFrame();
-
-    // Draw UI Buttons
-    ImGui::Begin("Game Controls");
-
-    if (ImGui::Button("Up")) {
-        //TODO
-    }
-    if (ImGui::Button("Down")) {
-        //TODO
-    }
-    if (ImGui::Button("Left")) {
-        //TODO
-    }
-    if (ImGui::Button("Right")) {
-        //TODO
-    }
-    if (ImGui::Button("A")) {
-        //TODO
-    }
-    if (ImGui::Button("B")) {
-        //TODO
-    }
-
-    ImGui::End();
-
-    ImGui::Render();
-    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(), rR);
 }
 
 /* ******************************************** */

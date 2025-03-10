@@ -6,6 +6,7 @@
 const std::string PauseMenu::TOUCH_GAME = "pause_menu_game";
 const std::string PauseMenu::TOUCH_OPTIONS = "pause_menu_options";
 const std::string PauseMenu::TOUCH_MENU = "pause_menu_menu";
+const std::string PauseMenu::TOUCH_DESKTOP = "pause_desktop";
 
 PauseMenu::PauseMenu(void) {
 	rPause.x = 220;
@@ -25,15 +26,16 @@ PauseMenu::PauseMenu(void) {
 }
 
 PauseMenu::~PauseMenu(void) {
-    TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
-    TouchManager::getInstance()->removeTouchArea(TOUCH_GAME);
-    TouchManager::getInstance()->removeTouchArea(TOUCH_OPTIONS);
+    this->clearTouchAreas();
 }
 
 /* ******************************************** */
 
 void PauseMenu::Update() {
-
+    if(!touchAreasInitialized) {
+        this->setupPauseMenuTouchAreas();
+        touchAreasInitialized = true;
+    }
 }
 
 void PauseMenu::Draw(SDL_Renderer* rR) {
@@ -99,33 +101,42 @@ void PauseMenu::updateActiveButton(int iDir) {
 }
 
 void PauseMenu::setupPauseMenuTouchAreas() {
-    const int TOUCH_WIDTH = 220;   // Wide enough for the text
-    const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
+    const int TOUCH_WIDTH = 200;   // Wide enough for the text
+    const int TOUCH_HEIGHT = 20;   // Tall enough to touch easily
 
     // Create touch area for "1 PLAYER GAME" option
     MenuOption* option1 = lMO[0];
     SDL_Rect bounds1 = {
-            option1->getXPos(),
-            option1->getYPos() - 15,
-            TOUCH_WIDTH,
+            (CCFG::GAME_WIDTH - (TOUCH_WIDTH/2)) / 2,
+            option1->getYPos() - 5,
+            TOUCH_WIDTH / 2,
             TOUCH_HEIGHT
     };
 
     // Create touch area for "OPTIONS" option
     MenuOption* option2 = lMO[1];
     SDL_Rect bounds2 = {
-            option2->getXPos(),
-            option2->getYPos() - 15,
+            (CCFG::GAME_WIDTH - (TOUCH_WIDTH/2)) / 2,
+            option2->getYPos() - 5,
+            TOUCH_WIDTH / 2,
+            TOUCH_HEIGHT
+    };
+
+    // Create touch area for "MAIN MENU" option
+    MenuOption* option3 = lMO[2];
+    SDL_Rect bounds3 = {
+            (CCFG::GAME_WIDTH - TOUCH_WIDTH) / 2,
+            option3->getYPos() - 5,
             TOUCH_WIDTH,
             TOUCH_HEIGHT
     };
 
-    // Create touch area for "ABOUT" option
-    MenuOption* option3 = lMO[2];
-    SDL_Rect bounds3 = {
-            option3->getXPos(),
-            option3->getYPos() - 15,
-            TOUCH_WIDTH,
+    // Create touch area for "DESKTOP" option
+    MenuOption* option4 = lMO[3];
+    SDL_Rect bounds4 = {
+            (CCFG::GAME_WIDTH - (TOUCH_WIDTH + 50)) / 2,
+            option4->getYPos() - 5,
+            TOUCH_WIDTH + 50,
             TOUCH_HEIGHT
     };
 
@@ -135,6 +146,7 @@ void PauseMenu::setupPauseMenuTouchAreas() {
                                                   if (pressed) {
                                                       activeMenuOption = 0;
                                                       enter();
+                                                      clearTouchAreas();
                                                   }
                                               });
 
@@ -143,6 +155,7 @@ void PauseMenu::setupPauseMenuTouchAreas() {
                                                   if (pressed) {
                                                       activeMenuOption = 1;
                                                       enter();
+                                                      clearTouchAreas();
                                                   }
                                               });
 
@@ -150,6 +163,16 @@ void PauseMenu::setupPauseMenuTouchAreas() {
                                               [this](bool pressed) {
                                                   if (pressed) {
                                                       activeMenuOption = 2;
+                                                      enter();
+                                                      clearTouchAreas();
+                                                  }
+                                              });
+
+    TouchManager::getInstance()->addTouchArea(TOUCH_DESKTOP, bounds4,
+                                              [this](bool pressed) {
+                                                  if (pressed) {
+                                                      activeMenuOption = 3;
+                                                      clearTouchAreas();
                                                       enter();
                                                   }
                                               });
@@ -167,4 +190,12 @@ void PauseMenu::setupPauseMenuTouchAreas() {
             area->borderColor = borderColor;
         }
     }
+}
+
+void PauseMenu::clearTouchAreas() {
+    TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
+    TouchManager::getInstance()->removeTouchArea(TOUCH_GAME);
+    TouchManager::getInstance()->removeTouchArea(TOUCH_OPTIONS);
+    TouchManager::getInstance()->removeTouchArea(TOUCH_DESKTOP);
+    touchAreasInitialized = false;
 }

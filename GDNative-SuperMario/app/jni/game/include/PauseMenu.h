@@ -10,9 +10,15 @@ class PauseMenu : public Menu
 {
 private:
 	SDL_Rect rPause;
+
+    // Touch area IDs for options
     static const std::string TOUCH_GAME;
     static const std::string TOUCH_OPTIONS;
     static const std::string TOUCH_MENU;
+    static const std::string TOUCH_DESKTOP;
+
+    //to check if touch areas were initialized or not
+    bool touchAreasInitialized = false;
 public:
 	PauseMenu(void);
 	~PauseMenu(void);
@@ -26,6 +32,7 @@ public:
 	void updateActiveButton(int iDir);
 
     void setupPauseMenuTouchAreas();
+    void clearTouchAreas();
 };
 
 #endif

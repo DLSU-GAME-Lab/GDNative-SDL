@@ -39,6 +39,11 @@ AboutMenu::~AboutMenu(void) {
 /* ******************************************** */
 
 void AboutMenu::Update() {
+    if(!touchAreasInitialized) {
+        this->setupMenuTouchArea();
+        touchAreasInitialized = true;
+    }
+
 	if(SDL_GetTicks() >= iTime + 35) {
 		this->cR = getColorStep(cR, nR);
 		this->cG = getColorStep(cG, nG);
@@ -96,8 +101,6 @@ void AboutMenu::Draw(SDL_Renderer* rR) {
 	for(unsigned int i = 0; i < lMO.size(); i++) {
 		CCFG::getText()->DrawWS(rR, lMO[i]->getText(), lMO[i]->getXPos(), lMO[i]->getYPos(), 0, 0, 0);
 	}
-
-	CCFG::getMM()->getActiveOption()->Draw(rR, lMO[activeMenuOption]->getXPos() - 32, lMO[activeMenuOption]->getYPos());
 
     SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_BLEND);
     TouchManager::getInstance()->drawTouchAreas(rR);
@@ -238,7 +241,7 @@ void AboutMenu::updateTime() {
 
 void AboutMenu::setupMenuTouchArea() {
     // Create touch areas with appropriate dimensions
-    const int TOUCH_WIDTH = 220;   // Wide enough for the text
+    const int TOUCH_WIDTH = 160;   // Wide enough for the text
     const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
 
     // Create touch area for "1 PLAYER GAME" option
@@ -253,8 +256,9 @@ void AboutMenu::setupMenuTouchArea() {
     TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds,
                                               [this](bool pressed) {
                                                   if (pressed) {
-                                                      activeMenuOption = 0;
-                                                      enter();
+                                                      this->enter();
+                                                      TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
+                                                      touchAreasInitialized = false;
                                                   }
                                               });
 

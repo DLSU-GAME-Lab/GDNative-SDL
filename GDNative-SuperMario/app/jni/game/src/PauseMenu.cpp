@@ -3,6 +3,9 @@
 #include "GDCore.h"
 
 /* ******************************************** */
+const std::string PauseMenu::TOUCH_GAME = "pause_menu_game";
+const std::string PauseMenu::TOUCH_OPTIONS = "pause_menu_options";
+const std::string PauseMenu::TOUCH_MENU = "pause_menu_menu";
 
 PauseMenu::PauseMenu(void) {
 	rPause.x = 220;

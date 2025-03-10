@@ -6,6 +6,7 @@
 #include "TouchManager.h"
 
 /* ******************************************** */
+const std::string AboutMenu::TOUCH_MENU = "about_menu_touch";
 
 AboutMenu::AboutMenu(void) {
 	lMO.push_back(new MenuOption("MAIN MENU", 150, 340));

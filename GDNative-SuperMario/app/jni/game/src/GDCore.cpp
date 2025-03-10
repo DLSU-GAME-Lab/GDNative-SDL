@@ -8,6 +8,8 @@
 #include "Text.h"
 #include "SDL_mixer.h"
 
+#include <android/log.h>
+
 Map* GDCore::oMap = new Map();
 bool GDCore::mouseLeftPressed = false;
 bool GDCore::mouseRightPressed = false;
@@ -369,13 +371,48 @@ void GDCore::MouseInput() {
             }
             break;
         }
-        case SDL_MOUSEWHEEL:
-            if(mainEvent->wheel.timestamp > SDL_GetTicks() - 2) {
+        case SDL_MOUSEWHEEL: {
+            if (mainEvent->wheel.timestamp > SDL_GetTicks() - 2) {
                 //CCFG::getMM()->getLE()->mouseWheel(mainEvent->wheel.y);
             }
             break;
+        }
+        case SDL_FINGERDOWN: {
+            HandleTouchInput(mainEvent->tfinger.x, mainEvent->tfinger.y, true);
+            __android_log_print(ANDROID_LOG_DEBUG, "DebugLogz", "SDL_FINGERDOWN Detected");
+            break;
+        }
+
+        case SDL_FINGERUP: {
+            HandleTouchInput(mainEvent->tfinger.x, mainEvent->tfinger.y, false);
+            __android_log_print(ANDROID_LOG_DEBUG, "DebugLogz", "SDL_FINGERUP Detected");
+            break;
+        }
     }
 }
+
+//==================================================================================================
+
+void GDCore::HandleTouchInput(float x, float y, bool isPressed) {
+    int screenWidth, screenHeight;
+    SDL_GetRendererOutputSize(rR, &screenWidth, &screenHeight);
+
+    int touchX = x * screenWidth;
+    int touchY = y * screenHeight;
+
+    int dpadSize = screenWidth / 4;
+    int buttonSize = screenWidth / 6;
+    int dpadY = screenHeight - dpadSize - 50;
+    int buttonY = screenHeight - buttonSize - 50;
+
+    if (touchX < dpadSize && touchY > dpadY) { keyA = isPressed; } // Left
+    else if (touchX < dpadSize * 2 && touchY > dpadY) { keyD = isPressed;} // Right
+    else if (touchX > screenWidth - buttonSize * 2 && touchY > buttonY) { keyAPressed = isPressed; } // A (Jump)
+    else if (touchX > screenWidth - buttonSize && touchY > buttonY) { keyDPressed = isPressed; } // B (Run/Fire)
+}
+
+
+//==================================================================================================
 
 void GDCore::resetKeys() {
     movePressed = keyMenuPressed = keyS = keyW = keyA = keyD = CCFG::keySpace = keyShift = keyAPressed = keyDPressed = false;

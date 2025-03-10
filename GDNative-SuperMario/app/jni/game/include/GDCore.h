@@ -43,6 +43,9 @@ private:
     void InputPlayer();
     void InputMenu();
 
+    //==============================================================================================
+    void HandleTouchInput(float x, float y, bool isPressed);
+
 public:
     GDCore(void);
     ~GDCore(void);

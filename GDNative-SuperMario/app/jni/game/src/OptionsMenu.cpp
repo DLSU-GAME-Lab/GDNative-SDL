@@ -4,6 +4,7 @@
 #include "TouchManager.h"
 
 /* ******************************************** */
+const std::string OptionsMenu::TOUCH_DPAD_JOYSTICK = "options_menu_dpad_or_joystick";
 const std::string OptionsMenu::TOUCH_BACKWARDS = "options_menu_can_move_backwards";
 const std::string OptionsMenu::TOUCH_PAUSE = "options_menu_pause";
 const std::string OptionsMenu::TOUCH_MENU = "options_menu_main_menu";
@@ -20,6 +21,7 @@ OptionsMenu::OptionsMenu(void) {
 	//this->lMO.push_back(new MenuOption("RIGHT", 73, 137));
 	//this->lMO.push_back(new MenuOption("JUMP", 73, 161));
 	//this->lMO.push_back(new MenuOption("RUN", 73, 185));
+    this->lMO.push_back(new MenuOption("DPAD OR JOYSTICK", 73, 185));
 	this->lMO.push_back(new MenuOption("CAN MOVE BACKWARD", 73, 209));
     this->lMO.push_back((new MenuOption("RETURN TO PAUSE", 73, 257)));
 	this->lMO.push_back(new MenuOption("MAIN MENU", 73, 281));
@@ -45,6 +47,10 @@ OptionsMenu::OptionsMenu(void) {
 
 	this->escapeToMainMenu = true;
 
+    if(strDpadOrJoystick == "") {
+        strDpadOrJoystick = "DPAD";
+    }
+
     this->setupOptionsMenuTouchAreas();
 }
 
@@ -59,6 +65,10 @@ void OptionsMenu::Update() {
 		inSetKey = false;
 		resetSetKey = false;
 	}
+
+    if(strDpadOrJoystick == "") {
+        strDpadOrJoystick = "DPAD";
+    }
 
     if(!touchAreasInitialized) {
         this->setupOptionsMenuTouchAreas();
@@ -109,6 +119,10 @@ void OptionsMenu::Draw(SDL_Renderer* rR) {
 	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDSpace), 185, 161, 16, activeMenuOption == 4 ? 255 : 90, activeMenuOption == 4 ? 255 : 90, activeMenuOption == 4 ? 255 : 90);
 	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDShift), 185, 185, 16, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90);
 
+    //ADD visible option for dpad or joystick
+    CCFG::getText()->Draw(rR, this->strDpadOrJoystick, 357, 185, 16, 200, 200, 200);
+
+    //
 	CCFG::getText()->Draw(rR, CCFG::canMoveBackward ? "TRUE" : "FALSE", 357, 209, 16, activeMenuOption == 6 ? 255 : 90, activeMenuOption == 6 ? 255 : 90, activeMenuOption == 6 ? 255 : 90);
 
 	if(inSetKey) {
@@ -145,14 +159,17 @@ void OptionsMenu::enter() {
 		//case 1: case 2: case 3: case 4: case 5:
 		//	inSetKey = true;
 		//	break;
-		case 1:
+        case 1:
+            //add function to change dpad and joystick;
+            break;
+		case 2:
 			CCFG::canMoveBackward = !CCFG::canMoveBackward;
 			break;
-        case 2:
+        case 3:
             this->escapeToMainMenu = false;
             this->escape();
             break;
-		case 3:
+		case 4:
 			GDCore::getMap()->resetGameData();
 			CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
 			break;
@@ -262,8 +279,17 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
 
     TouchManager::getInstance()->setAllTouchAreasOpacity(0.5f);
 
+    // Create touch area for "DPAD OR JOYSTICK" option
+    MenuOption* option6 = lMO[1];
+    SDL_Rect bounds6 = {
+            option6->getXPos(),
+            option6->getYPos() - 5,
+            TOUCH_WIDTH * 2,
+            TOUCH_HEIGHT
+    };
+
     // Create touch area for "BACKWARDS" option
-    MenuOption* option7 = lMO[1];
+    MenuOption* option7 = lMO[2];
     SDL_Rect bounds7 = {
             option7->getXPos(),
             option7->getYPos() - 5,
@@ -272,7 +298,7 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
     };
 
     // Create touch area for "PAUSE" option
-    MenuOption* option8 = lMO[2];
+    MenuOption* option8 = lMO[3];
     SDL_Rect bounds8 = {
             option8->getXPos(),
             option8->getYPos() - 5,
@@ -281,7 +307,7 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
     };
 
     // Create touch area for "MAIN MENU" option
-    MenuOption* option9 = lMO[3];
+    MenuOption* option9 = lMO[4];
     SDL_Rect bounds9 = {
             option9->getXPos(),
             option9->getYPos() - 5,
@@ -291,7 +317,7 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
 
     //Add touchable areas and functionality
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_BACKWARDS, bounds7,
+    TouchManager::getInstance()->addTouchArea(TOUCH_DPAD_JOYSTICK, bounds6,
                                               [this](bool pressed) {
                                                   if (pressed) {
                                                       this->activeMenuOption = 1;
@@ -300,7 +326,7 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
                                                   }
                                               });
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_PAUSE, bounds8,
+    TouchManager::getInstance()->addTouchArea(TOUCH_BACKWARDS, bounds7,
                                               [this](bool pressed) {
                                                   if (pressed) {
                                                       this->activeMenuOption = 2;
@@ -309,10 +335,19 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
                                                   }
                                               });
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds9,
+    TouchManager::getInstance()->addTouchArea(TOUCH_PAUSE, bounds8,
                                               [this](bool pressed) {
                                                   if (pressed) {
                                                       this->activeMenuOption = 3;
+                                                      this->enter();
+                                                      this->clearTouchAreas();
+                                                  }
+                                              });
+
+    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds9,
+                                              [this](bool pressed) {
+                                                  if (pressed) {
+                                                      this->activeMenuOption = 4;
                                                       this->enter();
                                                       this->clearTouchAreas();
                                                   }
@@ -323,7 +358,7 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
     SDL_Color borderColor = {255, 255, 255, 80};   // White border, semi-transparent
 
     // Apply colors to all menu touch areas
-    for (const auto& id : {TOUCH_PAUSE, TOUCH_MENU}) {
+    for (const auto& id : {TOUCH_DPAD_JOYSTICK, TOUCH_BACKWARDS, TOUCH_PAUSE, TOUCH_MENU}) {
         if (TouchArea* area = TouchManager::getInstance()->getTouchArea(id)) {
             area->normalColor = normalColor;
             area->pressedColor = pressedColor;
@@ -333,7 +368,24 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
 }
 
 void OptionsMenu::clearTouchAreas() {
+    TouchManager::getInstance()->removeTouchArea(TOUCH_DPAD_JOYSTICK);
+    TouchManager::getInstance()->removeTouchArea(TOUCH_BACKWARDS);
     TouchManager::getInstance()->removeTouchArea(TOUCH_PAUSE);
     TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
     touchAreasInitialized = false;
+}
+
+void OptionsMenu::changeDpadOrJoystick() {
+    if(this->strDpadOrJoystick == "DPAD") {
+        //set to joystick
+        this->strDpadOrJoystick = "JOYSTICK";
+    }
+    else if(this->strDpadOrJoystick == "JOYSTICK") {
+        //set to dpad
+        this->strDpadOrJoystick = "DPAD";
+    }
+    else {
+        //force set to dpad;
+        this->strDpadOrJoystick = "DPAD";
+    }
 }

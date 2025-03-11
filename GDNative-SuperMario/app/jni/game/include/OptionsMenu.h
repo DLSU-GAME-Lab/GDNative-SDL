@@ -19,6 +19,7 @@ private:
 	bool escapeToMainMenu;
 
     // Touch area IDs for options
+    static const std::string TOUCH_BACKWARDS;
     static const std::string TOUCH_PAUSE;
     static const std::string TOUCH_MENU;
 

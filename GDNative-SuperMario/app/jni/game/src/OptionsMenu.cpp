@@ -4,6 +4,7 @@
 #include "TouchManager.h"
 
 /* ******************************************** */
+const std::string OptionsMenu::TOUCH_BACKWARDS = "options_menu_can_move_backwards";
 const std::string OptionsMenu::TOUCH_PAUSE = "options_menu_pause";
 const std::string OptionsMenu::TOUCH_MENU = "options_menu_main_menu";
 
@@ -14,13 +15,14 @@ OptionsMenu::OptionsMenu(void) {
 	rRect.h = 324;
 
 	this->lMO.push_back(new MenuOption("VOLUME", 73, 65));
-	this->lMO.push_back(new MenuOption("LEFT", 73, 89));
-	this->lMO.push_back(new MenuOption("DOWN", 73, 113));
-	this->lMO.push_back(new MenuOption("RIGHT", 73, 137));
-	this->lMO.push_back(new MenuOption("JUMP", 73, 161));
-	this->lMO.push_back(new MenuOption("RUN", 73, 185));
+	//this->lMO.push_back(new MenuOption("LEFT", 73, 89));
+	//this->lMO.push_back(new MenuOption("DOWN", 73, 113));
+	//this->lMO.push_back(new MenuOption("RIGHT", 73, 137));
+	//this->lMO.push_back(new MenuOption("JUMP", 73, 161));
+	//this->lMO.push_back(new MenuOption("RUN", 73, 185));
 	this->lMO.push_back(new MenuOption("CAN MOVE BACKWARD", 73, 209));
-	this->lMO.push_back(new MenuOption("MAIN MENU", 73, 257));
+    this->lMO.push_back((new MenuOption("RETURN TO PAUSE", 73, 257)));
+	this->lMO.push_back(new MenuOption("MAIN MENU", 73, 281));
 
 	this->numOfMenuOptions = lMO.size();
 
@@ -101,11 +103,11 @@ void OptionsMenu::Draw(SDL_Renderer* rR) {
 		SDL_RenderDrawRect(rR, &rVolumeBG);
 	}
 
-	CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDA), 185, 89, 16, activeMenuOption == 1 ? 255 : 90, activeMenuOption == 1 ? 255 : 90, activeMenuOption == 1 ? 255 : 90);
-	CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDS), 185, 113, 16, activeMenuOption == 2 ? 255 : 90, activeMenuOption == 2 ? 255 : 90, activeMenuOption == 2 ? 255 : 90);
-	CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDD), 185, 137, 16, activeMenuOption == 3 ? 255 : 90, activeMenuOption == 3 ? 255 : 90, activeMenuOption == 3 ? 255 : 90);
-	CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDSpace), 185, 161, 16, activeMenuOption == 4 ? 255 : 90, activeMenuOption == 4 ? 255 : 90, activeMenuOption == 4 ? 255 : 90);
-	CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDShift), 185, 185, 16, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90);
+	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDA), 185, 89, 16, activeMenuOption == 1 ? 255 : 90, activeMenuOption == 1 ? 255 : 90, activeMenuOption == 1 ? 255 : 90);
+	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDS), 185, 113, 16, activeMenuOption == 2 ? 255 : 90, activeMenuOption == 2 ? 255 : 90, activeMenuOption == 2 ? 255 : 90);
+	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDD), 185, 137, 16, activeMenuOption == 3 ? 255 : 90, activeMenuOption == 3 ? 255 : 90, activeMenuOption == 3 ? 255 : 90);
+	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDSpace), 185, 161, 16, activeMenuOption == 4 ? 255 : 90, activeMenuOption == 4 ? 255 : 90, activeMenuOption == 4 ? 255 : 90);
+	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDShift), 185, 185, 16, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90);
 
 	CCFG::getText()->Draw(rR, CCFG::canMoveBackward ? "TRUE" : "FALSE", 357, 209, 16, activeMenuOption == 6 ? 255 : 90, activeMenuOption == 6 ? 255 : 90, activeMenuOption == 6 ? 255 : 90);
 
@@ -129,6 +131,8 @@ void OptionsMenu::Draw(SDL_Renderer* rR) {
 
 	SDL_SetRenderDrawBlendMode(rR, SDL_BLENDMODE_NONE);
 	GDCore::getMap()->setBackgroundColor(rR);
+
+    TouchManager::getInstance()->drawTouchAreas(rR);
 }
 
 /* ******************************************** */
@@ -138,13 +142,17 @@ void OptionsMenu::enter() {
 		case 0:
 			CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cCOIN);
 			break;
-		case 1: case 2: case 3: case 4: case 5:
-			inSetKey = true;
-			break;
-		case 6:
+		//case 1: case 2: case 3: case 4: case 5:
+		//	inSetKey = true;
+		//	break;
+		case 1:
 			CCFG::canMoveBackward = !CCFG::canMoveBackward;
 			break;
-		case 7:
+        case 2:
+            this->escapeToMainMenu = false;
+            this->escape();
+            break;
+		case 3:
 			GDCore::getMap()->resetGameData();
 			CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
 			break;
@@ -249,31 +257,62 @@ void OptionsMenu::setEscapeToMainMenu(bool escapeToMainMenu) {
 
 void OptionsMenu::setupOptionsMenuTouchAreas() {
     // Create touch areas with appropriate dimensions
-    const int TOUCH_WIDTH = 160;   // Wide enough for the text
-    const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
+    const int TOUCH_WIDTH = 140;   // Wide enough for the text
+    const int TOUCH_HEIGHT = 20;   // Tall enough to touch easily
 
-    // Create touch area for "PAUSE" option
-    //MenuOption* option = lMO[0];
-    //SDL_Rect bounds = {
-    //        option->getXPos(),
-    //        option->getYPos() - 15,
-    //        TOUCH_WIDTH,
-    //        TOUCH_HEIGHT
-    //};
+    TouchManager::getInstance()->setAllTouchAreasOpacity(0.5f);
 
-    // Create touch area for "PAUSE" option
-    MenuOption* option8 = lMO[7];
-    SDL_Rect bounds8 = {
-            option8->getXPos(),
-            option8->getYPos() - 15,
-            TOUCH_WIDTH,
+    // Create touch area for "BACKWARDS" option
+    MenuOption* option7 = lMO[1];
+    SDL_Rect bounds7 = {
+            option7->getXPos(),
+            option7->getYPos() - 5,
+            TOUCH_WIDTH * 2,
             TOUCH_HEIGHT
     };
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds8,
+    // Create touch area for "PAUSE" option
+    MenuOption* option8 = lMO[2];
+    SDL_Rect bounds8 = {
+            option8->getXPos(),
+            option8->getYPos() - 5,
+            (TOUCH_WIDTH - 10) * 2,
+            TOUCH_HEIGHT
+    };
+
+    // Create touch area for "MAIN MENU" option
+    MenuOption* option9 = lMO[3];
+    SDL_Rect bounds9 = {
+            option9->getXPos(),
+            option9->getYPos() - 5,
+            TOUCH_WIDTH + 10,
+            TOUCH_HEIGHT
+    };
+
+    //Add touchable areas and functionality
+
+    TouchManager::getInstance()->addTouchArea(TOUCH_BACKWARDS, bounds7,
                                               [this](bool pressed) {
                                                   if (pressed) {
-                                                      this->activeMenuOption = 7;
+                                                      this->activeMenuOption = 1;
+                                                      this->enter();
+                                                      this->clearTouchAreas();
+                                                  }
+                                              });
+
+    TouchManager::getInstance()->addTouchArea(TOUCH_PAUSE, bounds8,
+                                              [this](bool pressed) {
+                                                  if (pressed) {
+                                                      this->activeMenuOption = 2;
+                                                      this->enter();
+                                                      this->clearTouchAreas();
+                                                  }
+                                              });
+
+    TouchManager::getInstance()->addTouchArea(TOUCH_MENU, bounds9,
+                                              [this](bool pressed) {
+                                                  if (pressed) {
+                                                      this->activeMenuOption = 3;
                                                       this->enter();
                                                       this->clearTouchAreas();
                                                   }
@@ -284,7 +323,7 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
     SDL_Color borderColor = {255, 255, 255, 80};   // White border, semi-transparent
 
     // Apply colors to all menu touch areas
-    for (const auto& id : {TOUCH_MENU}) {
+    for (const auto& id : {TOUCH_PAUSE, TOUCH_MENU}) {
         if (TouchArea* area = TouchManager::getInstance()->getTouchArea(id)) {
             area->normalColor = normalColor;
             area->pressedColor = pressedColor;
@@ -294,6 +333,7 @@ void OptionsMenu::setupOptionsMenuTouchAreas() {
 }
 
 void OptionsMenu::clearTouchAreas() {
+    TouchManager::getInstance()->removeTouchArea(TOUCH_PAUSE);
     TouchManager::getInstance()->removeTouchArea(TOUCH_MENU);
     touchAreasInitialized = false;
 }

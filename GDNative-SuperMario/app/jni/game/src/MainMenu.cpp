@@ -63,7 +63,7 @@ void MainMenu::setupMenuTouchAreas() {
     SDL_Rect bounds2 = {
             option2->getXPos(),
             option2->getYPos() - 15,
-            TOUCH_WIDTH,
+            (TOUCH_WIDTH / 2) + 5,
             TOUCH_HEIGHT
     };
 
@@ -72,7 +72,7 @@ void MainMenu::setupMenuTouchAreas() {
     SDL_Rect bounds3 = {
             option3->getXPos(),
             option3->getYPos() - 15,
-            TOUCH_WIDTH,
+            TOUCH_WIDTH / 2,
             TOUCH_HEIGHT
     };
 

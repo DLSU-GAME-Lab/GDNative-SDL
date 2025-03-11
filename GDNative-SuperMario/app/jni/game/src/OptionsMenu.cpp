@@ -12,7 +12,7 @@ const std::string OptionsMenu::TOUCH_MENU = "options_menu_main_menu";
 OptionsMenu::OptionsMenu(void) {
 	rRect.x = 58;
 	rRect.y = 48;
-	rRect.w = 403;
+	rRect.w = 433;
 	rRect.h = 324;
 
 	this->lMO.push_back(new MenuOption("VOLUME", 73, 65));
@@ -162,6 +162,7 @@ void OptionsMenu::enter() {
         case 1:
             //add function to change dpad and joystick;
             CCFG::isDpadOrJoystick = !CCFG::isDpadOrJoystick;
+            this->changeDpadOrJoystick();
             break;
 		case 2:
 			CCFG::canMoveBackward = !CCFG::canMoveBackward;
@@ -379,10 +380,8 @@ void OptionsMenu::clearTouchAreas() {
 void OptionsMenu::changeDpadOrJoystick() {
     if(CCFG::isDpadOrJoystick) {
         //set to joystick
-        CCFG::isDpadOrJoystick = false;
     }
     else if(!CCFG::isDpadOrJoystick) {
         //set to dpad
-        CCFG::isDpadOrJoystick = true;
     }
 }

@@ -49,57 +49,38 @@ void MainMenu::setupMenuTouchAreas() {
     const int TOUCH_WIDTH = 220;   // Wide enough for the text
     const int TOUCH_HEIGHT = 40;   // Tall enough to touch easily
 
-    // Create touch area for "1 PLAYER GAME" option
-    MenuOption* option1 = lMO[0];
-    SDL_Rect bounds1 = {
-            option1->getXPos(),
-            option1->getYPos() - 15,
-            TOUCH_WIDTH,
-            TOUCH_HEIGHT
-    };
-
-    // Create touch area for "OPTIONS" option
-    MenuOption* option2 = lMO[1];
-    SDL_Rect bounds2 = {
-            option2->getXPos(),
-            option2->getYPos() - 15,
-            (TOUCH_WIDTH / 2) + 5,
-            TOUCH_HEIGHT
-    };
-
-    // Create touch area for "ABOUT" option
-    MenuOption* option3 = lMO[2];
-    SDL_Rect bounds3 = {
-            option3->getXPos(),
-            option3->getYPos() - 15,
-            TOUCH_WIDTH / 2,
-            TOUCH_HEIGHT
-    };
-
     // Create touch areas with callbacks
-    TouchManager::getInstance()->addTouchArea(TOUCH_1PLAYER, bounds1,
-                                              [this](bool pressed) {
-                                                  if (pressed) {
-                                                      activeMenuOption = 0;
-                                                      enter();
-                                                  }
-                                              });
+    for (int i = 0; i < lMO.size(); i++) {
+        MenuOption* option = lMO[i];
+        SDL_Rect bounds = {
+                option->getXPos(),
+                option->getYPos() - 15,
+                TOUCH_WIDTH,
+                TOUCH_HEIGHT
+        };
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_OPTIONS, bounds2,
-                                              [this](bool pressed) {
-                                                  if (pressed) {
-                                                      activeMenuOption = 1;
-                                                      enter();
-                                                  }
-                                              });
+        // Determine touch area ID based on menu option
+        std::string touchId;
+        switch (i) {
+            case 0: touchId = TOUCH_1PLAYER; break;
+            case 1: touchId = TOUCH_OPTIONS; break;
+            case 2: touchId = TOUCH_ABOUT; break;
+            default: touchId = "menu_option_" + std::to_string(i);
+        }
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_ABOUT, bounds3,
-                                              [this](bool pressed) {
-                                                  if (pressed) {
-                                                      activeMenuOption = 2;
-                                                      enter();
-                                                  }
-                                              });
+        // Add touch area with "main_menu" scene
+        TouchManager::getInstance()->addTouchArea(
+                touchId,
+                bounds,
+                [this, i](bool pressed) {
+                    if (pressed) {
+                        activeMenuOption = i;
+                        enter();
+                    }
+                },
+                "main_menu"  // Associate with main_menu scene
+        );
+    }
 
     // Set semi-transparent colors for the touch areas
     SDL_Color normalColor = {200, 200, 200, 60};   // Light gray, semi-transparent
@@ -114,30 +95,54 @@ void MainMenu::setupMenuTouchAreas() {
             area->borderColor = borderColor;
         }
     }
+
+    // Set main_menu as the active scene
+    TouchManager::getInstance()->setActiveScene("main_menu");
 }
 
 void MainMenu::setupWorldSelectionTouchAreas() {
-    // Clear any existing world selection touch areas
-    clearWorldSelectionTouchAreas();
-
     // Create touch areas for world selection (1-8)
+    int worldButtonsStartX = 1;     // Starting X position offset from rSelectWorld.x
+    int worldButtonSpacing = 40;     // Spacing between buttons (increase for more gap)
+    int worldButtonSize = 30;        // Size of the touch area
+    int worldButtonY = 16 + 24;      // Y position relative to rSelectWorld.y
+
+    // Loop for all world buttons
     for (int i = 0; i < 8; i++) {
         // Calculate position based on the drawing logic
         int extraX = (i == activeWorldID) ? 32 : 0;
-        int x = rSelectWorld.x + 16*(i + 1) + 16*i + extraX;
-        int y = rSelectWorld.y + 16 + 24;
+
+        // BRUTE FORCE FIX: Special position adjustments for buttons 1 and 2
+        // This is weird fix but necessary because of how the drawing of button 1 and 2 works
+        int x;
+        if (i == 0) {
+            // Button 1 - position at exact Draw position
+            x = 138; // Hardcoded to match Draw Button 1 position
+        } else if (i == 1) {
+            // Button 2 - position at exact Draw position
+            x = 172; // Hardcoded to match Draw Button 2 position
+        } else {
+            // Other buttons - use regular formula
+            x = rSelectWorld.x + worldButtonsStartX + (i * worldButtonSpacing) + extraX;
+        }
+
+        int y = rSelectWorld.y + worldButtonY;
 
         // Create touch area
         std::string touchId = TOUCH_WORLD_PREFIX + std::to_string(i);
-        SDL_Rect bounds = {x - 10, y - 10, 30, 30};  // Make it a bit larger for easier touching
+        SDL_Rect bounds = {x - worldButtonSize/2, y - worldButtonSize/2, worldButtonSize, worldButtonSize};
 
-        TouchManager::getInstance()->addTouchArea(touchId, bounds,
-                                                  [this, i](bool pressed) {
-                                                      if (pressed) {
-                                                          // Set the active world ID
-                                                          activeWorldID = i;
-                                                      }
-                                                  });
+        TouchManager::getInstance()->addTouchArea(
+                touchId,
+                bounds,
+                [this, i](bool pressed) {
+                    if (pressed) {
+                        // Set the active world ID
+                        activeWorldID = i;
+                    }
+                },
+                "world_selection"  // Associate with world_selection scene
+        );
 
         // Set colors
         if (TouchArea* area = TouchManager::getInstance()->getTouchArea(touchId)) {
@@ -147,23 +152,28 @@ void MainMenu::setupWorldSelectionTouchAreas() {
         }
     }
 
-    // Add touch areas for level selection (1-4)
+    // Add touch areas for level selection (1-4) in horizontal layout
     for (int j = 0; j < 4; j++) {
         std::string touchId = TOUCH_LEVEL_PREFIX + std::to_string(j);
-        // Position based on where these would be shown in the UI
+
+        // Position based on horizontal layout
         SDL_Rect bounds = {
-                rSelectWorld.x + 150,
-                rSelectWorld.y + 40 + 24*j,
-                30, 30
+                rSelectWorld.x + 75 + 40*j,  // X position increments for each level
+                rSelectWorld.y + 100,         // Fixed Y position (all on same row)
+                30, 30                       // Width and height
         };
 
-        TouchManager::getInstance()->addTouchArea(touchId, bounds,
-                                                  [this, j](bool pressed) {
-                                                      if (pressed) {
-                                                          // Set the active secondary world ID
-                                                          activeSecondWorldID = j;
-                                                      }
-                                                  });
+        TouchManager::getInstance()->addTouchArea(
+                touchId,
+                bounds,
+                [this, j](bool pressed) {
+                    if (pressed) {
+                        // Set the active secondary world ID
+                        activeSecondWorldID = j;
+                    }
+                },
+                "world_selection"  // Associate with world_selection scene
+        );
 
         // Set colors
         if (TouchArea* area = TouchManager::getInstance()->getTouchArea(touchId)) {
@@ -175,45 +185,56 @@ void MainMenu::setupWorldSelectionTouchAreas() {
 
     // Add a "Start Game" touch area
     SDL_Rect startBounds = {
-            rSelectWorld.x + rSelectWorld.w/2 - 60,
-            rSelectWorld.y + rSelectWorld.h - 30,
-            120, 25
+            rSelectWorld.x + rSelectWorld.w/2 - 60, // Center horizontally
+            rSelectWorld.y + rSelectWorld.h - 10,   // Near the bottom
+            120, 25                                // Width and height
     };
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_WORLD_START, startBounds,
-                                              [this](bool pressed) {
-                                                  if (pressed) {
-                                                      // Do the same thing as pressing Enter on the world selection screen
-                                                      CCFG::getMM()->getLoadingMenu()->updateTime();
-                                                      GDCore::getMap()->resetGameData();
-                                                      GDCore::getMap()->setCurrentLevelID(activeWorldID * 4 + activeSecondWorldID);
-                                                      CCFG::getMM()->setViewID(CCFG::getMM()->eGameLoading);
-                                                      CCFG::getMM()->getLoadingMenu()->loadingType = true;
-                                                      GDCore::getMap()->setSpawnPointID(0);
-                                                      selectWorld = false;
+    TouchManager::getInstance()->addTouchArea(
+            TOUCH_WORLD_START,
+            startBounds,
+            [this](bool pressed) {
+                if (pressed) {
+                    // Start the game
+                    CCFG::getMM()->getLoadingMenu()->updateTime();
+                    GDCore::getMap()->resetGameData();
+                    GDCore::getMap()->setCurrentLevelID(activeWorldID * 4 + activeSecondWorldID);
+                    CCFG::getMM()->setViewID(CCFG::getMM()->eGameLoading);
+                    CCFG::getMM()->getLoadingMenu()->loadingType = true;
+                    GDCore::getMap()->setSpawnPointID(0);
+                    selectWorld = false;
 
-                                                      // Clear the touch areas when leaving this screen
-                                                      clearWorldSelectionTouchAreas();
-                                                  }
-                                              });
+                    // Return to main_menu scene (but don't show it yet)
+                    TouchManager::getInstance()->setActiveScene("main_menu");
+                }
+            },
+            "world_selection"  // Associate with world_selection scene
+    );
 
     // Add a "Back" touch area
     SDL_Rect backBounds = {
-            rSelectWorld.x + 10,
-            rSelectWorld.y + rSelectWorld.h - 30,
-            50, 25
+            rSelectWorld.x + 10,               // Left side
+            rSelectWorld.y + rSelectWorld.h - 10, // Near the bottom
+            50, 25                             // Width and height
     };
 
-    TouchManager::getInstance()->addTouchArea(TOUCH_WORLD_BACK, backBounds,
-                                              [this](bool pressed) {
-                                                  if (pressed) {
-                                                      // Go back to main menu
-                                                      selectWorld = false;
+    TouchManager::getInstance()->addTouchArea(
+            TOUCH_WORLD_BACK,
+            backBounds,
+            [this](bool pressed) {
+                if (pressed) {
+                    // Go back to main menu
+                    selectWorld = false;
 
-                                                      // Clear the touch areas when leaving this screen
-                                                      clearWorldSelectionTouchAreas();
-                                                  }
-                                              });
+                    // Switch back to main_menu scene
+                    TouchManager::getInstance()->setActiveScene("main_menu");
+                }
+            },
+            "world_selection"  // Associate with world_selection scene
+    );
+
+    // Set world_selection as the active scene
+    TouchManager::getInstance()->setActiveScene("world_selection");
 }
 
 void MainMenu::clearWorldSelectionTouchAreas() {
@@ -293,9 +314,10 @@ void MainMenu::enter() {
         case 0:
             if(!selectWorld) {
                 selectWorld = true;
-                // Create touch areas for world selection when entering this screen
+                // Setup and switch to world selection scene
                 setupWorldSelectionTouchAreas();
             } else {
+                // Start the game
                 CCFG::getMM()->getLoadingMenu()->updateTime();
                 GDCore::getMap()->resetGameData();
                 GDCore::getMap()->setCurrentLevelID(activeWorldID * 4 + activeSecondWorldID);
@@ -303,8 +325,9 @@ void MainMenu::enter() {
                 CCFG::getMM()->getLoadingMenu()->loadingType = true;
                 GDCore::getMap()->setSpawnPointID(0);
                 selectWorld = false;
-                // Clear world selection touch areas
-                clearWorldSelectionTouchAreas();
+
+                // Switch back to main_menu scene
+                TouchManager::getInstance()->setActiveScene("main_menu");
             }
             break;
         case 1:
@@ -322,9 +345,11 @@ void MainMenu::enter() {
 }
 
 void MainMenu::escape() {
-    selectWorld = false;
-    // Clear world selection touch areas when escaping
-    clearWorldSelectionTouchAreas();
+    if(selectWorld) {
+        selectWorld = false;
+        // Switch back to main_menu scene
+        TouchManager::getInstance()->setActiveScene("main_menu");
+    }
 }
 
 void MainMenu::updateActiveButton(int iDir) {

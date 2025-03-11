@@ -19,11 +19,16 @@ private:
 	bool escapeToMainMenu;
 
     // Touch area IDs for options
+    static const std::string TOUCH_DPAD_JOYSTICK;
+    static const std::string TOUCH_BACKWARDS;
     static const std::string TOUCH_PAUSE;
     static const std::string TOUCH_MENU;
 
     //to check if touch areas were initialized or not
     bool touchAreasInitialized = false;
+
+    //to show if dpad or joystick
+    std::string strDpadOrJoystick = "";
 public:
 	OptionsMenu(void);
 	~OptionsMenu(void);
@@ -43,6 +48,7 @@ public:
 
     void setupOptionsMenuTouchAreas();
     void clearTouchAreas();
+    void changeDpadOrJoystick();
 };
 
 #endif

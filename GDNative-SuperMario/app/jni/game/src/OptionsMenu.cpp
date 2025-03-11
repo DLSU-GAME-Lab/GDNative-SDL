@@ -120,7 +120,7 @@ void OptionsMenu::Draw(SDL_Renderer* rR) {
 	//CCFG::getText()->Draw(rR, CCFG::getKeyString(CCFG::keyIDShift), 185, 185, 16, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90, activeMenuOption == 5 ? 255 : 90);
 
     //ADD visible option for dpad or joystick
-    CCFG::getText()->Draw(rR, this->strDpadOrJoystick, 357, 185, 16, 200, 200, 200);
+    CCFG::getText()->Draw(rR, CCFG::isDpadOrJoystick ? "DPAD" : "JOYSTICK", 357, 185, 16, 200, 200, 200);
 
     //
 	CCFG::getText()->Draw(rR, CCFG::canMoveBackward ? "TRUE" : "FALSE", 357, 209, 16, activeMenuOption == 6 ? 255 : 90, activeMenuOption == 6 ? 255 : 90, activeMenuOption == 6 ? 255 : 90);
@@ -161,6 +161,7 @@ void OptionsMenu::enter() {
 		//	break;
         case 1:
             //add function to change dpad and joystick;
+            CCFG::isDpadOrJoystick = !CCFG::isDpadOrJoystick;
             break;
 		case 2:
 			CCFG::canMoveBackward = !CCFG::canMoveBackward;
@@ -376,16 +377,12 @@ void OptionsMenu::clearTouchAreas() {
 }
 
 void OptionsMenu::changeDpadOrJoystick() {
-    if(this->strDpadOrJoystick == "DPAD") {
+    if(CCFG::isDpadOrJoystick) {
         //set to joystick
-        this->strDpadOrJoystick = "JOYSTICK";
+        CCFG::isDpadOrJoystick = false;
     }
-    else if(this->strDpadOrJoystick == "JOYSTICK") {
+    else if(!CCFG::isDpadOrJoystick) {
         //set to dpad
-        this->strDpadOrJoystick = "DPAD";
-    }
-    else {
-        //force set to dpad;
-        this->strDpadOrJoystick = "DPAD";
+        CCFG::isDpadOrJoystick = true;
     }
 }

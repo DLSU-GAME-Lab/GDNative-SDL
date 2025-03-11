@@ -149,7 +149,7 @@ void OptionsMenu::escape() {
 			GDCore::getMap()->resetGameData();
 			CCFG::getMM()->setViewID(CCFG::getMM()->eMainMenu);
 		} else {
-			CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
+			CCFG::getMM()->setViewID(CCFG::getMM()->ePause);
 		}
 	}
 }

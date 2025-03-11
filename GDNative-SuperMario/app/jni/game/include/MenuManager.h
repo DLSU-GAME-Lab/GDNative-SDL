@@ -35,7 +35,7 @@ public:
 		eGame,
 		eAbout,
 		eOptions,
-		ePasue,
+		ePause,
 		//eLevelEditor,
 	};
 

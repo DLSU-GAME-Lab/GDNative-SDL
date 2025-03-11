@@ -48,7 +48,7 @@ void MenuManager::Update() {
 		case eOptions:
 			oOptionsMenu->Update();
 			break;
-		case ePasue:
+		case ePause:
 			oPauseMenu->Update();
 			break;
 	}
@@ -82,7 +82,7 @@ void MenuManager::Draw(SDL_Renderer* rR) {
 			GDCore::getMap()->DrawGameLayout(rR);
 			oOptionsMenu->Draw(rR);
 			break;
-		case ePasue:
+		case ePause:
 			GDCore::getMap()->DrawMap(rR);
 			GDCore::getMap()->DrawMinions(rR);
 			GDCore::getMap()->getPlayer()->Draw(rR);
@@ -136,7 +136,7 @@ void MenuManager::enter() {
 		case eOptions:
 			oOptionsMenu->enter();
 			break;
-		case ePasue:
+		case ePause:
 			oPauseMenu->enter();
 			break;
 	}
@@ -153,7 +153,7 @@ void MenuManager::escape() {
 		case eOptions:
 			oOptionsMenu->escape();
 			break;
-		case ePasue:
+		case ePause:
 			oPauseMenu->escape();
 			break;
 		case eMainMenu:
@@ -178,7 +178,7 @@ void MenuManager::keyPressed(int iDir) {
 		case eOptions:
 			oOptionsMenu->updateActiveButton(iDir);
 			break;
-		case ePasue:
+		case ePause:
 			oPauseMenu->updateActiveButton(iDir);
 			break;
 	}
@@ -192,7 +192,7 @@ void MenuManager::resetActiveOptionID(gameState ID) {
 		case eOptions:
 			oOptionsMenu->activeMenuOption = 0;
 			break;
-		case ePasue:
+		case ePause:
 			oPauseMenu->activeMenuOption = 0;
 			break;
 	}

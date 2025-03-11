@@ -227,8 +227,8 @@ void GDCore::InputPlayer() {
     if(mainEvent->type == SDL_WINDOWEVENT) {
         switch(mainEvent->window.event) {
             case SDL_WINDOWEVENT_FOCUS_LOST:
-                CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePasue);
-                CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
+                CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePause);
+                CCFG::getMM()->setViewID(CCFG::getMM()->ePause);
                 CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
                 CCFG::getMusic()->PauseMusic();
                 break;
@@ -318,8 +318,8 @@ void GDCore::InputPlayer() {
                 }
             case SDLK_ESCAPE:
                 if(!keyMenuPressed && CCFG::getMM()->getViewID() == CCFG::getMM()->eGame) {
-                    CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePasue);
-                    CCFG::getMM()->setViewID(CCFG::getMM()->ePasue);
+                    CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePause);
+                    CCFG::getMM()->setViewID(CCFG::getMM()->ePause);
                     CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
                     CCFG::getMusic()->PauseMusic();
                     keyMenuPressed = true;

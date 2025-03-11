@@ -31,19 +31,11 @@ void Menu::Draw(SDL_Renderer* rR) {
 void Menu::updateActiveButton(int iDir) {
 	switch(iDir) {
 		case 0:
-			if (activeMenuOption - 1 < 0) {
-				activeMenuOption = numOfMenuOptions - 1;
-			} else {
-				--activeMenuOption;
-			}
+            activeMenuOption = (activeMenuOption == 0) ? numOfMenuOptions - 1 : activeMenuOption - 1;
 			break;
 		case 2:
-			if (activeMenuOption + 1 >= numOfMenuOptions) {
-				activeMenuOption = 0;
-			} else {
-				++activeMenuOption;
-			}
-			break;
+            activeMenuOption = (activeMenuOption + 1) % numOfMenuOptions;
+            break;
 		default:
 			break;
 	}

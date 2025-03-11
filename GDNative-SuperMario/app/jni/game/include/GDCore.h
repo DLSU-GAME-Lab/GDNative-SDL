@@ -64,6 +64,9 @@ public:
     static bool mouseLeftPressed, mouseRightPressed;
     static int mouseX, mouseY;
 
+    // ----- New Methods
+
+
     /* ----- get & set ----- */
     static Map* getMap();
 };

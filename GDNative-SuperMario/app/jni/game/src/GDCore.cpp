@@ -388,6 +388,38 @@ void GDCore::MouseInput() {
             }
             break;
         }
+        case SDL_FINGERDOWN: {
+            int windowWidth, windowHeight;
+            SDL_GetRendererOutputSize(rR, &windowWidth, &windowHeight);
+
+            // Get logical size set by SDL_RenderSetLogicalSize
+            int logicalWidth = CCFG::GAME_WIDTH;
+            int logicalHeight = CCFG::GAME_HEIGHT;
+
+            // Convert absolute touch coordinates to logical coordinates
+            float touchX = mainEvent->tfinger.x * (float)windowWidth;
+            float touchY = mainEvent->tfinger.y * (float)windowHeight;
+
+            float offsetX = 75.0f;
+            float offsetY = 10.0f;
+
+            // Scale touch input to match ImGui
+            float scaledX = (touchX / (float)windowWidth) * (float)logicalWidth + offsetX;
+            float scaledY = (touchY / (float)windowHeight) * (float)logicalHeight - offsetY;
+
+            // Convert touch to ImGui mouse input
+            ImGuiIO &io = ImGui::GetIO();
+            io.MousePos = ImVec2(scaledX, scaledY);
+            io.MouseDown[0] = true;
+
+            break;
+        }
+        case SDL_FINGERUP: {
+            ImGuiIO& io = ImGui::GetIO();
+            io.MouseDown[0] = false;
+
+            break;
+        }
     }
 }
 
@@ -449,7 +481,7 @@ void GDCore::RenderGameUI() {
     ImVec4 blackTextColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
     // --- D-Pad ---
-    ImGui::SetNextWindowPos(ImVec2(30, 185));
+    ImGui::SetNextWindowPos(ImVec2(75, 185));
     ImGui::SetNextWindowSize(ImVec2(250, 245));
     ImGui::Begin("D-Pad", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
 
@@ -469,26 +501,26 @@ void GDCore::RenderGameUI() {
     // Up
     ImGui::SetCursorPosX(centerX - DPadSize.x / 2);
     if (ImGui::Button("▲", DPadSize)) {
-        //TODO
+        CCFG::getMM()->keyPressed(0);
     }
 
     // Left & Right
     ImGui::SetCursorPos(ImVec2(centerX - DPadSize.x - buttonOffset - LRGap, DPadSize.y + buttonOffset));
     if (ImGui::Button("◀", DPadSize)) {
-        //TODO
+        CCFG::getMM()->keyPressed(3);
     }
 
     ImGui::SameLine();
 
     ImGui::SetCursorPosX(centerX + buttonOffset + LRGap);
     if (ImGui::Button("▶", DPadSize)) {
-        //TODO
+        CCFG::getMM()->keyPressed(1);
     }
 
     // Down
     ImGui::SetCursorPos(ImVec2(centerX - DPadSize.x / 2, DPadSize.y * 2 + buttonOffset));
     if (ImGui::Button("▼", DPadSize)) {
-        //TODO
+        CCFG::getMM()->keyPressed(2);
     }
 
     // Pop border size & color
@@ -500,7 +532,7 @@ void GDCore::RenderGameUI() {
 
     // --- A/B Buttons
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 50.0f);
-    ImGui::SetNextWindowPos(ImVec2(700, 260));
+    ImGui::SetNextWindowPos(ImVec2(685, 260));
     ImGui::SetNextWindowSize(ImVec2(200, 100));
     ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
 
@@ -521,7 +553,7 @@ void GDCore::RenderGameUI() {
 
     ImGui::SetCursorPosX(offset);
     if (ImGui::Button("A", ABSize)) {
-        //TODO
+        CCFG::getMM()->enter();
     }
     ImGui::PopStyleColor(3);
 
@@ -532,7 +564,7 @@ void GDCore::RenderGameUI() {
 
     ImGui::SameLine(0.0f, ABgap);
     if (ImGui::Button("B", ABSize)) {
-        //TODO
+        CCFG::getMM()->escape();
     }
     ImGui::PopStyleColor(4);
 

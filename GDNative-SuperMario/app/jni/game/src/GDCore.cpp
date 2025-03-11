@@ -400,9 +400,37 @@ void GDCore::InitializeImGui() {
     // ImGui style
     ImGui::StyleColorsDark();
 
+    // Load font from assets folder
+    ImGuiIO& io = ImGui::GetIO();
+
+    #ifdef __ANDROID__
+        SDL_RWops* fontFile = SDL_RWFromFile("files/fonts/MarklMono.otf", "rb");
+        if (fontFile) {
+            size_t fileSize = SDL_RWsize(fontFile);
+            void* fontData = IM_ALLOC(fileSize);
+            SDL_RWread(fontFile, fontData, fileSize, 1);
+            SDL_RWclose(fontFile);
+
+            ImFontConfig fontConfig;
+            fontConfig.MergeMode = false;
+
+            static const ImWchar unicodeRanges[] = {
+                    0x0020, 0x00FF,
+                    0x25A0, 0x25FF,
+                    0
+            };
+            
+            io.Fonts->AddFontFromMemoryTTF(fontData, (int)fileSize, 30.0f, &fontConfig, unicodeRanges);
+        }
+        else
+            SDL_Log("Failed to load font from assets!");
+    #endif
+
     // Initialize SDL2 bindings
     ImGui_ImplSDL2_InitForSDLRenderer(window, rR);
     ImGui_ImplSDLRenderer2_Init(rR);
+
+
 }
 
 void GDCore::RenderGameUI() {
@@ -411,42 +439,108 @@ void GDCore::RenderGameUI() {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
+
+    // Border Variables
+    float borderSize = 3.0f;
+    ImVec4 borderColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+    // Label Variables
+    float ABLabelSize = 2.5f;
+    ImVec4 blackTextColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
     // --- D-Pad ---
-    ImGui::SetNextWindowPos(ImVec2(50, 300));
-    ImGui::SetNextWindowSize(ImVec2(100, 100));
-    ImGui::Begin("D-Pad", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+    ImGui::SetNextWindowPos(ImVec2(30, 185));
+    ImGui::SetNextWindowSize(ImVec2(250, 245));
+    ImGui::Begin("D-Pad", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
 
-    if (ImGui::Button("Up", ImVec2(40, 40))) {
+    ImVec2 DPadSize(75, 75);
+
+    float centerX = ImGui::GetWindowSize().x / 2;
+    float buttonOffset = 10.0f;
+    float LRGap = 30.0f;
+
+    // Colors for D-Pad
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.6f, 0.6f, 0.6f, 0.625f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 0.4f, 0.4f, 0.75f));
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, borderSize);
+    ImGui::PushStyleColor(ImGuiCol_Border, borderColor);
+
+    // Up
+    ImGui::SetCursorPosX(centerX - DPadSize.x / 2);
+    if (ImGui::Button("▲", DPadSize)) {
         //TODO
     }
+
+    // Left & Right
+    ImGui::SetCursorPos(ImVec2(centerX - DPadSize.x - buttonOffset - LRGap, DPadSize.y + buttonOffset));
+    if (ImGui::Button("◀", DPadSize)) {
+        //TODO
+    }
+
     ImGui::SameLine();
-    if (ImGui::Button("Down", ImVec2(40, 40))) {
+
+    ImGui::SetCursorPosX(centerX + buttonOffset + LRGap);
+    if (ImGui::Button("▶", DPadSize)) {
         //TODO
     }
 
-    if (ImGui::Button("Left", ImVec2(40, 40))) {
-        //TODO
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Right", ImVec2(40, 40))) {
+    // Down
+    ImGui::SetCursorPos(ImVec2(centerX - DPadSize.x / 2, DPadSize.y * 2 + buttonOffset));
+    if (ImGui::Button("▼", DPadSize)) {
         //TODO
     }
 
+    // Pop border size & color
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
+
+    ImGui::PopStyleColor(3);
     ImGui::End();
 
     // --- A/B Buttons
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 25.0f);
-    ImGui::SetNextWindowPos(ImVec2(750, 300));
-    ImGui::SetNextWindowSize(ImVec2(175, 100));
-    ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 50.0f);
+    ImGui::SetNextWindowPos(ImVec2(700, 260));
+    ImGui::SetNextWindowSize(ImVec2(200, 100));
+    ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
 
-    if (ImGui::Button("A", ImVec2(50, 50))) {
+    ImVec2 ABSize(75, 75);
+    float windowCenterX = ImGui::GetWindowSize().x / 2;
+    float ABgap = 20.0f;
+    float totalButtonWidth = 2 * ABSize.x + ImGui::GetStyle().ItemSpacing.x + ABgap / 2;
+    float offset = windowCenterX - totalButtonWidth / 2;
+
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, borderSize);
+    ImGui::PushStyleColor(ImGuiCol_Border, borderColor);
+    ImGui::PushStyleColor(ImGuiCol_Text, blackTextColor);
+
+    // colors for A Button
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.0f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.1f, 0.1f, 0.625f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.0f, 0.0f, 0.75f));
+
+    ImGui::SetCursorPosX(offset);
+    if (ImGui::Button("A", ABSize)) {
         //TODO
     }
-    ImGui::SameLine();
-    if (ImGui::Button("B", ImVec2(50, 50))) {
+    ImGui::PopStyleColor(3);
+
+    // colors for B Button
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.8f, 0.0f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.7f, 0.9f, 0.1f, 0.625f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.5f, 0.7f, 0.0f, 0.75f));
+
+    ImGui::SameLine(0.0f, ABgap);
+    if (ImGui::Button("B", ABSize)) {
         //TODO
     }
+    ImGui::PopStyleColor(4);
+
+    // Pop border size & color
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
+
+    // Text Rounding
     ImGui::PopStyleVar();
 
     ImGui::End();

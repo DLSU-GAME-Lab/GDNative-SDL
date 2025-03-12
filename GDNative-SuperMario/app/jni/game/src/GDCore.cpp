@@ -501,26 +501,62 @@ void GDCore::RenderGameUI() {
     // Up
     ImGui::SetCursorPosX(centerX - DPadSize.x / 2);
     if (ImGui::Button("▲", DPadSize)) {
-        CCFG::getMM()->keyPressed(0);
+        if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(0); }
+    }
+    if (ImGui::IsItemActive()) {
+        oMap->getPlayer()->jump();
+        CCFG::keySpace = true;
+    }
+    if (!ImGui::IsItemActive()) {
+        CCFG::keySpace = false;
     }
 
     // Left & Right
     ImGui::SetCursorPos(ImVec2(centerX - DPadSize.x - buttonOffset - LRGap, DPadSize.y + buttonOffset));
     if (ImGui::Button("◀", DPadSize)) {
-        CCFG::getMM()->keyPressed(3);
+        if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(3); }
     }
-
+    if (ImGui::IsItemActive()) {
+        keyAPressed = true;
+        if(!keyDPressed)
+            firstDir = false;
+    }
+    if (!ImGui::IsItemActive()) {
+        if(!firstDir)
+            firstDir = true;
+        keyAPressed = false;
+    }
+    
     ImGui::SameLine();
 
     ImGui::SetCursorPosX(centerX + buttonOffset + LRGap);
     if (ImGui::Button("▶", DPadSize)) {
-        CCFG::getMM()->keyPressed(1);
+        if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(1); }
+    }
+    if (ImGui::IsItemActive()) {
+        keyDPressed = true;
+        if(!keyAPressed)
+            firstDir = true;
+    }
+    if (!ImGui::IsItemActive()) {
+        if(firstDir)
+            firstDir = false;
+        keyDPressed = false;
     }
 
     // Down
     ImGui::SetCursorPos(ImVec2(centerX - DPadSize.x / 2, DPadSize.y * 2 + buttonOffset));
     if (ImGui::Button("▼", DPadSize)) {
-        CCFG::getMM()->keyPressed(2);
+        if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(2); }
+    }
+    if (ImGui::IsItemActive() && !keyS) {
+        keyS = true;
+        if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation())
+            oMap->getPlayer()->setSquat(true);
+    }
+    if (!ImGui::IsItemActive()) {
+        oMap->getPlayer()->setSquat(false);
+        keyS = false;
     }
 
     // Pop border size & color
@@ -553,8 +589,16 @@ void GDCore::RenderGameUI() {
 
     ImGui::SetCursorPosX(offset);
     if (ImGui::Button("A", ABSize)) {
-        CCFG::getMM()->enter();
+        if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->enter(); }
     }
+    if (ImGui::IsItemActive()) {
+        oMap->getPlayer()->jump();
+        CCFG::keySpace = true;
+    }
+    if (!ImGui::IsItemActive()) {
+        CCFG::keySpace = false;
+    }
+
     ImGui::PopStyleColor(3);
 
     // colors for B Button
@@ -564,7 +608,15 @@ void GDCore::RenderGameUI() {
 
     ImGui::SameLine(0.0f, ABgap);
     if (ImGui::Button("B", ABSize)) {
-        CCFG::getMM()->escape();
+        if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->escape(); }
+    }
+    if (ImGui::IsItemActive() && !keyShift) {
+        oMap->getPlayer()->startRun();
+        keyShift = true;
+    }
+    if (!ImGui::IsItemActive() && keyShift) {
+        oMap->getPlayer()->resetRun();
+        keyShift = false;
     }
     ImGui::PopStyleColor(4);
 

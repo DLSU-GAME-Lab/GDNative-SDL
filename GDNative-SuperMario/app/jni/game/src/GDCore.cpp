@@ -8,11 +8,6 @@
 #include "Text.h"
 #include "SDL_mixer.h"
 
-//----- ImGui -----
-#include "../ImGui/include/imgui.h"
-#include "../ImGui/include/imgui_impl_sdl2.h"
-#include "../ImGui/include/imgui_impl_sdlrenderer2.h"
-
 Map* GDCore::oMap = new Map();
 bool GDCore::mouseLeftPressed = false;
 bool GDCore::mouseRightPressed = false;
@@ -97,6 +92,7 @@ GDCore::GDCore(void) {
     CCFG::getMusic()->LoadAllMusic();
 
     // ----- ImGui
+    InitializeTouchVariables();
     InitializeImGui();
 }
 
@@ -127,6 +123,7 @@ void GDCore::mainLoop() {
 
         Input();
         MouseInput();
+        TouchInput();
         Update();
         Draw();
 
@@ -382,48 +379,94 @@ void GDCore::MouseInput() {
             }
             break;
         }
-        case SDL_MOUSEWHEEL: {
-            if (mainEvent->wheel.timestamp > SDL_GetTicks() - 2) {
-                //CCFG::getMM()->getLE()->mouseWheel(mainEvent->wheel.y);
-            }
-            break;
-        }
+    }
+}
+
+//==================================================================================================
+
+void GDCore::TouchInput() {
+    switch(mainEvent->type) {
         case SDL_FINGERDOWN: {
-            int windowWidth, windowHeight;
-            SDL_GetRendererOutputSize(rR, &windowWidth, &windowHeight);
+            SDL_FingerID fingerId = mainEvent->tfinger.fingerId;
 
-            // Get logical size set by SDL_RenderSetLogicalSize
-            int logicalWidth = CCFG::GAME_WIDTH;
-            int logicalHeight = CCFG::GAME_HEIGHT;
+            float touchX = mainEvent->tfinger.x * (float)rendererOutputWindowWidth;
+            float touchY = mainEvent->tfinger.y * (float)rendererOutputWindowHeight;
 
-            // Convert absolute touch coordinates to logical coordinates
-            float touchX = mainEvent->tfinger.x * (float)windowWidth;
-            float touchY = mainEvent->tfinger.y * (float)windowHeight;
+            ImVec2 position = GetTouchCoordinates(touchX, touchY);
 
-            float offsetX = 75.0f;
-            float offsetY = 10.0f;
+            TouchPoint touch = {
+                    fingerId,
+                    position,
+                    true
+            };
+            touchPoints[fingerId] = touch;
 
-            // Scale touch input to match ImGui
-            float scaledX = (touchX / (float)windowWidth) * (float)logicalWidth + offsetX;
-            float scaledY = (touchY / (float)windowHeight) * (float)logicalHeight - offsetY;
-
-            // Convert touch to ImGui mouse input
             ImGuiIO &io = ImGui::GetIO();
-            io.MousePos = ImVec2(scaledX, scaledY);
+            io.MousePos = position;
             io.MouseDown[0] = true;
 
             break;
         }
+
         case SDL_FINGERUP: {
+            SDL_FingerID fingerId = mainEvent->tfinger.fingerId;
+
+            if (touchPoints.count(fingerId) > 0)
+                touchPoints.erase(fingerId);
+
             ImGuiIO& io = ImGui::GetIO();
             io.MouseDown[0] = false;
+
+            break;
+        }
+
+        case SDL_FINGERMOTION: {
+            SDL_FingerID fingerId = mainEvent->tfinger.fingerId;
+
+            if (touchPoints.count(fingerId) > 0) {
+                float touchX = mainEvent->tfinger.x * (float)rendererOutputWindowWidth;
+                float touchY = mainEvent->tfinger.y * (float)rendererOutputWindowHeight;
+
+                ImVec2 position = GetTouchCoordinates(touchX, touchY);
+
+                touchPoints[fingerId].pos = position;
+            }
 
             break;
         }
     }
 }
 
-//==================================================================================================
+ImVec2 GDCore::GetTouchCoordinates(float touchX, float touchY) {
+    scaledX = (touchX / (float)rendererOutputWindowWidth) * (float)logicalWidth + offsetX;
+    scaledY = (touchY / (float)rendererOutputWindowHeight) * (float)logicalHeight - offsetY;
+
+    return ImVec2(scaledX, scaledY);
+}
+
+bool GDCore::IsPointInRect(const ImVec2& point, const ImVec2& rectMin, const ImVec2& rectMax) {
+    return point.x >= rectMin.x && point.x <= rectMax.x && point.y >= rectMin.y && point.y <= rectMax.y;
+}
+
+bool GDCore::IsTouchingButton(const ImVec2& buttonPos, const ImVec2& buttonSize) {
+    ImVec2 buttonMax(buttonPos.x + buttonSize.x, buttonPos.y + buttonSize.y);
+    for (const auto& [fingerId, touch] : touchPoints) {
+        if (touch.active && IsPointInRect(touch.pos, buttonPos, buttonMax)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void GDCore::InitializeTouchVariables() {
+    SDL_GetRendererOutputSize(rR, &rendererOutputWindowWidth, &rendererOutputWindowHeight);
+
+    logicalWidth = CCFG::GAME_WIDTH;
+    logicalHeight = CCFG::GAME_HEIGHT;
+
+    offsetX = 75.0f;
+    offsetY = 10.0f;
+}
 
 void GDCore::InitializeImGui() {
     IMGUI_CHECKVERSION();
@@ -461,8 +504,6 @@ void GDCore::InitializeImGui() {
     // Initialize SDL2 bindings
     ImGui_ImplSDL2_InitForSDLRenderer(window, rR);
     ImGui_ImplSDLRenderer2_Init(rR);
-
-
 }
 
 void GDCore::RenderGameUI() {
@@ -481,6 +522,7 @@ void GDCore::RenderGameUI() {
     ImVec4 blackTextColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
     // --- D-Pad ---
+    ImVec2 DPADWindowPos(75, 185);
     ImGui::SetNextWindowPos(ImVec2(75, 185));
     ImGui::SetNextWindowSize(ImVec2(250, 245));
     ImGui::Begin("D-Pad", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
@@ -498,16 +540,30 @@ void GDCore::RenderGameUI() {
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, borderSize);
     ImGui::PushStyleColor(ImGuiCol_Border, borderColor);
 
+    // Button positions relative to window
+    ImVec2 upButtonPos(centerX - DPadSize.x / 2, 0);  // Up
+    ImVec2 leftButtonPos(centerX - DPadSize.x - buttonOffset - LRGap, DPadSize.y + buttonOffset);  // Left
+    ImVec2 rightButtonPos(centerX + buttonOffset + LRGap, DPadSize.y + buttonOffset);  // Right
+    ImVec2 downButtonPos(centerX - DPadSize.x / 2, DPadSize.y * 2 + buttonOffset);  // Down
+
+    // Absolute coordinates (window position + relative position)
+    ImVec2 upButtonAbsolute(DPADWindowPos.x + upButtonPos.x, DPADWindowPos.y + upButtonPos.y + 10.0f);
+    ImVec2 leftButtonAbsolute(DPADWindowPos.x + leftButtonPos.x - 20.0f, DPADWindowPos.y + leftButtonPos.y);
+    ImVec2 rightButtonAbsolute(DPADWindowPos.x + rightButtonPos.x - 20.0f, DPADWindowPos.y + rightButtonPos.y);
+    ImVec2 downButtonAbsolute(DPADWindowPos.x + downButtonPos.x, DPADWindowPos.y + downButtonPos.y);
+
     // Up
     ImGui::SetCursorPosX(centerX - DPadSize.x / 2);
     if (ImGui::Button("▲", DPadSize)) {
         if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(0); }
     }
-    if (ImGui::IsItemActive()) {
-        oMap->getPlayer()->jump();
-        CCFG::keySpace = true;
+    if (IsTouchingButton(upButtonAbsolute, DPadSize)) {
+        if (CCFG::getMM()->getViewID() == MenuManager::eGame){
+            oMap->getPlayer()->jump();
+            CCFG::keySpace = true;
+        }
     }
-    if (!ImGui::IsItemActive()) {
+    else {
         CCFG::keySpace = false;
     }
 
@@ -516,12 +572,14 @@ void GDCore::RenderGameUI() {
     if (ImGui::Button("◀", DPadSize)) {
         if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(3); }
     }
-    if (ImGui::IsItemActive()) {
-        keyAPressed = true;
-        if(!keyDPressed)
-            firstDir = false;
+    if (IsTouchingButton(leftButtonAbsolute, DPadSize)) {
+        if (CCFG::getMM()->getViewID() == MenuManager::eGame){
+            keyAPressed = true;
+            if(!keyDPressed)
+                firstDir = false;
+        }
     }
-    if (!ImGui::IsItemActive()) {
+    else {
         if(!firstDir)
             firstDir = true;
         keyAPressed = false;
@@ -533,12 +591,14 @@ void GDCore::RenderGameUI() {
     if (ImGui::Button("▶", DPadSize)) {
         if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(1); }
     }
-    if (ImGui::IsItemActive()) {
-        keyDPressed = true;
-        if(!keyAPressed)
-            firstDir = true;
+    if (IsTouchingButton(rightButtonAbsolute, DPadSize)) {
+        if (CCFG::getMM()->getViewID() == MenuManager::eGame){
+            keyDPressed = true;
+            if(!keyAPressed)
+                firstDir = true;
+        }
     }
-    if (!ImGui::IsItemActive()) {
+    else {
         if(firstDir)
             firstDir = false;
         keyDPressed = false;
@@ -549,12 +609,14 @@ void GDCore::RenderGameUI() {
     if (ImGui::Button("▼", DPadSize)) {
         if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->keyPressed(2); }
     }
-    if (ImGui::IsItemActive() && !keyS) {
-        keyS = true;
-        if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation())
-            oMap->getPlayer()->setSquat(true);
+    if (IsTouchingButton(downButtonAbsolute, DPadSize)) {
+        if (CCFG::getMM()->getViewID() == MenuManager::eGame && !keyS){
+            keyS = true;
+            if(!oMap->getUnderWater() && !oMap->getPlayer()->getInLevelAnimation())
+                oMap->getPlayer()->setSquat(true);
+        }
     }
-    if (!ImGui::IsItemActive()) {
+    else {
         oMap->getPlayer()->setSquat(false);
         keyS = false;
     }
@@ -564,10 +626,13 @@ void GDCore::RenderGameUI() {
     ImGui::PopStyleColor();
 
     ImGui::PopStyleColor(3);
+
     ImGui::End();
 
     // --- A/B Buttons
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 50.0f);
+
+    ImVec2 ABWindowPos(685, 260);
     ImGui::SetNextWindowPos(ImVec2(685, 260));
     ImGui::SetNextWindowSize(ImVec2(200, 100));
     ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground);
@@ -587,15 +652,21 @@ void GDCore::RenderGameUI() {
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.1f, 0.1f, 0.625f));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.7f, 0.0f, 0.0f, 0.75f));
 
+    ImVec2 aButtonPos(offset, 0);
+    ImVec2 aButtonAbsolute(ABWindowPos.x + aButtonPos.x, ABWindowPos.y + aButtonPos.y + 10.0f);
+
+
     ImGui::SetCursorPosX(offset);
     if (ImGui::Button("A", ABSize)) {
         if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->enter(); }
     }
-    if (ImGui::IsItemActive()) {
-        oMap->getPlayer()->jump();
-        CCFG::keySpace = true;
+    if (IsTouchingButton(aButtonAbsolute, DPadSize)) {
+        if (CCFG::getMM()->getViewID() == MenuManager::eGame){
+            oMap->getPlayer()->jump();
+            CCFG::keySpace = true;
+        }
     }
-    if (!ImGui::IsItemActive()) {
+   else {
         CCFG::keySpace = false;
     }
 
@@ -606,15 +677,20 @@ void GDCore::RenderGameUI() {
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.7f, 0.9f, 0.1f, 0.625f));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.5f, 0.7f, 0.0f, 0.75f));
 
+    ImVec2 bButtonPos(offset + ABSize.x + ABgap, 0);
+    ImVec2 bButtonAbsolute(ABWindowPos.x + bButtonPos.x, ABWindowPos.y + bButtonPos.y + 10.0f);
+
     ImGui::SameLine(0.0f, ABgap);
     if (ImGui::Button("B", ABSize)) {
         if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->escape(); }
     }
-    if (ImGui::IsItemActive() && !keyShift) {
-        oMap->getPlayer()->startRun();
-        keyShift = true;
+    if (IsTouchingButton(downButtonAbsolute, DPadSize)) {
+        if (CCFG::getMM()->getViewID() == MenuManager::eGame && !keyShift){
+            oMap->getPlayer()->startRun();
+            keyShift = true;
+        }
     }
-    if (!ImGui::IsItemActive() && keyShift) {
+    else if (!IsTouchingButton(bButtonAbsolute, DPadSize) && keyShift){
         oMap->getPlayer()->resetRun();
         keyShift = false;
     }

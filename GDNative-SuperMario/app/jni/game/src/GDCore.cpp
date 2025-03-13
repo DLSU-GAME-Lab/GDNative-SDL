@@ -521,6 +521,36 @@ void GDCore::RenderGameUI() {
     float ABLabelSize = 2.5f;
     ImVec4 blackTextColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
+    // --- Menu ---
+    if (CCFG::getMM()->getViewID() == MenuManager::eGame) {
+        ImVec2 menuWindowPos(75, 1.5);
+        ImGui::SetNextWindowPos(menuWindowPos);
+        ImGui::SetNextWindowSize(ImVec2(75, 75));
+        ImGui::Begin("Menu", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+                                      ImGuiWindowFlags_NoBackground);
+
+        ImVec2 MenuSize(50, 50);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, borderSize);
+        ImGui::PushStyleColor(ImGuiCol_Border, borderColor);
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.3f, 0.3f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.4f, 0.4f, 0.4f, 0.625f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 0.75f));
+
+        ImGui::SetCursorPos(ImVec2(10, 10));
+        if (ImGui::Button("■", MenuSize)) {
+            CCFG::getMM()->resetActiveOptionID(CCFG::getMM()->ePause);
+            CCFG::getMM()->setViewID(CCFG::getMM()->ePause);
+            CCFG::getMusic()->PlayChunk(CCFG::getMusic()->cPASUE);
+            CCFG::getMusic()->PauseMusic();
+        }
+
+        ImGui::PopStyleColor(4);
+        ImGui::PopStyleVar();
+
+        ImGui::End();
+    }
+
     // --- D-Pad ---
     ImVec2 DPADWindowPos(75, 185);
     ImGui::SetNextWindowPos(ImVec2(75, 185));

@@ -73,7 +73,7 @@ GDCore::GDCore(void) {
     mainEvent = new SDL_Event();
     // ----- ICO
 
-//    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 //
     oMap = new Map(rR);
     CCFG::getMM()->setActiveOption(rR);

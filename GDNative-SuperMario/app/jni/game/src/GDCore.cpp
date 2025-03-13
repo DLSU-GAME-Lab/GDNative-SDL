@@ -8,6 +8,8 @@
 #include "Text.h"
 #include "SDL_mixer.h"
 
+#include <android/log.h>
+
 Map* GDCore::oMap = new Map();
 bool GDCore::mouseLeftPressed = false;
 bool GDCore::mouseRightPressed = false;
@@ -714,13 +716,13 @@ void GDCore::RenderGameUI() {
     if (ImGui::Button("B", ABSize)) {
         if (CCFG::getMM()->getViewID() != MenuManager::eGame) { CCFG::getMM()->escape(); }
     }
-    if (IsTouchingButton(downButtonAbsolute, DPadSize)) {
-        if (CCFG::getMM()->getViewID() == MenuManager::eGame && !keyShift){
+    if (IsTouchingButton(bButtonAbsolute, DPadSize)) {
+        if (CCFG::getMM()->getViewID() == MenuManager::eGame){
             oMap->getPlayer()->startRun();
             keyShift = true;
         }
     }
-    else if (!IsTouchingButton(bButtonAbsolute, DPadSize) && keyShift){
+    else {
         oMap->getPlayer()->resetRun();
         keyShift = false;
     }

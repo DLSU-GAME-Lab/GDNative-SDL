@@ -4,22 +4,21 @@
 #include <SDL3/SDL.h>
 #include <string>
 
-// renders a sprite managed by TextureManager
 class SpriteRenderer : public AComponent {
-public:
-    // grabs a texture by name from TextureManager
-    SpriteRenderer(const std::string& name, SDL_Renderer* renderer, int x, int y);
-    ~SpriteRenderer() override;
-
-    // called each frame to draw the sprite
-    void draw();
-
-    void perform() override;
-
 private:
-    SDL_Renderer* mRenderer;
     SDL_Texture* mTexture;
+    SDL_FRect mDestRect;
 
-    int mX, mY;          // position
-    int mWidth, mHeight; // dimensions
+public:
+    SpriteRenderer(const std::string& textureName, SDL_Renderer* renderer,
+        float x = 0, float y = 0, float w = -1, float h = -1);
+
+    void render(SDL_Renderer* renderer);
+
+    // setters
+    void setPosition(float x, float y);
+    void setSize(float w, float h);
+
+    // getters
+    SDL_FRect getRect() const { return mDestRect; }
 };

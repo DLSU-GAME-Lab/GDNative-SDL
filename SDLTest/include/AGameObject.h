@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AComponent.h"
+#include "SpriteRenderer.h"
 #include <SDL3/SDL.h>
 #include <vector>
 
@@ -41,4 +42,13 @@ public:
     std::string getName();
     AGameObject* getParent();
     void setParent(AGameObject* pParent);
+
+// sprite renderer
+public:
+    template<typename... Args>
+    SpriteRenderer* addSpriteRenderer(const std::string& textureName, SDL_Renderer* renderer, Args&&... args) {
+        SpriteRenderer* sr = new SpriteRenderer(textureName, renderer, std::forward<Args>(args)...);
+        this->attachComponent(sr);
+        return sr;
+    }
 };

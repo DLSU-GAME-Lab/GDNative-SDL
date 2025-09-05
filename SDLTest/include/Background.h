@@ -7,7 +7,7 @@ private:
 	std::string strImageName;
 
 public:
-	Background(std::string strName, std::string strImageName);
+	Background(const std::string& strName, const std::string& strImageName, SDL_Renderer* renderer);
 	~Background();
 };
 

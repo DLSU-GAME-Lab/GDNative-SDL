@@ -69,6 +69,10 @@
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\Lamps.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ladder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -125,5 +129,9 @@
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="include\Lamps.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Ladder.h" />
   </ItemGroup>
 </Project>

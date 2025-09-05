@@ -1,16 +1,14 @@
-#pragma once
 #include "AGameObject.h"
 #include "SpriteRendererSystem.h"
-class UIButton: public AGameObject
+class Prop : public AGameObject
 {
 private:
 	std::string strImageName;
 	int nX, nY, nH, nW;
 	bool bFlipX;
 public:
-	UIButton(const std::string& strName, int nX, int nY, int nW, int nH, bool bFlipX);
-	~UIButton();
+	Prop(const std::string& strName, const std::string& strImageName, int nX, int nY, int nW, int nH, bool bFlipX);
+	~Prop();
 
 	void initialize() override;
 };
-

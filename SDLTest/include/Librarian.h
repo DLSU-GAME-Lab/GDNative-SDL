@@ -1,6 +1,5 @@
 #pragma once
 #include "AGameObject.h"
-
 class Librarian : public AGameObject
 {
 public:

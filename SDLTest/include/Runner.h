@@ -1,5 +1,6 @@
 #pragma once
 #include "SDL3/SDL.h"
+#include "Settings.h"
 class Runner
 {
 private:

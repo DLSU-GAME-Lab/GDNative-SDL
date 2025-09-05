@@ -7,10 +7,6 @@ Runner::Runner()
 	SDL_DisplayMode dispMode = *SDL_GetDesktopDisplayMode(dispID);
 	screenWidth = dispMode.w;
 	screenHeight = dispMode.h;
-	//should have a game width and game height to scale the window
-	// give them here ->
-	float gameHeight = 1200;
-	float gameWidth = 2000;
 
 	float scaleX = (float)screenWidth / gameWidth;
 	float scaleY = (float)screenHeight / gameHeight;

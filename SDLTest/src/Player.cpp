@@ -13,7 +13,7 @@ Player::~Player()
 
 void Player::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("frame1.png", 500, 500);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("frame1.png", 500, 630);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteRenderer);
 }

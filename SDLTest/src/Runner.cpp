@@ -16,12 +16,13 @@ Runner::Runner()
 	screenWidth = dispMode.w;
 	screenHeight = dispMode.h;
 
+	this->fWindowScale = 0.75f;
 	float scaleX = (float)screenWidth / gameWidth;
 	float scaleY = (float)screenHeight / gameHeight;
 	float scale = std::min(scaleX, scaleY);
 
-	int windowHeight = gameHeight * scale;
-	int windowWidth = gameWidth * scale;
+	int windowHeight = gameHeight * scale * this->fWindowScale;
+	int windowWidth = gameWidth * scale * this->fWindowScale;
 
 	pWindow = SDL_CreateWindow("Babaylan Tales", windowWidth, windowHeight,SDL_WINDOW_RESIZABLE);
 
@@ -30,7 +31,7 @@ Runner::Runner()
 	{
 		printf("ERROR");
 	}
-	SDL_SetRenderLogicalPresentation(this->pRenderer, windowHeight, screenHeight, SDL_LOGICAL_PRESENTATION_DISABLED);
+	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
 	pMainEvent = new SDL_Event();
 

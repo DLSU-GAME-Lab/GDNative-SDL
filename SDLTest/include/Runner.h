@@ -9,6 +9,7 @@ private:
     SDL_Renderer* pRenderer;
     SDL_Event* pMainEvent;
     uint64_t ticks;
+    float fWindowScale;
 
 
     //FPS

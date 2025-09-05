@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Component.h"
-
-using namespace components;
+#include "GameObject.h"
 
 Component::Component(std::string strName, ComponentType EType) {
     this->strName = strName;
@@ -27,14 +26,10 @@ GameObject* Component::getOwner() {
     return this->pOwner;
 }
 
-ComponentType Component::getType() {
+ComponentType Component::getType() const {
     return this->EType;
 }
 
 std::string Component::getName() {
     return this->strName;
 }
-//
-//void Component::setDeltaTime(sf::Time tDeltaTime) {
-//    this->tDeltaTime = tDeltaTime;
-//}

@@ -6,6 +6,10 @@
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
     : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr)
 {
+    this->flipX = false;
+    this->flipY = false;
+    this->dAngle = 0.0;
+
     auto textures = TextureManager::getInstance()->getTexture(textureName);
     if (!textures.empty()) {
         pTexture = textures[0];
@@ -31,9 +35,10 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
 
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
     if (pTexture) {
-        if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, 0, NULL, SDL_FLIP_HORIZONTAL);
-        else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, 0, NULL, SDL_FLIP_VERTICAL);
-        else SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect);
+        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE); //replace with both flipped when available
+        if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
+        else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
+        else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
     }
 
     // additional log
@@ -68,6 +73,11 @@ void SpriteRenderer::setFlipY(bool flipY)
     this->flipY = flipY;
 }
 
+void SpriteRenderer::setAngle(double dAngle)
+{
+    this->dAngle = dAngle;
+}
+
 bool SpriteRenderer::getflipX()
 {
     return this->flipX;
@@ -76,5 +86,10 @@ bool SpriteRenderer::getflipX()
 bool SpriteRenderer::getFlipY()
 {
     return this->flipY;
+}
+
+double SpriteRenderer::getAngle()
+{
+    return this->dAngle;
 }
 

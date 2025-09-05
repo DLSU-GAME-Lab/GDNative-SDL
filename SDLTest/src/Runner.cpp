@@ -65,18 +65,36 @@ Runner::~Runner()
 
 void Runner::run()
 {
-	this->lFPSTime = SDL_GetTicks();
-	while (this->pMainEvent->type != SDL_EVENT_QUIT)
+	bool running = true;
+
+	// pick a clear color once (optional)
+	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
+	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
+
+	while (running)
 	{
-		this->lFrameTime = SDL_GetTicks();
-		SDL_PollEvent(this->pMainEvent);
+		// process all pending events
+		SDL_Event e;
+		while (SDL_PollEvent(&e))
+		{
+			if (e.type == SDL_EVENT_QUIT)
+				running = false;
+		}
+
+		// clear backbuffer
 		SDL_RenderClear(pRenderer);
-		SDL_RenderFillRect(pRenderer, NULL);
+
+		// per-frame logic
 		this->update();
 		SceneManager::getInstance()->checkLoadScene();
+
+		// draw all sprites
 		this->render();
+
+		SDL_RenderPresent(pRenderer);
 	}
 }
+
 
 void Runner::processEvents()
 {

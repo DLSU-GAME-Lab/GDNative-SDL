@@ -34,6 +34,11 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
         SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect);
         std::cout << "Drawing: " << this->strName << "\n";
     }
+
+    // additional log
+    else if (SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect) < 0) {
+        SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
+    }
 }
 
 void SpriteRenderer::perform()

@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,6 +135,7 @@
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
+    <ClCompile Include="src\SpriteComponent.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +144,7 @@
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\Runner.h" />
+    <ClInclude Include="include\SpriteComponent.h" />
     <ClInclude Include="include\TextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

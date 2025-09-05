@@ -33,6 +33,9 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="src\SpriteComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="include\TextureManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteComponent.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -32,6 +32,7 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
     if (pTexture) {
         SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect);
+        std::cout << "Drawing: " << this->strName << "\n";
     }
 }
 

@@ -14,6 +14,9 @@ LobbyScene::~LobbyScene()
 void LobbyScene::onLoadResources()
 {
 	TextureManager::getInstance()->load("library_redo.png");
+	TextureManager::getInstance()->load("librarian.png");
+	TextureManager::getInstance()->load("fairy.png");
+	TextureManager::getInstance()->load("frame1.png");
 }
 
 void LobbyScene::onLoadObjects()

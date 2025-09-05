@@ -46,8 +46,8 @@ void GameObjectManager::deleteObject(AGameObject* pGameObject)
     }
 
     if(nIndex != -1) {
-        this->vecGameObject.erase(this->vecGameObject.begin() + nIndex);
         this->mapGameObject.erase(this->vecGameObject[nIndex]->getName());
+        this->vecGameObject.erase(this->vecGameObject.begin() + nIndex);
         delete pGameObject;
     }
 }

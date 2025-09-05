@@ -1,10 +1,25 @@
 #include "Background.h"
 #include "TextureManager.h"
-#include "SpriteRenderer.h"
+#include "SpriteRendererSystem.h"
+#include "Settings.h"
 
 Background::Background(const std::string& strName, const std::string& strImageName)
     : AGameObject(strName), strImageName(strImageName)
 {
+    
+}
+
+Background::~Background()
+{
+
+}
+
+void Background::initialize()
+{
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(strImageName, 0, 0, gameWidth, gameHeight);
+    SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
+    this->attachComponent((AComponent*)pSpriteRenderer);
+
     // create & attach sprite renderer
     // sample
     // this->addSpriteRenderer(strImageName, renderer, 0.0f, 0.0f);
@@ -15,14 +30,4 @@ Background::Background(const std::string& strName, const std::string& strImageNa
 
     // Resize the sprite to 128x128 (regardless of the original texture size)
     //sprite->setSize(128.0f, 128.0f);
-}
-
-Background::~Background()
-{
-
-}
-
-void Background::initialize()
-{
-
 }

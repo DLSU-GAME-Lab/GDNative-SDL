@@ -50,6 +50,8 @@ Runner::Runner()
 
 Runner::~Runner()
 {
+	SceneManager::getInstance()->unloadScene();
+
 	//destroy systems
 	SceneManager::destroy();
 	GameObjectManager::destroy();

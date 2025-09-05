@@ -136,6 +136,8 @@
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
+    <ClCompile Include="src\AScene.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
     <ClCompile Include="src\SpriteRendererSystem.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
@@ -145,8 +147,11 @@
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\EnumComponentType.h" />
     <ClInclude Include="include\AGameObject.h" />
+    <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\Runner.h" />
+    <ClInclude Include="include\AScene.h" />
+    <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
     <ClInclude Include="include\SpriteRendererSystem.h" />

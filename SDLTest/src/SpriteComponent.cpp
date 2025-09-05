@@ -1,55 +1,37 @@
 #include "SpriteComponent.h"
-#include <SDL3_image/SDL_image.h>
+#include "TextureManager.h"
 #include <iostream>
 
-// initialize the component and load the sprite
-SpriteComponent::SpriteComponent(const std::string& path, SDL_Renderer* renderer, int x, int y)
-    : Component("SpriteComponent", ComponentType::SPRITE),  
+// Constructor: fetches texture from TextureManager and queries its size
+SpriteComponent::SpriteComponent(const std::string& name, SDL_Renderer* renderer, int x, int y)
+    : Component("SpriteComponent", ComponentType::SPRITE),
     mRenderer(renderer), mTexture(nullptr), mX(x), mY(y), mWidth(0), mHeight(0)
 {
-    load(path);
+    // Fetch texture by name (must be loaded earlier in TextureManager)
+    mTexture = TextureManager::getInstance()->get(name);
+
+    if (mTexture) {
+        // Query width and height of the texture (SDL3 style)
+        float w, h;
+        if (SDL_GetTextureSize(mTexture, &w, &h)) {
+            mWidth = static_cast<int>(w);
+            mHeight = static_cast<int>(h);
+        }
+        else {
+            SDL_Log("Failed to query texture: %s", SDL_GetError());
+        }
+    }
 }
 
 SpriteComponent::~SpriteComponent() {
-    if (mTexture) {
-        SDL_DestroyTexture(mTexture);
-        mTexture = nullptr;
-    }
+    // Do not destroy the texture here — TextureManager owns it
+    mTexture = nullptr;
 }
 
-// Loads the image from file and creates a texture
-bool SpriteComponent::load(const std::string& path) {
-    SDL_Surface* surface = IMG_Load(path.c_str());
-    if (!surface) {
-        std::cerr << "Failed to load image: " << path << " Error: " << SDL_GetError() << std::endl;
-        return false;
-    }
-
-    // Convert surface to texture
-    mTexture = SDL_CreateTextureFromSurface(mRenderer, surface);
-    if (!mTexture) {
-        std::cerr << "Failed to create texture: " << SDL_GetError() << std::endl;
-        SDL_DestroySurface(surface);
-        return false;
-    }
-
-    // Store sprite dimensions from the surface
-    mWidth = surface->w;
-    mHeight = surface->h;
-
-    SDL_DestroySurface(surface);
-    return true;
-}
-
-// Renders the sprite to the screen at its position
+// Renders the sprite at (x, y) with its stored width and height
 void SpriteComponent::perform() {
     if (!mTexture) return;
 
-    SDL_FRect dest;
-    dest.x = static_cast<float>(mX);
-    dest.y = static_cast<float>(mY);
-    dest.w = static_cast<float>(mWidth);
-    dest.h = static_cast<float>(mHeight);
-
+    SDL_FRect dest{ (float)mX, (float)mY, (float)mWidth, (float)mHeight };
     SDL_RenderTexture(mRenderer, mTexture, nullptr, &dest);
 }

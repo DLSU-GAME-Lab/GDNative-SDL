@@ -1,54 +1,78 @@
 #include "TextureManager.h"
+#include <SDL3_image/SDL_image.h>
+#include <iostream>
+#include <algorithm>
 
-void TextureManager::load(std::string strName)
+void TextureManager::load(std::string strName, SDL_Renderer* renderer)
 {
     std::string strPath = "Resource/Asset/" + strName;
-    SDL_Texture* pTexture = new SDL_Texture();
 
-    //if(pTexture->loadFromFile(strPath)) {
-    //    this->mapTexture[strName].push_back(pTexture);
-    //    this->vecTexture.push_back(pTexture);
-    //}
-    //else std::cout << "[ERROR] : Problem loading image file [" + strName + "] from Asset folder." << std::endl;
-    //
+    SDL_Surface* surface = IMG_Load(strPath.c_str());
+    if (!surface) {
+        std::cerr << "[ERROR] : Problem loading image file [" << strPath << "] "
+            << "Error: " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_DestroySurface(surface);
+
+    if (!pTexture) {
+        std::cerr << "[ERROR] : Failed to create texture for [" << strPath << "] "
+            << "Error: " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    this->mapTexture[strName].push_back(pTexture);
+    this->vecTexture.push_back(pTexture);
 }
 
 void TextureManager::unload(std::string strName)
 {
-    int nFinalSize = this->vecTexture.size() - this->mapTexture[strName].size();
-    int i = 0;
-    while(this->vecTexture.size() > nFinalSize) {
-        bool bErased = false;
-        for(int j = 0; j < this->mapTexture[strName].size() && !bErased; j++) {
-            if(this->vecTexture[i] == this->mapTexture[strName][j]) {
-                this->vecTexture.erase(this->vecTexture.begin() + i);
-                bErased = true;
-            }
-        }
-        if(!bErased) i++;
+    // destroy each texture associated with this name
+    for (SDL_Texture* tex : this->mapTexture[strName]) {
+        SDL_DestroyTexture(tex);
     }
+
+    // remove them from the global vector
+    this->vecTexture.erase(
+        std::remove_if(this->vecTexture.begin(), this->vecTexture.end(),
+            [&](SDL_Texture* tex) {
+                return std::find(this->mapTexture[strName].begin(),
+                    this->mapTexture[strName].end(),
+                    tex) != this->mapTexture[strName].end();
+            }),
+        this->vecTexture.end()
+    );
+
     this->mapTexture[strName].clear();
 }
 
 std::vector<SDL_Texture*> TextureManager::getTexture(std::string strName, int nStart, int nEnd)
 {
-    /*
-    if(nStart == -1)
-        return this->mapTexture[strName];
+    if (mapTexture.find(strName) == mapTexture.end())
+        return {};
 
-    else {
-        std::vector<SDL_Texture*> vecTexture = this->mapTexture[strName];
-        std::vector<SDL_Texture*>::const_iterator iStart = vecTexture.begin() + nStart;
+    if (nStart == -1)
+        return mapTexture[strName];
 
-        if(nEnd == -1)
-            nEnd = nStart + 1;
+    std::vector<SDL_Texture*> vecTexture = mapTexture[strName];
+    if (nEnd == -1)
+        nEnd = nStart + 1;
 
-        std::vector<SDL_Texture*>::const_iterator iEnd = vecTexture.begin() + nEnd + 1;
-        std::vector<SDL_Texture*> vecSublist = std::vector(iStart, iEnd);
+    if (nStart >= 0 && nEnd <= (int)vecTexture.size())
+        return std::vector<SDL_Texture*>(vecTexture.begin() + nStart, vecTexture.begin() + nEnd);
 
-        return vecSublist;
-    }*/
-    return std::vector<SDL_Texture*>();
+    return {};
+}
+
+// get a single texture by name (first one in the list)
+SDL_Texture* TextureManager::get(const std::string& strName)
+{
+    if (mapTexture.find(strName) != mapTexture.end() && !mapTexture[strName].empty()) {
+        return mapTexture[strName][0];
+    }
+    return nullptr;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * 

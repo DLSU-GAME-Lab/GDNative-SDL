@@ -4,20 +4,20 @@
 #include <SDL3/SDL.h>
 #include <string>
 
+// renders a sprite managed by TextureManager
 class SpriteComponent : public Component {
 public:
-    SpriteComponent(const std::string& path, SDL_Renderer* renderer, int x, int y);
+    // grabs a texture by name from TextureManager
+    SpriteComponent(const std::string& name, SDL_Renderer* renderer, int x, int y);
     ~SpriteComponent() override;
 
-    bool load(const std::string& path);
-
-    // override base Component interface
+    // called each frame to draw the sprite
     void perform() override;
 
 private:
     SDL_Renderer* mRenderer;
     SDL_Texture* mTexture;
 
-    int mX, mY;          // Position
-    int mWidth, mHeight; // Size
+    int mX, mY;          // position
+    int mWidth, mHeight; // dimensions
 };

@@ -12,9 +12,10 @@ private:
     std::vector<SDL_Texture*> vecTexture;
 
 public:
-    void load(std::string strName);
+    void load(std::string strName, SDL_Renderer* renderer);
     void unload(std::string strName);
     std::vector<SDL_Texture*> getTexture(std::string strName, int nStart = -1, int nEnd = -1);
+    SDL_Texture* get(const std::string& strName);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Librarian.h"
 #include "Fairy.h"
-
+#include "UIButton.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -20,6 +20,7 @@ void LobbyScene::onLoadResources()
 	TextureManager::getInstance()->load("frame1.png");
 	TextureManager::getInstance()->load("librarian.png");
 	TextureManager::getInstance()->load("fairy.png");
+	TextureManager::getInstance()->load("button.png");
 }
 
 void LobbyScene::onLoadObjects()
@@ -28,12 +29,13 @@ void LobbyScene::onLoadObjects()
 	Player* pPlayer = new Player();
 	Librarian* pLibrarian = new Librarian();
 	Fairy* pFairy = new Fairy();
-
+	UIButton* pButtonRight = new UIButton("Button Right", 100,600, 150, 150);
 
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pButtonRight);
 }
 
 void LobbyScene::onUnloadResources()
@@ -42,4 +44,5 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("frame1.png");
 	TextureManager::getInstance()->unload("librarian.png");
 	TextureManager::getInstance()->unload("fairy.png");
+	TextureManager::getInstance()->unload("button.png");
 }

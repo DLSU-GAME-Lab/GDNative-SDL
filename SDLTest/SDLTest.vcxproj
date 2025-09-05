@@ -145,6 +145,7 @@
     <ClCompile Include="src\SpriteRenderer.cpp" />
     <ClCompile Include="src\SpriteRendererSystem.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\UIButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AComponent.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="include\SpriteRenderer.h" />
     <ClInclude Include="include\SpriteRendererSystem.h" />
     <ClInclude Include="include\TextureManager.h" />
+    <ClInclude Include="include\UIButton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

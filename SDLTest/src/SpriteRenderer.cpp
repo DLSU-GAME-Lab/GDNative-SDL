@@ -55,3 +55,24 @@ void SpriteRenderer::setSize(float w, float h) {
     mDestRect.h = h;
 }
 
+
+void SpriteRenderer::setFlipX(bool flipX)
+{
+    this->flipX = flipX;
+}
+
+void SpriteRenderer::setFlipY(bool flipY)
+{
+    this->flipY = flipY;
+}
+
+bool SpriteRenderer::getflipX()
+{
+    return this->flipX;
+}
+
+bool SpriteRenderer::getFlipY()
+{
+    return this->flipY;
+}
+

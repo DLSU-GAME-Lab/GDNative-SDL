@@ -21,31 +21,25 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Component.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameObjectManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="src\SpriteComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
+    <ClCompile Include="src\AComponent.cpp" />
+    <ClCompile Include="src\AGameObject.cpp" />
+    <ClCompile Include="src\Background.cpp" />
+    <ClCompile Include="src\LobbyScene.cpp" />
+    <ClCompile Include="src\AScene.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SpriteRenderer.cpp" />
+    <ClCompile Include="src\SpriteRendererSystem.cpp" />
+    <ClCompile Include="src\UIButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
       <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameObject.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Component.h">
-      <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumComponentType.h">
       <Filter>Component</Filter>
@@ -56,8 +50,16 @@
     <ClInclude Include="include\TextureManager.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="include\SpriteComponent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
+    <ClInclude Include="include\AComponent.h" />
+    <ClInclude Include="include\Background.h" />
+    <ClInclude Include="include\AGameObject.h" />
+    <ClInclude Include="include\EnumSceneTag.h" />
+    <ClInclude Include="include\LobbyScene.h" />
+    <ClInclude Include="include\AScene.h" />
+    <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\Settings.h" />
+    <ClInclude Include="include\SpriteRenderer.h" />
+    <ClInclude Include="include\SpriteRendererSystem.h" />
+    <ClInclude Include="include\UIButton.h" />
   </ItemGroup>
 </Project>

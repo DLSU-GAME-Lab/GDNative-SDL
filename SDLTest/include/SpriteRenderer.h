@@ -5,13 +5,15 @@
 #include <string>
 
 // renders a sprite managed by TextureManager
-class SpriteComponent : public Component {
+class SpriteRenderer : public Component {
 public:
     // grabs a texture by name from TextureManager
-    SpriteComponent(const std::string& name, SDL_Renderer* renderer, int x, int y);
-    ~SpriteComponent() override;
+    SpriteRenderer(const std::string& name, SDL_Renderer* renderer, int x, int y);
+    ~SpriteRenderer() override;
 
     // called each frame to draw the sprite
+    void draw();
+
     void perform() override;
 
 private:

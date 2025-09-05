@@ -135,7 +135,8 @@
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
-    <ClCompile Include="src\SpriteComponent.cpp" />
+    <ClCompile Include="src\SpriteRenderer.cpp" />
+    <ClCompile Include="src\SpriteRendererSystem.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +146,8 @@
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\Settings.h" />
-    <ClInclude Include="include\SpriteComponent.h" />
+    <ClInclude Include="include\SpriteRenderer.h" />
+    <ClInclude Include="include\SpriteRendererSystem.h" />
     <ClInclude Include="include\TextureManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

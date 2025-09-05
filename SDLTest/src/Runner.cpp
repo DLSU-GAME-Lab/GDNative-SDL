@@ -1,5 +1,7 @@
 #include "Runner.h"
 #include "algorithm"
+#include "SpriteRendererSystem.h"
+
 Runner::Runner()
 {
 	int screenWidth, screenHeight;
@@ -21,10 +23,16 @@ Runner::Runner()
 	SDL_SetRenderLogicalPresentation(this->renderer, windowHeight, screenHeight, SDL_LOGICAL_PRESENTATION_DISABLED);
 
 	mainEvent = new SDL_Event();
+
+	//initialize systems
+	SpriteRendererSystem::initialize();
 }
 
 Runner::~Runner()
 {
+	//destroy systems
+	SpriteRendererSystem::destroy();
+
 	delete this->mainEvent;
 	SDL_DestroyRenderer(this->renderer);
 	SDL_DestroyWindow(this->window);
@@ -56,5 +64,5 @@ void Runner::update()
 
 void Runner::render()
 {
-
+	SpriteRendererSystem::getInstance()->draw();
 }

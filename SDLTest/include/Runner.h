@@ -5,9 +5,9 @@ class Runner
 {
 private:
     //Window
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Event* mainEvent;
+    SDL_Window* pWindow;
+    SDL_Renderer* pRenderer;
+    SDL_Event* pMainEvent;
     uint64_t ticks;
 
 

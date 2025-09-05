@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
+    <ClCompile Include="src\Background.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
@@ -141,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AComponent.h" />
+    <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\EnumComponentType.h" />
     <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\GameObjectManager.h" />

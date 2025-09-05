@@ -3,7 +3,7 @@
 #include <iostream>
 #include <algorithm>
 
-void TextureManager::load(std::string strName, SDL_Renderer* renderer)
+void TextureManager::load(std::string strName)
 {
     std::string strPath = "Resource/Asset/" + strName;
 
@@ -14,7 +14,7 @@ void TextureManager::load(std::string strName, SDL_Renderer* renderer)
         return;
     }
 
-    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, surface);
     SDL_DestroySurface(surface);
 
     if (!pTexture) {
@@ -80,9 +80,10 @@ SDL_Texture* TextureManager::get(const std::string& strName)
  * * * * * * * * * * * * * * * * * * * * */
 TextureManager* TextureManager::P_SHARED_INSTANCE = NULL;
 
-void TextureManager::initialize()
+void TextureManager::initialize(SDL_Renderer* pRenderer)
 {
     P_SHARED_INSTANCE = new TextureManager();
+    P_SHARED_INSTANCE->pRenderer = pRenderer;
 }
 
 void TextureManager::destroy()

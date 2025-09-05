@@ -25,7 +25,11 @@ Runner::Runner()
 
 	pWindow = SDL_CreateWindow("Babaylan Tales", windowWidth, windowHeight,SDL_WINDOW_RESIZABLE);
 
-	this->pRenderer = SDL_CreateRenderer(this->pWindow, "Babaylan Tales");
+	this->pRenderer = SDL_CreateRenderer(this->pWindow, NULL);
+	if (this->pRenderer == NULL)
+	{
+		printf("ERROR");
+	}
 	SDL_SetRenderLogicalPresentation(this->pRenderer, windowHeight, screenHeight, SDL_LOGICAL_PRESENTATION_DISABLED);
 
 	pMainEvent = new SDL_Event();

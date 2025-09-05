@@ -13,6 +13,12 @@
     <Filter Include="System">
       <UniqueIdentifier>{6541477a-7151-4488-9518-b845ae41fc80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{6763a1c5-fb3c-4102-bdea-d725d5feb8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enum">
+      <UniqueIdentifier>{24f4b3aa-a3f0-4b00-b085-552c4fcc65fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -27,22 +33,46 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="src\AComponent.cpp" />
-    <ClCompile Include="src\AGameObject.cpp" />
-    <ClCompile Include="src\Background.cpp" />
-    <ClCompile Include="src\LobbyScene.cpp" />
-    <ClCompile Include="src\AScene.cpp" />
-    <ClCompile Include="src\SceneManager.cpp" />
-    <ClCompile Include="src\SpriteRenderer.cpp" />
-    <ClCompile Include="src\SpriteRendererSystem.cpp" />
-    <ClCompile Include="src\UIButton.cpp" />
+    <ClCompile Include="src\AComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AGameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Background.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fairy.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Librarian.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIButton.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteRendererSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LobbyScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteRenderer.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
       <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EnumComponentType.h">
-      <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="include\GameObjectManager.h">
       <Filter>System</Filter>
@@ -50,16 +80,50 @@
     <ClInclude Include="include\TextureManager.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="include\AComponent.h" />
-    <ClInclude Include="include\Background.h" />
-    <ClInclude Include="include\AGameObject.h" />
-    <ClInclude Include="include\EnumSceneTag.h" />
-    <ClInclude Include="include\LobbyScene.h" />
-    <ClInclude Include="include\AScene.h" />
-    <ClInclude Include="include\SceneManager.h" />
-    <ClInclude Include="include\Settings.h" />
-    <ClInclude Include="include\SpriteRenderer.h" />
-    <ClInclude Include="include\SpriteRendererSystem.h" />
-    <ClInclude Include="include\UIButton.h" />
+    <ClInclude Include="include\AComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AGameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Background.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Fairy.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Librarian.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIButton.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteRendererSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnumSceneTag.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnumComponentType.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LobbyScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Settings.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteRenderer.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

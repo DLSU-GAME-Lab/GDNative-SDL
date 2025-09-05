@@ -2,7 +2,7 @@
 #include "TextureManager.h"
 #include <iostream>
 
-// Constructor: fetches texture from TextureManager and queries its size
+// fetches texture from TextureManager and queries its size
 SpriteComponent::SpriteComponent(const std::string& name, SDL_Renderer* renderer, int x, int y)
     : Component("SpriteComponent", ComponentType::SPRITE),
     mRenderer(renderer), mTexture(nullptr), mX(x), mY(y), mWidth(0), mHeight(0)
@@ -11,7 +11,7 @@ SpriteComponent::SpriteComponent(const std::string& name, SDL_Renderer* renderer
     mTexture = TextureManager::getInstance()->get(name);
 
     if (mTexture) {
-        // Query width and height of the texture (SDL3 style)
+        // Query width and height of the texture
         float w, h;
         if (SDL_GetTextureSize(mTexture, &w, &h)) {
             mWidth = static_cast<int>(w);
@@ -24,11 +24,11 @@ SpriteComponent::SpriteComponent(const std::string& name, SDL_Renderer* renderer
 }
 
 SpriteComponent::~SpriteComponent() {
-    // Do not destroy the texture here — TextureManager owns it
+    // do not destroy the texture here — TextureManager owns it
     mTexture = nullptr;
 }
 
-// Renders the sprite at (x, y) with its stored width and height
+// Renders the sprite at (x, y)
 void SpriteComponent::perform() {
     if (!mTexture) return;
 

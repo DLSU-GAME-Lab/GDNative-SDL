@@ -48,7 +48,7 @@ std::vector<SDL_Texture*> TextureManager::getTexture(std::string strName, int nS
 
         return vecSublist;
     }*/
-
+    return std::vector<SDL_Texture*>();
 }
 
 /* * * * * * * * * * * * * * * * * * * * * 

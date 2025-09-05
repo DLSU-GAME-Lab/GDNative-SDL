@@ -10,6 +10,9 @@
     <Filter Include="Component">
       <UniqueIdentifier>{f3599f81-6152-4bfb-8ca9-f22c74f95f8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{6541477a-7151-4488-9518-b845ae41fc80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -24,6 +27,12 @@
     <ClCompile Include="src\Component.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameObjectManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -37,6 +46,12 @@
     </ClInclude>
     <ClInclude Include="include\EnumComponentType.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObjectManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextureManager.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

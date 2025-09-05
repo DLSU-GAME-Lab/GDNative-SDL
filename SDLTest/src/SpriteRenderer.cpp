@@ -31,7 +31,9 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
 
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
     if (pTexture) {
-        SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect);
+        if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, 0, NULL, SDL_FLIP_HORIZONTAL);
+        else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, 0, NULL, SDL_FLIP_VERTICAL);
+        else SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect);
     }
 
     // additional log

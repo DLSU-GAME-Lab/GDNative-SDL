@@ -27,5 +27,5 @@ public:
 public:
     GameObject* getOwner();
     ComponentType getType() const;
-    std::string getName();
+    std::string getName() const;
 };

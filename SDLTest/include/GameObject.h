@@ -21,7 +21,7 @@ public:
 public:
     virtual void initialize() = 0;
     virtual void processInput(SDL_Event eEvent);
-    virtual void update(SDL_Time tDeltaTime);
+    virtual void update();
     virtual void draw(SDL_Window* pWindow);
 
 public:
@@ -41,7 +41,4 @@ public:
     std::string getName();
     GameObject* getParent();
     void setParent(GameObject* pParent);
-    void setFrame(int nFrame);
-    int getFrameSize();
-    int getCurrentFrame();
 };

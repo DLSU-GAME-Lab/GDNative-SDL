@@ -1,35 +1,41 @@
 #pragma once
 
 #include "Component.h"
-#include "GameObject.h"
 
-Component::Component(std::string strName, ComponentType EType) {
+Component::Component(std::string strName, ComponentType EType)
+{
     this->strName = strName;
     this->pOwner = NULL;
     this->EType = EType;
 }
 
-Component::~Component() {
+Component::~Component()
+{
     this->pOwner = NULL;
     this->EType = ComponentType::NONE;
 }
 
-void Component::attachOwner(GameObject* pOwner) {
+void Component::attachOwner(GameObject* pOwner)
+{
     this->pOwner = pOwner;
 }
 
-void Component::detachOwner() {
+void Component::detachOwner()
+{
     delete this;
 }
 
-GameObject* Component::getOwner() {
+GameObject* Component::getOwner()
+{
     return this->pOwner;
 }
 
-ComponentType Component::getType() const {
+ComponentType Component::getType() const
+{
     return this->EType;
 }
 
-std::string Component::getName() {
+std::string Component::getName() const
+{
     return this->strName;
 }

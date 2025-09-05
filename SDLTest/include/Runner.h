@@ -3,8 +3,22 @@
 class Runner
 {
 private:
-	static SDL_Window* window;
-	static SDL_Renderer* renderer;
+    //Window
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_Event* mainEvent;
+    uint64_t ticks;
+
+
+    //FPS
+    long lFrameTime;
+    static const int MIN_FRAME_TIME = 16;
+
+    unsigned long lFPSTime;
+    int nNumOfFPS, nFPS;
+
+
+
 public:
     Runner();
     ~Runner();
@@ -18,5 +32,5 @@ private:
     void render();
 
 private:
-    void updateBounds(SDL_EventType& EEvent);
+    //void updateBounds(SDL_EventType EEvent);
 };

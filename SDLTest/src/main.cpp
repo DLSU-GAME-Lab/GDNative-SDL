@@ -1,4 +1,5 @@
 #include "SDL3/SDL.h"
+#include "Runner.h"
 #include <memory>
 
 
@@ -12,4 +13,8 @@ int main(int argc, char* argv[])
         "!! Your SDL project successfully runs on Android !!", NULL) == 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_ShowSimpleMessageBox failed (%s)", SDL_GetError());
     }
+
+    //program
+    Runner runner;
+    runner.run();
 }

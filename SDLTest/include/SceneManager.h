@@ -34,10 +34,10 @@ private:
     SceneManager(const SceneManager&) {};
     SceneManager& operator=(const SceneManager&) {};
 
+public:
     static void initialize();
     static void destroy();
 
-public:
     static SceneManager* getInstance();
     /* * * * * * * * * * * * * * * * * * * * */
 };

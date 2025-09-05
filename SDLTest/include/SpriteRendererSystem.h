@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL3/SDL.h>
 #include <vector>
 
 class SpriteRenderer;
@@ -8,6 +9,7 @@ class SpriteRendererSystem
 {
 private:
     std::vector<SpriteRenderer*> vecSpriteRenderers;
+    SDL_Renderer* pRenderer = NULL;
 
 public:
     void draw();
@@ -26,7 +28,7 @@ private:
     SpriteRendererSystem& operator=(const SpriteRendererSystem&) {};
 
 public:
-    static void initialize();
+    static void initialize(SDL_Renderer* pRenderer);
     static void destroy();
 
     static SpriteRendererSystem* getInstance();

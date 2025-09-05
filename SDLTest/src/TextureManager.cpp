@@ -5,7 +5,7 @@
 
 void TextureManager::load(std::string strName)
 {
-    std::string strPath = "Resource/Asset/" + strName;
+    std::string strPath = "Assets/" + strName;
 
     SDL_Surface* surface = IMG_Load(strPath.c_str());
     if (!surface) {

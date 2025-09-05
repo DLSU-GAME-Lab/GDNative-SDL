@@ -2,7 +2,7 @@
 #include "TextureManager.h"
 #include "SpriteRenderer.h"
 
-Background::Background(const std::string& strName, const std::string& strImageName, SDL_Renderer* renderer)
+Background::Background(const std::string& strName, const std::string& strImageName)
     : AGameObject(strName), strImageName(strImageName)
 {
     // create & attach sprite renderer
@@ -18,6 +18,11 @@ Background::Background(const std::string& strName, const std::string& strImageNa
 }
 
 Background::~Background()
+{
+
+}
+
+void Background::initialize()
 {
 
 }

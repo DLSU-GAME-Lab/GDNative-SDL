@@ -134,6 +134,7 @@
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\Background.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
+    <ClCompile Include="src\LobbyScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\GameObjectManager.h" />
+    <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />

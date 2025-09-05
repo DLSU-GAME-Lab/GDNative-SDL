@@ -1,9 +1,12 @@
 #include "Runner.h"
 #include "algorithm"
 
+#include "TextureManager.h"
 #include "SpriteRendererSystem.h"
 #include "GameObjectManager.h"
-#include "TextureManager.h"
+#include "SceneManager.h"
+
+#include "LobbyScene.h"
 
 Runner::Runner()
 {
@@ -28,21 +31,26 @@ Runner::Runner()
 	pMainEvent = new SDL_Event();
 
 	//initialize systems
-	SpriteRendererSystem::initialize();
-	GameObjectManager::initialize();
 	TextureManager::initialize(this->pRenderer);
+	SpriteRendererSystem::initialize(this->pRenderer);
+	GameObjectManager::initialize();
+	SceneManager::initialize();
 
-	//startup objects
+	//load scene
+	LobbyScene* pLobbyScene = new LobbyScene();
+	SceneManager::getInstance()->registerScene((AScene*)pLobbyScene);
+	SceneManager::getInstance()->loadScene(SceneTag::LOBBY_SCENE);
 
-	GameObjectManager::getInstance()->addObject(NULL);
+	//GameObjectManager::getInstance()->addObject(NULL);
 }
 
 Runner::~Runner()
 {
 	//destroy systems
-	TextureManager::destroy();
+	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SpriteRendererSystem::destroy();
+	TextureManager::destroy();
 
 	delete this->pMainEvent;
 	SDL_DestroyRenderer(this->pRenderer);
@@ -59,6 +67,7 @@ void Runner::run()
 		SDL_RenderClear(pRenderer);
 		SDL_RenderFillRect(pRenderer, NULL);
 		this->update();
+		SceneManager::getInstance()->checkLoadScene();
 		this->render();
 	}
 }

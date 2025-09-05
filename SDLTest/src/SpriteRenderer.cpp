@@ -2,24 +2,22 @@
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
 #include "SpriteRendererSystem.h"
-#include <iostream>
 
-SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Renderer* renderer,
-    float x, float y, float w, float h)
-    : AComponent("SpriteRenderer", ComponentType::SPRITE), mTexture(nullptr)
+SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
+    : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr)
 {
     auto textures = TextureManager::getInstance()->getTexture(textureName);
     if (!textures.empty()) {
-        mTexture = textures[0];
+        pTexture = textures[0];
     }
     else {
         std::cerr << "[ERROR] : Texture not found: " << textureName << std::endl;
     }
 
     int texW = 0, texH = 0;
-    if (mTexture) {
+    if (pTexture) {
         float fw, fh;
-        if (SDL_GetTextureSize(mTexture, &fw, &fh)) {
+        if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
             texW = static_cast<int>(fw);
             texH = static_cast<int>(fh);
         }
@@ -31,10 +29,15 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Renderer* ren
     mDestRect.h = (h > 0) ? h : (float)texH;
 }
 
-void SpriteRenderer::render(SDL_Renderer* renderer) {
-    if (mTexture) {
-        SDL_RenderTexture(renderer, mTexture, nullptr, &mDestRect);
+void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
+    if (pTexture) {
+        SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect);
     }
+}
+
+void SpriteRenderer::perform()
+{
+
 }
 
 void SpriteRenderer::setPosition(float x, float y) {

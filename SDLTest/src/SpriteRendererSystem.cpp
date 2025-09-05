@@ -10,7 +10,7 @@ SpriteRendererSystem* SpriteRendererSystem::P_SHARED_INSTANCE = NULL;
 void SpriteRendererSystem::draw()
 {
     for (auto pSpriteRenderer : this->vecSpriteRenderers)
-        pSpriteRenderer->draw();
+        pSpriteRenderer->draw(P_SHARED_INSTANCE->pRenderer);
 }
 
 void SpriteRendererSystem::registerSpriteRenderer(SpriteRenderer* pSpriteRenderer)
@@ -35,9 +35,10 @@ void SpriteRendererSystem::unregisterSpriteRenderer(SpriteRenderer * pSpriteRend
     }
 }
 
-void SpriteRendererSystem::initialize()
+void SpriteRendererSystem::initialize(SDL_Renderer* pRenderer)
 {
     P_SHARED_INSTANCE = new SpriteRendererSystem();
+    P_SHARED_INSTANCE->pRenderer = pRenderer;
 }
 
 void SpriteRendererSystem::destroy()

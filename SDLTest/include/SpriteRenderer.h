@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Component.h"
+#include "AComponent.h"
 #include <SDL3/SDL.h>
 #include <string>
 
 // renders a sprite managed by TextureManager
-class SpriteRenderer : public Component {
+class SpriteRenderer : public AComponent {
 public:
     // grabs a texture by name from TextureManager
     SpriteRenderer(const std::string& name, SDL_Renderer* renderer, int x, int y);

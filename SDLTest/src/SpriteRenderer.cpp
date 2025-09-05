@@ -5,7 +5,7 @@
 
 // fetches texture from TextureManager and queries its size
 SpriteRenderer::SpriteRenderer(const std::string& name, SDL_Renderer* renderer, int x, int y)
-    : Component("SpriteRenderer", ComponentType::SPRITE),
+    : AComponent("SpriteRenderer", ComponentType::SPRITE),
     mRenderer(renderer), mTexture(nullptr), mX(x), mY(y), mWidth(0), mHeight(0)
 {
     // Fetch texture by name (must be loaded earlier in TextureManager)

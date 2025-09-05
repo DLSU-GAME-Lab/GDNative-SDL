@@ -130,8 +130,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\AComponent.cpp" />
+    <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
@@ -140,9 +140,9 @@
     <ClCompile Include="src\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\EnumComponentType.h" />
-    <ClInclude Include="include\GameObject.h" />
+    <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\Settings.h" />

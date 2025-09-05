@@ -4,28 +4,28 @@
 #include <SDL3/SDL.h>
 #include <string>
 
-class GameObject;
+class AGameObject;
 
-class Component
+class AComponent
 {
 protected:
-    GameObject* pOwner;
+    AGameObject* pOwner;
     ComponentType EType;
     std::string strName;
 
 public:
-    Component(std::string strName, ComponentType EType);
-    virtual ~Component();
+    AComponent(std::string strName, ComponentType EType);
+    virtual ~AComponent();
 
 public:
-    void attachOwner(GameObject* pOwner);
+    void attachOwner(AGameObject* pOwner);
     void detachOwner();
 
 public:
     virtual void perform() = 0;
 
 public:
-    GameObject* getOwner();
+    AGameObject* getOwner();
     ComponentType getType() const;
     std::string getName() const;
 };

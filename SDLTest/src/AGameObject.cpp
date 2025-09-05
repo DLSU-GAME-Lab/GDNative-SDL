@@ -1,36 +1,36 @@
-#include "GameObject.h"
+#include "AGameObject.h"
 #include <iostream>
 
-GameObject::GameObject(std::string strName)
+AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
     bEnabled = true;
     pParent = NULL;
 }
 
-void GameObject::processInput(SDL_Event eEvent)
+void AGameObject::processInput(SDL_Event eEvent)
 {
 
 }
 
-void GameObject::update()
+void AGameObject::update()
 {
 
 }
 
-void GameObject::draw(SDL_Window * pWindow)
+void AGameObject::draw(SDL_Window * pWindow)
 {
 
 }
 
-void GameObject::attachChild(GameObject * pChild)
+void AGameObject::attachChild(AGameObject * pChild)
 {
     this->vecChildren.push_back(pChild);
     pChild->setParent(this);
     pChild->initialize();
 }
 
-void GameObject::detachChild(GameObject * pChild)
+void AGameObject::detachChild(AGameObject * pChild)
 {
     int nIndex = -1;
     for (int i = 0; i < this->vecChildren.size() && nIndex == -1; i++)
@@ -45,7 +45,7 @@ void GameObject::detachChild(GameObject * pChild)
         this->vecChildren.erase(this->vecChildren.begin() + nIndex);
 }
 
-GameObject* GameObject::findChildByName(std::string strName)
+AGameObject* AGameObject::findChildByName(std::string strName)
 {
     int nIndex = -1;
     for (int i = 0; i < this->vecChildren.size() && nIndex == -1; i++)
@@ -65,13 +65,13 @@ GameObject* GameObject::findChildByName(std::string strName)
     }
 }
 
-void GameObject::attachComponent(Component* pComponent)
+void AGameObject::attachComponent(AComponent* pComponent)
 {
     this->vecComponent.push_back(pComponent);
     pComponent->attachOwner(this);
 }
 
-void GameObject::detachComponent(Component * pComponent)
+void AGameObject::detachComponent(AComponent * pComponent)
 {
     int nIndex = -1;
     for (int i = 0; i < this->vecComponent.size() && nIndex == -1; i++)
@@ -89,9 +89,9 @@ void GameObject::detachComponent(Component * pComponent)
     }
 }
 
-Component* GameObject::findComponentByName(std::string strName)
+AComponent* AGameObject::findComponentByName(std::string strName)
 {
-    for (Component* pComponent : this->vecComponent)
+    for (AComponent* pComponent : this->vecComponent)
     {
         if (pComponent->getName() == strName)
             return pComponent;
@@ -101,11 +101,11 @@ Component* GameObject::findComponentByName(std::string strName)
     return NULL;
 }
 
-std::vector<Component*> GameObject::getComponents(ComponentType EType)
+std::vector<AComponent*> AGameObject::getComponents(ComponentType EType)
 {
-    std::vector<Component*> vecFound = {};
+    std::vector<AComponent*> vecFound = {};
 
-    for (Component* pComponent : this->vecComponent)
+    for (AComponent* pComponent : this->vecComponent)
     {
         if (pComponent->getType() == EType)
             vecFound.push_back(pComponent);
@@ -114,16 +114,16 @@ std::vector<Component*> GameObject::getComponents(ComponentType EType)
     return vecFound;
 }
 
-std::vector<Component*> GameObject::getComponentsRecursively(ComponentType EType, bool bInclusive)
+std::vector<AComponent*> AGameObject::getComponentsRecursively(ComponentType EType, bool bInclusive)
 {
-    std::vector<Component*> vecFound = {};
+    std::vector<AComponent*> vecFound = {};
 
     if (bInclusive)
         vecFound = this->getComponents(EType);
 
-    for (GameObject* pChild : this->vecChildren)
+    for (AGameObject* pChild : this->vecChildren)
     {
-        for (Component* pComponent : pChild->getComponents(EType))
+        for (AComponent* pComponent : pChild->getComponents(EType))
         {
             if (pComponent->getType() == EType)
                 vecFound.push_back(pComponent);
@@ -133,27 +133,27 @@ std::vector<Component*> GameObject::getComponentsRecursively(ComponentType EType
     return vecFound;
 }
 
-bool GameObject::isEnabled()
+bool AGameObject::isEnabled()
 {
     return this->bEnabled;
 }
 
-void GameObject::setEnabled(bool bEnabled)
+void AGameObject::setEnabled(bool bEnabled)
 {
     this->bEnabled = bEnabled;
 }
 
-std::string GameObject::getName()
+std::string AGameObject::getName()
 {
     return this->strName;
 }
 
-GameObject* GameObject::getParent()
+AGameObject* AGameObject::getParent()
 {
     return this->pParent;
 }
 
-void GameObject::setParent(GameObject* pParent)
+void AGameObject::setParent(AGameObject* pParent)
 {
     this->pParent = pParent;
 }

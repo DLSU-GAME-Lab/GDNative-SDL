@@ -1,7 +1,7 @@
 #pragma once
 
 #include "EnumComponentType.h"
-#include "GameObject.h"
+#include "AGameObject.h"
 //#include "GameStateManager.hpp"
 #include <SDL3/SDL.h>
 #include <unordered_map>
@@ -9,20 +9,20 @@
 class GameObjectManager
 {
 private:
-    std::unordered_map<std::string, GameObject*> mapGameObject;
-    std::vector<GameObject*> vecGameObject;
+    std::unordered_map<std::string, AGameObject*> mapGameObject;
+    std::vector<AGameObject*> vecGameObject;
 
 public:
     void processInput(SDL_Event eEvent);
     void update();
     void draw(SDL_Window* pWindow);
 
-    void addObject(GameObject* pGameObject);
-    void deleteObject(GameObject* pGameObject);
+    void addObject(AGameObject* pGameObject);
+    void deleteObject(AGameObject* pGameObject);
     void deleteObjectByName(std::string strName);
     void deleteAllObjects();
 
-    GameObject* findObjectByName(std::string strName);
+    AGameObject* findObjectByName(std::string strName);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

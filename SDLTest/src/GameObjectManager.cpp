@@ -3,7 +3,7 @@
 
 void GameObjectManager::processInput(SDL_Event eEvent)
 {
-    for(GameObject* pGameObject : this->vecGameObject)
+    for(AGameObject* pGameObject : this->vecGameObject)
     {
         if(pGameObject->isEnabled())
             pGameObject->processInput(eEvent);
@@ -11,7 +11,7 @@ void GameObjectManager::processInput(SDL_Event eEvent)
 }
 
 void GameObjectManager::update() {
-    for(GameObject* pGameObject : this->vecGameObject)
+    for(AGameObject* pGameObject : this->vecGameObject)
     {
         if(pGameObject->isEnabled()/* && !GameStateManager::getInstance()->isPaused()*/)
             pGameObject->update();
@@ -20,21 +20,21 @@ void GameObjectManager::update() {
 
 void GameObjectManager::draw(SDL_Window* pWindow)
 {
-    for(GameObject* pGameObject : this->vecGameObject)
+    for(AGameObject* pGameObject : this->vecGameObject)
     {
         if(pGameObject->isEnabled())
             pGameObject->draw(pWindow);
     }
 }
 
-void GameObjectManager::addObject(GameObject* pGameObject)
+void GameObjectManager::addObject(AGameObject* pGameObject)
 {
     this->vecGameObject.push_back(pGameObject);
     this->mapGameObject[pGameObject->getName()] = pGameObject;
     pGameObject->initialize();
 }
 
-void GameObjectManager::deleteObject(GameObject* pGameObject)
+void GameObjectManager::deleteObject(AGameObject* pGameObject)
 {
     std::string strName = pGameObject->getName();
     int nIndex = -1;
@@ -54,23 +54,23 @@ void GameObjectManager::deleteObject(GameObject* pGameObject)
 
 void GameObjectManager::deleteObjectByName(std::string strName)
 {
-    GameObject* pGameObject = this->findObjectByName(strName);
+    AGameObject* pGameObject = this->findObjectByName(strName);
     if(pGameObject != NULL)
         this->deleteObject(pGameObject);
 }
 
 void GameObjectManager::deleteAllObjects()
 {
-    std::vector<GameObject*> vecGameObject = this->vecGameObject;
+    std::vector<AGameObject*> vecGameObject = this->vecGameObject;
 
-    for(GameObject* pGameObject : vecGameObject)
+    for(AGameObject* pGameObject : vecGameObject)
         this->deleteObject(pGameObject);
 
     this->vecGameObject.clear();
     this->mapGameObject.clear();
 }
 
-GameObject* GameObjectManager::findObjectByName(std::string strName)
+AGameObject* GameObjectManager::findObjectByName(std::string strName)
 {
     if(this->mapGameObject[strName] != NULL)
         return this->mapGameObject[strName];

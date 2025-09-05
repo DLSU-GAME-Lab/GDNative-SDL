@@ -130,7 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Runner.cpp" />
   </ItemGroup>
   <ItemGroup>

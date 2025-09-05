@@ -30,25 +30,16 @@ public:
     void detachChild(AGameObject* pChild);
     AGameObject* findChildByName(std::string strName);
 
-    void attachComponent(AComponent* pAComponent);
-    void detachComponent(AComponent* pAComponent);
+    void attachComponent(AComponent* pComponent);
+    void detachComponent(AComponent* pComponent);
     AComponent* findComponentByName(std::string strName);
     std::vector<AComponent*> getComponents(ComponentType EType);
     std::vector<AComponent*> getComponentsRecursively(ComponentType EType, bool bInclusive = true);
 
 public:
-    bool isEnabled();
+    bool isEnabled() const;
     void setEnabled(bool bEnabled);
-    std::string getName();
-    AGameObject* getParent();
+    std::string getName() const;
+    AGameObject* getParent() const;
     void setParent(AGameObject* pParent);
-
-// sprite renderer
-public:
-    template<typename... Args>
-    SpriteRenderer* addSpriteRenderer(const std::string& textureName, SDL_Renderer* renderer, Args&&... args) {
-        SpriteRenderer* sr = new SpriteRenderer(textureName, renderer, std::forward<Args>(args)...);
-        this->attachComponent(sr);
-        return sr;
-    }
 };

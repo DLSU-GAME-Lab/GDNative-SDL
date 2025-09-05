@@ -133,7 +133,7 @@ std::vector<AComponent*> AGameObject::getComponentsRecursively(ComponentType ETy
     return vecFound;
 }
 
-bool AGameObject::isEnabled()
+bool AGameObject::isEnabled() const
 {
     return this->bEnabled;
 }
@@ -143,12 +143,12 @@ void AGameObject::setEnabled(bool bEnabled)
     this->bEnabled = bEnabled;
 }
 
-std::string AGameObject::getName()
+std::string AGameObject::getName() const
 {
     return this->strName;
 }
 
-AGameObject* AGameObject::getParent()
+AGameObject* AGameObject::getParent() const
 {
     return this->pParent;
 }

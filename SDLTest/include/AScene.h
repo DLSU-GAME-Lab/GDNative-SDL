@@ -2,11 +2,12 @@
 
 #include "GameObjectManager.h"
 #include "TextureManager.h"
-//#include "FontManager.h"
-//#include "SFXManager.h"
-
 #include "EnumSceneTag.h"
 #include "AGameObject.h"
+#include <SDL3/SDL.h>
+
+//#include "FontManager.h"
+//#include "SFXManager.h"
 
 class AScene
 {
@@ -15,7 +16,7 @@ private:
 
 public:
     AScene(SceneTag ETag);
-    ~AScene();
+    virtual ~AScene() = default;
 
 public:
     virtual void onLoadResources() = 0;
@@ -23,9 +24,13 @@ public:
     virtual void onUnloadResources() = 0;
     virtual void onUnloadObjects();
 
+    // new methods for scene-specific update and render
+    virtual void update(float deltaTime);
+    virtual void render(SDL_Renderer* pRenderer);
+
 protected:
     void registerObject(AGameObject* pGameObject);
 
 public:
-    SceneTag getTag();
+    SceneTag getTag() const;
 };

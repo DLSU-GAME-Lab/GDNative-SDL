@@ -69,14 +69,15 @@
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\EngineTime.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="src\SpriteAnimator.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Prop.cpp">
-      <Filter>GameObject</Filter>
+    <ClCompile Include="src\Title_Scene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,14 +135,15 @@
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="include\Prop.h" />
     <ClInclude Include="include\EngineTime.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="include\Prop.h">
-      <Filter>GameObject</Filter>
+    <ClInclude Include="include\Title_Scene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

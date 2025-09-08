@@ -12,7 +12,7 @@
 
 // scenes
 #include "LobbyScene.h"
-//#include "TitleScene.h"
+#include "Title_Scene.h"
 
 Runner::Runner()
 {
@@ -50,14 +50,14 @@ Runner::Runner()
 	SceneManager::initialize();
 
 	//register scene/s
-	//auto titleScene = std::make_unique<TitleScene>();
+	auto titleScene = std::make_unique<Title_Scene>();
 	auto lobbyScene = std::make_unique<LobbyScene>();
 
-	//SceneManager::getInstance()->registerScene(SceneTag::TITLE_SCENE, std::move(titleScene));
+	SceneManager::getInstance()->registerScene(SceneTag::TITLE_SCENE, std::move(titleScene));
 	SceneManager::getInstance()->registerScene(SceneTag::LOBBY_SCENE, std::move(lobbyScene));
 
 	//load initial scene
-	SceneManager::getInstance()->loadScene(SceneTag::LOBBY_SCENE);
+	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
 
 	//GameObjectManager::getInstance()->addObject(NULL);
 }

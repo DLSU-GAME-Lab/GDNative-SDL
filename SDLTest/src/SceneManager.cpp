@@ -35,6 +35,7 @@ void SceneManager::unloadCurrentScene()
     }
 }
 
+//This shouldn't be here. Scene Manager only manages scene objects and resources. Move somewhere else.
 void SceneManager::update(float deltaTime)
 {
     // handle scene transitions and updates
@@ -83,6 +84,7 @@ void SceneManager::update(float deltaTime)
     }
 }
 
+//Aslo should be moved.
 void SceneManager::render(SDL_Renderer* pRenderer)
 {
     if (!pActiveScene) return;

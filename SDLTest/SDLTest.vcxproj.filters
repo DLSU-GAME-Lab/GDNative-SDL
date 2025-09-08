@@ -79,6 +79,9 @@
     <ClCompile Include="src\Title_Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\AButton.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -144,6 +147,9 @@
     </ClInclude>
     <ClInclude Include="include\Title_Scene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AButton.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

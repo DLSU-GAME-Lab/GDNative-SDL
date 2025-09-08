@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="src\UIButton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AButton.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\EngineTime.h" />

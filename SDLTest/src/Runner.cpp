@@ -89,6 +89,9 @@ void Runner::run()
 
 	while (running)
 	{
+		EngineTime::getInstance()->logFrameStart();
+
+		//TODO: Remove additional time stuff. We have an EngineTime class for that.
 		uint64_t currentTime = SDL_GetTicks();
 		float deltaTime = (currentTime - lastTime) / 1000.0f;
 		lastTime = currentTime;
@@ -99,16 +102,13 @@ void Runner::run()
 		{
 			if (e.type == SDL_EVENT_QUIT)
 				running = false;
-
-			// pass input to current scene
-			GameObjectManager::getInstance()->processInput(e);
+			else this->processEvents(e);
 		}
 
 		// clear backbuffer
 		SDL_RenderClear(pRenderer);
 
 		// per-frame logic
-		EngineTime::getInstance()->logFrameStart();
 		this->update();
 		SceneManager::getInstance()->checkLoadScene();
 
@@ -126,9 +126,10 @@ void Runner::run()
 }
 
 
-void Runner::processEvents()
+void Runner::processEvents(SDL_Event eEvent)
 {
-	//TODO: create input system
+	// pass input to current scene
+	GameObjectManager::getInstance()->processInput(eEvent);
 }
 
 void Runner::update()

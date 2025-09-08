@@ -20,10 +20,10 @@ void Title_Scene::onLoadResources()
 void Title_Scene::onLoadObjects()
 {
     // create and register game objects for the title scene
-    Background* pBackground = new Background("Title_Background", "Title_Background");
+    Background* pBackground = new Background("Title_Background", "Title_Background", 1,1);
 
     // create a button that switches to the Lobby scene when clicked
-    UIButton* pStartButton = new UIButton("StartButton", 800, 500, 300, 150, false, SceneTag::LOBBY_SCENE);
+    UIButton* pStartButton = new UIButton("Start_Button", 250.f, 600.f, 0.25, 0.25f,0.0f, false, SceneTag::LOBBY_SCENE);
 
     GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
     GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);

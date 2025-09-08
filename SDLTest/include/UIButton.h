@@ -10,12 +10,12 @@ class UIButton: public AGameObject
 {
 private:
 	std::string strImageName;
-	int nX, nY, nH, nW;
+	float fX, fY, fH, fW;
 	bool bFlipX;
 	SceneTag targetScene;
 
 public:
-	UIButton(const std::string& strName, int nX, int nY, int nW, int nH, bool bFlipX, SceneTag targetScene = SceneTag::LOBBY_SCENE);
+	UIButton(const std::string& strName, float nX, float nY, float nW, float nH, float fRot, bool bFlipX, SceneTag targetScene = SceneTag::LOBBY_SCENE);
 	~UIButton();
 
 	void initialize() override;

@@ -2,11 +2,11 @@
 #include "SpriteRendererSystem.h"
 #include "Settings.h"
 
-Background::Background(const std::string& strName, const std::string& strImageName)
+Background::Background(const std::string& strName, const std::string& strImageName, float fScaleX, float fScaleY)
     : AGameObject(strName), strImageName(strImageName)
 {
-    this->fScaleX = .33;
-    this->fScaleY = .4;
+    this->fScaleX = fScaleX;
+    this->fScaleY = fScaleY;
 }
 
 Background::~Background()

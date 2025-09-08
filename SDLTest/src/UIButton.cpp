@@ -1,9 +1,14 @@
 #include "UIButton.h"
 #include <iostream>
 
-UIButton::UIButton(const std::string& strName, int nX,int nY, int nW, int nH, bool bFlipX, SceneTag targetScene):AGameObject(strName),nX(nX),nY(nY),
-nW(nW),nH(nH), bFlipX(bFlipX)
+UIButton::UIButton(const std::string& strName, float fX, float fY, float fW, float fH, float fRot, bool bFlipX, 
+    SceneTag targetScene):AGameObject(strName), bFlipX(bFlipX)
 {
+    this->fX = this->fPosX = fX;
+    this->fY = this->fPosY = fY;
+    this->fW = this->fScaleX = fW;
+    this->fH = this->fScaleY = fH;
+    this->fRot = fRot;
 }
 
 UIButton::~UIButton()
@@ -12,7 +17,7 @@ UIButton::~UIButton()
 
 void UIButton::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Button", nX, nY, nW,nH);
+	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strName, fPosX, fPosY);
 	if (bFlipX)
 	{
 		pSpriteRenderer->setFlipX(true);
@@ -29,8 +34,8 @@ void UIButton::processInput(SDL_Event eEvent)
         int mouseY = eEvent.button.y;
 
         // check if click is within button bounds
-        if (mouseX >= nX && mouseX <= nX + nW &&
-            mouseY >= nY && mouseY <= nY + nH) {
+        if (mouseX >= fX && mouseX <= fX + fW &&
+            mouseY >= fY && mouseY <= fY + fH) {
             std::cout << "Button clicked! Switching to scene: "
                 << static_cast<int>(targetScene) << std::endl;
 

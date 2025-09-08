@@ -7,6 +7,8 @@
 void TextureManager::load(std::string strFolderPath, std::string strName)
 {
     std::string strPath = "Assets/" + strFolderPath;
+    // DEBUG: print what path is being loaded
+    std::cout << "[DEBUG] Attempting to load texture: " << strPath << std::endl;
 
     SDL_Surface* surface = IMG_Load(strPath.c_str());
     if (!surface) {

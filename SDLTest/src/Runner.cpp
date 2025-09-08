@@ -6,8 +6,13 @@
 #include "SpriteRendererSystem.h"
 #include "GameObjectManager.h"
 #include "SceneManager.h"
+#include "AGameObject.h"
+#include "EnumSceneTag.h"
+#include "Settings.h"
 
+// scenes
 #include "LobbyScene.h"
+//#include "TitleScene.h"
 
 Runner::Runner()
 {
@@ -44,9 +49,14 @@ Runner::Runner()
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 
-	//load scene
-	LobbyScene* pLobbyScene = new LobbyScene();
-	SceneManager::getInstance()->registerScene((AScene*)pLobbyScene);
+	//register scene/s
+	//auto titleScene = std::make_unique<TitleScene>();
+	auto lobbyScene = std::make_unique<LobbyScene>();
+
+	//SceneManager::getInstance()->registerScene(SceneTag::TITLE_SCENE, std::move(titleScene));
+	SceneManager::getInstance()->registerScene(SceneTag::LOBBY_SCENE, std::move(lobbyScene));
+
+	//load initial scene
 	SceneManager::getInstance()->loadScene(SceneTag::LOBBY_SCENE);
 
 	//GameObjectManager::getInstance()->addObject(NULL);
@@ -54,7 +64,7 @@ Runner::Runner()
 
 Runner::~Runner()
 {
-	SceneManager::getInstance()->unloadScene();
+	SceneManager::getInstance()->unloadCurrentScene();
 
 	//destroy systems
 	SceneManager::destroy();
@@ -71,6 +81,7 @@ Runner::~Runner()
 void Runner::run()
 {
 	bool running = true;
+	uint64_t lastTime = SDL_GetTicks();
 
 	// pick a clear color once (optional)
 	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
@@ -78,12 +89,19 @@ void Runner::run()
 
 	while (running)
 	{
+		uint64_t currentTime = SDL_GetTicks();
+		float deltaTime = (currentTime - lastTime) / 1000.0f;
+		lastTime = currentTime;
+		
 		// process all pending events
 		SDL_Event e;
 		while (SDL_PollEvent(&e))
 		{
 			if (e.type == SDL_EVENT_QUIT)
 				running = false;
+
+			// pass input to current scene
+			GameObjectManager::getInstance()->processInput(e);
 		}
 
 		// clear backbuffer
@@ -94,8 +112,11 @@ void Runner::run()
 		this->update();
 		SceneManager::getInstance()->checkLoadScene();
 
-		// draw all sprites
-		this->render();
+		// update scene
+		SceneManager::getInstance()->update(deltaTime);
+
+		// render scene
+		SceneManager::getInstance()->render(pRenderer);
 
 		SDL_RenderPresent(pRenderer);
 		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
@@ -113,6 +134,7 @@ void Runner::processEvents()
 void Runner::update()
 {
 	GameObjectManager::getInstance()->update();
+	EngineTime::getInstance()->logFrameEnd();
 }
 
 void Runner::render()

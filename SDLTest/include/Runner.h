@@ -1,6 +1,8 @@
 #pragma once
 #include "SDL3/SDL.h"
 #include "Settings.h"
+#include <string>
+
 class Runner
 {
 private:
@@ -10,6 +12,7 @@ private:
     SDL_Event* pMainEvent;
     uint64_t ticks;
     float fWindowScale;
+    std::string strWindowTitle;
 
 
     //FPS

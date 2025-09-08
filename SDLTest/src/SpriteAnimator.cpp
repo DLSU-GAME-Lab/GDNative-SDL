@@ -25,7 +25,7 @@ void SpriteAnimator::perform()
 	if (this->bIsPlaying)
 	{
 		this->nTicks += EngineTime::getInstance()->getTrueDeltaTime();
-		std::cerr << this->nTicks << "\n";
+		SDL_Delay(1);
 		if (this->nTicks >= this->nTicksPerFrame)
 		{
 			this->nTicks %= this->nTicksPerFrame;

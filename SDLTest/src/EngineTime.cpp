@@ -2,12 +2,12 @@
 
 void EngineTime::logFrameStart()
 {
-    SDL_GetCurrentTime(&P_SHARED_INSTANCE->tStart);
+    P_SHARED_INSTANCE->tStart = SDL_GetTicks();
 }
 
 void EngineTime::logFrameEnd()
 {
-    SDL_GetCurrentTime(&P_SHARED_INSTANCE->tEnd);
+    P_SHARED_INSTANCE->tEnd = SDL_GetTicks();
     P_SHARED_INSTANCE->tDeltaTime = P_SHARED_INSTANCE->tEnd - P_SHARED_INSTANCE->tStart;
 
     P_SHARED_INSTANCE->dUnscaledDeltaTime = SDL_NS_TO_SECONDS(P_SHARED_INSTANCE->tDeltaTime);
@@ -17,7 +17,7 @@ void EngineTime::logFrameEnd()
     P_SHARED_INSTANCE->dUnscaledTime += P_SHARED_INSTANCE->dUnscaledDeltaTime;
 }
 
-SDL_Time EngineTime::getTrueDeltaTime()
+Uint64 EngineTime::getTrueDeltaTime()
 {
     return P_SHARED_INSTANCE->tDeltaTime;
 }

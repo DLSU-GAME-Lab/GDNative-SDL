@@ -90,12 +90,17 @@ void Runner::run()
 		SDL_RenderClear(pRenderer);
 
 		// per-frame logic
+		EngineTime::getInstance()->logFrameStart();
 		this->update();
+		SceneManager::getInstance()->checkLoadScene();
 
 		// draw all sprites
 		this->render();
 
 		SDL_RenderPresent(pRenderer);
+		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
+		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
+		EngineTime::getInstance()->logFrameEnd();
 	}
 }
 
@@ -107,10 +112,7 @@ void Runner::processEvents()
 
 void Runner::update()
 {
-	EngineTime::getInstance()->logFrameStart();
 	GameObjectManager::getInstance()->update();
-	EngineTime::getInstance()->logFrameEnd();
-	SceneManager::getInstance()->checkLoadScene();
 }
 
 void Runner::render()

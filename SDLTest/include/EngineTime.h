@@ -7,7 +7,7 @@ class BaseRunner;
 class EngineTime
 {
 public:
-	SDL_Time getTrueDeltaTime();
+	Uint64 getTrueDeltaTime();
 	double getTime();
 	double getDeltaTime();
 	double getUnscaledTime();
@@ -15,9 +15,9 @@ public:
 	void setTimeScale(double dTimeScale);
 
 private:
-	SDL_Time tStart = 0;
-	SDL_Time tEnd = 0;
-	SDL_Time tDeltaTime = 0;
+	Uint64 tStart = 0;
+	Uint64 tEnd = 0;
+	Uint64 tDeltaTime = 0;
 
 	double dTime = 0.0;
 	double dDeltaTime = 0.0;

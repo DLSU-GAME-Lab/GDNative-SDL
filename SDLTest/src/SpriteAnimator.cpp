@@ -12,7 +12,7 @@ SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_
 	this->bIsLooping = true;
 	this->nFrameIndex = 0;
 	this->nTicks = 0;
-	this->nTicksPerFrame = SDL_SECONDS_TO_NS(1) / nFrameRate;
+	this->nTicksPerFrame = SDL_MS_PER_SECOND / nFrameRate;
 }
 
 SpriteAnimator::~SpriteAnimator()
@@ -25,7 +25,6 @@ void SpriteAnimator::perform()
 	if (this->bIsPlaying)
 	{
 		this->nTicks += EngineTime::getInstance()->getTrueDeltaTime();
-		SDL_Delay(1);
 		if (this->nTicks >= this->nTicksPerFrame)
 		{
 			this->nTicks %= this->nTicksPerFrame;

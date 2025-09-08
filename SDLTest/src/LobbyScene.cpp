@@ -4,7 +4,6 @@
 #include "Librarian.h"
 #include "Fairy.h"
 #include "UIButton.h"
-#include "Lamps.h"
 #include "Ladder.h"
 #include "Chair.h"
 #include "Prop.h"
@@ -37,7 +36,7 @@ void LobbyScene::onLoadObjects()
 	Background* pBackground = new Background("Lobby Background", "library_redo.png");
 	Player* pPlayer = new Player();
 	Librarian* pLibrarian = new Librarian();
-	Lamps* pLamps = new Lamps();
+	Prop* pLamps = new Prop("Lamps", "lobby_transition_lamps.png", 0, 0, 1000, 500, false);
 	Fairy* pFairy = new Fairy();
 	Prop* pLadder = new Prop("Ladder", "stepladder_revised.png", 600, 430, 700, 700, false);
 	Prop* pChair = new Prop("Chair", "monoblock_revised.png", 0, 630, 500, 500,true);

@@ -131,14 +131,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Prop.cpp" />
-    <ClCompile Include="src\Chair.cpp" />
-    <ClCompile Include="src\Ladder.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\Background.cpp" />
     <ClCompile Include="src\Fairy.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
-    <ClCompile Include="src\Lamps.cpp" />
     <ClCompile Include="src\Librarian.cpp" />
     <ClCompile Include="src\LobbyScene.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -152,7 +149,6 @@
     <ClCompile Include="src\UIButton.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Chair.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\EnumComponentType.h" />
@@ -160,7 +156,6 @@
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\Fairy.h" />
     <ClInclude Include="include\GameObjectManager.h" />
-    <ClInclude Include="include\Lamps.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\Player.h" />
@@ -172,7 +167,6 @@
     <ClInclude Include="include\SpriteRendererSystem.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\UIButton.h" />
-    <ClInclude Include="include\Ladder.h" />
     <ClInclude Include="include\Prop.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

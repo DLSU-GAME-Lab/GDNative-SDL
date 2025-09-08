@@ -1,9 +1,14 @@
 #include "Prop.h"
 
 
-Prop::Prop(const std::string& strName, const std::string& strImageName, int nX, int nY, int nW, int nH, bool bFlipX):
-	AGameObject(strName), strImageName(strImageName),nX(nX), nY(nY), nW(nW), nH(nH),bFlipX(bFlipX)
+Prop::Prop(const std::string& strName, const std::string& strImageName, float fX, float fY, float fW, float fH, float fRot, bool bFlipX):
+	AGameObject(strName), strImageName(strImageName),bFlipX(bFlipX)
 {
+	this->fPosX = fX;
+	this->fPosY = fY;
+	this->fScaleX = fW;
+	this->fScaleY = fH;
+	this->fRot = fRot;
 }
 
 Prop::~Prop()
@@ -12,7 +17,8 @@ Prop::~Prop()
 
 void Prop::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, nX, nY, nW, nH);
+	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fPosX, this->fPosY);
+	pSpriteRenderer->setScale(fScaleX, fScaleY);
 	if (bFlipX)
 	{
 		pSpriteRenderer->setFlipX(true);
@@ -20,3 +26,4 @@ void Prop::initialize()
 	SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 	this->attachComponent((AComponent*)pSpriteRenderer);
 }
+

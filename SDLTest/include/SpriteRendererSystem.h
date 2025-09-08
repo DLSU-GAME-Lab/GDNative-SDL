@@ -15,6 +15,8 @@ public:
     void draw();
     void registerSpriteRenderer(SpriteRenderer* pSpriteRenderer);
     void unregisterSpriteRenderer(SpriteRenderer* pSpriteRenderer);
+public:
+    SDL_Renderer* getRenderer();
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

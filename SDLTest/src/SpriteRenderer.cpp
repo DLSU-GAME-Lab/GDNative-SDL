@@ -27,10 +27,17 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
         }
     }
 
+
+    //SDL_Point anchor = { texW / 2,texH / 2 };
     mDestRect.x = x;
     mDestRect.y = y;
     mDestRect.w = (w > 0) ? w : (float)texW;
     mDestRect.h = (h > 0) ? h : (float)texH;
+
+    //mDestRect.x = anchor.x - (mDestRect.w / 2);
+    //mDestRect.y = anchor.y - (mDestRect.h / 2);
+
+
 }
 
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
@@ -81,6 +88,12 @@ void SpriteRenderer::setFlipY(bool flipY)
 void SpriteRenderer::setAngle(double dAngle)
 {
     this->dAngle = dAngle;
+}
+
+void SpriteRenderer::setScale(float fX, float fY)
+{
+    mDestRect.w *= fX;
+    mDestRect.h *= fY;
 }
 
 SDL_Texture* SpriteRenderer::getTexture()

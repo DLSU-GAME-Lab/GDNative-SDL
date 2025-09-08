@@ -3,9 +3,13 @@
 #include "SpriteRendererSystem.h"
 #include "SpriteAnimator.h"
 
-Player::Player() : AGameObject("Player")
+Player::Player(float fPosX, float fPosY, float fScaleX, float fScaleY, float fRot):AGameObject("Player")
 {
-
+    this->fPosX = fPosX;
+    this->fPosY = fPosY;
+    this->fScaleX = fScaleX;
+    this->fScaleY = fScaleY;
+    this->fRot = fRot;
 }
 
 Player::~Player()
@@ -15,7 +19,9 @@ Player::~Player()
 
 void Player::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Player", 500, 630);
+    //500, 630
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Player", this->fPosX, this->fPosY);
+    pSpriteRenderer->setScale(this->fScaleX, this->fScaleY);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 
     auto vecSprite = TextureManager::getInstance()->getTexture("Player", 0, 15);

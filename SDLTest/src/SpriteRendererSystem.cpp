@@ -35,6 +35,11 @@ void SpriteRendererSystem::unregisterSpriteRenderer(SpriteRenderer * pSpriteRend
     }
 }
 
+SDL_Renderer* SpriteRendererSystem::getRenderer()
+{
+    return this->pRenderer;
+}
+
 void SpriteRendererSystem::initialize(SDL_Renderer* pRenderer)
 {
     P_SHARED_INSTANCE = new SpriteRendererSystem();

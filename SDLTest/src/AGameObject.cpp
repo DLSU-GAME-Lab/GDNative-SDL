@@ -162,3 +162,55 @@ void AGameObject::setParent(AGameObject* pParent)
 {
     this->pParent = pParent;
 }
+
+void AGameObject::setPosX(float fX)
+{
+    this->fPosX = fX;
+}
+
+float AGameObject::getPosX()
+{
+    return this->fPosX;
+}
+
+void AGameObject::setPosY(float fY)
+{
+    this->fPosY = fY;
+}
+
+float AGameObject::getPosY()
+{
+    return this->fPosY;
+}
+
+void AGameObject::setScaleX(float fX)
+{
+    this->fScaleX = fX;
+}
+
+float AGameObject::getScaleX()
+{
+    return this->fScaleX;
+}
+
+void AGameObject::setScaleY(float fY)
+{
+    this->fScaleY = fY;
+}
+
+float AGameObject::getScaleY()
+{
+    return this->fScaleY;
+}
+
+void AGameObject::setRot(float fRot)
+{
+    this->fRot = fRot;
+}
+
+float AGameObject::getRot()
+{
+    return this->fRot;
+}
+
+

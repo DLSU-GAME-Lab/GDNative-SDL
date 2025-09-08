@@ -20,11 +20,12 @@ public:
     // setters
     void setTexture(SDL_Texture* pTexture);
     void setPosition(float x, float y);
+    //remove later if set scale is what this should do
     void setSize(float w, float h);
     void setFlipX(bool flipX);
     void setFlipY(bool flipY);
     void setAngle(double dAngle);
-
+    void setScale(float fX, float fY);
     // getters
     SDL_Texture* getTexture();
     SDL_FRect getRect() const { return mDestRect; }

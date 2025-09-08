@@ -17,32 +17,39 @@ LobbyScene::~LobbyScene()
 
 void LobbyScene::onLoadResources()
 {
-	TextureManager::getInstance()->load("library_redo.png");
-	TextureManager::getInstance()->load("frame1.png");
-	TextureManager::getInstance()->load("librarian.png");
-	TextureManager::getInstance()->load("fairy.png");
-	TextureManager::getInstance()->load("button.png");
-	TextureManager::getInstance()->load("lobby_transition_lamps.png");
-	TextureManager::getInstance()->load("stepladder_revised.png");
-	TextureManager::getInstance()->load("monoblock_revised.png");
-	TextureManager::getInstance()->load("librariandesk_revised.png");
+	TextureManager::getInstance()->load("library_redo.png", "Lobby_Background");
+	//TextureManager::getInstance()->load("frame1.png", "Player");
+	TextureManager::getInstance()->load("librarian.png", "Librarian");
+	TextureManager::getInstance()->load("fairy.png", "Fairy");
+
+	for (int i = 0; i < 16; i++)
+	{
+		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
+		TextureManager::getInstance()->load(strPath, "Player");
+	}
+
+	TextureManager::getInstance()->load("button.png", "Button");
+	TextureManager::getInstance()->load("lobby_transition_lamps.png", "Lamps");
+	TextureManager::getInstance()->load("stepladder_revised.png", "Step_Ladder");
+	TextureManager::getInstance()->load("monoblock_revised.png", "Chair");
+	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
 
 }
 
 void LobbyScene::onLoadObjects()
 {
-	Background* pBackground = new Background("Lobby Background", "library_redo.png");
+	Background* pBackground = new Background("Lobby_Background", "Lobby_Background");
+
 	Player* pPlayer = new Player();
 	Librarian* pLibrarian = new Librarian();
-	Prop* pLamps = new Prop("Lamps", "lobby_transition_lamps.png", 0, 0, 1000, 500, false);
 	Fairy* pFairy = new Fairy();
-	Prop* pLadder = new Prop("Ladder", "stepladder_revised.png", 600, 430, 700, 700, false);
-	Prop* pChair = new Prop("Chair", "monoblock_revised.png", 0, 630, 500, 500,true);
-	Prop* pDesk = new Prop("Desk", "librariandesk_revised.png", 1000, 650, 700, 700,false);
-	UIButton* pButtonRight = new UIButton("Button Right", 1600,450, 300, 300, false);
-	UIButton* pButtonLeft = new UIButton("Button Right", 100,450, 300, 300, true);
 
-
+	Prop* pLamps = new Prop("Lamps", "Lamps", 0, 0, 1000, 500, false);
+	Prop* pLadder = new Prop("Ladder", "Step_Ladder", 600, 430, 700, 700, false);
+	Prop* pChair = new Prop("Chair", "Chair", 0, 630, 500, 500,true);
+	Prop* pDesk = new Prop("Desk", "Librarian_Desk", 1000, 650, 700, 700,false);
+	UIButton* pButtonRight = new UIButton("Button_Right", 1600,450, 300, 300, false);
+	UIButton* pButtonLeft = new UIButton("Button_Right", 100,450, 300, 300, true);
 
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
@@ -59,14 +66,13 @@ void LobbyScene::onLoadObjects()
 
 void LobbyScene::onUnloadResources()
 {
-	TextureManager::getInstance()->unload("library_redo.png");
-	TextureManager::getInstance()->unload("frame1.png");
-	TextureManager::getInstance()->unload("librarian.png");
-	TextureManager::getInstance()->unload("fairy.png");
-	TextureManager::getInstance()->unload("button.png");
-	TextureManager::getInstance()->unload("lobby_transition_lamps.png");
-	TextureManager::getInstance()->unload("stepladder_revised.png");
-	TextureManager::getInstance()->load("monoblock_revised.png");
-	TextureManager::getInstance()->load("librariandesk_revised.png");
-
+	TextureManager::getInstance()->unload("Lobby_Background");
+	TextureManager::getInstance()->unload("Player");
+	TextureManager::getInstance()->unload("Librarian");
+	TextureManager::getInstance()->unload("Fairy");
+	TextureManager::getInstance()->unload("Button");
+	TextureManager::getInstance()->unload("Lamps");
+	TextureManager::getInstance()->unload("Step_Ladder");
+	TextureManager::getInstance()->unload("Chair");
+	TextureManager::getInstance()->unload("Librarian_Desk");
 }

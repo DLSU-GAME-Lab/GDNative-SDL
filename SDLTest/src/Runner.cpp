@@ -1,6 +1,7 @@
 #include "Runner.h"
 #include "algorithm"
 
+#include "EngineTime.h"
 #include "TextureManager.h"
 #include "SpriteRendererSystem.h"
 #include "GameObjectManager.h"
@@ -36,6 +37,7 @@ Runner::Runner()
 	pMainEvent = new SDL_Event();
 
 	//initialize systems
+	EngineTime::initialize();
 	TextureManager::initialize(this->pRenderer);
 	SpriteRendererSystem::initialize(this->pRenderer);
 	GameObjectManager::initialize();
@@ -58,6 +60,7 @@ Runner::~Runner()
 	GameObjectManager::destroy();
 	SpriteRendererSystem::destroy();
 	TextureManager::destroy();
+	EngineTime::destroy();
 
 	delete this->pMainEvent;
 	SDL_DestroyRenderer(this->pRenderer);
@@ -87,7 +90,6 @@ void Runner::run()
 
 		// per-frame logic
 		this->update();
-		SceneManager::getInstance()->checkLoadScene();
 
 		// draw all sprites
 		this->render();
@@ -104,7 +106,10 @@ void Runner::processEvents()
 
 void Runner::update()
 {
+	EngineTime::getInstance()->logFrameStart();
 	GameObjectManager::getInstance()->update();
+	EngineTime::getInstance()->logFrameEnd();
+	SceneManager::getInstance()->checkLoadScene();
 }
 
 void Runner::render()

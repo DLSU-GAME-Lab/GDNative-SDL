@@ -70,6 +70,12 @@
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="src\Prop.cpp" />
+    <ClCompile Include="src\EngineTime.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteAnimator.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -127,5 +133,11 @@
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="include\Prop.h" />
+    <ClInclude Include="include\EngineTime.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteAnimator.h">
+      <Filter>Component</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

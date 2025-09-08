@@ -11,7 +11,7 @@ UIButton::~UIButton()
 
 void UIButton::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer("button.png", nX, nY, nW,nH);
+	SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Button", nX, nY, nW,nH);
 	if (bFlipX)
 	{
 		pSpriteRenderer->setFlipX(true);

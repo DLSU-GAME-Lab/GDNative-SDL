@@ -13,7 +13,7 @@ Librarian::~Librarian()
 
 void Librarian::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("librarian.png", 1000, 350);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian", 1000, 350);
     pSpriteRenderer->setFlipX(true);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteRenderer);

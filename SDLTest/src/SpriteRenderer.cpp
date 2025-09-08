@@ -4,7 +4,7 @@
 #include "SpriteRendererSystem.h"
 
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
-    : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr)
+    : AComponent("Sprite Renderer", ComponentType::RENDERER), pTexture(nullptr)
 {
     this->flipX = false;
     this->flipY = false;
@@ -52,6 +52,11 @@ void SpriteRenderer::perform()
 
 }
 
+void SpriteRenderer::setTexture(SDL_Texture* pTexture)
+{
+    this->pTexture = pTexture;
+}
+
 void SpriteRenderer::setPosition(float x, float y) {
     mDestRect.x = x;
     mDestRect.y = y;
@@ -76,6 +81,11 @@ void SpriteRenderer::setFlipY(bool flipY)
 void SpriteRenderer::setAngle(double dAngle)
 {
     this->dAngle = dAngle;
+}
+
+SDL_Texture* SpriteRenderer::getTexture()
+{
+    return this->pTexture;
 }
 
 bool SpriteRenderer::getflipX()

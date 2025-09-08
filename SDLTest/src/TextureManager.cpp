@@ -2,10 +2,11 @@
 #include <SDL3_image/SDL_image.h>
 #include <iostream>
 #include <algorithm>
+#include <filesystem>
 
-void TextureManager::load(std::string strName)
+void TextureManager::load(std::string strFolderPath, std::string strName)
 {
-    std::string strPath = "Assets/" + strName;
+    std::string strPath = "Assets/" + strFolderPath;
 
     SDL_Surface* surface = IMG_Load(strPath.c_str());
     if (!surface) {
@@ -26,6 +27,18 @@ void TextureManager::load(std::string strName)
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }
+//
+//void TextureManager::loadFromFolder(std::string strFolderPath, std::string strName)
+//{
+//    std::string strPath = "Assets/" + strFolderPath;
+//    for (const auto& entry : std::filesystem::directory_iterator(strPath))
+//    {
+//        std::string path = entry.path().generic_string();
+//        std::vector<std::string> tokens = StringUtils::split(path, '/');
+//        std::string assetName = StringUtils::split(tokens[tokens.size() - 1], '.')[0];
+//
+//    }
+//}
 
 void TextureManager::unload(std::string strName)
 {

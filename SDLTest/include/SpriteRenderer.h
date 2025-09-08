@@ -18,6 +18,7 @@ public:
     void perform() override;
 
     // setters
+    void setTexture(SDL_Texture* pTexture);
     void setPosition(float x, float y);
     void setSize(float w, float h);
     void setFlipX(bool flipX);
@@ -25,6 +26,7 @@ public:
     void setAngle(double dAngle);
 
     // getters
+    SDL_Texture* getTexture();
     SDL_FRect getRect() const { return mDestRect; }
     bool getflipX();
     bool getFlipY();

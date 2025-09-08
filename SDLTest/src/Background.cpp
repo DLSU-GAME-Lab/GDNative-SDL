@@ -5,7 +5,8 @@
 Background::Background(const std::string& strName, const std::string& strImageName)
     : AGameObject(strName), strImageName(strImageName)
 {
-    
+    this->fScaleX = .33;
+    this->fScaleY = .4;
 }
 
 Background::~Background()

@@ -18,7 +18,6 @@ Prop::~Prop()
 void Prop::initialize()
 {
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fPosX, this->fPosY);
-	pSpriteRenderer->setScale(fScaleX, fScaleY);
 	if (bFlipX)
 	{
 		pSpriteRenderer->setFlipX(true);

@@ -2,6 +2,7 @@
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
 #include "SpriteRendererSystem.h"
+#include "AGameObject.h"
 
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
     : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr)
@@ -18,12 +19,12 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
         std::cerr << "[ERROR] : Texture not found: " << textureName << std::endl;
     }
 
-    int texW = 0, texH = 0;
+   
     if (pTexture) {
         float fw, fh;
         if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
-            texW = static_cast<int>(fw);
-            texH = static_cast<int>(fh);
+            fTexW = fw;
+            fTexH = fh;
         }
     }
 
@@ -31,8 +32,8 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     //SDL_Point anchor = { texW / 2,texH / 2 };
     mDestRect.x = x;
     mDestRect.y = y;
-    mDestRect.w = (w > 0) ? w : (float)texW;
-    mDestRect.h = (h > 0) ? h : (float)texH;
+    mDestRect.w = (w > 0) ? w : fTexW;
+    mDestRect.h = (h > 0) ? h : fTexH;
 
     //mDestRect.x = anchor.x - (mDestRect.w / 2);
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
@@ -90,10 +91,15 @@ void SpriteRenderer::setAngle(double dAngle)
     this->dAngle = dAngle;
 }
 
-void SpriteRenderer::setScale(float fX, float fY)
+void SpriteRenderer::setScale()
 {
-    mDestRect.w *= fX;
-    mDestRect.h *= fY;
+    AGameObject* pOg = this->getOwner();
+    if (pOg != NULL)
+    {
+        mDestRect.w = fTexW * pOg->getScaleX();
+        mDestRect.h = fTexH * pOg->getScaleY();
+    }
+
 }
 
 SDL_Texture* SpriteRenderer::getTexture()

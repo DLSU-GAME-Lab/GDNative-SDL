@@ -10,7 +10,11 @@ SpriteRendererSystem* SpriteRendererSystem::P_SHARED_INSTANCE = NULL;
 void SpriteRendererSystem::draw()
 {
     for (auto pSpriteRenderer : this->vecSpriteRenderers)
+    {
+        pSpriteRenderer->setScale();
         pSpriteRenderer->draw(P_SHARED_INSTANCE->pRenderer);
+    }
+        
 }
 
 void SpriteRendererSystem::registerSpriteRenderer(SpriteRenderer* pSpriteRenderer)

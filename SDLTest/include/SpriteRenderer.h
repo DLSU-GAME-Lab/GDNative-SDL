@@ -10,6 +10,7 @@ private:
     SDL_FRect mDestRect;
     bool flipX, flipY;
     double dAngle;
+    float fTexW, fTexH;
 
 public:
     SpriteRenderer(const std::string& strTexName, float x = 0, float y = 0, float w = -1, float h = -1);
@@ -25,7 +26,7 @@ public:
     void setFlipX(bool flipX);
     void setFlipY(bool flipY);
     void setAngle(double dAngle);
-    void setScale(float fX, float fY);
+    void setScale();
     // getters
     SDL_Texture* getTexture();
     SDL_FRect getRect() const { return mDestRect; }

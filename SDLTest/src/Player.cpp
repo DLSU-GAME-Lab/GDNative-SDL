@@ -21,9 +21,7 @@ void Player::initialize()
 {
     //500, 630
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Player", this->fPosX, this->fPosY);
-    pSpriteRenderer->setScale(this->fScaleX, this->fScaleY);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
-
     auto vecSprite = TextureManager::getInstance()->getTexture("Player", 0, 15);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 12);
 

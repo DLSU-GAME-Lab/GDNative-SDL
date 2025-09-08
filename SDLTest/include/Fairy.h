@@ -3,7 +3,7 @@
 class Fairy : public AGameObject
 {
 public:
-	Fairy();
+	Fairy(float fPosX, float fPosY, float fScaleX, float fScaleY, float fRot);
 	~Fairy();
 
 	void initialize() override;

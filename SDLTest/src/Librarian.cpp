@@ -3,9 +3,13 @@
 #include "SpriteRendererSystem.h"
 #include "SpriteAnimator.h"
 
-Librarian::Librarian() : AGameObject("Librarian")
+Librarian::Librarian(float fPosX, float fPosY, float fScaleX, float fScaleY, float fRot) : AGameObject("Librarian")
 {
-
+    this->fPosX = fPosX;
+    this->fPosY = fPosY;
+    this->fScaleX = fScaleX;
+    this->fScaleY = fScaleY;
+    this->fRot = fRot;
 }
 
 Librarian::~Librarian()
@@ -15,7 +19,8 @@ Librarian::~Librarian()
 
 void Librarian::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian", 1000, 350);
+    //1000, 350
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian", fPosX, fPosY);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 
     auto vecSprite = TextureManager::getInstance()->getTexture("Librarian", 0, 6);

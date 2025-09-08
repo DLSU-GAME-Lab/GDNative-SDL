@@ -3,7 +3,7 @@
 class Librarian : public AGameObject
 {
 public:
-	Librarian();
+	Librarian(float fPosX, float fPosY, float fScaleX, float fScaleY, float fRot);
 	~Librarian();
 
 	void initialize() override;

@@ -3,9 +3,13 @@
 #include "SpriteRendererSystem.h"
 #include "SpriteAnimator.h"
 
-Fairy::Fairy() : AGameObject("Fairy")
+Fairy::Fairy(float fPosX, float fPosY, float fScaleX, float fScaleY, float fRot) : AGameObject("Fairy")
 {
-
+    this->fPosX = fPosX;
+    this->fPosY = fPosY;
+    this->fScaleX = fScaleX;
+    this->fScaleY = fScaleY;
+    this->fRot = fRot;
 }
 
 Fairy::~Fairy()
@@ -15,7 +19,7 @@ Fairy::~Fairy()
 
 void Fairy::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy", 350, 500);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy", fPosX, fPosY);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 
     auto vecSprite = TextureManager::getInstance()->getTexture("Fairy", 0, 18);

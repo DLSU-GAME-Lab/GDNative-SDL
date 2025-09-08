@@ -53,12 +53,12 @@ void LobbyScene::onLoadObjects()
 	Background* pBackground = new Background("Lobby_Background", "Lobby_Background");
 
 	Player* pPlayer = new Player(500.f,630.f,1.f,1.f,0.0f);
-	Librarian* pLibrarian = new Librarian();
-	Fairy* pFairy = new Fairy();
+	Librarian* pLibrarian = new Librarian(1000.f, 350.f, 1.f, 1.f, 0.0f);
+	Fairy* pFairy = new Fairy(350, 500, 1.f, 1.f, 0.0f);
 
 	Prop* pLamps = new Prop("Lamps", "Lamps", 0, 0, 1.f, 1.f, 0, false);
 	Prop* pLadder = new Prop("Ladder", "Step_Ladder", 600.f, 530.f, 1.25f, 1.25f, 0, false);
-	Prop* pChair = new Prop("Chair", "Chair", 0, 630.f, 1.f, 1.f, 0, true);
+	Prop* pChair = new Prop("Chair", "Chair", 0, 750.f, 0.75f, 0.75f, 0, true);
 	Prop* pDesk = new Prop("Desk", "Librarian_Desk", 1000.f, 650.f, 1.25f, 1.25f, 0, false);
 	UIButton* pButtonRight = new UIButton("Button_Right", 1600.f,450.f, 300.f, 300.f, false);
 	UIButton* pButtonLeft = new UIButton("Button_Right", 100.f,450.f, 300.f, 300.f, true);

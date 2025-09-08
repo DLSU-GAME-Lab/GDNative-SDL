@@ -15,7 +15,12 @@ void AGameObject::processInput(SDL_Event eEvent)
 
 void AGameObject::update()
 {
+    for (AComponent* pComponent : this->vecComponent)
+    {
+        pComponent->perform();
+    }
 
+    //TODO: update children
 }
 
 void AGameObject::draw(SDL_Window * pWindow)

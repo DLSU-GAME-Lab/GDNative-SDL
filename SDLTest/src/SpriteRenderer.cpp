@@ -4,7 +4,7 @@
 #include "SpriteRendererSystem.h"
 
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
-    : AComponent("Sprite Renderer", ComponentType::RENDERER), pTexture(nullptr)
+    : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr)
 {
     this->flipX = false;
     this->flipY = false;

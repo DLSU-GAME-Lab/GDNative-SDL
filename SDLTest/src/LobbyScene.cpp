@@ -19,13 +19,25 @@ void LobbyScene::onLoadResources()
 {
 	TextureManager::getInstance()->load("library_redo.png", "Lobby_Background");
 	//TextureManager::getInstance()->load("frame1.png", "Player");
-	TextureManager::getInstance()->load("librarian.png", "Librarian");
-	TextureManager::getInstance()->load("fairy.png", "Fairy");
+	//TextureManager::getInstance()->load("fairy.png", "Fairy");
+	//TextureManager::getInstance()->load("librarian.png", "Librarian");
 
 	for (int i = 0; i < 16; i++)
 	{
 		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
 		TextureManager::getInstance()->load(strPath, "Player");
+	}
+
+	for (int i = 0; i < 19; i++)
+	{
+		std::string strPath = "animations/lobby_scene/fairy/frame" + std::to_string(i + 1) + ".png";
+		TextureManager::getInstance()->load(strPath, "Fairy");
+	}
+
+	for (int i = 0; i < 7; i++)
+	{
+		std::string strPath = "animations/lobby_scene/librarian/Set" + std::to_string(i + 1) + ".png";
+		TextureManager::getInstance()->load(strPath, "Librarian");
 	}
 
 	TextureManager::getInstance()->load("button.png", "Button");

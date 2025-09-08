@@ -10,26 +10,25 @@ class SpriteAnimator : public AComponent
 private:
 	SpriteRenderer* pSpriteRenderer;
 	std::vector<SDL_Texture*> vecTexture;
-	unsigned int nFPS;
+	unsigned int nFrameRate;
 
-	bool bPlayOnInit = true;
-	bool bIsPlaying = true;
-	bool bIsLooping = true;
-	unsigned int nFrameIndex = 0;
-	unsigned int nTicks = 0;
-	unsigned int nTicksPerFrame = 0;
+	bool bIsPlaying;
+	bool bIsLooping;
+	unsigned int nFrameIndex;
+	unsigned int nTicks;
+	unsigned int nTicksPerFrame;
 
 public:
-	SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFPS);
+	SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFrameRate);
 	~SpriteAnimator();
 
-	void Animate();
 	virtual void perform() override;
 
 	void stop();
 	void play();
 
-	void setFrames(std::vector<SDL_Texture*> vecTexture);
-	std::vector<SDL_Texture*> getFrames() const;
+	void setIsLooping(bool bIsLooping);
+
+	bool getIsLooping() const;
 };
 

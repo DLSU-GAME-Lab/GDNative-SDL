@@ -4,8 +4,6 @@
 #include "Librarian.h"
 #include "Fairy.h"
 #include "UIButton.h"
-#include "Ladder.h"
-#include "Chair.h"
 #include "Prop.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {

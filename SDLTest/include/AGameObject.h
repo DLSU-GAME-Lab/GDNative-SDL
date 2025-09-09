@@ -57,6 +57,4 @@ public:
     float getScaleY();
     void setRot(float fRot);
     float getRot();
-
-
 };

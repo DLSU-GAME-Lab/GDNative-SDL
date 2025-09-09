@@ -5,13 +5,14 @@
 #include "AGameObject.h"
 
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
-    : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr)
+    : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr), m_textureKey(textureName)
 {
     this->flipX = false;
     this->flipY = false;
     this->dAngle = 0.0;
 
     auto textures = TextureManager::getInstance()->getTexture(textureName);
+
     if (!textures.empty()) {
         pTexture = textures[0];
     }
@@ -27,7 +28,9 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
             fTexH = fh;
         }
     }
-
+    else {
+        fTexW = fTexH = 0.0f; // only zero if no texture
+    }
 
     //SDL_Point anchor = { texW / 2,texH / 2 };
     mDestRect.x = x;
@@ -38,12 +41,43 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     //mDestRect.x = anchor.x - (mDestRect.w / 2);
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
 
+    // register this sprite with the system
+    SpriteRendererSystem::getInstance()->registerSpriteRenderer(this);
+}
 
+void SpriteRenderer::initialize() {
+    auto textures = TextureManager::getInstance()->getTexture(m_textureKey);
+    if (!textures.empty()) {
+        pTexture = textures[0];
+
+        float fw, fh;
+        if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
+            fTexW = fw;
+            fTexH = fh;
+        }
+
+        if (mDestRect.w <= 0) mDestRect.w = fTexW;
+        if (mDestRect.h <= 0) mDestRect.h = fTexH;
+
+        std::cout << "[SpriteRenderer] Initialized with texture: " << m_textureKey << std::endl;
+    }
+    else {
+        std::cerr << "[SpriteRenderer ERROR] Texture not found during initialize: "
+            << m_textureKey << std::endl;
+    }
+}
+
+SpriteRenderer::~SpriteRenderer() {
+    // unregister when destroyed
+    SpriteRendererSystem::getInstance()->unregisterSpriteRenderer(this);
 }
 
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
     this->setScale();
     if (pTexture) {
+        std::cout << "[Draw] Texture=" << m_textureKey
+            << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
+            << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
         if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE); //replace with both flipped when available
         if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);

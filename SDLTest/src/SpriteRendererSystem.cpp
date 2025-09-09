@@ -13,7 +13,6 @@ void SpriteRendererSystem::draw()
     {
         pSpriteRenderer->draw(P_SHARED_INSTANCE->pRenderer);
     }
-        
 }
 
 void SpriteRendererSystem::registerSpriteRenderer(SpriteRenderer* pSpriteRenderer)

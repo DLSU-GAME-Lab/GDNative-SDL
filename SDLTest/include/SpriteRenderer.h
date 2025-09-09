@@ -11,9 +11,13 @@ private:
     bool flipX, flipY;
     double dAngle;
     float fTexW, fTexH;
+    std::string m_textureKey;
 
 public:
     SpriteRenderer(const std::string& strTexName, float x = 0, float y = 0, float w = -1, float h = -1);
+    void initialize(); // (when all resources are guaranteed to be loaded).
+
+    ~SpriteRenderer();
 
     void draw(SDL_Renderer* pRenderer);
     void perform() override;
@@ -21,6 +25,7 @@ public:
     // setters
     void setTexture(SDL_Texture* pTexture);
     void setPosition(float x, float y);
+
     //remove later if set scale is what this should do
     void setSize(float w, float h);
     void setFlipX(bool flipX);

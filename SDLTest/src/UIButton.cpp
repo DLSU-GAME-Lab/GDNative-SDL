@@ -1,46 +1,50 @@
 #include "UIButton.h"
+#include "SceneManager.h"
+#include "SpriteRenderer.h"
 #include <iostream>
 
-UIButton::UIButton(const std::string& strName, float fX, float fY, float fW, float fH, float fRot, bool bFlipX, 
-    SceneTag targetScene):AGameObject(strName), bFlipX(bFlipX)
+UIButton::UIButton(std::string objName, std::string textureKey,
+    float x, float y, float scaleX, float scaleY,
+    float rotation, bool isUI, SceneTag eTargetScene)
+    : AButton(objName), m_eTargetScene(eTargetScene), m_textureKey(textureKey)
 {
-    this->fX = this->fPosX = fX;
-    this->fY = this->fPosY = fY;
-    this->fW = this->fScaleX = fW;
-    this->fH = this->fScaleY = fH;
-    this->fRot = fRot;
-}
+    // explicitly use the texture key stored in TextureManager
+    this->pSprite = new SpriteRenderer(m_textureKey, x, y);
+    this->attachComponent(this->pSprite);
 
-UIButton::~UIButton()
-{
+    this->pSprite->setPosition(x, y);
+    this->setPosX(x);
+    this->setPosY(y);
+
+    this->setScaleX(scaleX);
+    this->setScaleY(scaleY);
+    this->pSprite->setAngle(rotation);
 }
 
 void UIButton::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strName, fPosX, fPosY);
-	if (bFlipX)
-	{
-		pSpriteRenderer->setFlipX(true);
-	}
-	SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
-	this->attachComponent((AComponent*)pSpriteRenderer);
+    this->pSprite->initialize();
+    
+    std::cout << "[UIButton] Initialized: " << this->getName()
+        << " using texture: " << m_textureKey << std::endl;
 
+    if (this->pSprite->getTexture() == nullptr) {
+        std::cerr << "[UIButton ERROR] Texture not found for: " << m_textureKey << std::endl;
+    }
 }
 
-void UIButton::processInput(SDL_Event eEvent)
+void UIButton::OnPressed(SDL_MouseButtonEvent eMouseEvent)
 {
-    if (eEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-        int mouseX = eEvent.button.x;
-        int mouseY = eEvent.button.y;
+    std::cout << "[UIButton] Button pressed: " << this->getName() << std::endl;
+}
 
-        // check if click is within button bounds
-        if (mouseX >= fX && mouseX <= fX + fW &&
-            mouseY >= fY && mouseY <= fY + fH) {
-            std::cout << "Button clicked! Switching to scene: "
-                << static_cast<int>(targetScene) << std::endl;
+void UIButton::OnReleased(SDL_MouseButtonEvent eMouseEvent)
+{
+    std::cout << "[UIButton] Button released: " << this->getName() << std::endl;
+    SceneManager::getInstance()->loadScene(m_eTargetScene); // fixed
+}
 
-            // switch scenes
-            SceneManager::getInstance()->loadScene(targetScene);
-        }
-    }
+void UIButton::OnHovered()
+{
+    std::cout << "[UIButton] Hovering over: " << this->getName() << std::endl;
 }

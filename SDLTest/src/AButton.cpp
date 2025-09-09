@@ -12,36 +12,44 @@ AButton::~AButton()
 
 void AButton::processInput(SDL_Event eEvent)
 {
-	if (eEvent.motion.xrel != 0 || eEvent.motion.yrel != 0)
-	{
-		this->OnHovered();
-	}
-	
-	if (this->contains(eEvent.button.x, eEvent.button.y))
-	{
-		switch (eEvent.button.type)
-		{
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-			this->OnPressed(eEvent.button);
-			break;
+    switch (eEvent.type) {
+    case SDL_EVENT_MOUSE_MOTION:
+        if (this->contains(eEvent.motion.x, eEvent.motion.y)) {
+            this->OnHovered();
+        }
+        break;
 
-		case SDL_EVENT_MOUSE_BUTTON_UP:
-			this->OnReleased(eEvent.button);
-			break;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        if (this->contains(eEvent.button.x, eEvent.button.y)) {
+            this->OnPressed(eEvent.button);
+        }
+        break;
 
-		default:
-			break;
-		}
-	}
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+        if (this->contains(eEvent.button.x, eEvent.button.y)) {
+            this->OnReleased(eEvent.button);
+        }
+        break;
+    }
 }
 
 bool AButton::contains(float fX, float fY)
 {
+	if (!this->pSprite) return false;
+
+	// get sprite rect (texture size already adjusted by SpriteRenderer)
 	SDL_FRect spriteRect = this->pSprite->getRect();
+
+	// offset by GameObject position
+	spriteRect.x = this->getPosX();
+	spriteRect.y = this->getPosY();
+
+	// apply scaling
+	spriteRect.w *= this->getScaleX();
+	spriteRect.h *= this->getScaleY();
+
+	// create 1x1 point rect
 	SDL_FRect pointRect = { fX, fY, 1, 1 };
 
-	if (SDL_HasRectIntersectionFloat(&spriteRect, &pointRect))
-		return true;
-
-	return false;
+	return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }

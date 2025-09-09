@@ -1,24 +1,22 @@
 #pragma once
 
-#include "AGameObject.h"
-#include "SpriteRendererSystem.h"
-#include "Settings.h"
-#include "SceneManager.h"
+#include "AButton.h"
 #include "EnumSceneTag.h"
 
-class UIButton: public AGameObject
-{
-private:
-	std::string strImageName;
-	float fX, fY, fH, fW;
-	bool bFlipX;
-	SceneTag targetScene;
-
+class UIButton : public AButton {
 public:
-	UIButton(const std::string& strName, float nX, float nY, float nW, float nH, float fRot, bool bFlipX, SceneTag targetScene = SceneTag::LOBBY_SCENE);
-	~UIButton();
+    UIButton(std::string objName, std::string textureKey,
+        float x, float y, float scaleX, float scaleY,
+        float rotation, bool isUI, SceneTag eTargetScene);
 
-	void initialize() override;
-	void processInput(SDL_Event eEvent) override;
+    ~UIButton() override = default;
+    void initialize() override;
+
+    void OnPressed(SDL_MouseButtonEvent eMouseEvent) override;
+    void OnReleased(SDL_MouseButtonEvent eMouseEvent) override;
+    void OnHovered() override;
+
+private:
+    SceneTag m_eTargetScene;
+    std::string m_textureKey;
 };
-

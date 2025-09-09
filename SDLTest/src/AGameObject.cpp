@@ -6,6 +6,10 @@ AGameObject::AGameObject(std::string strName)
     this->strName = strName;
     bEnabled = true;
     pParent = NULL;
+
+    // defaults:
+    this->fScaleX = 1.0f;  
+    this->fScaleY = 1.0f;
 }
 
 void AGameObject::processInput(SDL_Event eEvent)

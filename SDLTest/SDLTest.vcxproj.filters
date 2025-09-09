@@ -69,7 +69,6 @@
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\EngineTime.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -80,6 +79,9 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\AButton.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Prop.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
@@ -138,7 +140,6 @@
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="include\Prop.h" />
     <ClInclude Include="include\EngineTime.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -149,6 +150,9 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\AButton.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Prop.h">
       <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>

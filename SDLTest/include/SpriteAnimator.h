@@ -2,6 +2,7 @@
 
 #include "AComponent.h"
 #include "SpriteRenderer.h"
+#include "EnumAnimationType.h"
 #include <SDL3/SDL.h>
 #include <vector>
 
@@ -13,7 +14,9 @@ private:
 	unsigned int nFrameRate;
 
 	bool bIsPlaying;
-	bool bIsLooping;
+	bool bIsReverse;
+	AnimationType EType;
+
 	unsigned int nFrameIndex;
 	unsigned int nTicks;
 	unsigned int nTicksPerFrame;
@@ -27,8 +30,8 @@ public:
 	void stop();
 	void play();
 
-	void setIsLooping(bool bIsLooping);
+	void setAnimationType(AnimationType EType);
 
-	bool getIsLooping() const;
+	AnimationType getAnimationType() const;
 };
 

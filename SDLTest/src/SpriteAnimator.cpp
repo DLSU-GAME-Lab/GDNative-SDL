@@ -9,7 +9,8 @@ SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_
 	this->nFrameRate = nFrameRate;
 
 	this->bIsPlaying = false;
-	this->bIsLooping = true;
+	this->bIsReverse = false;
+	this->EType = AnimationType::ONCE;
 	this->nFrameIndex = 0;
 	this->nTicks = 0;
 	this->nTicksPerFrame = SDL_MS_PER_SECOND / nFrameRate;
@@ -28,12 +29,37 @@ void SpriteAnimator::perform()
 		if (this->nTicks >= this->nTicksPerFrame)
 		{
 			this->nTicks %= this->nTicksPerFrame;
-			this->nFrameIndex++;
 
-			if (this->nFrameIndex == this->vecTexture.size())
+			if (!this->bIsReverse) this->nFrameIndex++;
+			else this->nFrameIndex--;
+
+			switch (this->EType)
 			{
-				if (this->bIsLooping) this->nFrameIndex = 0;
-				else this->stop();
+			case AnimationType::ONCE:
+				if (this->nFrameIndex == this->vecTexture.size())
+				{
+					this->stop();
+				}
+				break;
+
+			case AnimationType::LOOP:
+				if (this->nFrameIndex == this->vecTexture.size())
+				{
+					this->nFrameIndex = 0;
+				}
+				break;
+
+			case AnimationType::PINGPONG:
+				if (this->nFrameIndex == this->vecTexture.size() - 1 ||
+					this->nFrameIndex == 0)
+				{
+					this->bIsReverse = !this->bIsReverse;
+
+				}
+				break;
+
+			default:
+				break;
 			}
 
 			this->pSpriteRenderer->setTexture(this->vecTexture[this->nFrameIndex]);
@@ -54,12 +80,12 @@ void SpriteAnimator::play()
 	this->bIsPlaying = true;
 }
 
-void SpriteAnimator::setIsLooping(bool bIsLooping)
+void SpriteAnimator::setAnimationType(AnimationType EType)
 {
-	this->bIsLooping = bIsLooping;
+	this->EType = EType;
 }
 
-bool SpriteAnimator::getIsLooping() const
+AnimationType SpriteAnimator::getAnimationType() const
 {
-	return this->bIsLooping;
+	return this->EType;
 }

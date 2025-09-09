@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AButton.cpp" />
+    <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -155,8 +156,10 @@
   <ItemGroup>
     <ClInclude Include="include\AButton.h" />
     <ClInclude Include="include\AComponent.h" />
+    <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\EngineTime.h" />
+    <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />
     <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\EnumSceneTag.h" />

@@ -1,5 +1,4 @@
-#ifndef ENUM_COMPONENT_TYPE_HPP
-#define ENUM_COMPONENT_TYPE_HPP
+#pragma once
 
 enum class ComponentType : int {
     NONE = -1,
@@ -10,6 +9,3 @@ enum class ComponentType : int {
     PHYSICS,
     DATA
 };
-
-#endif
-

@@ -75,9 +75,10 @@ SpriteRenderer::~SpriteRenderer() {
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
     this->setScale();
     if (pTexture) {
-        std::cout << "[Draw] Texture=" << m_textureKey
+        /*std::cout << "[Draw] Texture=" << m_textureKey
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
             << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
+        */
         if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE); //replace with both flipped when available
         if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);

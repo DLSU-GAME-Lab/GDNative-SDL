@@ -16,7 +16,7 @@ Background::~Background()
 
 void Background::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(strImageName, 0, 0, gameWidth, gameHeight);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(strImageName, 0, 0, 0, gameWidth, gameHeight);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteRenderer);
 }

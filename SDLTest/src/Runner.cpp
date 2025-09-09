@@ -23,7 +23,7 @@ Runner::Runner()
 	screenHeight = dispMode.h;
 
 	this->fWindowScale = 0.75f;
-	this->strWindowTitle = "Babaylan Tales";
+	this->strWindowTitle = "Gem Hunter Match";
 	float scaleX = (float)screenWidth / gameWidth;
 	float scaleY = (float)screenHeight / gameHeight;
 	float scale = std::min(scaleX, scaleY);

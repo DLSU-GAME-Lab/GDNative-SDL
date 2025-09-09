@@ -17,7 +17,7 @@ Prop::~Prop()
 
 void Prop::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fPosX, this->fPosY);
+	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fPosX, this->fPosY, this->fRot);
 	if (bFlipX)
 	{
 		pSpriteRenderer->setFlipX(true);

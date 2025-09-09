@@ -14,7 +14,7 @@ private:
     std::string m_textureKey;
 
 public:
-    SpriteRenderer(const std::string& strTexName, float x = 0, float y = 0, float w = -1, float h = -1);
+    SpriteRenderer(const std::string& strTexName, float x = 0, float y = 0, double dAngle = 0.0f, float w = -1, float h = -1);
     void initialize(); // (when all resources are guaranteed to be loaded).
 
     ~SpriteRenderer();

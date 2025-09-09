@@ -4,12 +4,12 @@
 #include "SpriteRendererSystem.h"
 #include "AGameObject.h"
 
-SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
+SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, double dAngle, float w, float h)
     : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr), m_textureKey(textureName)
 {
     this->flipX = false;
     this->flipY = false;
-    this->dAngle = 0.0;
+    this->dAngle = dAngle;
 
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 

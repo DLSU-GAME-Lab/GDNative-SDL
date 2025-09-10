@@ -2,6 +2,7 @@
 #include "Runner.h"
 #include <memory>
 
+#define MAIN_TAG "main"
 
 int main(int argc, char* argv[])
 {

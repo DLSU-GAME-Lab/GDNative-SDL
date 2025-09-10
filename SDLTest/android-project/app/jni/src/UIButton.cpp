@@ -12,13 +12,14 @@ UIButton::UIButton(std::string objName, std::string textureKey,
     this->pSprite = new SpriteRenderer(m_textureKey, x, y);
     this->attachComponent(this->pSprite);
 
-    this->pSprite->setPosition(x, y);
     this->setPosX(x);
     this->setPosY(y);
 
     this->setScaleX(scaleX);
     this->setScaleY(scaleY);
     this->pSprite->setAngle(rotation);
+
+    this->pSprite = dynamic_cast<SpriteRenderer*>(this->findComponentByName("SpriteRenderer"));
 }
 
 void UIButton::initialize()

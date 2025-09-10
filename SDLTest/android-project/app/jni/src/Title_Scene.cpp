@@ -56,8 +56,8 @@ void Title_Scene::onLoadObjects()
     AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy", 50.f, 100.f, 1.f, 1.f, 0.f, 0, 1, 4);
     AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", 100.f, 300.f, 1.f, 1.f, 0.f, 0, 1, 4);
 
-    GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);
     GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);
     GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
     GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
     GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);

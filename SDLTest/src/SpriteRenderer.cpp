@@ -65,6 +65,9 @@ void SpriteRenderer::initialize() {
         std::cerr << "[SpriteRenderer ERROR] Texture not found during initialize: "
             << m_textureKey << std::endl;
     }
+
+    // register this sprite with the system
+    SpriteRendererSystem::getInstance()->registerSpriteRenderer(this);
 }
 
 SpriteRenderer::~SpriteRenderer() {
@@ -93,7 +96,14 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
 
 void SpriteRenderer::perform()
 {
-
+    AGameObject* owner = this->getOwner();
+    if (owner) {
+        mDestRect.x = owner->getPosX();
+        mDestRect.y = owner->getPosY();
+        // size = texture size * owner scale
+        mDestRect.w = fTexW * owner->getScaleX();
+        mDestRect.h = fTexH * owner->getScaleY();
+    }
 }
 
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)
@@ -135,7 +145,6 @@ void SpriteRenderer::setScale()
         mDestRect.w = fTexW * pOg->getScaleX();
         mDestRect.h = fTexH * pOg->getScaleY();
     }
-
 }
 
 SDL_Texture* SpriteRenderer::getTexture()

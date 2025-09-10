@@ -1,4 +1,6 @@
 #include "AButton.h"
+#include "SpriteRendererSystem.h"
+#include <iostream>
 
 AButton::AButton(std::string strName) : AGameObject(strName)
 {
@@ -35,21 +37,18 @@ void AButton::processInput(SDL_Event eEvent)
 
 bool AButton::contains(float fX, float fY)
 {
-	if (!this->pSprite) return false;
+    if (!this->pSprite) return false;
 
-	// get sprite rect (texture size already adjusted by SpriteRenderer)
-	SDL_FRect spriteRect = this->pSprite->getRect();
+    SDL_FRect spriteRect = this->pSprite->getRect();
+    SDL_FRect pointRect = { fX, fY, 1, 1 };
 
-	// offset by GameObject position
-	spriteRect.x = this->getPosX();
-	spriteRect.y = this->getPosY();
+    // log full info
+    std::cout << "Button: " << this->getName()
+        << " Rect: (" << spriteRect.x << ", " << spriteRect.y
+        << ", " << spriteRect.w << ", " << spriteRect.h << ")"
+        << " Mouse Logical: (" << fX << ", " << fY << ")"
+        << std::endl;
 
-	// apply scaling
-	spriteRect.w *= this->getScaleX();
-	spriteRect.h *= this->getScaleY();
-
-	// create 1x1 point rect
-	SDL_FRect pointRect = { fX, fY, 1, 1 };
-
-	return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
+    return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }
+

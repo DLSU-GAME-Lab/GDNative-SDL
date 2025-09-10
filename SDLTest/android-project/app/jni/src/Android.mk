@@ -5,8 +5,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := main
 
 # Add your application source files here...
-LOCAL_SRC_FILES := \
-    YourSourceHere.c
+LOCAL_SRC_FILES := main.cpp
 
 SDL_PATH := ../SDL  # SDL
 

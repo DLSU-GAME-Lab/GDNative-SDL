@@ -98,11 +98,11 @@ void SpriteRenderer::perform()
 {
     AGameObject* owner = this->getOwner();
     if (owner) {
-        mDestRect.x = owner->getPosX();
-        mDestRect.y = owner->getPosY();
+        mDestRect.x = owner->getPos().x;
+        mDestRect.y = owner->getPos().y;
         // size = texture size * owner scale
-        mDestRect.w = fTexW * owner->getScaleX();
-        mDestRect.h = fTexH * owner->getScaleY();
+        mDestRect.w = fTexW * owner->getScale().x;
+        mDestRect.h = fTexH * owner->getScale().y;
     }
 }
 
@@ -142,8 +142,8 @@ void SpriteRenderer::setScale()
     AGameObject* pOg = this->getOwner();
     if (pOg != NULL)
     {
-        mDestRect.w = fTexW * pOg->getScaleX();
-        mDestRect.h = fTexH * pOg->getScaleY();
+        mDestRect.w = fTexW * pOg->getScale().x;
+        mDestRect.h = fTexH * pOg->getScale().y;
     }
 }
 

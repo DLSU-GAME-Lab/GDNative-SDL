@@ -6,7 +6,7 @@ private:
 	std::string strImageName;
 	bool bFlipX;
 public:
-	Prop(const std::string& strName, const std::string& strImageName, float nX, float nY, float nW, float nH, float fRot, bool bFlipX);
+	Prop(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX);
 	~Prop();
 
 	void initialize() override;

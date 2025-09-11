@@ -12,10 +12,8 @@ public:
 	AnimatedSprite(
 		std::string strName,
 		std::string strSpriteName,
-		float fPosX,
-		float fPosY,
-		float fScaleX,
-		float fScaleY,
+		Vector2D fVecTranslate,
+		Vector2D fVecScale,
 		float fRot,
 		int nFrameStart,
 		int nFrameEnd,

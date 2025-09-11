@@ -6,7 +6,7 @@
 class UIButton : public AButton {
 public:
     UIButton(std::string objName, std::string textureKey,
-        float x, float y, float scaleX, float scaleY,
+        Vector2D fVecTranslate, Vector2D fVecScale,
         float rotation, bool isUI, SceneTag eTargetScene);
 
     ~UIButton() override = default;

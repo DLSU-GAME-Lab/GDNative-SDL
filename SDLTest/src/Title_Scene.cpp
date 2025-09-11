@@ -40,21 +40,21 @@ void Title_Scene::onLoadResources()
 void Title_Scene::onLoadObjects()
 {
     // create and register game objects for the title scene
-    Background* pBackground = new Background("Title_Background", "Title_Background", 1,1);
+    Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(1.f,1.f));
 
     // create a button that switches to the Lobby scene when clicked
     UIButton* pStartButton = new UIButton(
         "Start_Button_Object",   // object name (can be unique)
         "Start_Button",          // texture key (MUST match TextureManager)
-        250.f, 600.f,
-        0.25f, 0.25f,
+        Vector2D(250.f, 600.f),
+        Vector2D(0.25f, 0.25f),
         0.0f, false,
         SceneTag::LOBBY_SCENE
     );
 
-    AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", -20.f, 100.f, 1.f, 1.f, 0.f, 0, 1, 4);
-    AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy", 50.f, 100.f, 1.f, 1.f, 0.f, 0, 1, 4);
-    AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", 100.f, 300.f, 1.f, 1.f, 0.f, 0, 1, 4);
+    AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-20.f, 100.f), Vector2D(1.f, 1.f), 0.f, 0, 1, 4);
+    AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy",Vector2D(50.f, 100.f),Vector2D(1.f, 1.f), 0.f, 0, 1, 4);
+    AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", Vector2D(100.f, 300.f), Vector2D(1.f, 1.f), 0.f, 0, 1, 4);
 
     GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
     GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);

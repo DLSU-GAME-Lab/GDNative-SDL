@@ -3,6 +3,7 @@
 #include "AComponent.h"
 #include "SpriteRenderer.h"
 #include <SDL3/SDL.h>
+#include "Vector2D.h"
 #include <vector>
 
 class AGameObject
@@ -16,8 +17,9 @@ protected:
     std::vector<AComponent*> vecComponent;
 
     // X and Y since 2d
-    float fPosX, fPosY;
-    float fScaleX, fScaleY;
+    
+    Vector2D fVecTranslate;
+    Vector2D fVecScale;
     float fRot;
 
 public:
@@ -47,14 +49,10 @@ public:
     std::string getName() const;
     AGameObject* getParent() const;
     void setParent(AGameObject* pParent);
-    void setPosX(float fX);
-    float getPosX();
-    void setPosY(float fY);
-    float getPosY();
-    void setScaleX(float fX);
-    float getScaleX();
-    void setScaleY(float fY);
-    float getScaleY();
+    void setPos(Vector2D fVecTranslate);
+    void setScale(Vector2D fVecScale);
+    Vector2D getPos();
+    Vector2D getScale();
     void setRot(float fRot);
     float getRot();
 };

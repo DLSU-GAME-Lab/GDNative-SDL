@@ -6,10 +6,8 @@
 AnimatedSprite::AnimatedSprite(
 	std::string strName,
     std::string strSpriteName,
-	float fPosX,
-	float fPosY,
-	float fScaleX,
-	float fScaleY,
+    Vector2D fVecTranslate,
+    Vector2D fVecScale,
 	float fRot,
 	int nFrameStart,
 	int nFrameEnd,
@@ -17,10 +15,8 @@ AnimatedSprite::AnimatedSprite(
 	: AGameObject(strName)
 {
     this->strSpriteName = strSpriteName;
-    this->fPosX = fPosX;
-    this->fPosY = fPosY;
-    this->fScaleX = fScaleX;
-    this->fScaleY = fScaleY;
+    this->fVecTranslate = fVecTranslate;
+    this->fVecScale = fVecScale;
     this->fRot = fRot;
     this->nFrameStart = nFrameStart;
     this->nFrameEnd = nFrameEnd;
@@ -34,7 +30,7 @@ AnimatedSprite::~AnimatedSprite()
 
 void AnimatedSprite::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strSpriteName, this->fPosX, this->fPosY);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strSpriteName, this->fVecTranslate.x, this->fVecTranslate.y);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
     auto vecSprite = TextureManager::getInstance()->getTexture(this->strSpriteName, this->nFrameStart, this->nFrameEnd);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, this->nFrameRate);

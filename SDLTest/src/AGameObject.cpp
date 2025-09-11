@@ -8,8 +8,7 @@ AGameObject::AGameObject(std::string strName)
     pParent = NULL;
 
     // defaults:
-    this->fScaleX = 1.0f;  
-    this->fScaleY = 1.0f;
+    this->fVecScale = Vector2D(1, 1);
 }
 
 void AGameObject::processInput(SDL_Event eEvent)
@@ -167,45 +166,26 @@ void AGameObject::setParent(AGameObject* pParent)
     this->pParent = pParent;
 }
 
-void AGameObject::setPosX(float fX)
+void AGameObject::setPos(Vector2D fVecTranslate)
 {
-    this->fPosX = fX;
+    this->fVecTranslate = fVecTranslate;
 }
 
-float AGameObject::getPosX()
+void AGameObject::setScale(Vector2D fVecScale)
 {
-    return this->fPosX;
+    this->fVecScale = fVecScale;
 }
 
-void AGameObject::setPosY(float fY)
+Vector2D AGameObject::getPos()
 {
-    this->fPosY = fY;
+    return this->fVecTranslate;
 }
 
-float AGameObject::getPosY()
+Vector2D AGameObject::getScale()
 {
-    return this->fPosY;
+    return this->fVecScale;
 }
 
-void AGameObject::setScaleX(float fX)
-{
-    this->fScaleX = fX;
-}
-
-float AGameObject::getScaleX()
-{
-    return this->fScaleX;
-}
-
-void AGameObject::setScaleY(float fY)
-{
-    this->fScaleY = fY;
-}
-
-float AGameObject::getScaleY()
-{
-    return this->fScaleY;
-}
 
 void AGameObject::setRot(float fRot)
 {

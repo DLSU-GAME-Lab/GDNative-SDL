@@ -8,7 +8,7 @@ private:
 	
 
 public:
-	Background(const std::string& strName, const std::string& strImageName, float fScaleX, float fScaleY);
+	Background(const std::string& strName, const std::string& strImageName, Vector2D fVecScale);
 	~Background();
 
 	void initialize() override;

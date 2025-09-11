@@ -41,26 +41,28 @@ void Title_Scene::onLoadObjects()
 {
     // create and register game objects for the title scene
     Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(1.f,1.f));
+    GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
+
+    AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", Vector2D(0.f, 300.f), Vector2D(1.f, 1.f), 0.f, 8);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
+
+    AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy", Vector2D(-50.f, 150.f), Vector2D(1.f, 1.f), 0.f, 8);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+
+    AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-300.f, 0.f), Vector2D(1.f, 1.f), 0.f, 8);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
 
     // create a button that switches to the Lobby scene when clicked
     UIButton* pStartButton = new UIButton(
         "Start_Button_Object",   // object name (can be unique)
         "Start_Button",          // texture key (MUST match TextureManager)
-        Vector2D(250.f, 600.f),
+        Vector2D(60.f, 800.f),
         Vector2D(0.25f, 0.25f),
         0.0f, false,
         SceneTag::LOBBY_SCENE
     );
-
-    AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-20.f, 100.f), Vector2D(1.f, 1.f), 0.f, 0, 1, 4);
-    AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy",Vector2D(50.f, 100.f),Vector2D(1.f, 1.f), 0.f, 0, 1, 4);
-    AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", Vector2D(100.f, 300.f), Vector2D(1.f, 1.f), 0.f, 0, 1, 4);
-
-    GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
     GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);
-    GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
-    GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
-    GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+
 }
 
 void Title_Scene::onUnloadResources()

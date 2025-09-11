@@ -4,8 +4,6 @@ class AnimatedSprite : public AGameObject
 {
 private:
 	std::string strSpriteName;
-	int nFrameStart;
-	int nFrameEnd;
 	int nFrameRate;
 
 public:
@@ -15,8 +13,6 @@ public:
 		Vector2D fVecTranslate,
 		Vector2D fVecScale,
 		float fRot,
-		int nFrameStart,
-		int nFrameEnd,
 		int nFrameRate);
 	~AnimatedSprite();
 

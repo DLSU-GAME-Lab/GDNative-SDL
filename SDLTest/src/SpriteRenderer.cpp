@@ -76,7 +76,15 @@ SpriteRenderer::~SpriteRenderer() {
 }
 
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
-    this->setScale();
+    AGameObject* owner = this->getOwner();
+    if (owner)
+    {
+        mDestRect.x = owner->getPos().x;
+        mDestRect.y = owner->getPos().y;
+        // size = texture size * owner scale
+        mDestRect.w = fTexW * owner->getScale().x;
+        mDestRect.h = fTexH * owner->getScale().y;
+    }
     if (pTexture) {
         /*std::cout << "[Draw] Texture=" << m_textureKey
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
@@ -96,14 +104,6 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
 
 void SpriteRenderer::perform()
 {
-    AGameObject* owner = this->getOwner();
-    if (owner) {
-        mDestRect.x = owner->getPos().x;
-        mDestRect.y = owner->getPos().y;
-        // size = texture size * owner scale
-        mDestRect.w = fTexW * owner->getScale().x;
-        mDestRect.h = fTexH * owner->getScale().y;
-    }
 }
 
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)
@@ -135,16 +135,6 @@ void SpriteRenderer::setFlipY(bool flipY)
 void SpriteRenderer::setAngle(double dAngle)
 {
     this->dAngle = dAngle;
-}
-
-void SpriteRenderer::setScale()
-{
-    AGameObject* pOg = this->getOwner();
-    if (pOg != NULL)
-    {
-        mDestRect.w = fTexW * pOg->getScale().x;
-        mDestRect.h = fTexH * pOg->getScale().y;
-    }
 }
 
 SDL_Texture* SpriteRenderer::getTexture()

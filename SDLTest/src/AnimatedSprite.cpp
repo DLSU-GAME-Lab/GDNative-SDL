@@ -9,8 +9,6 @@ AnimatedSprite::AnimatedSprite(
     Vector2D fVecTranslate,
     Vector2D fVecScale,
 	float fRot,
-	int nFrameStart,
-	int nFrameEnd,
     int nFrameRate)
 	: AGameObject(strName)
 {
@@ -18,8 +16,6 @@ AnimatedSprite::AnimatedSprite(
     this->fVecTranslate = fVecTranslate;
     this->fVecScale = fVecScale;
     this->fRot = fRot;
-    this->nFrameStart = nFrameStart;
-    this->nFrameEnd = nFrameEnd;
     this->nFrameRate = nFrameRate;
 }
 
@@ -32,11 +28,11 @@ void AnimatedSprite::initialize()
 {
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strSpriteName, this->fVecTranslate.x, this->fVecTranslate.y);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
-    auto vecSprite = TextureManager::getInstance()->getTexture(this->strSpriteName, this->nFrameStart, this->nFrameEnd);
+    auto vecSprite = TextureManager::getInstance()->getTexture(this->strSpriteName);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, this->nFrameRate);
 
     this->attachComponent((AComponent*)pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteAnimator);
-    pSpriteAnimator->setAnimationType(AnimationType::LOOP);
+    pSpriteAnimator->setAnimationType(AnimationType::PINGPONG);
     pSpriteAnimator->play();
 }

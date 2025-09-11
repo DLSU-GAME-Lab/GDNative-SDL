@@ -32,21 +32,15 @@ void SpriteAnimator::perform()
 
 			if (!this->bIsReverse) this->nFrameIndex++;
 			else this->nFrameIndex--;
-
+			
 			switch (this->EType)
 			{
 			case AnimationType::ONCE:
-				if (this->nFrameIndex == this->vecTexture.size())
-				{
-					this->stop();
-				}
+				if (this->nFrameIndex == this->vecTexture.size()) this->stop();
 				break;
 
 			case AnimationType::LOOP:
-				if (this->nFrameIndex == this->vecTexture.size())
-				{
-					this->nFrameIndex = 0;
-				}
+				this->nFrameIndex %= this->vecTexture.size();
 				break;
 
 			case AnimationType::PINGPONG:
@@ -54,7 +48,6 @@ void SpriteAnimator::perform()
 					this->nFrameIndex == 0)
 				{
 					this->bIsReverse = !this->bIsReverse;
-
 				}
 				break;
 

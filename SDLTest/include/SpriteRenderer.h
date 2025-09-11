@@ -31,7 +31,7 @@ public:
     void setFlipX(bool flipX);
     void setFlipY(bool flipY);
     void setAngle(double dAngle);
-    void setScale();
+
     // getters
     SDL_Texture* getTexture();
     SDL_FRect getRect() const { return mDestRect; }

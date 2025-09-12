@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22.1)
 include(FetchContent)
 include(ExternalProject)
 
-project("Sample_App")
+project("Babaylan_Tales")
 
 # Version Management (Optional)
 set(SAMPLE_VERSION_MAJOR 1)
@@ -52,7 +52,7 @@ file(MAKE_DIRECTORY ${SDL3_IMAGE_INSTALL_DIR}/include)
 # ================= Add SDL3 via ExternalProject (CMake Stuff =============================
 ExternalProject_Add(external_sdl3
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG release-3.2.10   # Choose whatever version/tag here you guys want
+        GIT_TAG main  # Choose whatever version/tag here you guys want
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
         PREFIX ${CMAKE_BINARY_DIR}/external/SDL3
@@ -61,7 +61,6 @@ ExternalProject_Add(external_sdl3
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DANDROID_STL=c++_shared
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-	-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
 
         -DSDL_INSTALL=ON
 
@@ -142,18 +141,17 @@ target_link_libraries(sdl3_wrapper INTERFACE SDL3)
 
 # ================= SDL3_image Configuration for Android ==================
 ExternalProject_Add(external_sdl3_image
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
-        GIT_TAG release-3.2.4
-        GIT_SHALLOW TRUE
+        GIT_REPOSITORY  https://github.com/libsdl-org/SDL_image.git
+        GIT_TAG main
+        GIT_SHALLOW FALSE
         GIT_PROGRESS TRUE
+        GIT_SUBMODULES ""
         PREFIX ${CMAKE_BINARY_DIR}/external/SDL3_image
         CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${SDL3_IMAGE_INSTALL_DIR}
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DANDROID_STL=c++_shared
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-	-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM} 
-
         -DSDL3IMAGE_INSTALL=ON
 
         # Configure SDL3_image options for Android before fetching
@@ -191,6 +189,7 @@ ExternalProject_Add(external_sdl3_image
 
 # Create wrapper for SDL3_image
 add_library(sdl3_image_wrapper INTERFACE)
+
 target_include_directories(sdl3_image_wrapper INTERFACE
         ${SDL3_IMAGE_INSTALL_DIR}/include
 )
@@ -219,6 +218,7 @@ add_library(spdlog_headers INTERFACE)
 target_include_directories(spdlog_headers INTERFACE
         ${spdlog_SOURCE_DIR}/include
 )
+
 
 add_subdirectory(jni)
 

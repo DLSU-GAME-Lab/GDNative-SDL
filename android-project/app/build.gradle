@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace "org.libsdl.app"
+    namespace "org.main.babaylan_tales"
     compileSdkVersion 35
 
     defaultConfig {
-        applicationId "org.libsdl.app"
+        applicationId "org.main.babaylan_tales"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode 1

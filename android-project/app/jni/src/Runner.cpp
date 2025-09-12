@@ -16,6 +16,7 @@
 
 Runner::Runner()
 {
+
 	int screenWidth, screenHeight;
 	SDL_DisplayID dispID = SDL_GetPrimaryDisplay();
 	SDL_DisplayMode dispMode = *SDL_GetDesktopDisplayMode(dispID);
@@ -42,6 +43,7 @@ Runner::Runner()
 		printf("ERROR");
 	}
 	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    spdlog::info("Entered Constructor");
 
 	pMainEvent = new SDL_Event();
 
@@ -63,6 +65,8 @@ Runner::Runner()
 	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
 
 	//GameObjectManager::getInstance()->addObject(NULL);
+    spdlog::info("Exit Constructor");
+
 }
 
 Runner::~Runner()
@@ -89,10 +93,12 @@ void Runner::run()
 	// pick a clear color once (optional)
 	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
 	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
-
 	while (running)
 	{
+        spdlog::info("Entered Run");
+
 		EngineTime::getInstance()->logFrameStart();
+        spdlog::info("after engine time");
 
 		//TODO: Remove additional time stuff. We have an EngineTime class for that.
 		uint64_t currentTime = SDL_GetTicks();
@@ -125,6 +131,8 @@ void Runner::run()
 		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
 		EngineTime::getInstance()->logFrameEnd();
+        spdlog::info("dead end");
+
 	}
 }
 

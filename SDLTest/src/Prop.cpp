@@ -16,6 +16,7 @@ Prop::~Prop()
 void Prop::initialize()
 {
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fVecTranslate.x, this->fVecTranslate.y);
+	pSpriteRenderer->setAngle(this->fRot);
 	if (bFlipX)
 	{
 		pSpriteRenderer->setFlipX(true);

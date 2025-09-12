@@ -28,14 +28,14 @@ void Title_Scene::onLoadResources()
 void Title_Scene::onLoadObjects()
 {
     // create and register game objects for the title scene
-    Background* pBackground = new Background("Title_Background", "Title_Background", 125.f,1.17f);
-    Prop* pLogo = new Prop("Title_Logo", "Title_Logo", 750.f, 400.f, 0.5f, 0.35f, 0.0f, false);
-    Prop* pYellow = new Prop("Yellow", "Yellow", 650.f, 250.f, .25f, .25f, -45, false);
-    Prop* pFish = new Prop("Fish", "Fish", 450.f, 400.f, .25f, .25f, 25.0f, false);
-    Prop* pPurple = new Prop("Purple", "Purple", 1300.f, 300.f, .25f, .25f, 45.0f, false);
-    Prop* pRed = new Prop("Red", "Red", 350.f, 250.f, .25f, .25f, 0.0f, false);
-    Prop* pWhite = new Prop("White", "White", 500.f, 100.f, .25f, .25f, 0.0f, false);
-    Prop* pGreen = new Prop("Green", "Green", 1300.f, 500.f, .25f, .25f, 0.0f, false);
+    Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(125.f, 1.17f));
+    Prop* pLogo = new Prop("Title_Logo", "Title_Logo", Vector2D(750.f, 400.f), Vector2D(0.5f, 0.35f), 0.0f, false);
+    Prop* pYellow = new Prop("Yellow", "Yellow", Vector2D(650.f, 250.f), Vector2D(.25f, .25f), -45, false);
+    Prop* pFish = new Prop("Fish", "Fish", Vector2D(450.f, 400.f), Vector2D(.25f, .25f), 25.0f, false);
+    Prop* pPurple = new Prop("Purple", "Purple", Vector2D(1300.f, 300.f), Vector2D(.25f, .25f), 45.0f, false);
+    Prop* pRed = new Prop("Red", "Red", Vector2D(350.f, 250.f), Vector2D(.25f, .25f), 0.0f, false);
+    Prop* pWhite = new Prop("White", "White", Vector2D(500.f, 100.f), Vector2D(.25f, .25f), 0.0f, false);
+    Prop* pGreen = new Prop("Green", "Green", Vector2D(1300.f, 500.f), Vector2D(.25f, .25f), 0.0f, false);
 
     // create a button that switches to the Lobby scene when clicked
     //UIButton* pStartButton = new UIButton(

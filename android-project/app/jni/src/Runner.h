@@ -4,7 +4,6 @@
 #include <string>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/android_sink.h"
-#define MAIN_TAG "main"
 class Runner
 {
 private:

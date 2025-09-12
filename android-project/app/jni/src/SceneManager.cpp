@@ -1,5 +1,7 @@
 #include "SceneManager.h"
 #include <iostream>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/android_sink.h"
 
 void SceneManager::registerScene(SceneTag tag, std::unique_ptr<AScene> scene)
 {
@@ -38,6 +40,7 @@ void SceneManager::unloadCurrentScene()
 //This shouldn't be here. Scene Manager only manages scene objects and resources. Move somewhere else.
 void SceneManager::update(float deltaTime)
 {
+    spdlog::info("Entered Scene");
     // handle scene transitions and updates
     if (transitionState == TransitionState::NONE) {
         if (pActiveScene) {
@@ -64,6 +67,7 @@ void SceneManager::update(float deltaTime)
         break;
 
     case TransitionState::TRANSITION_IN:
+        spdlog::info("Entered Trans In");
         if (transitionProgress >= transitionDuration) {
             transitionState = TransitionState::COMPLETE;
             transitionProgress = 0.0f;
@@ -71,6 +75,7 @@ void SceneManager::update(float deltaTime)
         break;
 
     case TransitionState::COMPLETE:
+        spdlog::info("Entered Complete trans");
         transitionState = TransitionState::NONE;
         break;
 

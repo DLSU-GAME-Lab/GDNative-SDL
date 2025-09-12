@@ -15,6 +15,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
         sdl3_wrapper
+	sdl3_image_wrapper
         spdlog_headers
         ${android}
         ${log}

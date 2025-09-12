@@ -19,9 +19,21 @@ option(SAMPLEAPP_USE_BUNDLED_DEPS "Use bundled dependencies" ON)
 
 set(CMAKE_DISABLE_IN_SOURCE_BUILDS ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Android-specific settings
+if(ANDROID)
+    # Android-specific settings
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DANDROID -D__ANDROID__")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID -D__ANDROID__ -D__ANDROID_USE_LIBCXX=1")
+
+    # Prevent Windows library linking attempts
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+    set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+    set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+endif()
 
 # =============================================================
 
@@ -29,9 +41,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_BUILD_TYPE_INIT "Debug")
 
 # ================= SDL Directories Creation ==================
-set(SDL3_INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/SDL")
+set(SDL3_INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/SDL3")
 file(MAKE_DIRECTORY ${SDL3_INSTALL_DIR}/lib)
 file(MAKE_DIRECTORY ${SDL3_INSTALL_DIR}/include)
+
+set(SDL3_IMAGE_INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/SDL3_image")
+file(MAKE_DIRECTORY ${SDL3_IMAGE_INSTALL_DIR}/lib)
+file(MAKE_DIRECTORY ${SDL3_IMAGE_INSTALL_DIR}/include)
 
 # ================= Add SDL3 via ExternalProject (CMake Stuff =============================
 ExternalProject_Add(external_sdl3
@@ -44,6 +60,8 @@ ExternalProject_Add(external_sdl3
         -DCMAKE_INSTALL_PREFIX=${SDL3_INSTALL_DIR}
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DANDROID_STL=c++_shared
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+	-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
 
         -DSDL_INSTALL=ON
 
@@ -56,7 +74,6 @@ ExternalProject_Add(external_sdl3
         -DSDL_VULKAN=ON
 
         # Disable unused features
-        -DSDL_JOYSTICK=OFF
         -DSDL_HAPTIC=OFF
         -DSDL_POWER=OFF
         -DSDL_OPENGL=OFF
@@ -64,6 +81,7 @@ ExternalProject_Add(external_sdl3
         -DSDL_METAL=OFF
 
         # Keep essential subsystems
+        -DSDL_JOYSTICK=ON
         -DSDL_RENDER=ON
         -DSDL_AUDIO=ON
         -DSDL_VIDEO=ON
@@ -89,7 +107,6 @@ ExternalProject_Add(external_sdl3
         # Do not run configure again if already done
         UPDATE_COMMAND ""
         BUILD_BYPRODUCTS ${SDL3_INSTALL_DIR}/lib/libSDL3.so
-        CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE}
 
         CMAKE_CACHE_ARGS
         -DCMAKE_TOOLCHAIN_FILE:PATH=${CMAKE_TOOLCHAIN_FILE}
@@ -123,22 +140,66 @@ add_library(sdl3_wrapper INTERFACE)
 target_include_directories(sdl3_wrapper INTERFACE ${SDL3_INSTALL_DIR}/include)
 target_link_libraries(sdl3_wrapper INTERFACE SDL3)
 
-
-FetchContent_Declare(sdl3_image
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image.git
-        GIT_TAG "main"
+# ================= SDL3_image Configuration for Android ==================
+ExternalProject_Add(external_sdl3_image
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
+        GIT_TAG release-3.2.4
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
-)
-FetchContent_MakeAvailable(sdl3_image)
-set_target_properties(sdl3_image PROPERTIES EXCLUDE_FROM_ALL TRUE SYSTEM TRUE) # To remove warnings becoz its from 3rd party (just makes our logs clean)
+        PREFIX ${CMAKE_BINARY_DIR}/external/SDL3_image
+        CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${SDL3_IMAGE_INSTALL_DIR}
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+        -DANDROID_STL=c++_shared
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+	-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM} 
 
-# Just get sdl3_image wrapper to only get header files
-add_library(sdl3_image_headers INTERFACE)
-target_include_directories(sdl3_image_headers INTERFACE
-        ${sdl3_image_SOURCE_DIR}/include
+        -DSDL3IMAGE_INSTALL=ON
+
+        # Configure SDL3_image options for Android before fetching
+        -DSDL3IMAGE_DEPS_SHARED=OFF
+        -DSDL3IMAGE_VENDORED=ON
+        -DSDL3IMAGE_BUILD_SHARED_LIBS=OFF
+
+        # Disable image formats that might cause linking issues on Android
+        -DSDL3IMAGE_JPG_SHARED=OFF
+        -DSDL3IMAGE_PNG_SHARED=OFF
+        -DSDL3IMAGE_TIF_SHARED=OFF
+        -DSDL3IMAGE_WEBP_SHARED=OFF
+
+        # Enable only basic formats
+        -DSDL3IMAGE_JPG=ON
+        -DSDL3IMAGE_PNG=ON
+
+        # Disable tests and samples
+        -DSDL3IMAGE_SAMPLES=OFF
+        -DSDL3IMAGE_TESTS=OFF
+
+        -DSDL3_DIR=${SDL3_INSTALL_DIR}/lib/cmake/SDL3
+        -DCMAKE_PREFIX_PATH=${SDL3_INSTALL_DIR}
+
+        # Do not run configure again if already done
+        UPDATE_COMMAND ""
+        BUILD_BYPRODUCTS ${SDL3_IMAGE_INSTALL_DIR}/lib/libSDL3_image.so
+
+        DEPENDS external_sdl3  # Make sure SDL3 is built first
+        CMAKE_CACHE_ARGS
+        -DCMAKE_TOOLCHAIN_FILE:PATH=${CMAKE_TOOLCHAIN_FILE}
+        -DANDROID_PLATFORM:STRING=${ANDROID_PLATFORM}
+        -DANDROID_ABI:STRING=${ANDROID_ABI}
 )
 
+# Create wrapper for SDL3_image
+add_library(sdl3_image_wrapper INTERFACE)
+target_include_directories(sdl3_image_wrapper INTERFACE
+        ${SDL3_IMAGE_INSTALL_DIR}/include
+)
+# Link to the built SDL3_image library
+target_link_libraries(sdl3_image_wrapper INTERFACE
+        ${SDL3_IMAGE_INSTALL_DIR}/lib/libSDL3_image.so
+)
+add_dependencies(sdl3_image_wrapper external_sdl3_image)
+# ===========================================================================
 
 # Fetch Content spdlog just for logging
 # Fetch Content should be the norm when getting stuff from github repos

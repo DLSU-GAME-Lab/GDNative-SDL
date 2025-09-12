@@ -40,9 +40,6 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
 
     //mDestRect.x = anchor.x - (mDestRect.w / 2);
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
-
-    // register this sprite with the system
-    SpriteRendererSystem::getInstance()->registerSpriteRenderer(this);
 }
 
 void SpriteRenderer::initialize() {

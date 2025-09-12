@@ -3,13 +3,10 @@
 #include "SpriteRendererSystem.h"
 #include "SpriteAnimator.h"
 
-Librarian::Librarian(float fPosX, float fPosY, float fScaleX, float fScaleY, float fRot) : AGameObject("Librarian")
+Librarian::Librarian(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Librarian")
 {
-    this->fPosX = fPosX;
-    this->fPosY = fPosY;
-    this->fScaleX = fScaleX;
-    this->fScaleY = fScaleY;
-    this->fRot = fRot;
+    this->fVecTranslate = fVecTranslate;
+    this->fVecScale = fVecScale;
 }
 
 Librarian::~Librarian()
@@ -20,15 +17,16 @@ Librarian::~Librarian()
 void Librarian::initialize()
 {
     //1000, 350
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian", fPosX, fPosY);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian", this->fVecTranslate.x, this->fVecTranslate.y);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 
     auto vecSprite = TextureManager::getInstance()->getTexture("Librarian", 0, 6);
-    SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 12);
+    SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 8);
 
     this->attachComponent((AComponent*)pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteAnimator);
 
     pSpriteRenderer->setFlipX(true);
+    pSpriteAnimator->setAnimationType(AnimationType::PINGPONG);
     pSpriteAnimator->play();
 }

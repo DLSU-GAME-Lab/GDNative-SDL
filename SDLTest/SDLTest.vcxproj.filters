@@ -19,6 +19,9 @@
     <Filter Include="Enum">
       <UniqueIdentifier>{24f4b3aa-a3f0-4b00-b085-552c4fcc65fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{74a74283-8f40-48da-9512-f9d5789c68a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -81,8 +84,14 @@
     <ClCompile Include="src\AButton.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="src\AnimatedSprite.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
     <ClCompile Include="src\Prop.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2D.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,8 +161,17 @@
     <ClInclude Include="include\AButton.h">
       <Filter>GameObject</Filter>
     </ClInclude>
+    <ClInclude Include="include\EnumAnimationType.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AnimatedSprite.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
     <ClInclude Include="include\Prop.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vector2D.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

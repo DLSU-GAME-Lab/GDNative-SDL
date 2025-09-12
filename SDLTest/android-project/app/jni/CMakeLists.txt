@@ -1,15 +1,21 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.22.1)
 
-project(GAME)
+find_library(log log)
+find_library(android android)
 
-# SDL sources are in a subfolder named "SDL"
-add_subdirectory(SDL)
+file(GLOB SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-# Compilation of companion libraries
-#add_subdirectory(SDL_image)
-#add_subdirectory(SDL_mixer)
-#add_subdirectory(SDL_ttf)
+add_library(${CMAKE_PROJECT_NAME} SHARED
+        ${SOURCES}
+)
 
-# Your game and its CMakeLists.txt are in a subfolder named "src"
-add_subdirectory(src)
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
 
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+        sdl3_wrapper
+        spdlog_headers
+        ${android}
+        ${log}
+)

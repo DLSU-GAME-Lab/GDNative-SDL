@@ -3,12 +3,10 @@
 #include "SpriteRendererSystem.h"
 #include "SpriteAnimator.h"
 
-Fairy::Fairy(float fPosX, float fPosY, float fScaleX, float fScaleY, float fRot) : AGameObject("Fairy")
+Fairy::Fairy(Vector2D fVecTranslate, Vector2D fVecScale, float fRot) : AGameObject("Fairy")
 {
-    this->fPosX = fPosX;
-    this->fPosY = fPosY;
-    this->fScaleX = fScaleX;
-    this->fScaleY = fScaleY;
+    this->fVecTranslate = fVecTranslate;
+    this->fVecScale = fVecScale;
     this->fRot = fRot;
 }
 
@@ -19,7 +17,7 @@ Fairy::~Fairy()
 
 void Fairy::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy", fPosX, fPosY);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy", this->fVecTranslate.x, this->fVecTranslate.y);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 
     auto vecSprite = TextureManager::getInstance()->getTexture("Fairy", 0, 18);
@@ -27,5 +25,6 @@ void Fairy::initialize()
 
     this->attachComponent((AComponent*)pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteAnimator);
+    pSpriteAnimator->setAnimationType(AnimationType::PINGPONG);
     pSpriteAnimator->play();
 }

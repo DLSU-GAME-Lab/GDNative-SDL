@@ -5,6 +5,8 @@
 #include "TextureManager.h"
 #include "EnumSceneTag.h"
 #include "Prop.h"
+#include "AnimatedSprite.h"
+
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
 {

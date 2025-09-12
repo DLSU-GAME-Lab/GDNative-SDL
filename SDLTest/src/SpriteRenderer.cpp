@@ -65,6 +65,9 @@ void SpriteRenderer::initialize() {
         std::cerr << "[SpriteRenderer ERROR] Texture not found during initialize: "
             << m_textureKey << std::endl;
     }
+
+    // register this sprite with the system
+    SpriteRendererSystem::getInstance()->registerSpriteRenderer(this);
 }
 
 SpriteRenderer::~SpriteRenderer() {
@@ -73,11 +76,20 @@ SpriteRenderer::~SpriteRenderer() {
 }
 
 void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
-    this->setScale();
+    AGameObject* owner = this->getOwner();
+    if (owner)
+    {
+        mDestRect.x = owner->getPos().x;
+        mDestRect.y = owner->getPos().y;
+        // size = texture size * owner scale
+        mDestRect.w = fTexW * owner->getScale().x;
+        mDestRect.h = fTexH * owner->getScale().y;
+    }
     if (pTexture) {
-        std::cout << "[Draw] Texture=" << m_textureKey
+        /*std::cout << "[Draw] Texture=" << m_textureKey
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
             << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
+        */
         if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE); //replace with both flipped when available
         if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
@@ -92,7 +104,6 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
 
 void SpriteRenderer::perform()
 {
-
 }
 
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)
@@ -124,17 +135,6 @@ void SpriteRenderer::setFlipY(bool flipY)
 void SpriteRenderer::setAngle(double dAngle)
 {
     this->dAngle = dAngle;
-}
-
-void SpriteRenderer::setScale()
-{
-    AGameObject* pOg = this->getOwner();
-    if (pOg != NULL)
-    {
-        mDestRect.w = fTexW * pOg->getScaleX();
-        mDestRect.h = fTexH * pOg->getScaleY();
-    }
-
 }
 
 SDL_Texture* SpriteRenderer::getTexture()

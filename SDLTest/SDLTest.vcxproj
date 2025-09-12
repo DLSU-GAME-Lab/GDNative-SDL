@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AButton.cpp" />
+    <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -151,12 +152,15 @@
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\UIButton.cpp" />
+    <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AButton.h" />
     <ClInclude Include="include\AComponent.h" />
+    <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\EngineTime.h" />
+    <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />
     <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\EnumSceneTag.h" />
@@ -176,6 +180,7 @@
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\UIButton.h" />
     <ClInclude Include="include\Prop.h" />
+    <ClInclude Include="include\Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

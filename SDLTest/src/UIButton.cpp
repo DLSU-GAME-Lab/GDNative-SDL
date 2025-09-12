@@ -4,21 +4,19 @@
 #include <iostream>
 
 UIButton::UIButton(std::string objName, std::string textureKey,
-    float x, float y, float scaleX, float scaleY,
+    Vector2D fVecTranslate, Vector2D fVecScale,
     float rotation, bool isUI, SceneTag eTargetScene)
     : AButton(objName), m_eTargetScene(eTargetScene), m_textureKey(textureKey)
 {
     // explicitly use the texture key stored in TextureManager
-    this->pSprite = new SpriteRenderer(m_textureKey, x, y);
+    this->pSprite = new SpriteRenderer(m_textureKey, fVecTranslate.x, fVecTranslate.y);
     this->attachComponent(this->pSprite);
 
-    this->pSprite->setPosition(x, y);
-    this->setPosX(x);
-    this->setPosY(y);
-
-    this->setScaleX(scaleX);
-    this->setScaleY(scaleY);
+    this->fVecTranslate = fVecTranslate;
+    this->fVecScale = fVecScale;
     this->pSprite->setAngle(rotation);
+
+    this->pSprite = dynamic_cast<SpriteRenderer*>(this->findComponentByName("SpriteRenderer"));
 }
 
 void UIButton::initialize()

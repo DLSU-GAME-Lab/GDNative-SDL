@@ -22,6 +22,9 @@ Runner::Runner()
 	screenWidth = dispMode.w;
 	screenHeight = dispMode.h;
 
+	// debug
+	std::cout << "Screen size: " << screenWidth << "x" << screenHeight << std::endl;
+
 	this->fWindowScale = 0.75f;
 	this->strWindowTitle = "Gem Hunter Match";
 	float scaleX = (float)screenWidth / gameWidth;
@@ -128,6 +131,33 @@ void Runner::run()
 
 void Runner::processEvents(SDL_Event eEvent)
 {
+	if (eEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+		eEvent.type == SDL_EVENT_MOUSE_BUTTON_UP ||
+		eEvent.type == SDL_EVENT_MOUSE_MOTION)
+	{
+		int rawX = eEvent.button.x;
+		int rawY = eEvent.button.y;
+
+		// convert window coordinates to logical coordinates
+		float logicalX, logicalY;
+		SDL_RenderCoordinatesFromWindow(pRenderer, rawX, rawY, &logicalX, &logicalY);
+
+		// update the event with logical coordinates
+		if (eEvent.type == SDL_EVENT_MOUSE_MOTION) {
+			eEvent.motion.x = logicalX;
+			eEvent.motion.y = logicalY;
+		}
+		else {
+			eEvent.button.x = logicalX;
+			eEvent.button.y = logicalY;
+		}
+
+		// log converted mouse input
+		std::cout << "[Converted Mouse] Logical: (" << logicalX << ", " << logicalY << ")"
+			<< " Type: " << eEvent.type
+			<< std::endl;
+	}
+
 	// pass input to current scene
 	GameObjectManager::getInstance()->processInput(eEvent);
 }

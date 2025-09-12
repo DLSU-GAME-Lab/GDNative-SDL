@@ -21,8 +21,7 @@ android {
             cmake {
                 cppFlags "-Wall -std=c++17 -D__ANDROID_USE_LIBCXX=1"
                 arguments "-DANDROID_STL=c++_shared",
-                        "-DANDROID_USE_LEGACY_TOOLCHAIN_FILE=OFF",
-                        "-DCMAKE_MAKE_PROGRAM=C:/Users/Matthew Fernandez/AppData/Local/Android/Sdk/cmake/3.22.1/bin/ninja.exe"
+                        "-DANDROID_USE_LEGACY_TOOLCHAIN_FILE=OFF"
             }
         }
     }

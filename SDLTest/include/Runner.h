@@ -32,7 +32,7 @@ public:
     void run();
 
 private:
-    void processEvents(SDL_Event eEvent);
+    void processEvents(SDL_Event* eEvent);
     void update();
     void render();
 

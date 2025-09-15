@@ -7,9 +7,11 @@ void SceneManager::registerScene(AScene* pScene)
 
 void SceneManager::loadScene(SceneTag ETag)
 {
-    this->bLoading = true;
-    this->ESceneToLoad = ETag;
-    //create Loading AScene
+    if (this->ESceneToLoad != ETag)
+    {
+        this->bLoading = true;
+        this->ESceneToLoad = ETag;
+    }
 }
 
 void SceneManager::unloadScene()
@@ -38,6 +40,16 @@ void SceneManager::checkLoadScene()
 bool SceneManager::isLoaded(SceneTag ETag)
 {
     return this->pActiveScene->getTag() == ETag;
+}
+
+SceneTag SceneManager::getLoadedSceneTag() const
+{
+    return this->ESceneToLoad;
+}
+
+int SceneManager::getRegisteredSceneAmount() const
+{
+    return this->mapScene.size();
 }
 
 /* * * * * * * * * * * * * * * * * * * * * 

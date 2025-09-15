@@ -140,6 +140,7 @@
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
+    <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\Prop.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\CustomStyles.h" />
+    <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EngineTime.h" />
     <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />

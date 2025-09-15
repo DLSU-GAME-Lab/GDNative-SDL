@@ -132,6 +132,9 @@
     <ClCompile Include="src\InspectorScreen.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="src\EditorModule.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -249,6 +252,9 @@
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="include\InspectorScreen.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EditorModule.h">
       <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>

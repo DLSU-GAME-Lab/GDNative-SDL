@@ -13,5 +13,7 @@ protected:
 
 private:
 	AGameObject* selectedObject;
+
+	void showTransform();
 };
 

@@ -8,10 +8,11 @@ AGameObject::AGameObject(std::string strName)
     pParent = NULL;
 
     // defaults:
+    this->fRot = 0.0f;
     this->fVecScale = Vector2D(1, 1);
 }
 
-void AGameObject::processInput(SDL_Event eEvent)
+void AGameObject::processInput(SDL_Event* eEvent)
 {
 
 }

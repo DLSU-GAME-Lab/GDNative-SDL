@@ -12,7 +12,7 @@ private:
     std::unordered_map<SceneTag, AScene*> mapScene;
     AScene* pActiveScene = NULL;
     bool bLoading = false;
-    SceneTag ESceneToLoad = SceneTag::TITLE_SCENE;
+    SceneTag ESceneToLoad = SceneTag::NONE;
 
 public:
     void registerScene(AScene* pScene);
@@ -22,6 +22,8 @@ public:
 
 public:
     bool isLoaded(SceneTag ETag);
+    SceneTag getLoadedSceneTag() const;
+    int getRegisteredSceneAmount() const;
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

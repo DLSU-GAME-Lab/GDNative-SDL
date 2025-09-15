@@ -28,7 +28,7 @@ public:
 
 public:
     virtual void initialize() = 0;
-    virtual void processInput(SDL_Event eEvent);
+    virtual void processInput(SDL_Event* eEvent);
     virtual void update();
     virtual void draw(SDL_Window* pWindow);
 

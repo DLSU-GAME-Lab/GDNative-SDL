@@ -16,7 +16,7 @@ public:
 	AButton(std::string strName);
 	virtual ~AButton();
 
-	void processInput(SDL_Event eEvent);
+	void processInput(SDL_Event* eEvent);
 
 	virtual void OnPressed(SDL_MouseButtonEvent eMouseEvent) = 0;
 	virtual void OnReleased(SDL_MouseButtonEvent eMouseEvent) = 0;

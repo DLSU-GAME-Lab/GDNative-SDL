@@ -1,3 +1,9 @@
+#define EDITOR_MODE __has_include("EditorModule.h") && 1
+
+#if EDITOR_MODE
+#include "EditorModule.h"
+#endif
+
 #include "Runner.h"
 #include "algorithm"
 
@@ -60,7 +66,10 @@ Runner::Runner()
 	SpriteRendererSystem::initialize(this->pRenderer);
 	GameObjectManager::initialize();
 	SceneManager::initialize();
-	UIManager::initialize(this->pWindow, this->pRenderer);
+
+#if EDITOR_MODE
+	EditorModule::initialize(this->pWindow, this->pRenderer);
+#endif
 
 	this->registerScenes();
 }
@@ -70,7 +79,10 @@ Runner::~Runner()
 	SceneManager::getInstance()->unloadScene();
 
 	//destroy systems
-	UIManager::destroy();
+#if EDITOR_MODE
+	EditorModule::destroy();
+#endif
+
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SpriteRendererSystem::destroy();
@@ -97,19 +109,24 @@ void Runner::run()
 
 		// process all pending events
 		SDL_Event e;
+#if EDITOR_MODE
 		while (SDL_PollEvent(&e))
 		{
-			UIManager::getInstance()->processEvent(&e);
-			if (e.type == SDL_EVENT_QUIT)
-				running = false;
-			else this->processEvents(e);
+			EditorModule::getInstance()->processEditorInput(&e);
+			if (e.type == SDL_EVENT_QUIT) running = false;
 		}
-
-		// per-frame logic
+#else
+		while (SDL_PollEvent(&e))
+		{
+			if (e.type == SDL_EVENT_QUIT) running = false;
+			else this->processEvents(&e);
+		}
 		this->update();
-		SceneManager::getInstance()->checkLoadScene();
+#endif
 
 		this->render();
+
+		SceneManager::getInstance()->checkLoadScene();
 
 		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
@@ -118,7 +135,7 @@ void Runner::run()
 }
 
 
-void Runner::processEvents(SDL_Event eEvent)
+void Runner::processEvents(SDL_Event* eEvent)
 {
 	GameObjectManager::getInstance()->processInput(eEvent);
 }
@@ -137,11 +154,9 @@ void Runner::render()
 
 	SpriteRendererSystem::getInstance()->draw();
 
-	UIManager::getInstance()->newFrame();
-	UIManager::getInstance()->drawAllUI(pRenderer);
-
-	ImGuiIO io = ImGui::GetIO();
-	SDL_SetRenderScale(this->pRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+#if EDITOR_MODE
+	EditorModule::getInstance()->drawEditor(this->pRenderer);
+#endif
 
 	SDL_RenderPresent(this->pRenderer);
 }

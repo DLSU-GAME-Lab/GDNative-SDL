@@ -12,26 +12,24 @@ AButton::~AButton()
 
 }
 
-void AButton::processInput(SDL_Event eEvent)
+void AButton::processInput(SDL_Event* eEvent)
 {
-    switch (eEvent.type) {
-    case SDL_EVENT_MOUSE_MOTION:
-        if (this->contains(eEvent.motion.x, eEvent.motion.y)) {
+    if (this->contains(eEvent->motion.x, eEvent->motion.y))
+    {
+        switch (eEvent->type)
+        {
+        case SDL_EVENT_MOUSE_MOTION:
             this->OnHovered();
-        }
-        break;
+            break;
 
-    case SDL_EVENT_MOUSE_BUTTON_DOWN:
-        if (this->contains(eEvent.button.x, eEvent.button.y)) {
-            this->OnPressed(eEvent.button);
-        }
-        break;
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            this->OnPressed(eEvent->button);
+            break;
 
-    case SDL_EVENT_MOUSE_BUTTON_UP:
-        if (this->contains(eEvent.button.x, eEvent.button.y)) {
-            this->OnReleased(eEvent.button);
+        case SDL_EVENT_MOUSE_BUTTON_UP:
+            this->OnReleased(eEvent->button);
+            break;
         }
-        break;
     }
 }
 

@@ -1,12 +1,18 @@
 #include "UIManager.h"
 #include "CustomStyles.h"
 #include "imgui_impl_sdl3.h"
+#include "imgui_impl_sdlrenderer3.h"
 
 UIManager* UIManager::sharedInstance = nullptr;
 
-void UIManager::initialize(SDL_Window* window)
+UIManager* UIManager::getInstance()
 {
-	sharedInstance = new UIManager(window);
+	return sharedInstance;
+}
+
+void UIManager::initialize(SDL_Window* window, SDL_Renderer* renderer)
+{
+	sharedInstance = new UIManager(window, renderer);
 }
 
 void UIManager::destroy()
@@ -20,14 +26,18 @@ void UIManager::destroy()
 		sharedInstance->uiList.clear();
 	}
 
+	ImGui_ImplSDLRenderer3_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
+
 	delete sharedInstance;
 }
 
 void UIManager::newFrame()
 {
-	//ImGui_ImplSDL3_NewFrame();
+	ImGui_ImplSDLRenderer3_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
 }
 
 void UIManager::processEvent(const SDL_Event* event)
@@ -35,8 +45,9 @@ void UIManager::processEvent(const SDL_Event* event)
 	ImGui_ImplSDL3_ProcessEvent(event);
 }
 
-void UIManager::drawAllUI()
+void UIManager::drawAllUI(SDL_Renderer* renderer)
 {
+	ImGui::ShowDemoWindow();
 	for (int i = 0; i < this->uiList.size(); i++)
 	{
 		if (this->uiList[i]->enabled)
@@ -44,26 +55,27 @@ void UIManager::drawAllUI()
 	}
 
 	ImGui::Render();
+	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
 }
 
-UIScreen* UIManager::getUIScreen(std::string name)
+AUIScreen* UIManager::getUIScreen(std::string name)
 {
 	return this->uiTable[name];
 }
 
 bool UIManager::getEnabled(std::string name)
 {
-	UIScreen* ui = this->uiTable[name];
+	AUIScreen* ui = this->uiTable[name];
 	return ui ? ui->enabled : false;
 }
 
 void UIManager::setEnabled(std::string name, bool enabled)
 {
-	UIScreen* ui = this->uiTable[name];
+	AUIScreen* ui = this->uiTable[name];
 	if (ui) ui->enabled = enabled;
 }
 
-UIManager::UIManager(SDL_Window* window)
+UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -73,11 +85,12 @@ UIManager::UIManager(SDL_Window* window)
 	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-	ImGui_ImplSDL3_InitForSDLGPU(window);
-	
 	CustomStyles styles;
 	styles.StyleColorsCrimson();
 
+	ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
+	ImGui_ImplSDLRenderer3_Init(renderer);
+	
 	//UINames uiNames;
 	//MenuScreen* menuScreen = new MenuScreen();
 	//this->uiTable[uiNames.MENU_SCREEN] = menuScreen;

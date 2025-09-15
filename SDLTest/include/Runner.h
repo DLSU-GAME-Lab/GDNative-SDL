@@ -9,6 +9,7 @@ private:
     //Window
     SDL_Window* pWindow;
     SDL_Renderer* pRenderer;
+    SDL_GPUDevice* pGPUDevice;
     uint64_t ticks;
     float fWindowScale;
     std::string strWindowTitle;

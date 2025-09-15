@@ -102,7 +102,7 @@
     <ClCompile Include="src\UIManager.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\UIScreen.cpp">
+    <ClCompile Include="src\AUIScreen.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\CustomStyles.cpp">
@@ -125,6 +125,12 @@
     </ClCompile>
     <ClCompile Include="imgui\src\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InspectorScreen.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -206,7 +212,7 @@
     <ClInclude Include="include\Vector2D.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="include\UIScreen.h">
+    <ClInclude Include="include\AUIScreen.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="include\UIManager.h">
@@ -238,6 +244,12 @@
     </ClInclude>
     <ClInclude Include="imgui\include\imstb_truetype.h">
       <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui_impl_sdlrenderer3.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InspectorScreen.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

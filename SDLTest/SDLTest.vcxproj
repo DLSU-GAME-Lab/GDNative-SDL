@@ -134,12 +134,14 @@
     <ClCompile Include="imgui\src\imgui_demo.cpp" />
     <ClCompile Include="imgui\src\imgui_draw.cpp" />
     <ClCompile Include="imgui\src\imgui_impl_sdl3.cpp" />
+    <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
     <ClCompile Include="imgui\src\imgui_tables.cpp" />
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
+    <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -160,13 +162,14 @@
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\UIButton.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
-    <ClCompile Include="src\UIScreen.cpp" />
+    <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\include\imconfig.h" />
     <ClInclude Include="imgui\include\imgui.h" />
     <ClInclude Include="imgui\include\imgui_impl_sdl3.h" />
+    <ClInclude Include="imgui\include\imgui_impl_sdlrenderer3.h" />
     <ClInclude Include="imgui\include\imgui_internal.h" />
     <ClInclude Include="imgui\include\imstb_rectpack.h" />
     <ClInclude Include="imgui\include\imstb_textedit.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\Fairy.h" />
     <ClInclude Include="include\GameObjectManager.h" />
+    <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\Player.h" />
@@ -199,7 +203,7 @@
     <ClInclude Include="include\Prop.h" />
     <ClInclude Include="include\UIManager.h" />
     <ClInclude Include="include\UINames.h" />
-    <ClInclude Include="include\UIScreen.h" />
+    <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

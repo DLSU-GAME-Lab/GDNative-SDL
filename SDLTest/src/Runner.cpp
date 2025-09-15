@@ -9,7 +9,7 @@
 #include "AGameObject.h"
 #include "EnumSceneTag.h"
 #include "Settings.h"
-//#include "UIManager.h"
+#include "UIManager.h"
 
 // scenes
 #include "LobbyScene.h"
@@ -37,14 +37,13 @@ Runner::Runner()
 	// debug
 	std::cout << "Screen size: " << screenWidth << "x" << screenHeight << std::endl;
 
-	this->fWindowScale = 0.75f;
 	this->strWindowTitle = "Babaylan Tales";
 	float scaleX = (float)screenWidth / gameWidth;
 	float scaleY = (float)screenHeight / gameHeight;
 	float scale = std::min(scaleX, scaleY);
 
-	int windowHeight = gameHeight * scale * this->fWindowScale;
-	int windowWidth = gameWidth * scale * this->fWindowScale;
+	int windowHeight = gameHeight * scale;
+	int windowWidth = gameWidth * scale;
 
 	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
 
@@ -61,7 +60,7 @@ Runner::Runner()
 	SpriteRendererSystem::initialize(this->pRenderer);
 	GameObjectManager::initialize();
 	SceneManager::initialize();
-	//UIManager::initialize(this->pWindow);
+	UIManager::initialize(this->pWindow, this->pRenderer);
 
 	this->registerScenes();
 }
@@ -71,7 +70,7 @@ Runner::~Runner()
 	SceneManager::getInstance()->unloadCurrentScene();
 
 	//destroy systems
-	//UIManager::destroy();
+	UIManager::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SpriteRendererSystem::destroy();
@@ -100,19 +99,17 @@ void Runner::run()
 		float deltaTime = (currentTime - lastTime) / 1000.0f;
 		lastTime = currentTime;
 
-		
+		SDL_RenderClear(pRenderer);
+
 		// process all pending events
 		SDL_Event e;
 		while (SDL_PollEvent(&e))
 		{
-			//UIManager::getInstance()->processEvent(&e);
+			UIManager::getInstance()->processEvent(&e);
 			if (e.type == SDL_EVENT_QUIT)
 				running = false;
 			else this->processEvents(e);
 		}
-
-		// clear backbuffer
-		SDL_RenderClear(pRenderer);
 
 		// per-frame logic
 		this->update();
@@ -124,7 +121,14 @@ void Runner::run()
 		// render scene
 		SceneManager::getInstance()->render(pRenderer);
 
+		UIManager::getInstance()->newFrame();
+		UIManager::getInstance()->drawAllUI(pRenderer);
+
+		ImGuiIO io = ImGui::GetIO();
+		SDL_SetRenderScale(this->pRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+
 		SDL_RenderPresent(pRenderer);
+
 		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
 		EngineTime::getInstance()->logFrameEnd();
@@ -168,13 +172,11 @@ void Runner::processEvents(SDL_Event eEvent)
 void Runner::update()
 {
 	GameObjectManager::getInstance()->update();
-	//UIManager::getInstance()->newFrame();
 }
 
 void Runner::render()
 {
 	SpriteRendererSystem::getInstance()->draw();
-	//UIManager::getInstance()->drawAllUI();
 }
 
 void Runner::registerScenes()

@@ -5,11 +5,11 @@
 
 class UIManager;
 
-class UIScreen
+class AUIScreen
 {
 protected:
-	UIScreen(std::string name);
-	~UIScreen();
+	AUIScreen(std::string name);
+	~AUIScreen();
 
 	std::string GetName();
 	virtual void DrawUI() = 0;

@@ -9,7 +9,6 @@ private:
     //Window
     SDL_Window* pWindow;
     SDL_Renderer* pRenderer;
-    SDL_Event* pMainEvent;
     uint64_t ticks;
     float fWindowScale;
     std::string strWindowTitle;
@@ -37,5 +36,5 @@ private:
     void render();
 
 private:
-    //void updateBounds(SDL_EventType EEvent);
+    void registerScenes();
 };

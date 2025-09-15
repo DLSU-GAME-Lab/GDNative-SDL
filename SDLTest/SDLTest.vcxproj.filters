@@ -22,6 +22,12 @@
     <Filter Include="Math">
       <UniqueIdentifier>{74a74283-8f40-48da-9512-f9d5789c68a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{25a0e8d9-193a-40ce-98e5-010e8ee695b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{8158b3ad-3af1-4797-a9f6-4ba416319dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -92,6 +98,33 @@
     </ClCompile>
     <ClCompile Include="src\Vector2D.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIManager.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIScreen.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CustomStyles.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_impl_sdl3.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +205,39 @@
     </ClInclude>
     <ClInclude Include="include\Vector2D.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIScreen.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIManager.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UINames.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CustomStyles.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui_impl_sdl3.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imstb_truetype.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

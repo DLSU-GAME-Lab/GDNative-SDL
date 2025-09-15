@@ -9,6 +9,7 @@
 #include "AGameObject.h"
 #include "EnumSceneTag.h"
 #include "Settings.h"
+//#include "UIManager.h"
 
 // scenes
 #include "LobbyScene.h"
@@ -16,6 +17,17 @@
 
 Runner::Runner()
 {
+	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) == 0)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
+	}
+
+	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hello World",
+		"!! Your SDL project successfully runs on Android !!", NULL) == 0)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_ShowSimpleMessageBox failed (%s)", SDL_GetError());
+	}
+
 	int screenWidth, screenHeight;
 	SDL_DisplayID dispID = SDL_GetPrimaryDisplay();
 	SDL_DisplayMode dispMode = *SDL_GetDesktopDisplayMode(dispID);
@@ -43,26 +55,15 @@ Runner::Runner()
 	}
 	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-	pMainEvent = new SDL_Event();
-
 	//initialize systems
 	EngineTime::initialize();
 	TextureManager::initialize(this->pRenderer);
 	SpriteRendererSystem::initialize(this->pRenderer);
 	GameObjectManager::initialize();
 	SceneManager::initialize();
+	//UIManager::initialize(this->pWindow);
 
-	//register scene/s
-	auto titleScene = std::make_unique<Title_Scene>();
-	auto lobbyScene = std::make_unique<LobbyScene>();
-
-	SceneManager::getInstance()->registerScene(SceneTag::TITLE_SCENE, std::move(titleScene));
-	SceneManager::getInstance()->registerScene(SceneTag::LOBBY_SCENE, std::move(lobbyScene));
-
-	//load initial scene
-	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
-
-	//GameObjectManager::getInstance()->addObject(NULL);
+	this->registerScenes();
 }
 
 Runner::~Runner()
@@ -70,13 +71,13 @@ Runner::~Runner()
 	SceneManager::getInstance()->unloadCurrentScene();
 
 	//destroy systems
+	//UIManager::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SpriteRendererSystem::destroy();
 	TextureManager::destroy();
 	EngineTime::destroy();
 
-	delete this->pMainEvent;
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
 }
@@ -98,11 +99,13 @@ void Runner::run()
 		uint64_t currentTime = SDL_GetTicks();
 		float deltaTime = (currentTime - lastTime) / 1000.0f;
 		lastTime = currentTime;
+
 		
 		// process all pending events
 		SDL_Event e;
 		while (SDL_PollEvent(&e))
 		{
+			//UIManager::getInstance()->processEvent(&e);
 			if (e.type == SDL_EVENT_QUIT)
 				running = false;
 			else this->processEvents(e);
@@ -165,10 +168,24 @@ void Runner::processEvents(SDL_Event eEvent)
 void Runner::update()
 {
 	GameObjectManager::getInstance()->update();
-	EngineTime::getInstance()->logFrameEnd();
+	//UIManager::getInstance()->newFrame();
 }
 
 void Runner::render()
 {
 	SpriteRendererSystem::getInstance()->draw();
+	//UIManager::getInstance()->drawAllUI();
+}
+
+void Runner::registerScenes()
+{
+	auto titleScene = std::make_unique<Title_Scene>();
+	auto lobbyScene = std::make_unique<LobbyScene>();
+
+	SceneManager::getInstance()->registerScene(SceneTag::TITLE_SCENE, std::move(titleScene));
+	SceneManager::getInstance()->registerScene(SceneTag::LOBBY_SCENE, std::move(lobbyScene));
+
+	//load initial scene
+	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
+
 }

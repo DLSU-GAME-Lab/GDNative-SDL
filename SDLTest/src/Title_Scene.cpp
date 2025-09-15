@@ -17,12 +17,12 @@ void Title_Scene::onLoadResources()
     // naming convention (TextureManager prefixes "Assets/")
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_bg.png", "Title_Background");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_GemHunterMatch_Logo.png", "Title_Logo");
-    TextureManager::getInstance()->load("title_screen_pngs/Sprite_YellowItem.png", "Yellow");
-    TextureManager::getInstance()->load("title_screen_pngs/Sprite_BlueItem.png", "Fish");
-    TextureManager::getInstance()->load("title_screen_pngs/Sprite_PurpleItem.png", "Purple");
-    TextureManager::getInstance()->load("title_screen_pngs/Sprite_RedItem.png", "Red");
-    TextureManager::getInstance()->load("title_screen_pngs/Sprite_WhiteItem.png", "White");
-    TextureManager::getInstance()->load("title_screen_pngs/Sprite_GreenItem.png", "Green");
+    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Yellow.png", "Yellow");
+    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Blue.png", "Fish");
+    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Purple.png", "Purple");
+    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Red.png", "Red");
+    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_White.png", "White");
+    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Green.png", "Green");
 }
 
 void Title_Scene::onLoadObjects()
@@ -30,12 +30,12 @@ void Title_Scene::onLoadObjects()
     // create and register game objects for the title scene
     Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(125.f, 1.17f));
     Prop* pLogo = new Prop("Title_Logo", "Title_Logo", Vector2D(750.f, 400.f), Vector2D(0.5f, 0.35f), 0.0f, false);
-    Prop* pYellow = new Prop("Yellow", "Yellow", Vector2D(650.f, 250.f), Vector2D(.25f, .25f), -45, false);
-    Prop* pFish = new Prop("Fish", "Fish", Vector2D(450.f, 400.f), Vector2D(.25f, .25f), 25.0f, false);
-    Prop* pPurple = new Prop("Purple", "Purple", Vector2D(1300.f, 300.f), Vector2D(.25f, .25f), 45.0f, false);
-    Prop* pRed = new Prop("Red", "Red", Vector2D(350.f, 250.f), Vector2D(.25f, .25f), 0.0f, false);
-    Prop* pWhite = new Prop("White", "White", Vector2D(500.f, 100.f), Vector2D(.25f, .25f), 0.0f, false);
-    Prop* pGreen = new Prop("Green", "Green", Vector2D(1300.f, 500.f), Vector2D(.25f, .25f), 0.0f, false);
+    Prop* pYellow = new Prop("Yellow", "Yellow", Vector2D(650.f, 250.f), Vector2D(.35f, .35f), -45, false);
+    Prop* pFish = new Prop("Fish", "Fish", Vector2D(450.f, 400.f), Vector2D(.35f, .35f), 25.0f, false);
+    Prop* pPurple = new Prop("Purple", "Purple", Vector2D(1300.f, 300.f), Vector2D(.35f, .35f), 45.0f, false);
+    Prop* pRed = new Prop("Red", "Red", Vector2D(350.f, 250.f), Vector2D(.35f, .35f), 0.0f, false);
+    Prop* pWhite = new Prop("White", "White", Vector2D(500.f, 100.f), Vector2D(.35f, .35f), 0.0f, false);
+    Prop* pGreen = new Prop("Green", "Green", Vector2D(1300.f, 500.f), Vector2D(.35f, .35f), 0.0f, false);
 
     // create a button that switches to the Lobby scene when clicked
     //UIButton* pStartButton = new UIButton(

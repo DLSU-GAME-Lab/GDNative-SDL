@@ -6,6 +6,6 @@
 class UINames
 {
 public:
-	const std::string MENU_SCREEN = "MENU_SCREEN";
+	const std::string INSPECTOR_SCREEN = "INSPECTOR_SCREEN";
 };
 

@@ -67,7 +67,7 @@ Runner::Runner()
 
 Runner::~Runner()
 {
-	SceneManager::getInstance()->unloadCurrentScene();
+	SceneManager::getInstance()->unloadScene();
 
 	//destroy systems
 	UIManager::destroy();
@@ -86,10 +86,6 @@ void Runner::run()
 	bool running = true;
 	uint64_t lastTime = SDL_GetTicks();
 
-	// pick a clear color once (optional)
-	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
-	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
-
 	while (running)
 	{
 		EngineTime::getInstance()->logFrameStart();
@@ -98,8 +94,6 @@ void Runner::run()
 		uint64_t currentTime = SDL_GetTicks();
 		float deltaTime = (currentTime - lastTime) / 1000.0f;
 		lastTime = currentTime;
-
-		SDL_RenderClear(pRenderer);
 
 		// process all pending events
 		SDL_Event e;
@@ -115,19 +109,7 @@ void Runner::run()
 		this->update();
 		SceneManager::getInstance()->checkLoadScene();
 
-		// update scene
-		SceneManager::getInstance()->update(deltaTime);
-
-		// render scene
-		SceneManager::getInstance()->render(pRenderer);
-
-		UIManager::getInstance()->newFrame();
-		UIManager::getInstance()->drawAllUI(pRenderer);
-
-		ImGuiIO io = ImGui::GetIO();
-		SDL_SetRenderScale(this->pRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
-
-		SDL_RenderPresent(pRenderer);
+		this->render();
 
 		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
@@ -138,34 +120,6 @@ void Runner::run()
 
 void Runner::processEvents(SDL_Event eEvent)
 {
-	if (eEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
-		eEvent.type == SDL_EVENT_MOUSE_BUTTON_UP ||
-		eEvent.type == SDL_EVENT_MOUSE_MOTION)
-	{
-		int rawX = eEvent.button.x;
-		int rawY = eEvent.button.y;
-
-		// convert window coordinates to logical coordinates
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(pRenderer, rawX, rawY, &logicalX, &logicalY);
-
-		// update the event with logical coordinates
-		if (eEvent.type == SDL_EVENT_MOUSE_MOTION) {
-			eEvent.motion.x = logicalX;
-			eEvent.motion.y = logicalY;
-		}
-		else {
-			eEvent.button.x = logicalX;
-			eEvent.button.y = logicalY;
-		}
-
-		// log converted mouse input
-		std::cout << "[Converted Mouse] Logical: (" << logicalX << ", " << logicalY << ")"
-			<< " Type: " << eEvent.type
-			<< std::endl;
-	}
-
-	// pass input to current scene
 	GameObjectManager::getInstance()->processInput(eEvent);
 }
 
@@ -176,16 +130,29 @@ void Runner::update()
 
 void Runner::render()
 {
+	// pick a clear color once (optional)
+	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
+	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
+	SDL_RenderClear(pRenderer);
+
 	SpriteRendererSystem::getInstance()->draw();
+
+	UIManager::getInstance()->newFrame();
+	UIManager::getInstance()->drawAllUI(pRenderer);
+
+	ImGuiIO io = ImGui::GetIO();
+	SDL_SetRenderScale(this->pRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+
+	SDL_RenderPresent(this->pRenderer);
 }
 
 void Runner::registerScenes()
 {
-	auto titleScene = std::make_unique<Title_Scene>();
-	auto lobbyScene = std::make_unique<LobbyScene>();
+	auto titleScene = new Title_Scene();
+	auto lobbyScene = new LobbyScene();
 
-	SceneManager::getInstance()->registerScene(SceneTag::TITLE_SCENE, std::move(titleScene));
-	SceneManager::getInstance()->registerScene(SceneTag::LOBBY_SCENE, std::move(lobbyScene));
+	SceneManager::getInstance()->registerScene(titleScene);
+	SceneManager::getInstance()->registerScene(lobbyScene);
 
 	//load initial scene
 	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);

@@ -44,5 +44,5 @@ void UIButton::OnReleased(SDL_MouseButtonEvent eMouseEvent)
 
 void UIButton::OnHovered()
 {
-    std::cout << "[UIButton] Hovering over: " << this->getName() << std::endl;
+    //std::cout << "[UIButton] Hovering over: " << this->getName() << std::endl;
 }

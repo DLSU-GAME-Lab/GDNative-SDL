@@ -4,7 +4,7 @@
 
 AButton::AButton(std::string strName) : AGameObject(strName)
 {
-
+    this->pSprite = NULL;
 }
 
 AButton::~AButton()
@@ -42,12 +42,12 @@ bool AButton::contains(float fX, float fY)
     SDL_FRect spriteRect = this->pSprite->getRect();
     SDL_FRect pointRect = { fX, fY, 1, 1 };
 
-    // log full info
-    std::cout << "Button: " << this->getName()
-        << " Rect: (" << spriteRect.x << ", " << spriteRect.y
-        << ", " << spriteRect.w << ", " << spriteRect.h << ")"
-        << " Mouse Logical: (" << fX << ", " << fY << ")"
-        << std::endl;
+    //// log full info
+    //std::cout << "Button: " << this->getName()
+    //    << " Rect: (" << spriteRect.x << ", " << spriteRect.y
+    //    << ", " << spriteRect.w << ", " << spriteRect.h << ")"
+    //    << " Mouse Logical: (" << fX << ", " << fY << ")"
+    //    << std::endl;
 
     return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }

@@ -3,6 +3,8 @@
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
 
+#include "InspectorScreen.h"
+
 UIManager* UIManager::sharedInstance = nullptr;
 
 UIManager* UIManager::getInstance()
@@ -47,7 +49,7 @@ void UIManager::processEvent(const SDL_Event* event)
 
 void UIManager::drawAllUI(SDL_Renderer* renderer)
 {
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 	for (int i = 0; i < this->uiList.size(); i++)
 	{
 		if (this->uiList[i]->enabled)
@@ -91,10 +93,10 @@ UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
 	ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
 	ImGui_ImplSDLRenderer3_Init(renderer);
 	
-	//UINames uiNames;
-	//MenuScreen* menuScreen = new MenuScreen();
-	//this->uiTable[uiNames.MENU_SCREEN] = menuScreen;
-	//this->uiList.push_back(menuScreen);
+	UINames uiNames;
+	InspectorScreen* inspectorScreen = new InspectorScreen();
+	this->uiTable[uiNames.INSPECTOR_SCREEN] = inspectorScreen;
+	this->uiList.push_back(inspectorScreen);
 
 }
 

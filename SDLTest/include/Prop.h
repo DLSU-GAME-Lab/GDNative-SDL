@@ -1,5 +1,5 @@
 #include "AGameObject.h"
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 class Prop : public AGameObject
 {
 private:

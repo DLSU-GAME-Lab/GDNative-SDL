@@ -1,6 +1,6 @@
 #include "Fairy.h"
 #include "TextureManager.h"
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 #include "SpriteAnimator.h"
 
 Fairy::Fairy(Vector2D fVecTranslate, Vector2D fVecScale, float fRot) : AGameObject("Fairy")
@@ -18,7 +18,7 @@ Fairy::~Fairy()
 void Fairy::initialize()
 {
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy", this->fVecTranslate.x, this->fVecTranslate.y);
-    SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
+    RenderSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 
     auto vecSprite = TextureManager::getInstance()->getTexture("Fairy", 0, 18);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 12);

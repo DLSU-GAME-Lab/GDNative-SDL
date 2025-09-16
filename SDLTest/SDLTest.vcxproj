@@ -139,9 +139,11 @@
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
+    <ClCompile Include="src\GameCamera.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -158,7 +160,7 @@
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
-    <ClCompile Include="src\SpriteRendererSystem.cpp" />
+    <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\UIButton.cpp" />
@@ -179,6 +181,7 @@
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Background.h" />
+    <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EngineTime.h" />
@@ -187,6 +190,7 @@
     <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\Fairy.h" />
+    <ClInclude Include="include\GameCamera.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\Librarian.h" />
@@ -198,7 +202,7 @@
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
-    <ClInclude Include="include\SpriteRendererSystem.h" />
+    <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\UIButton.h" />

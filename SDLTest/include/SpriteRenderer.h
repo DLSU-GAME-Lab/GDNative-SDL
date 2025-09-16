@@ -2,6 +2,7 @@
 
 #include "AComponent.h"
 #include "Vector2D.h"
+#include "Camera.h"
 #include <SDL3/SDL.h>
 #include <string>
 
@@ -22,7 +23,7 @@ public:
 
     ~SpriteRenderer();
 
-    void draw(SDL_Renderer* pRenderer);
+    void draw(SDL_Renderer* pRenderer, Camera* pCamera);
     void perform() override;
 
     // setters

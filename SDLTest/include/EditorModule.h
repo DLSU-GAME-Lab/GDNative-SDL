@@ -23,7 +23,7 @@ public:
     void drawEditor(SDL_Renderer* pRenderer);
 
 private:
-    bool contains(Vector2D objPos, float fX, float fY);
+    bool contains(Vector2D objPos, Vector2D mousePos);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

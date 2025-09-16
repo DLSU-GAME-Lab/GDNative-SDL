@@ -4,36 +4,35 @@
 #include <vector>
 
 class SpriteRenderer;
+class Camera;
 
-class SpriteRendererSystem
+class RenderSystem
 {
 private:
     std::vector<SpriteRenderer*> vecSpriteRenderers;
-    SDL_Renderer* pRenderer = NULL;
+    Camera* pCamera = NULL;
 
 public:
-    void draw();
+    void draw(SDL_Renderer* pRenderer);
     void registerSpriteRenderer(SpriteRenderer* pSpriteRenderer);
     void unregisterSpriteRenderer(SpriteRenderer* pSpriteRenderer);
-public:
-    SDL_Renderer* getRenderer();
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *
      * * * * * * * * * * * * * * * * * * * * */
 private:
-    static SpriteRendererSystem* P_SHARED_INSTANCE;
+    static RenderSystem* P_SHARED_INSTANCE;
 
 private:
-    SpriteRendererSystem() {};
-    SpriteRendererSystem(const SpriteRendererSystem&) {};
-    SpriteRendererSystem& operator=(const SpriteRendererSystem&) {};
+    RenderSystem() {};
+    RenderSystem(const RenderSystem&) {};
+    RenderSystem& operator=(const RenderSystem&) {};
 
 public:
-    static void initialize(SDL_Renderer* pRenderer);
+    static void initialize();
     static void destroy();
 
-    static SpriteRendererSystem* getInstance();
+    static RenderSystem* getInstance();
     /* * * * * * * * * * * * * * * * * * * * */
 };
 

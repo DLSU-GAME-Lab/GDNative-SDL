@@ -1,7 +1,7 @@
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 #include "AGameObject.h"
 #include "Settings.h"
 
@@ -70,26 +70,27 @@ void SpriteRenderer::initialize() {
     }
 
     // register this sprite with the system
-    SpriteRendererSystem::getInstance()->registerSpriteRenderer(this);
+    RenderSystem::getInstance()->registerSpriteRenderer(this);
 }
 
 SpriteRenderer::~SpriteRenderer() {
     // unregister when destroyed
-    SpriteRendererSystem::getInstance()->unregisterSpriteRenderer(this);
+    RenderSystem::getInstance()->unregisterSpriteRenderer(this);
 }
 
-void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
+void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
     AGameObject* owner = this->getOwner();
     if (owner)
     {
+        //TODO: fix the rotations. better if we used a transform matrix.
         // size = texture size * owner scale
-        mDestRect.w = fTexW * owner->getScale().x;
-        mDestRect.h = fTexH * owner->getScale().y;
+        mDestRect.w = (fTexW * owner->getScale().x) / pCam->getScale().x;
+        mDestRect.h = (fTexH * owner->getScale().y) / pCam->getScale().y;
 
-        mDestRect.x = owner->getPos().x - (pivot.x * mDestRect.w);
-        mDestRect.y = owner->getPos().y - (pivot.y * mDestRect.h);
+        mDestRect.x = (owner->getPos().x - (pivot.x * mDestRect.w) - pCam->getPos().x) / pCam->getScale().x;
+        mDestRect.y = (owner->getPos().y - (pivot.y * mDestRect.h) - pCam->getPos().y) / pCam->getScale().y;
 
-        this->dAngle = owner->getRot();
+        this->dAngle = owner->getRot() - pCam->getRot();
     }
     if (pTexture) {
         /*std::cout << "[Draw] Texture=" << m_textureKey

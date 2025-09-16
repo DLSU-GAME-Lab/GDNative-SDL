@@ -66,7 +66,7 @@
     <ClCompile Include="src\SceneManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="src\SpriteRendererSystem.cpp">
+    <ClCompile Include="src\RenderSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="src\AScene.cpp">
@@ -135,6 +135,12 @@
     <ClCompile Include="src\EngineTime.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameCamera.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -170,7 +176,7 @@
     <ClInclude Include="include\SceneManager.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="include\SpriteRendererSystem.h">
+    <ClInclude Include="include\RenderSystem.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumSceneTag.h">
@@ -256,6 +262,12 @@
     </ClInclude>
     <ClInclude Include="include\EngineTime.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Camera.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameCamera.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

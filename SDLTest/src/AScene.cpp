@@ -1,5 +1,5 @@
 #include "AScene.h"
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 
 AScene::AScene(SceneTag ETag) : ETag(ETag) {}
 

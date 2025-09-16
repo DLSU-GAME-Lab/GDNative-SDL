@@ -4,6 +4,7 @@
 #include "UIManager.h"
 #include "InspectorScreen.h"
 #include "EngineTime.h"
+#include "Camera.h"
 #include <iostream>
 
 void EditorModule::processEditorInput(const SDL_Event* eEvent)
@@ -27,11 +28,11 @@ void EditorModule::processEditorInput(const SDL_Event* eEvent)
             this->bIsHolding = true;
 
             std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-            for (auto object : vecObject)
+            for (int i = 1; i < vecObject.size(); i++)
             {
-                if (contains(object->getPos(), this->mousePos.x, this->mousePos.y))
+                if (contains(vecObject[i]->getPos(), this->mousePos))
                 {
-                    inspector->setSelectedObject(object);
+                    inspector->setSelectedObject(vecObject[i]);
                 }
             }
         }
@@ -67,16 +68,16 @@ void EditorModule::updateGameObjects()
 void EditorModule::drawEditor(SDL_Renderer* pRenderer)
 {
     std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-    for (auto object : vecObject)
+    Camera* cam = (Camera*)GameObjectManager::getInstance()->findObjectByName("Game Camera")->findComponentByName("Camera");
+    for (int i = 1; i < vecObject.size(); i++)
     {
         SDL_FRect mDestRect {};
         mDestRect.w = this->fTexW;
         mDestRect.h = this->fTexH;
 
-        mDestRect.x = object->getPos().x - (mDestRect.w * 0.5f);
-        mDestRect.y = object->getPos().y - (mDestRect.h * 0.5f);
+        mDestRect.x = vecObject[i]->getPos().x - (mDestRect.w * 0.5f)/* - cam->getPos().x*/;
+        mDestRect.y = vecObject[i]->getPos().y - (mDestRect.h * 0.5f)/* - cam->getPos().y*/;
         
-
         SDL_RenderTexture(pRenderer, this->pWidget, NULL, &mDestRect);
     }
 
@@ -87,14 +88,14 @@ void EditorModule::drawEditor(SDL_Renderer* pRenderer)
     SDL_SetRenderScale(pRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
 }
 
-bool EditorModule::contains(Vector2D objPos, float fX, float fY)
+bool EditorModule::contains(Vector2D objPos, Vector2D mousePos)
 {
     if (!this->pWidget) return false;
 
-    SDL_FRect pointRect = { fX, fY, 1, 1 };
+    SDL_FRect pointRect = { mousePos.x, mousePos.y, 1, 1 };
     SDL_FRect spriteRect = {};
-    spriteRect.x = objPos.x/* + (fTexW * 0.5f)*/;
-    spriteRect.y = objPos.y/* + (fTexH * 0.5f)*/;
+    spriteRect.x = objPos.x - (fTexW * 0.5f);
+    spriteRect.y = objPos.y - (fTexH * 0.5f);
     spriteRect.w = fTexW;
     spriteRect.h = fTexH;
 

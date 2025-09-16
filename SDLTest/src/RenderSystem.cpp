@@ -1,26 +1,28 @@
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 #include "SpriteRenderer.h"
+#include "GameCamera.h"
+#include "GameObjectManager.h"
 #include <iostream>
 
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */
-SpriteRendererSystem* SpriteRendererSystem::P_SHARED_INSTANCE = NULL;
+RenderSystem* RenderSystem::P_SHARED_INSTANCE = NULL;
 
-void SpriteRendererSystem::draw()
+void RenderSystem::draw(SDL_Renderer* pRenderer)
 {
     for (auto pSpriteRenderer : this->vecSpriteRenderers)
     {
-        pSpriteRenderer->draw(P_SHARED_INSTANCE->pRenderer);
+        pSpriteRenderer->draw(pRenderer, P_SHARED_INSTANCE->pCamera);
     }
 }
 
-void SpriteRendererSystem::registerSpriteRenderer(SpriteRenderer* pSpriteRenderer)
+void RenderSystem::registerSpriteRenderer(SpriteRenderer* pSpriteRenderer)
 {
     this->vecSpriteRenderers.push_back(pSpriteRenderer);
 }
 
-void SpriteRendererSystem::unregisterSpriteRenderer(SpriteRenderer * pSpriteRenderer)
+void RenderSystem::unregisterSpriteRenderer(SpriteRenderer * pSpriteRenderer)
 {
     int nIndex = -1;
 
@@ -37,25 +39,21 @@ void SpriteRendererSystem::unregisterSpriteRenderer(SpriteRenderer * pSpriteRend
     }
 }
 
-/*
-SDL_Renderer* SpriteRendererSystem::getRenderer()
+void RenderSystem::initialize()
 {
-    return this->pRenderer;
-}
-*/
+    P_SHARED_INSTANCE = new RenderSystem();
 
-void SpriteRendererSystem::initialize(SDL_Renderer* pRenderer)
-{
-    P_SHARED_INSTANCE = new SpriteRendererSystem();
-    P_SHARED_INSTANCE-> pRenderer = pRenderer;
+    GameCamera* cam = new GameCamera();
+    GameObjectManager::getInstance()->addObject(cam);
+    P_SHARED_INSTANCE->pCamera = (Camera*)cam->findComponentByName("Camera");
 }
 
-void SpriteRendererSystem::destroy()
+void RenderSystem::destroy()
 {
     delete P_SHARED_INSTANCE;
 }
 
-SpriteRendererSystem* SpriteRendererSystem::getInstance()
+RenderSystem* RenderSystem::getInstance()
 {
     return P_SHARED_INSTANCE;
 }

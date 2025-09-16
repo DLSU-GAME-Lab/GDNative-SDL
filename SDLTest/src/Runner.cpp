@@ -9,7 +9,7 @@
 
 #include "EngineTime.h"
 #include "TextureManager.h"
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 #include "GameObjectManager.h"
 #include "SceneManager.h"
 #include "AGameObject.h"
@@ -69,10 +69,10 @@ Runner::Runner()
 
 	//initialize systems
 	EngineTime::initialize();
-	TextureManager::initialize(this->pRenderer);
-	SpriteRendererSystem::initialize(this->pRenderer);
 	GameObjectManager::initialize();
 	SceneManager::initialize();
+	TextureManager::initialize(this->pRenderer);
+	RenderSystem::initialize();
 
 #if EDITOR_MODE
 	EditorModule::initialize(this->pWindow, this->pRenderer);
@@ -90,10 +90,10 @@ Runner::~Runner()
 	EditorModule::destroy();
 #endif
 
+	TextureManager::destroy();
+	RenderSystem::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
-	SpriteRendererSystem::destroy();
-	TextureManager::destroy();
 	EngineTime::destroy();
 
 	SDL_DestroyRenderer(this->pRenderer);
@@ -153,7 +153,7 @@ void Runner::render()
 	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(pRenderer);
 
-	SpriteRendererSystem::getInstance()->draw();
+	RenderSystem::getInstance()->draw(this->pRenderer);
 
 #if EDITOR_MODE
 	EditorModule::getInstance()->drawEditor(this->pRenderer);

@@ -133,6 +133,9 @@
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
+    <ClCompile Include="src\Level_1_Scene.cpp" />
+    <ClCompile Include="src\Level_2_Scene.cpp" />
+    <ClCompile Include="src\Level_3_Scene.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -140,7 +143,6 @@
     <ClCompile Include="src\Fairy.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\Librarian.cpp" />
-    <ClCompile Include="src\LobbyScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Runner.cpp" />
@@ -166,8 +168,10 @@
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\Fairy.h" />
     <ClInclude Include="include\GameObjectManager.h" />
+    <ClInclude Include="include\Level_1_Scene.h" />
+    <ClInclude Include="include\Level_2_Scene.h" />
+    <ClInclude Include="include\Level_3_Scene.h" />
     <ClInclude Include="include\Librarian.h" />
-    <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />

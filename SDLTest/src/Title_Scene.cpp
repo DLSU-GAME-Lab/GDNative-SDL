@@ -47,7 +47,7 @@ void Title_Scene::onLoadObjects()
         Vector2D(550.f, 825.f),
         Vector2D(2.f,2.f),
         0.0f, false,
-        SceneTag::LOBBY_SCENE
+        SceneTag::LEVEL_1_SCENE
     );
     UIButton* pLevelTwo = new UIButton(
         "Level_2_Button",   // object name (can be unique)
@@ -55,7 +55,7 @@ void Title_Scene::onLoadObjects()
         Vector2D(900.f, 825.f),
         Vector2D(2.f, 2.f),
         0.0f, false,
-        SceneTag::LOBBY_SCENE
+        SceneTag::LEVEL_2_SCENE
     );
     UIButton* pLevelThree = new UIButton(
         "Level_3_Button",   // object name (can be unique)
@@ -63,7 +63,7 @@ void Title_Scene::onLoadObjects()
         Vector2D(1250.f, 825.f),
         Vector2D(2.f, 2.f),
         0.0f, false,
-        SceneTag::LOBBY_SCENE
+        SceneTag::LEVEL_3_SCENE
     );
 
     GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);

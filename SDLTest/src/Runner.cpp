@@ -34,6 +34,13 @@ Runner::Runner()
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_ShowSimpleMessageBox failed (%s)", SDL_GetError());
 	}
 
+	std::cout << "|===========================================|\n";
+	std::cout << "|----------| SDL VERSION: " <<
+		SDL_MAJOR_VERSION << "." <<
+		SDL_MINOR_VERSION <<"." <<
+		SDL_MICRO_VERSION << " |----------|\n";
+	std::cout << "|===========================================|\n";
+
 	int screenWidth, screenHeight;
 	SDL_DisplayID dispID = SDL_GetPrimaryDisplay();
 	SDL_DisplayMode dispMode = *SDL_GetDesktopDisplayMode(dispID);
@@ -96,16 +103,10 @@ Runner::~Runner()
 void Runner::run()
 {
 	bool running = true;
-	uint64_t lastTime = SDL_GetTicks();
 
 	while (running)
 	{
-		EngineTime::getInstance()->logFrameStart();
-
-		//TODO: Remove additional time stuff. We have an EngineTime class for that.
-		uint64_t currentTime = SDL_GetTicks();
-		float deltaTime = (currentTime - lastTime) / 1000.0f;
-		lastTime = currentTime;
+		EngineTime::getInstance()->logFrame();
 
 		// process all pending events
 		SDL_Event e;
@@ -115,6 +116,7 @@ void Runner::run()
 			EditorModule::getInstance()->processEditorInput(&e);
 			if (e.type == SDL_EVENT_QUIT) running = false;
 		}
+		EditorModule::getInstance()->updateGameObjects();
 #else
 		while (SDL_PollEvent(&e))
 		{
@@ -130,7 +132,6 @@ void Runner::run()
 
 		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
-		EngineTime::getInstance()->logFrameEnd();
 	}
 }
 

@@ -18,4 +18,5 @@ void Background::initialize()
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(strImageName, 0, 0, gameWidth, gameHeight);
     SpriteRendererSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteRenderer);
+    pSpriteRenderer->setPivot(Vector2D(0.0f, 0.0f));
 }

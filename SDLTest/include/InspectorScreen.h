@@ -4,6 +4,10 @@
 
 class InspectorScreen : public AUIScreen
 {
+public:
+	void setSelectedObject(AGameObject* selectedObject);
+	AGameObject* getSelectedObject();
+
 protected:
 	InspectorScreen();
 	~InspectorScreen();

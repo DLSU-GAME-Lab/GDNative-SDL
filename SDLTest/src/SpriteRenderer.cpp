@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include "SpriteRendererSystem.h"
 #include "AGameObject.h"
+#include "Settings.h"
 
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
     : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr), m_textureKey(textureName)
@@ -10,6 +11,11 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     this->flipX = false;
     this->flipY = false;
     this->dAngle = 0.0;
+
+    fTexH = 0.0f;
+    fTexW = 0.0f;
+
+    this->pivot = Vector2D(0.5f, 0.5f);
 
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
@@ -76,18 +82,21 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
     AGameObject* owner = this->getOwner();
     if (owner)
     {
-        mDestRect.x = owner->getPos().x;
-        mDestRect.y = owner->getPos().y;
         // size = texture size * owner scale
         mDestRect.w = fTexW * owner->getScale().x;
         mDestRect.h = fTexH * owner->getScale().y;
+
+        mDestRect.x = owner->getPos().x - (pivot.x * mDestRect.w);
+        mDestRect.y = owner->getPos().y - (pivot.y * mDestRect.h);
+
+        this->dAngle = owner->getRot();
     }
     if (pTexture) {
         /*std::cout << "[Draw] Texture=" << m_textureKey
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
             << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
         */
-        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE); //replace with both flipped when available
+        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL); //replace with both flipped when available
         if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
         else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
@@ -134,6 +143,11 @@ void SpriteRenderer::setAngle(double dAngle)
     this->dAngle = dAngle;
 }
 
+void SpriteRenderer::setPivot(Vector2D pivot)
+{
+    this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
+}
+
 SDL_Texture* SpriteRenderer::getTexture()
 {
     return this->pTexture;
@@ -152,5 +166,10 @@ bool SpriteRenderer::getFlipY()
 double SpriteRenderer::getAngle()
 {
     return this->dAngle;
+}
+
+Vector2D SpriteRenderer::getPivot()
+{
+    return this->pivot;
 }
 

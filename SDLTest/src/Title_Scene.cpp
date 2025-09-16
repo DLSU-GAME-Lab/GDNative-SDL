@@ -79,15 +79,3 @@ void Title_Scene::onUnloadObjects()
     // base implementation to remove all objects
     AScene::onUnloadObjects();
 }
-
-void Title_Scene::update(float deltaTime)
-{
-    // defer to base (which updates GameObjectManager)
-    AScene::update(deltaTime);
-}
-
-void Title_Scene::render(SDL_Renderer* pRenderer)
-{
-    // base render will call SpriteRendererSystem::draw()
-    AScene::render(pRenderer);
-}

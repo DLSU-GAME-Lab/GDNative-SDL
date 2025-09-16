@@ -2,41 +2,66 @@
 #include "TextureManager.h"
 #include "GameObjectManager.h"
 #include "UIManager.h"
+#include "InspectorScreen.h"
+#include "EngineTime.h"
+#include <iostream>
 
 void EditorModule::processEditorInput(const SDL_Event* eEvent)
 {
     UIManager::getInstance()->processEvent(eEvent);
 
-    std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-    for (auto object : vecObject)
+    //ImGuiIO io = ImGui::GetIO();
+    //io.WantCaptureMouse = false;
+    InspectorScreen* inspector = static_cast<InspectorScreen*>(
+        UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"));
+
+    if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
     {
-        if (this->contains(object->getPos(), eEvent->motion.x, eEvent->motion.y))
+        this->mousePos = Vector2D(eEvent->motion.x, eEvent->motion.y);
+    }
+
+    if (eEvent->button.button == 1)
+    {
+        if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN)
         {
-            switch (eEvent->type)
+            this->bIsHolding = true;
+
+            std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
+            for (auto object : vecObject)
             {
-            case SDL_EVENT_MOUSE_MOTION:
-                //this->OnHovered();
-                break;
-
-            case SDL_EVENT_MOUSE_BUTTON_DOWN:
-                //this->OnPressed(eEvent->button);
-                break;
-
-            case SDL_EVENT_MOUSE_BUTTON_UP:
-                //this->OnReleased(eEvent->button);
-                break;
+                if (contains(object->getPos(), this->mousePos.x, this->mousePos.y))
+                {
+                    inspector->setSelectedObject(object);
+                }
             }
+        }
+        else if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP)
+        {
+            this->dTicks = 0.0f;
+            this->bIsHolding = false;
+            this->bIsDragging = false;
         }
     }
 }
 
 void EditorModule::updateGameObjects()
 {
-    std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-    for (auto object : vecObject)
-    {
+    AGameObject* selected = static_cast<InspectorScreen*>(
+        UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"))->getSelectedObject();
 
+    if (!selected) return;
+
+    if (this->bIsHolding)
+    {
+        this->dTicks += EngineTime::getInstance()->getDeltaTime();
+        if (this->dTicks >= D_MAX_DRAG_TICKS)
+        {
+            this->dTicks = 0.0;
+            this->bIsDragging = true;
+        }
     }
+
+    if (this->bIsDragging) selected->setPos(this->mousePos);
 }
 
 void EditorModule::drawEditor(SDL_Renderer* pRenderer)
@@ -45,10 +70,12 @@ void EditorModule::drawEditor(SDL_Renderer* pRenderer)
     for (auto object : vecObject)
     {
         SDL_FRect mDestRect {};
-        mDestRect.x = object->getPos().x;
-        mDestRect.y = object->getPos().y;
         mDestRect.w = this->fTexW;
         mDestRect.h = this->fTexH;
+
+        mDestRect.x = object->getPos().x - (mDestRect.w * 0.5f);
+        mDestRect.y = object->getPos().y - (mDestRect.h * 0.5f);
+        
 
         SDL_RenderTexture(pRenderer, this->pWidget, NULL, &mDestRect);
     }
@@ -64,8 +91,12 @@ bool EditorModule::contains(Vector2D objPos, float fX, float fY)
 {
     if (!this->pWidget) return false;
 
-    SDL_FRect spriteRect = {objPos.x, objPos.y, this->fTexW, this->fTexH};
     SDL_FRect pointRect = { fX, fY, 1, 1 };
+    SDL_FRect spriteRect = {};
+    spriteRect.x = objPos.x/* + (fTexW * 0.5f)*/;
+    spriteRect.y = objPos.y/* + (fTexH * 0.5f)*/;
+    spriteRect.w = fTexW;
+    spriteRect.h = fTexH;
 
     return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }

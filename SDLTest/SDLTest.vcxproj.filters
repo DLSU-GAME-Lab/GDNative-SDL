@@ -78,9 +78,6 @@
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\EngineTime.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="src\SpriteAnimator.cpp">
       <Filter>Component</Filter>
     </ClCompile>
@@ -134,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="src\EditorModule.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineTime.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -190,9 +190,6 @@
     </ClInclude>
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EngineTime.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Component</Filter>
@@ -256,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="include\EditorModule.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineTime.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

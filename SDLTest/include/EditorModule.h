@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include "Vector2D.h"
+#include "AUIScreen.h"
 
 class EditorModule
 {
@@ -9,6 +10,12 @@ private:
     SDL_Texture* pWidget = NULL;
     float fTexW = 64.0f;
     float fTexH = 64.0f;
+
+    const double D_MAX_DRAG_TICKS = 0.1;
+    double dTicks = 0.0;
+    bool bIsDragging = false;
+    bool bIsHolding = false;
+    Vector2D mousePos;
 
 public:
     void processEditorInput(const SDL_Event* eEvent);

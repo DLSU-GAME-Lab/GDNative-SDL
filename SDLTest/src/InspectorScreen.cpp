@@ -3,6 +3,16 @@
 #include "GameObjectManager.h"
 #include <cmath>
 
+void InspectorScreen::setSelectedObject(AGameObject* selectedObject)
+{
+    this->selectedObject = selectedObject;
+}
+
+AGameObject* InspectorScreen::getSelectedObject()
+{
+    return this->selectedObject;
+}
+
 InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
 {
 	this->selectedObject = NULL;
@@ -23,6 +33,7 @@ void InspectorScreen::DrawUI()
     ImGui::Text(scenesText.c_str());
     if (ImGui::InputInt("Scene Index", &sceneIndex))
     {
+        selectedObject = NULL;
         sceneIndex = SDL_clamp(sceneIndex, 0, scenes - 1);
         SceneManager::getInstance()->loadScene((SceneTag)sceneIndex);
     }

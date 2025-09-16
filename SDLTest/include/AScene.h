@@ -24,10 +24,6 @@ public:
     virtual void onUnloadResources() = 0;
     virtual void onUnloadObjects();
 
-    // new methods for scene-specific update and render
-    virtual void update(float deltaTime);
-    virtual void render(SDL_Renderer* pRenderer);
-
 protected:
     void registerObject(AGameObject* pGameObject);
 

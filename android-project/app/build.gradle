@@ -49,6 +49,7 @@ android {
         sourceSets {
             main {
                 jniLibs.srcDir 'libs'
+                assets.srcDirs = ["${projectDir}/../../SDLTest/assets"]
             }
         }
     }

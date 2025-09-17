@@ -19,11 +19,11 @@ private:
     SceneTag ENextScene = SceneTag::TITLE_SCENE;
 
     enum class TransitionState {
-        NONE,
-        LOADING,
-        TRANSITION_OUT,
-        TRANSITION_IN,
-        COMPLETE
+        NONE = 0,
+        LOADING = 1,
+        TRANSITION_OUT = 2,
+        TRANSITION_IN = 3,
+        COMPLETE = 4
     };
 
     TransitionState transitionState = TransitionState::NONE;

@@ -14,13 +14,26 @@ extern "C" void SDL_main(int argc, char* argv[])
     android_logger->set_pattern("%v");
 
     spdlog::info("Main.cpp Running", MAIN_TAG);
-    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) == 0) {
+
+    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
     }
 
+    spdlog::info("SDL initialized successfully");
 
-    Runner runner;
-    runner.run();
+    spdlog::info("SDL and SDL_image initialized successfully");
+
+    try {
+        Runner runner;
+        runner.run();
+    } catch (const std::exception& e) {
+        spdlog::error("Exception in Runner: {}", e.what());
+    } catch (...) {
+        spdlog::error("Unknown exception caught in Runner!");
+    }
+
+    SDL_Quit();
+    spdlog::info("Application shutdown complete");
 }
 
 

@@ -4,9 +4,23 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
 
 class TextureManager
 {
+#ifdef __ANDROID__
+private:
+    static void listAllAssets(AAssetManager* assetManager);
+    static void listAnimationAssets(AAssetManager* assetManager);
+    static std::string tryAlternativePaths(AAssetManager* assetManager, const std::string& originalPath);
+    static std::string toLowerCase(const std::string& str);
+    static std::string toUpperCase(const std::string& str);
+    static std::string changeExtensionToUpper(const std::string& str);
+    static std::string changeExtensionToLower(const std::string& str);
+    static std::string changeExtensionToMatch(const std::string& str, const std::string& newExtension);
+#endif
+
 private:
     std::unordered_map<std::string, std::vector<SDL_Texture*>> mapTexture;
     std::vector<SDL_Texture*> vecTexture;

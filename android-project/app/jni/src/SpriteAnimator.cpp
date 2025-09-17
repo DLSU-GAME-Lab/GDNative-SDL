@@ -1,5 +1,9 @@
 #include "SpriteAnimator.h"
 #include "EngineTime.h"
+#include "AGameObject.h"
+#include "SpriteRenderer.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/android_sink.h"
 
 SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFrameRate)
 	: AComponent("SpriteAnimator", ComponentType::ANIMATOR)
@@ -23,7 +27,7 @@ SpriteAnimator::~SpriteAnimator()
 
 void SpriteAnimator::perform()
 {
-	if (this->bIsPlaying)
+    if (this->bIsPlaying)
 	{
 		this->nTicks += EngineTime::getInstance()->getTrueDeltaTime();
 		if (this->nTicks >= this->nTicksPerFrame)

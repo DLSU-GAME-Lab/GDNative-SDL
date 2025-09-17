@@ -87,53 +87,67 @@ Runner::~Runner()
 
 void Runner::run()
 {
-	bool running = true;
-	uint64_t lastTime = SDL_GetTicks();
+    bool running = true;
+    uint64_t lastTime = SDL_GetTicks();
 
-	// pick a clear color once (optional)
-	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
-	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
-	while (running)
-	{
-        spdlog::info("Entered Run");
+    spdlog::info("Starting main game loop");
 
-		EngineTime::getInstance()->logFrameStart();
-        spdlog::info("after engine time");
+    SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
 
-		//TODO: Remove additional time stuff. We have an EngineTime class for that.
-		uint64_t currentTime = SDL_GetTicks();
-		float deltaTime = (currentTime - lastTime) / 1000.0f;
-		lastTime = currentTime;
-		
-		// process all pending events
-		SDL_Event e;
-		while (SDL_PollEvent(&e))
-		{
-			if (e.type == SDL_EVENT_QUIT)
-				running = false;
-			else this->processEvents(e);
-		}
+    while (running)
+    {
+        spdlog::debug("--- Frame Start ---");
 
-		// clear backbuffer
-		SDL_RenderClear(pRenderer);
+        EngineTime::getInstance()->logFrameStart();
 
-		// per-frame logic
-		this->update();
-		SceneManager::getInstance()->checkLoadScene();
+        uint64_t currentTime = SDL_GetTicks();
+        float deltaTime = (currentTime - lastTime) / 1000.0f;
+        lastTime = currentTime;
 
-		// update scene
-		SceneManager::getInstance()->update(deltaTime);
+        spdlog::debug("Delta time: {:.3f}", deltaTime);
 
-		// render scene
-		SceneManager::getInstance()->render(pRenderer);
+        // Process events
+        SDL_Event e;
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_EVENT_QUIT) {
+                spdlog::info("Quit event received");
+                running = false;
+            } else {
+                this->processEvents(e);
+            }
+        }
 
-		SDL_RenderPresent(pRenderer);
-		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
-		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
-		EngineTime::getInstance()->logFrameEnd();
-        spdlog::info("dead end");
+        // Clear backbuffer
+        SDL_RenderClear(pRenderer);
 
-	}
+        // REMOVED: this->update(); // This was causing duplicate updates
+
+        // Check for scene changes
+        SceneManager::getInstance()->checkLoadScene();
+
+        // Update scene (ONLY ONCE per frame)
+        SceneManager::getInstance()->update(deltaTime);
+
+        // REMOVED: GameObjectManager update - SceneManager should handle this
+
+        // Render scene
+        SceneManager::getInstance()->render(pRenderer);
+
+        // Present renderer
+        SDL_RenderPresent(pRenderer);
+
+        // Frame timing
+        Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
+        if (frameTime < frameDelay) {
+            SDL_Delay(frameDelay - frameTime);
+        }
+
+        EngineTime::getInstance()->logFrameEnd();
+        spdlog::debug("--- Frame End ---");
+    }
+
+    spdlog::info("Main game loop ended");
 }
 
 
@@ -172,8 +186,8 @@ void Runner::processEvents(SDL_Event eEvent)
 
 void Runner::update()
 {
-	GameObjectManager::getInstance()->update();
-	EngineTime::getInstance()->logFrameEnd();
+	//GameObjectManager::getInstance()->update();
+	//EngineTime::getInstance()->logFrameEnd();
 }
 
 void Runner::render()

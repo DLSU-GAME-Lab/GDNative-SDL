@@ -25,6 +25,22 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Android-specific settings
 if(ANDROID)
+    # For ninja.exe
+    # Derive SDK path from NDK path (Gradle always defines ANDROID_NDK)
+    get_filename_component(ANDROID_SDK "${ANDROID_NDK}/.." ABSOLUTE)
+
+    # Point CMake to Ninja inside the SDK's cmake folder
+    find_program(NINJA_EXECUTABLE ninja
+        HINTS "${ANDROID_SDK}/cmake/3.22.1/bin"
+    )
+
+    if(NINJA_EXECUTABLE)
+        set(CMAKE_MAKE_PROGRAM "${NINJA_EXECUTABLE}"
+            CACHE FILEPATH "Ninja executable" FORCE)
+    else()
+        message(FATAL_ERROR "Ninja not found in ${ANDROID_SDK}/cmake/3.22.1/bin. Please install via SDK Manager.")
+    endif()
+
     # Android-specific settings
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DANDROID -D__ANDROID__")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DANDROID -D__ANDROID__ -D__ANDROID_USE_LIBCXX=1")
@@ -61,6 +77,7 @@ ExternalProject_Add(external_sdl3
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DANDROID_STL=c++_shared
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+	-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
 
         -DSDL_INSTALL=ON
 
@@ -152,6 +169,8 @@ ExternalProject_Add(external_sdl3_image
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DANDROID_STL=c++_shared
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+	-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
+
         -DSDL3IMAGE_INSTALL=ON
 
         # Configure SDL3_image options for Android before fetching

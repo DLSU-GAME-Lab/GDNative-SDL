@@ -144,6 +144,7 @@
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
+    <ClCompile Include="src\LeftRoomScene.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="include\Fairy.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\InspectorScreen.h" />
+    <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\Player.h" />

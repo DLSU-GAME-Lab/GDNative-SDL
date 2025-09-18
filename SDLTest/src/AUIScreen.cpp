@@ -1,16 +1,18 @@
 #include "AUIScreen.h"
 
-AUIScreen::AUIScreen(std::string name)
+using namespace Editor;
+
+Editor::AUIScreen::AUIScreen(std::string name)
 {
     this->name = name;
 }
 
-AUIScreen::~AUIScreen()
+Editor::AUIScreen::~AUIScreen()
 {
 
 }
 
-std::string AUIScreen::GetName()
+std::string Editor::AUIScreen::GetName()
 {
     return this->name;
 }

@@ -80,7 +80,7 @@ Runner::Runner()
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 
 #if EDITOR_MODE
-	EditorModule::initialize(this->pWindow, this->pRenderer);
+	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);
 #endif
 
 	this->registerScenes();
@@ -92,7 +92,7 @@ Runner::~Runner()
 
 	//destroy systems
 #if EDITOR_MODE
-	EditorModule::destroy();
+	Editor::EditorModule::destroy();
 #endif
 
 	TextureManager::destroy();
@@ -120,7 +120,7 @@ void Runner::run()
 		while (SDL_PollEvent(&e))
 		{
 #if EDITOR_MODE
-			EditorModule::getInstance()->processEditorInput(&e);
+			Editor::EditorModule::getInstance()->processEditorInput(&e);
 #endif
 
 			switch (e.type)
@@ -143,7 +143,7 @@ void Runner::run()
 		}
 
 #if EDITOR_MODE
-		EditorModule::getInstance()->updateGameObjects();
+		Editor::EditorModule::getInstance()->updateGameObjects();
 #else
 		this->update();
 #endif
@@ -181,7 +181,7 @@ void Runner::render()
 	RenderSystem::getInstance()->draw(this->pRenderer);
 
 #if EDITOR_MODE
-	EditorModule::getInstance()->drawEditor(this->pRenderer);
+	Editor::EditorModule::getInstance()->drawEditor(this->pRenderer);
 #endif
 
 	// draw fade/transition overlay last

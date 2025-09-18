@@ -3,20 +3,23 @@
 #include "imgui.h"
 #include "imgui_impl_sdl3.h"
 
-class UIManager;
-
-class AUIScreen
+namespace Editor
 {
-protected:
-	AUIScreen(std::string name);
-	~AUIScreen();
+	class UIManager;
 
-	std::string GetName();
-	virtual void DrawUI() = 0;
+	class AUIScreen
+	{
+	protected:
+		AUIScreen(std::string name);
+		~AUIScreen();
 
-	std::string name;
-	bool enabled = true;
+		std::string GetName();
+		virtual void DrawUI() = 0;
 
-	friend class UIManager;
-};
+		std::string name;
+		bool enabled = true;
 
+		friend class UIManager;
+	};
+
+}

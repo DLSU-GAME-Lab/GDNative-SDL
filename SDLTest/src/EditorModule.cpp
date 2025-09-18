@@ -8,7 +8,7 @@
 #include "Camera.h"
 #include <iostream>
 
-void EditorModule::processEditorInput(const SDL_Event* eEvent)
+void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
 {
     UIManager::getInstance()->processEvent(eEvent);
 
@@ -48,7 +48,7 @@ void EditorModule::processEditorInput(const SDL_Event* eEvent)
     }
 }
 
-void EditorModule::updateGameObjects()
+void Editor::EditorModule::updateGameObjects()
 {
     AGameObject* selected = static_cast<InspectorScreen*>(
         UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"))->getSelectedObject();
@@ -79,11 +79,13 @@ void EditorModule::updateGameObjects()
     }
 }
 
-void EditorModule::drawEditor(SDL_Renderer* pRenderer)
+void Editor::EditorModule::drawEditor(SDL_Renderer* pRenderer)
 {
-    std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
     Camera* pCam = RenderSystem::getInstance()->getCamera();
 
+    //SDL_RenderLine(pRenderer, 0, 540, 1920, 540);
+
+    std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
     for (auto obj : vecObject)
     {
         SDL_FRect mDestRect {};
@@ -104,7 +106,7 @@ void EditorModule::drawEditor(SDL_Renderer* pRenderer)
     SDL_SetRenderScale(pRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
 }
 
-bool EditorModule::contains(Vector2D objPos, Vector2D mousePos)
+bool Editor::EditorModule::contains(Vector2D objPos, Vector2D mousePos)
 {
     if (!this->pWidget) return false;
 
@@ -123,7 +125,7 @@ bool EditorModule::contains(Vector2D objPos, Vector2D mousePos)
     return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }
 
-Vector2D EditorModule::getMouseWorldPos() const
+Vector2D Editor::EditorModule::getMouseWorldPos() const
 {
     Camera* cam = RenderSystem::getInstance()->getCamera();
     Vector2D mouseWorldPos;
@@ -137,27 +139,27 @@ Vector2D EditorModule::getMouseWorldPos() const
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */
-EditorModule::EditorModule()
+Editor::EditorModule::EditorModule()
 {
     TextureManager::getInstance()->load("editor/game_object_widget.png", "._widget");
     this->pWidget = TextureManager::getInstance()->get("._widget");
     SDL_GetTextureSize(this->pWidget, &this->fTexW, &this->fTexH);
 }
 
-EditorModule* EditorModule::P_SHARED_INSTANCE = NULL;
+Editor::EditorModule* Editor::EditorModule::P_SHARED_INSTANCE = NULL;
 
-void EditorModule::initialize(SDL_Window* window, SDL_Renderer* renderer)
+void Editor::EditorModule::initialize(SDL_Window* window, SDL_Renderer* renderer)
 {
     UIManager::initialize(window, renderer);
     P_SHARED_INSTANCE = new EditorModule();
 }
 
-void EditorModule::destroy()
+void Editor::EditorModule::destroy()
 {
     delete P_SHARED_INSTANCE;
 }
 
-EditorModule* EditorModule::getInstance()
+Editor::EditorModule* Editor::EditorModule::getInstance()
 {
     return P_SHARED_INSTANCE;
 }

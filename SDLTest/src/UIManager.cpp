@@ -5,19 +5,21 @@
 
 #include "InspectorScreen.h"
 
-UIManager* UIManager::sharedInstance = nullptr;
+using namespace Editor;
 
-UIManager* UIManager::getInstance()
+Editor::UIManager* Editor::UIManager::sharedInstance = nullptr;
+
+Editor::UIManager* Editor::UIManager::getInstance()
 {
 	return sharedInstance;
 }
 
-void UIManager::initialize(SDL_Window* window, SDL_Renderer* renderer)
+void Editor::UIManager::initialize(SDL_Window* window, SDL_Renderer* renderer)
 {
-	sharedInstance = new UIManager(window, renderer);
+	sharedInstance = new Editor::UIManager(window, renderer);
 }
 
-void UIManager::destroy()
+void Editor::UIManager::destroy()
 {
 	if (!sharedInstance->uiList.empty())
 	{
@@ -35,19 +37,19 @@ void UIManager::destroy()
 	delete sharedInstance;
 }
 
-void UIManager::newFrame()
+void Editor::UIManager::newFrame()
 {
 	ImGui_ImplSDLRenderer3_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 }
 
-void UIManager::processEvent(const SDL_Event* event)
+void Editor::UIManager::processEvent(const SDL_Event* event)
 {
 	ImGui_ImplSDL3_ProcessEvent(event);
 }
 
-void UIManager::drawAllUI(SDL_Renderer* renderer)
+void Editor::UIManager::drawAllUI(SDL_Renderer* renderer)
 {
 	//ImGui::ShowDemoWindow();
 	for (int i = 0; i < this->uiList.size(); i++)
@@ -60,24 +62,24 @@ void UIManager::drawAllUI(SDL_Renderer* renderer)
 	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
 }
 
-AUIScreen* UIManager::getUIScreen(std::string name)
+AUIScreen* Editor::UIManager::getUIScreen(std::string name)
 {
 	return this->uiTable[name];
 }
 
-bool UIManager::getEnabled(std::string name)
+bool Editor::UIManager::getEnabled(std::string name)
 {
 	AUIScreen* ui = this->uiTable[name];
 	return ui ? ui->enabled : false;
 }
 
-void UIManager::setEnabled(std::string name, bool enabled)
+void Editor::UIManager::setEnabled(std::string name, bool enabled)
 {
 	AUIScreen* ui = this->uiTable[name];
 	if (ui) ui->enabled = enabled;
 }
 
-UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
+Editor::UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -100,7 +102,7 @@ UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
 
 }
 
-UIManager::~UIManager()
+Editor::UIManager::~UIManager()
 {
 
 }

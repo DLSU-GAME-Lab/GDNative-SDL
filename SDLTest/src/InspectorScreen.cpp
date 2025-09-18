@@ -4,32 +4,32 @@
 #include "RenderSystem.h"
 #include <cmath>
 
-void InspectorScreen::setSelectedObject(AGameObject* selectedObject)
+void Editor::InspectorScreen::setSelectedObject(AGameObject* selectedObject)
 {
     this->selectedObject = selectedObject;
 }
 
-AGameObject* InspectorScreen::getSelectedObject()
+AGameObject* Editor::InspectorScreen::getSelectedObject()
 {
     return this->selectedObject;
 }
 
-void InspectorScreen::setMousePos(Vector2D mousePos)
+void Editor::InspectorScreen::setMousePos(Vector2D mousePos)
 {
     this->mousePos = mousePos;
 }
 
-InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
+Editor::InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
 {
 	this->selectedObject = NULL;
 }
 
-InspectorScreen::~InspectorScreen()
+Editor::InspectorScreen::~InspectorScreen()
 {
 
 }
 
-void InspectorScreen::DrawUI()
+void Editor::InspectorScreen::DrawUI()
 {
 	ImGui::Begin("Inspector", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
     const int scenes = SceneManager::getInstance()->getRegisteredSceneAmount();
@@ -67,7 +67,7 @@ void InspectorScreen::DrawUI()
     ImGui::End();
 }
 
-void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
+void Editor::InspectorScreen::showCamera(ImGuiChildFlags childFlags)
 {
     ImGui::BeginChild("Camera", ImVec2(0, 0), childFlags);
     ImGui::Text("Camera");
@@ -103,7 +103,7 @@ void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
     ImGui::EndChild();
 }
 
-void InspectorScreen::showTransform(ImGuiChildFlags childFlags)
+void Editor::InspectorScreen::showTransform(ImGuiChildFlags childFlags)
 {
     ImGui::BeginChild("Transform", ImVec2(0, 0), childFlags);
     if (this->selectedObject == NULL)

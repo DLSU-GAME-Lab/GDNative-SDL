@@ -1,14 +1,16 @@
 #pragma once
 #include "imgui.h"
 
-class CustomStyles
+namespace Editor
 {
-public:
-	void StyleColorsCrimson();
-	void StyleColorsEvangelion();
-	void StyleColorsDarkForest();
+	class CustomStyles
+	{
+	public:
+		void StyleColorsCrimson();
+		void StyleColorsEvangelion();
+		void StyleColorsDarkForest();
 
-private:
-	ImVec4 Alpha(const ImVec4& color, float a);
-};
-
+	private:
+		ImVec4 Alpha(const ImVec4& color, float a);
+	};
+}

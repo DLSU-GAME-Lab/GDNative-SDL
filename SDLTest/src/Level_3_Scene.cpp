@@ -42,13 +42,3 @@ void Level_3_Scene::onUnloadObjects()
 {
 	AScene::onUnloadObjects();
 }
-
-void Level_3_Scene::update(float deltaTime)
-{
-	AScene::update(deltaTime);
-}
-
-void Level_3_Scene::render(SDL_Renderer* pRenderer)
-{
-	AScene::render(pRenderer);
-}

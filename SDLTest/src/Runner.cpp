@@ -192,15 +192,15 @@ void Runner::render()
 
 void Runner::registerScenes()
 {
-	auto titleScene = std::make_unique<Title_Scene>();
-	auto level1Scene = std::make_unique<Level_1_Scene>();
-	auto level2Scene = std::make_unique<Level_2_Scene>();
-	auto level3Scene = std::make_unique<Level_3_Scene>();
+	auto titleScene = new Title_Scene();
+	auto level1Scene = new Level_1_Scene();
+	auto level2Scene = new Level_2_Scene();
+	auto level3Scene = new Level_3_Scene();
 
-	SceneManager::getInstance()->registerScene(SceneTag::TITLE_SCENE, std::move(titleScene));
-	SceneManager::getInstance()->registerScene(SceneTag::LEVEL_1_SCENE, std::move(level1Scene));
-	SceneManager::getInstance()->registerScene(SceneTag::LEVEL_2_SCENE, std::move(level2Scene));
-	SceneManager::getInstance()->registerScene(SceneTag::LEVEL_3_SCENE, std::move(level3Scene));
+	SceneManager::getInstance()->registerScene(titleScene);
+	SceneManager::getInstance()->registerScene(level1Scene);
+	SceneManager::getInstance()->registerScene(level2Scene);
+	SceneManager::getInstance()->registerScene(level3Scene);
 
 	//load initial scene
 	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);

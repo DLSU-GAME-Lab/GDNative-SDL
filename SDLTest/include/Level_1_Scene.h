@@ -16,8 +16,5 @@ public:
     void onLoadObjects() override;
     void onUnloadResources() override;
     void onUnloadObjects() override;
-
-    void update(float deltaTime) override;
-    void render(SDL_Renderer* pRenderer) override;
 };
 

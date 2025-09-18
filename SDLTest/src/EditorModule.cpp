@@ -32,11 +32,12 @@ void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
             std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
             for (auto obj : vecObject)
             {
-                if (inspector->getSelectedObject() != obj &&
-                    contains(obj->getPos(), this->mousePos))
+                if (contains(obj->getPos(), this->mousePos))
                 {
                     inspector->setSelectedObject(obj);
+                    this->offsetPos = this->getMouseWorldPos() - obj->getPos();
                 }
+                
             }
         }
         else if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP)
@@ -70,11 +71,11 @@ void Editor::EditorModule::updateGameObjects()
     {
         if (selected->getIsScreenObject())
         {
-            selected->setPos(this->mousePos);
+            selected->setPos(this->mousePos - this->offsetPos);
         }
         else
         {
-            selected->setPos(this->getMouseWorldPos());
+            selected->setPos(this->getMouseWorldPos() - this->offsetPos);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Editor
         bool bIsDragging = false;
         bool bIsHolding = false;
         Vector2D mousePos;
+        Vector2D offsetPos;
 
     public:
         void processEditorInput(const SDL_Event* eEvent);

@@ -112,7 +112,13 @@ void Editor::InspectorScreen::showTransform(ImGuiChildFlags childFlags)
     }
     else
     {
-        ImGui::Text(this->selectedObject->getName().c_str());
+        std::string objectText;
+        if (this->selectedObject->getIsScreenObject())
+            objectText = "Screen Object: " + this->selectedObject->getName();
+        else
+            objectText = "Game Object: " + this->selectedObject->getName();
+
+        ImGui::Text(objectText.c_str());
         Vector2D pos = this->selectedObject->getPos();
         float rot = this->selectedObject->getRot();
         Vector2D scale = this->selectedObject->getScale();

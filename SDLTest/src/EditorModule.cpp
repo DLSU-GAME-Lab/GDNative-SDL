@@ -68,7 +68,14 @@ void EditorModule::updateGameObjects()
     if (this->bIsDragging &&
         contains(selected->getPos(), this->mousePos))
     {
-        selected->setPos(this->getMouseWorldPos());
+        if (selected->getIsScreenObject())
+        {
+            selected->setPos(this->mousePos);
+        }
+        else
+        {
+            selected->setPos(this->getMouseWorldPos());
+        }
     }
 }
 

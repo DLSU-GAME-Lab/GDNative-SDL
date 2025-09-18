@@ -17,7 +17,7 @@ protected:
     std::vector<AComponent*> vecComponent;
 
     // X and Y since 2d
-    
+    bool bIsScreenObject;
     Vector2D fVecTranslate;
     Vector2D fVecScale;
     float fRot;
@@ -55,4 +55,5 @@ public:
     Vector2D getScale();
     void setRot(float fRot);
     float getRot();
+    bool getIsScreenObject() const;
 };

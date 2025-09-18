@@ -10,6 +10,7 @@ AGameObject::AGameObject(std::string strName)
     // defaults:
     this->fRot = 0.0f;
     this->fVecScale = Vector2D(1, 1);
+    this->bIsScreenObject = false;
 }
 
 void AGameObject::processInput(SDL_Event* eEvent)
@@ -196,6 +197,11 @@ void AGameObject::setRot(float fRot)
 float AGameObject::getRot()
 {
     return this->fRot;
+}
+
+bool AGameObject::getIsScreenObject() const
+{
+    return this->bIsScreenObject;
 }
 
 

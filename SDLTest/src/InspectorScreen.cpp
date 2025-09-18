@@ -99,6 +99,7 @@ void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
     //{
     //    cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
     //}
+
     ImGui::EndChild();
 }
 

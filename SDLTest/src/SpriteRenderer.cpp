@@ -78,16 +78,30 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
     if (owner)
     {
         //TODO: fix the rotations. better if we used a transform matrix.
-        // size = texture size * owner scale
-        mDestRect.w = (this->texSize.x * owner->getScale().x) / pCam->getScale().x;
-        mDestRect.h = (this->texSize.y * owner->getScale().y) / pCam->getScale().y;
+        this->dAngle = owner->getRot();
 
-        Vector2D screenPos = pCam->worldToScreenPoint(owner->getPos()) - (this->texSize * this->pivot);
+        Vector2D screenPos;
+        Vector2D screenSize = this->texSize * owner->getScale();
+
+        if (owner->getIsScreenObject())
+        {
+            screenPos = owner->getPos();
+        }
+        else
+        {
+            screenPos = pCam->worldToScreenPoint(owner->getPos());
+            screenSize /= pCam->getScale();
+            this->dAngle -= pCam->getRot();
+        }
+
+        screenPos -= this->texSize * this->pivot;
+
         mDestRect.x = screenPos.x;
         mDestRect.y = screenPos.y;
-
-        this->dAngle = owner->getRot() - pCam->getRot();
+        mDestRect.w = screenSize.x;
+        mDestRect.h = screenSize.y;
     }
+
     if (pTexture) {
         /*std::cout << "[Draw] Texture=" << m_textureKey
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"

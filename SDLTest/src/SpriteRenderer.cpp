@@ -1,15 +1,18 @@
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 #include "AGameObject.h"
+#include "Settings.h"
 
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, double dAngle, float w, float h)
     : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr), m_textureKey(textureName)
 {
     this->flipX = false;
     this->flipY = false;
-    this->dAngle = dAngle;
+    this->dAngle = 0.0f;
+    this->texSize = Vector2D(0.0f, 0.0f);
+    this->pivot = Vector2D(0.5f, 0.5f);
 
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
@@ -24,25 +27,21 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     if (pTexture) {
         float fw, fh;
         if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
-            fTexW = fw;
-            fTexH = fh;
+            this->texSize = Vector2D(fw, fh);
         }
     }
     else {
-        fTexW = fTexH = 0.0f; // only zero if no texture
+        this->texSize = Vector2D(0.0f, 0.0f);
     }
 
     //SDL_Point anchor = { texW / 2,texH / 2 };
     mDestRect.x = x;
     mDestRect.y = y;
-    mDestRect.w = (w > 0) ? w : fTexW;
-    mDestRect.h = (h > 0) ? h : fTexH;
+    mDestRect.w = (w > 0) ? w : this->texSize.x;
+    mDestRect.h = (h > 0) ? h : this->texSize.y;
 
     //mDestRect.x = anchor.x - (mDestRect.w / 2);
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
-
-    // register this sprite with the system
-    SpriteRendererSystem::getInstance()->registerSpriteRenderer(this);
 }
 
 void SpriteRenderer::initialize() {
@@ -52,12 +51,11 @@ void SpriteRenderer::initialize() {
 
         float fw, fh;
         if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
-            fTexW = fw;
-            fTexH = fh;
+            this->texSize = Vector2D(fw, fh);
         }
 
-        if (mDestRect.w <= 0) mDestRect.w = fTexW;
-        if (mDestRect.h <= 0) mDestRect.h = fTexH;
+        if (mDestRect.w <= 0) mDestRect.w = this->texSize.x;
+        if (mDestRect.h <= 0) mDestRect.h = this->texSize.y;
 
         std::cout << "[SpriteRenderer] Initialized with texture: " << m_textureKey << std::endl;
     }
@@ -67,30 +65,49 @@ void SpriteRenderer::initialize() {
     }
 
     // register this sprite with the system
-    SpriteRendererSystem::getInstance()->registerSpriteRenderer(this);
+    RenderSystem::getInstance()->registerSpriteRenderer(this);
 }
 
 SpriteRenderer::~SpriteRenderer() {
     // unregister when destroyed
-    SpriteRendererSystem::getInstance()->unregisterSpriteRenderer(this);
+    RenderSystem::getInstance()->unregisterSpriteRenderer(this);
 }
 
-void SpriteRenderer::draw(SDL_Renderer* pRenderer) {
+void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
     AGameObject* owner = this->getOwner();
     if (owner)
     {
-        mDestRect.x = owner->getPos().x;
-        mDestRect.y = owner->getPos().y;
-        // size = texture size * owner scale
-        mDestRect.w = fTexW * owner->getScale().x;
-        mDestRect.h = fTexH * owner->getScale().y;
+        //TODO: fix the rotations. better if we used a transform matrix.
+        this->dAngle = owner->getRot();
+
+        Vector2D screenPos;
+        Vector2D screenSize = this->texSize * owner->getScale();
+
+        if (owner->getIsScreenObject())
+        {
+            screenPos = owner->getPos() + screenSize;
+        }
+        else
+        {
+            screenSize /= pCam->getScale();
+            screenPos = pCam->worldToScreenPoint(owner->getPos());
+            this->dAngle -= pCam->getRot();
+        }
+
+        screenPos -= screenSize * this->pivot;
+
+        mDestRect.x = screenPos.x;
+        mDestRect.y = screenPos.y;
+        mDestRect.w = screenSize.x;
+        mDestRect.h = screenSize.y;
     }
+
     if (pTexture) {
         /*std::cout << "[Draw] Texture=" << m_textureKey
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
             << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
         */
-        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE); //replace with both flipped when available
+        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL); //replace with both flipped when available
         if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
         else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
@@ -137,6 +154,11 @@ void SpriteRenderer::setAngle(double dAngle)
     this->dAngle = dAngle;
 }
 
+void SpriteRenderer::setPivot(Vector2D pivot)
+{
+    this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
+}
+
 SDL_Texture* SpriteRenderer::getTexture()
 {
     return this->pTexture;
@@ -155,5 +177,10 @@ bool SpriteRenderer::getFlipY()
 double SpriteRenderer::getAngle()
 {
     return this->dAngle;
+}
+
+Vector2D SpriteRenderer::getPivot()
+{
+    return this->pivot;
 }
 

@@ -2,7 +2,6 @@
 
 #include "unordered_map"
 #include "string"
-#include "memory"
 
 #include "EnumSceneTag.h"
 #include "AScene.h"
@@ -10,36 +9,21 @@
 class SceneManager
 {
 private:
-    std::unordered_map<SceneTag, std::unique_ptr<AScene>> mapScene;
+    std::unordered_map<SceneTag, AScene*> mapScene;
     AScene* pActiveScene = NULL;
-    AScene* pNextScene = nullptr;
-    //bool bLoading = false;
-    //SceneTag ESceneToLoad = SceneTag::TITLE_SCENE;
-    SceneTag ECurrentScene = SceneTag::TITLE_SCENE;
-    SceneTag ENextScene = SceneTag::TITLE_SCENE;
-
-    enum class TransitionState {
-        NONE,
-        LOADING,
-        TRANSITION_OUT,
-        TRANSITION_IN,
-        COMPLETE
-    };
-
-    TransitionState transitionState = TransitionState::NONE;
-    float transitionProgress = 0.0f; 
-    float transitionDuration = 0.5f; // seconds
+    bool bLoading = false;
+    SceneTag ESceneToLoad = SceneTag::NONE;
 
 public:
-    void registerScene(SceneTag tag, std::unique_ptr<AScene> scene);
+    void registerScene(AScene* pScene);
     void loadScene(SceneTag ETag);
-    void unloadCurrentScene();
-    void update(float deltaTime);
-    void render(SDL_Renderer* pRenderer);
+    void unloadScene();
     void checkLoadScene();
 
-    bool isInTransition() const { return transitionState != TransitionState::NONE; }
-    bool isLoaded(SceneTag ETag) const;
+public:
+    bool isLoaded(SceneTag ETag);
+    SceneTag getLoadedSceneTag() const;
+    int getRegisteredSceneAmount() const;
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

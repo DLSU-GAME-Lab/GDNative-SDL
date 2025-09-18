@@ -17,7 +17,7 @@ protected:
     std::vector<AComponent*> vecComponent;
 
     // X and Y since 2d
-    
+    bool bIsScreenObject;
     Vector2D fVecTranslate;
     Vector2D fVecScale;
     float fRot;
@@ -28,7 +28,7 @@ public:
 
 public:
     virtual void initialize() = 0;
-    virtual void processInput(SDL_Event eEvent);
+    virtual void processInput(SDL_Event* eEvent);
     virtual void update();
     virtual void draw(SDL_Window* pWindow);
 
@@ -55,4 +55,5 @@ public:
     Vector2D getScale();
     void setRot(float fRot);
     float getRot();
+    bool getIsScreenObject() const;
 };

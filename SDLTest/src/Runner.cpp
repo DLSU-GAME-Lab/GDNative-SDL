@@ -1,14 +1,22 @@
+#define EDITOR_MODE __has_include("EditorModule.h") && 1
+
+#if EDITOR_MODE
+#include "EditorModule.h"
+#endif
+
 #include "Runner.h"
 #include "algorithm"
 
 #include "EngineTime.h"
 #include "TextureManager.h"
-#include "SpriteRendererSystem.h"
+#include "RenderSystem.h"
 #include "GameObjectManager.h"
 #include "SceneManager.h"
 #include "AGameObject.h"
 #include "EnumSceneTag.h"
 #include "Settings.h"
+#include "UIManager.h"
+#include "SceneTransitionManager.h" 
 
 // scenes
 #include "Title_Scene.h"
@@ -18,6 +26,24 @@
 
 Runner::Runner()
 {
+	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) == 0)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
+	}
+
+	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hello World",
+		"!! Your SDL project successfully runs on Android !!", NULL) == 0)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_ShowSimpleMessageBox failed (%s)", SDL_GetError());
+	}
+
+	std::cout << "|===========================================|\n";
+	std::cout << "|----------| SDL VERSION: " <<
+		SDL_MAJOR_VERSION << "." <<
+		SDL_MINOR_VERSION <<"." <<
+		SDL_MICRO_VERSION << " |----------|\n";
+	std::cout << "|===========================================|\n";
+
 	int screenWidth, screenHeight;
 	SDL_DisplayID dispID = SDL_GetPrimaryDisplay();
 	SDL_DisplayMode dispMode = *SDL_GetDesktopDisplayMode(dispID);
@@ -27,14 +53,13 @@ Runner::Runner()
 	// debug
 	std::cout << "Screen size: " << screenWidth << "x" << screenHeight << std::endl;
 
-	this->fWindowScale = 0.75f;
 	this->strWindowTitle = "Gem Hunter Match";
 	float scaleX = (float)screenWidth / gameWidth;
 	float scaleY = (float)screenHeight / gameHeight;
 	float scale = std::min(scaleX, scaleY);
 
-	int windowHeight = gameHeight * scale * this->fWindowScale;
-	int windowWidth = gameWidth * scale * this->fWindowScale;
+	int windowHeight = gameHeight * scale;
+	int windowWidth = gameWidth * scale;
 
 	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
 
@@ -45,16 +70,128 @@ Runner::Runner()
 	}
 	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-	pMainEvent = new SDL_Event();
-
 	//initialize systems
 	EngineTime::initialize();
-	TextureManager::initialize(this->pRenderer);
-	SpriteRendererSystem::initialize(this->pRenderer);
 	GameObjectManager::initialize();
 	SceneManager::initialize();
+	TextureManager::initialize(this->pRenderer);
+	RenderSystem::initialize();
+	SceneTransitionManager::initialize();
+	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 
-	//register scene/s
+#if EDITOR_MODE
+	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);
+#endif
+
+	this->registerScenes();
+}
+
+Runner::~Runner()
+{
+	SceneManager::getInstance()->unloadScene();
+
+	//destroy systems
+#if EDITOR_MODE
+	Editor::EditorModule::destroy();
+#endif
+
+	TextureManager::destroy();
+	RenderSystem::destroy();
+	SceneManager::destroy();
+	GameObjectManager::destroy();
+	EngineTime::destroy();
+	SceneTransitionManager::destroy();
+
+	SDL_DestroyRenderer(this->pRenderer);
+	SDL_DestroyWindow(this->pWindow);
+}
+
+void Runner::run()
+{
+	bool running = true;
+
+	while (running)
+	{
+		EngineTime::getInstance()->logFrame();
+
+		// process all pending events
+		SDL_Event e;
+
+		while (SDL_PollEvent(&e))
+		{
+#if EDITOR_MODE
+			Editor::EditorModule::getInstance()->processEditorInput(&e);
+#endif
+
+			switch (e.type)
+			{
+			case SDL_EVENT_QUIT:
+				running = false;
+				break;
+
+			case SDL_EVENT_WINDOW_RESIZED:
+				RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+				break;
+
+			default:
+#if EDITOR_MODE
+#else
+				this->processEvents(&e);
+#endif
+				break;
+			}
+		}
+
+#if EDITOR_MODE
+		Editor::EditorModule::getInstance()->updateGameObjects();
+#else
+		this->update();
+#endif
+		
+		this->render();
+
+		// scene loading now handled safely after transition
+		if (!SceneTransitionManager::getInstance()->isTransitioning())
+			SceneManager::getInstance()->checkLoadScene();
+
+		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
+		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
+	}
+}
+
+
+void Runner::processEvents(SDL_Event* eEvent)
+{
+	GameObjectManager::getInstance()->processInput(eEvent);
+}
+
+void Runner::update()
+{
+	GameObjectManager::getInstance()->update();
+	SceneTransitionManager::getInstance()->update();
+}
+
+void Runner::render()
+{
+	// pick a clear color once (optional)
+	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
+	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
+	SDL_RenderClear(pRenderer);
+
+	RenderSystem::getInstance()->draw(this->pRenderer);
+
+#if EDITOR_MODE
+	Editor::EditorModule::getInstance()->drawEditor(this->pRenderer);
+#endif
+
+	// draw fade/transition overlay last
+	SceneTransitionManager::getInstance()->draw(this->pRenderer);
+
+	SDL_RenderPresent(this->pRenderer);
+}
+
+void Runner::registerScenes()
+{
 	auto titleScene = std::make_unique<Title_Scene>();
 	auto level1Scene = std::make_unique<Level_1_Scene>();
 	auto level2Scene = std::make_unique<Level_2_Scene>();
@@ -68,113 +205,4 @@ Runner::Runner()
 	//load initial scene
 	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
 
-	//GameObjectManager::getInstance()->addObject(NULL);
-}
-
-Runner::~Runner()
-{
-	SceneManager::getInstance()->unloadCurrentScene();
-
-	//destroy systems
-	SceneManager::destroy();
-	GameObjectManager::destroy();
-	SpriteRendererSystem::destroy();
-	TextureManager::destroy();
-	EngineTime::destroy();
-
-	delete this->pMainEvent;
-	SDL_DestroyRenderer(this->pRenderer);
-	SDL_DestroyWindow(this->pWindow);
-}
-
-void Runner::run()
-{
-	bool running = true;
-	uint64_t lastTime = SDL_GetTicks();
-
-	// pick a clear color once (optional)
-	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
-	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
-
-	while (running)
-	{
-		EngineTime::getInstance()->logFrameStart();
-
-		//TODO: Remove additional time stuff. We have an EngineTime class for that.
-		uint64_t currentTime = SDL_GetTicks();
-		float deltaTime = (currentTime - lastTime) / 1000.0f;
-		lastTime = currentTime;
-		
-		// process all pending events
-		SDL_Event e;
-		while (SDL_PollEvent(&e))
-		{
-			if (e.type == SDL_EVENT_QUIT)
-				running = false;
-			else this->processEvents(e);
-		}
-
-		// clear backbuffer
-		SDL_RenderClear(pRenderer);
-
-		// per-frame logic
-		this->update();
-		SceneManager::getInstance()->checkLoadScene();
-
-		// update scene
-		SceneManager::getInstance()->update(deltaTime);
-
-		// render scene
-		SceneManager::getInstance()->render(pRenderer);
-
-		SDL_RenderPresent(pRenderer);
-		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
-		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
-		EngineTime::getInstance()->logFrameEnd();
-	}
-}
-
-
-void Runner::processEvents(SDL_Event eEvent)
-{
-	if (eEvent.type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
-		eEvent.type == SDL_EVENT_MOUSE_BUTTON_UP ||
-		eEvent.type == SDL_EVENT_MOUSE_MOTION)
-	{
-		int rawX = eEvent.button.x;
-		int rawY = eEvent.button.y;
-
-		// convert window coordinates to logical coordinates
-		float logicalX, logicalY;
-		SDL_RenderCoordinatesFromWindow(pRenderer, rawX, rawY, &logicalX, &logicalY);
-
-		// update the event with logical coordinates
-		if (eEvent.type == SDL_EVENT_MOUSE_MOTION) {
-			eEvent.motion.x = logicalX;
-			eEvent.motion.y = logicalY;
-		}
-		else {
-			eEvent.button.x = logicalX;
-			eEvent.button.y = logicalY;
-		}
-
-		// log converted mouse input
-		std::cout << "[Converted Mouse] Logical: (" << logicalX << ", " << logicalY << ")"
-			<< " Type: " << eEvent.type
-			<< std::endl;
-	}
-
-	// pass input to current scene
-	GameObjectManager::getInstance()->processInput(eEvent);
-}
-
-void Runner::update()
-{
-	GameObjectManager::getInstance()->update();
-	EngineTime::getInstance()->logFrameEnd();
-}
-
-void Runner::render()
-{
-	SpriteRendererSystem::getInstance()->draw();
 }

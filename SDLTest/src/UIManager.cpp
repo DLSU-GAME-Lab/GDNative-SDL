@@ -1,0 +1,108 @@
+#include "UIManager.h"
+#include "CustomStyles.h"
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_sdlrenderer3.h"
+
+#include "InspectorScreen.h"
+
+using namespace Editor;
+
+Editor::UIManager* Editor::UIManager::sharedInstance = nullptr;
+
+Editor::UIManager* Editor::UIManager::getInstance()
+{
+	return sharedInstance;
+}
+
+void Editor::UIManager::initialize(SDL_Window* window, SDL_Renderer* renderer)
+{
+	sharedInstance = new Editor::UIManager(window, renderer);
+}
+
+void Editor::UIManager::destroy()
+{
+	if (!sharedInstance->uiList.empty())
+	{
+		for (int i = sharedInstance->uiList.size() - 1; i >= 0; i--)
+			delete sharedInstance->uiList[i];
+
+		sharedInstance->uiTable.clear();
+		sharedInstance->uiList.clear();
+	}
+
+	ImGui_ImplSDLRenderer3_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
+
+	delete sharedInstance;
+}
+
+void Editor::UIManager::newFrame()
+{
+	ImGui_ImplSDLRenderer3_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
+	ImGui::NewFrame();
+}
+
+void Editor::UIManager::processEvent(const SDL_Event* event)
+{
+	ImGui_ImplSDL3_ProcessEvent(event);
+}
+
+void Editor::UIManager::drawAllUI(SDL_Renderer* renderer)
+{
+	//ImGui::ShowDemoWindow();
+	for (int i = 0; i < this->uiList.size(); i++)
+	{
+		if (this->uiList[i]->enabled)
+			this->uiList[i]->DrawUI();
+	}
+
+	ImGui::Render();
+	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+}
+
+AUIScreen* Editor::UIManager::getUIScreen(std::string name)
+{
+	return this->uiTable[name];
+}
+
+bool Editor::UIManager::getEnabled(std::string name)
+{
+	AUIScreen* ui = this->uiTable[name];
+	return ui ? ui->enabled : false;
+}
+
+void Editor::UIManager::setEnabled(std::string name, bool enabled)
+{
+	AUIScreen* ui = this->uiTable[name];
+	if (ui) ui->enabled = enabled;
+}
+
+Editor::UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
+{
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+	CustomStyles styles;
+	styles.StyleColorsCrimson();
+
+	ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
+	ImGui_ImplSDLRenderer3_Init(renderer);
+	
+	UINames uiNames;
+	InspectorScreen* inspectorScreen = new InspectorScreen();
+	this->uiTable[uiNames.INSPECTOR_SCREEN] = inspectorScreen;
+	this->uiList.push_back(inspectorScreen);
+
+}
+
+Editor::UIManager::~UIManager()
+{
+
+}

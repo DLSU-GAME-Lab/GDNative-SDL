@@ -25,8 +25,7 @@ private:
 	double dUnscaledDeltaTime = 0.0;
 	double dTimeScale = 1.0;
 
-	static void logFrameStart();
-	static void logFrameEnd();
+	static void logFrame();
 
 	/* * * * * * * * * * * * * * * * * * * * *
 	 *       SINGLETON-RELATED CONTENT       *

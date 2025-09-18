@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,12 +130,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="imgui\src\imgui.cpp" />
+    <ClCompile Include="imgui\src\imgui_demo.cpp" />
+    <ClCompile Include="imgui\src\imgui_draw.cpp" />
+    <ClCompile Include="imgui\src\imgui_impl_sdl3.cpp" />
+    <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
+    <ClCompile Include="imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="imgui\src\imgui_widgets.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\CustomStyles.cpp" />
+    <ClCompile Include="src\EditorModule.cpp" />
+    <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\Level_1_Scene.cpp" />
     <ClCompile Include="src\Level_2_Scene.cpp" />
     <ClCompile Include="src\Level_3_Scene.cpp" />
+    <ClCompile Include="src\GUIManager.cpp" />
+    <ClCompile Include="src\InspectorScreen.cpp" />
+    <ClCompile Include="src\LeftRoomScene.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -145,22 +159,38 @@
     <ClCompile Include="src\Librarian.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\RightRoomScene.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SceneTransitionManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
-    <ClCompile Include="src\SpriteRendererSystem.cpp" />
+    <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\UIButton.cpp" />
+    <ClCompile Include="src\UIManager.cpp" />
+    <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="imgui\include\imconfig.h" />
+    <ClInclude Include="imgui\include\imgui.h" />
+    <ClInclude Include="imgui\include\imgui_impl_sdl3.h" />
+    <ClInclude Include="imgui\include\imgui_impl_sdlrenderer3.h" />
+    <ClInclude Include="imgui\include\imgui_internal.h" />
+    <ClInclude Include="imgui\include\imstb_rectpack.h" />
+    <ClInclude Include="imgui\include\imstb_textedit.h" />
+    <ClInclude Include="imgui\include\imstb_truetype.h" />
     <ClInclude Include="include\AButton.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Background.h" />
+    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\CustomStyles.h" />
+    <ClInclude Include="include\EditorModule.h" />
+    <ClInclude Include="include\EmptyObject.h" />
     <ClInclude Include="include\EngineTime.h" />
     <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />
@@ -171,19 +201,27 @@
     <ClInclude Include="include\Level_1_Scene.h" />
     <ClInclude Include="include\Level_2_Scene.h" />
     <ClInclude Include="include\Level_3_Scene.h" />
+    <ClInclude Include="include\GUIManager.h" />
+    <ClInclude Include="include\InspectorScreen.h" />
+    <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\SceneTransitionManager.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
-    <ClInclude Include="include\SpriteRendererSystem.h" />
+    <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\UIButton.h" />
     <ClInclude Include="include\Prop.h" />
+    <ClInclude Include="include\UIManager.h" />
+    <ClInclude Include="include\UINames.h" />
+    <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -13,7 +13,7 @@ private:
     std::vector<AGameObject*> vecGameObject;
 
 public:
-    void processInput(SDL_Event eEvent);
+    void processInput(SDL_Event* eEvent);
     void update();
     void draw(SDL_Window* pWindow);
 
@@ -23,6 +23,7 @@ public:
     void deleteAllObjects();
 
     AGameObject* findObjectByName(std::string strName);
+    std::vector<AGameObject*>& getAllObjects();
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

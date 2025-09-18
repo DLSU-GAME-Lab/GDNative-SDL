@@ -1,16 +1,12 @@
 #include "EngineTime.h"
 
-void EngineTime::logFrameStart()
+void EngineTime::logFrame()
 {
+    P_SHARED_INSTANCE->tEnd = P_SHARED_INSTANCE->tStart;
     P_SHARED_INSTANCE->tStart = SDL_GetTicks();
-}
 
-void EngineTime::logFrameEnd()
-{
-    P_SHARED_INSTANCE->tEnd = SDL_GetTicks();
     P_SHARED_INSTANCE->tDeltaTime = P_SHARED_INSTANCE->tEnd - P_SHARED_INSTANCE->tStart;
-
-    P_SHARED_INSTANCE->dUnscaledDeltaTime = SDL_NS_TO_SECONDS(P_SHARED_INSTANCE->tDeltaTime);
+    P_SHARED_INSTANCE->dUnscaledDeltaTime = P_SHARED_INSTANCE->tDeltaTime / 1000.0;
     P_SHARED_INSTANCE->dDeltaTime = P_SHARED_INSTANCE->dUnscaledDeltaTime * P_SHARED_INSTANCE->dTimeScale;
 
     P_SHARED_INSTANCE->dTime += P_SHARED_INSTANCE->dDeltaTime;

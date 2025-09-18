@@ -1,7 +1,7 @@
 #include "GameObjectManager.h"
 #include <iostream>
 
-void GameObjectManager::processInput(SDL_Event eEvent)
+void GameObjectManager::processInput(SDL_Event* eEvent)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
     {
@@ -81,6 +81,11 @@ AGameObject* GameObjectManager::findObjectByName(std::string strName)
     }
 }
 
+std::vector<AGameObject*>& GameObjectManager::getAllObjects()
+{
+    return this->vecGameObject;
+}
+
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */
@@ -96,10 +101,8 @@ void GameObjectManager::destroy()
     delete P_SHARED_INSTANCE;
 }
 
-GameObjectManager* GameObjectManager::getInstance() {
-    if(P_SHARED_INSTANCE == NULL)
-        P_SHARED_INSTANCE = new GameObjectManager();
-
+GameObjectManager* GameObjectManager::getInstance()
+{
     return P_SHARED_INSTANCE;
 }
 /* * * * * * * * * * * * * * * * * * * * */

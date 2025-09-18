@@ -22,6 +22,12 @@
     <Filter Include="Math">
       <UniqueIdentifier>{74a74283-8f40-48da-9512-f9d5789c68a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{25a0e8d9-193a-40ce-98e5-010e8ee695b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{8158b3ad-3af1-4797-a9f6-4ba416319dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -60,7 +66,7 @@
     <ClCompile Include="src\SceneManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="src\SpriteRendererSystem.cpp">
+    <ClCompile Include="src\RenderSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="src\AScene.cpp">
@@ -68,9 +74,6 @@
     </ClCompile>
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EngineTime.cpp">
-      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="src\SpriteAnimator.cpp">
       <Filter>Component</Filter>
@@ -97,6 +100,54 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Level_3_Scene.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIManager.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AUIScreen.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CustomStyles.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_impl_sdl3.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InspectorScreen.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EditorModule.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineTime.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneTransitionManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RightRoomScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -134,7 +185,7 @@
     <ClInclude Include="include\SceneManager.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="include\SpriteRendererSystem.h">
+    <ClInclude Include="include\RenderSystem.h">
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumSceneTag.h">
@@ -151,9 +202,6 @@
     </ClInclude>
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EngineTime.h">
-      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Component</Filter>
@@ -183,6 +231,60 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\Level_3_Scene.h">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClInclude Include="include\AUIScreen.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIManager.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UINames.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CustomStyles.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui_impl_sdl3.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\include\imgui_impl_sdlrenderer3.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InspectorScreen.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EditorModule.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineTime.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Camera.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneTransitionManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RightRoomScene.h">
       <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>

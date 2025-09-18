@@ -142,7 +142,9 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\EditorModule.cpp" />
+    <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
+    <ClCompile Include="src\GUIManager.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
     <ClCompile Include="src\Prop.cpp" />
@@ -186,6 +188,7 @@
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\EditorModule.h" />
+    <ClInclude Include="include\EmptyObject.h" />
     <ClInclude Include="include\EngineTime.h" />
     <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />
@@ -193,6 +196,7 @@
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\Fairy.h" />
     <ClInclude Include="include\GameObjectManager.h" />
+    <ClInclude Include="include\GUIManager.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />

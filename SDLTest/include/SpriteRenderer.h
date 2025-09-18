@@ -13,8 +13,8 @@ private:
     SDL_FRect mDestRect;
     bool flipX, flipY;
     double dAngle;
-    float fTexW, fTexH;
     std::string m_textureKey;
+    Vector2D texSize;
     Vector2D pivot;
 
 public:

@@ -13,6 +13,7 @@ private:
     Camera* pCamera = NULL;
 
 public:
+    void updateWindowSize(SDL_Window* pWindow);
     void draw(SDL_Renderer* pRenderer);
     void registerSpriteRenderer(SpriteRenderer* pSpriteRenderer);
     void unregisterSpriteRenderer(SpriteRenderer* pSpriteRenderer);

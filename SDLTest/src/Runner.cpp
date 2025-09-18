@@ -1,4 +1,4 @@
-#define EDITOR_MODE __has_include("EditorModule.h") && 0
+#define EDITOR_MODE __has_include("EditorModule.h") && 1
 
 #if EDITOR_MODE
 #include "EditorModule.h"
@@ -74,6 +74,7 @@ Runner::Runner()
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	RenderSystem::initialize();
+	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 
 #if EDITOR_MODE
 	EditorModule::initialize(this->pWindow, this->pRenderer);
@@ -111,22 +112,37 @@ void Runner::run()
 
 		// process all pending events
 		SDL_Event e;
+
+		while (SDL_PollEvent(&e))
+		{
 #if EDITOR_MODE
-		while (SDL_PollEvent(&e))
-		{
 			EditorModule::getInstance()->processEditorInput(&e);
-			if (e.type == SDL_EVENT_QUIT) running = false;
-		}
-		EditorModule::getInstance()->updateGameObjects();
-#else
-		while (SDL_PollEvent(&e))
-		{
-			if (e.type == SDL_EVENT_QUIT) running = false;
-			else this->processEvents(&e);
-		}
-		this->update();
 #endif
 
+			switch (e.type)
+			{
+			case SDL_EVENT_QUIT:
+				running = false;
+				break;
+
+			case SDL_EVENT_WINDOW_RESIZED:
+				RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+				break;
+
+			default:
+#if !EDITOR_MODE
+				this->processEvents(&e);
+#endif
+				break;
+			}
+		}
+
+#if EDITOR_MODE
+		EditorModule::getInstance()->updateGameObjects();
+#elif
+		this->update();
+#endif
+		
 		this->render();
 
 		SceneManager::getInstance()->checkLoadScene();

@@ -11,10 +11,7 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     this->flipX = false;
     this->flipY = false;
     this->dAngle = 0.0;
-
-    fTexH = 0.0f;
-    fTexW = 0.0f;
-
+    this->texSize = Vector2D(0.0f, 0.0f);
     this->pivot = Vector2D(0.5f, 0.5f);
 
     auto textures = TextureManager::getInstance()->getTexture(textureName);
@@ -30,19 +27,18 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     if (pTexture) {
         float fw, fh;
         if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
-            fTexW = fw;
-            fTexH = fh;
+            this->texSize = Vector2D(fw, fh);
         }
     }
     else {
-        fTexW = fTexH = 0.0f; // only zero if no texture
+        this->texSize = Vector2D(0.0f, 0.0f);
     }
 
     //SDL_Point anchor = { texW / 2,texH / 2 };
     mDestRect.x = x;
     mDestRect.y = y;
-    mDestRect.w = (w > 0) ? w : fTexW;
-    mDestRect.h = (h > 0) ? h : fTexH;
+    mDestRect.w = (w > 0) ? w : this->texSize.x;
+    mDestRect.h = (h > 0) ? h : this->texSize.y;
 
     //mDestRect.x = anchor.x - (mDestRect.w / 2);
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
@@ -55,12 +51,11 @@ void SpriteRenderer::initialize() {
 
         float fw, fh;
         if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
-            fTexW = fw;
-            fTexH = fh;
+            this->texSize = Vector2D(fw, fh);
         }
 
-        if (mDestRect.w <= 0) mDestRect.w = fTexW;
-        if (mDestRect.h <= 0) mDestRect.h = fTexH;
+        if (mDestRect.w <= 0) mDestRect.w = this->texSize.x;
+        if (mDestRect.h <= 0) mDestRect.h = this->texSize.y;
 
         std::cout << "[SpriteRenderer] Initialized with texture: " << m_textureKey << std::endl;
     }
@@ -84,11 +79,12 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
     {
         //TODO: fix the rotations. better if we used a transform matrix.
         // size = texture size * owner scale
-        mDestRect.w = (fTexW * owner->getScale().x) / pCam->getScale().x;
-        mDestRect.h = (fTexH * owner->getScale().y) / pCam->getScale().y;
+        mDestRect.w = (this->texSize.x * owner->getScale().x) / pCam->getScale().x;
+        mDestRect.h = (this->texSize.y * owner->getScale().y) / pCam->getScale().y;
 
-        mDestRect.x = (owner->getPos().x - (pivot.x * mDestRect.w) - pCam->getPos().x + 960) / pCam->getScale().x;
-        mDestRect.y = (owner->getPos().y - (pivot.y * mDestRect.h) - pCam->getPos().y + 540) / pCam->getScale().y;
+        Vector2D screenPos = pCam->worldToScreenPoint(owner->getPos()) - (this->texSize * this->pivot);
+        mDestRect.x = screenPos.x;
+        mDestRect.y = screenPos.y;
 
         this->dAngle = owner->getRot() - pCam->getRot();
     }

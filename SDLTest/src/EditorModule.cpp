@@ -1,6 +1,7 @@
 #include "EditorModule.h"
 #include "TextureManager.h"
 #include "GameObjectManager.h"
+#include "RenderSystem.h"
 #include "UIManager.h"
 #include "InspectorScreen.h"
 #include "EngineTime.h"
@@ -18,8 +19,8 @@ void EditorModule::processEditorInput(const SDL_Event* eEvent)
 
     if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
     {
-        this->mousePos = Vector2D(eEvent->motion.x - 960, eEvent->motion.y - 540);
-        std::cout << this->mousePos << "\n";
+        this->mousePos = Vector2D(eEvent->motion.x, eEvent->motion.y);
+        inspector->setMousePos(this->mousePos);
     }
 
     if (eEvent->button.button == 1)
@@ -66,21 +67,26 @@ void EditorModule::updateGameObjects()
 
     if (this->bIsDragging &&
         contains(selected->getPos(), this->mousePos))
-        selected->setPos(this->mousePos);
+    {
+        selected->setPos(this->getMouseWorldPos());
+    }
 }
 
 void EditorModule::drawEditor(SDL_Renderer* pRenderer)
 {
     std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
+    Camera* pCam = RenderSystem::getInstance()->getCamera();
+
     for (auto obj : vecObject)
     {
         SDL_FRect mDestRect {};
         mDestRect.w = this->fTexW;
         mDestRect.h = this->fTexH;
 
-        mDestRect.x = obj->getPos().x - (mDestRect.w * 0.5f) + 960/* - cam->getPos().x*/;
-        mDestRect.y = obj->getPos().y - (mDestRect.h * 0.5f) + 540/* - cam->getbPos().y*/;
-        
+        Vector2D screenPos = pCam->worldToScreenPoint(obj->getPos());
+        mDestRect.x = screenPos.x - (mDestRect.w * 0.5f);
+        mDestRect.y = screenPos.y - (mDestRect.h * 0.5f);
+
         SDL_RenderTexture(pRenderer, this->pWidget, NULL, &mDestRect);
     }
 
@@ -95,14 +101,30 @@ bool EditorModule::contains(Vector2D objPos, Vector2D mousePos)
 {
     if (!this->pWidget) return false;
 
-    SDL_FRect pointRect = { mousePos.x, mousePos.y, 1, 1 };
+    Camera* cam = RenderSystem::getInstance()->getCamera();
+
+    SDL_FRect pointRect = { mousePos.x, mousePos.y, 1, 1};
     SDL_FRect spriteRect = {};
-    spriteRect.x = objPos.x - (fTexW * 0.5f);
-    spriteRect.y = objPos.y - (fTexH * 0.5f);
+    
+    Vector2D objScreenPos = cam->worldToScreenPoint(objPos);
+    std::cout << objPos << " " << objScreenPos << "\n";
+    spriteRect.x = objScreenPos.x - (fTexW * 0.5f);
+    spriteRect.y = objScreenPos.y - (fTexH * 0.5f);
     spriteRect.w = fTexW;
     spriteRect.h = fTexH;
 
     return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
+}
+
+Vector2D EditorModule::getMouseWorldPos() const
+{
+    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Vector2D mouseWorldPos;
+
+    mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
+    mouseWorldPos.y = (-(this->mousePos.y - cam->getPos().y - cam->getHalfHeight())) * cam->getScale().y;
+
+    return mouseWorldPos;
 }
 
 /* * * * * * * * * * * * * * * * * * * * *

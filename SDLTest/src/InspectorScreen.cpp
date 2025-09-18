@@ -14,6 +14,11 @@ AGameObject* InspectorScreen::getSelectedObject()
     return this->selectedObject;
 }
 
+void InspectorScreen::setMousePos(Vector2D mousePos)
+{
+    this->mousePos = mousePos;
+}
+
 InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
 {
 	this->selectedObject = NULL;
@@ -39,21 +44,31 @@ void InspectorScreen::DrawUI()
         SceneManager::getInstance()->loadScene((SceneTag)sceneIndex);
     }
 
+    Camera* cam = RenderSystem::getInstance()->getCamera();
+
+    Vector2D mouseWorldPos;
+    mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
+    mouseWorldPos.y = (-(this->mousePos.y - cam->getPos().y - cam->getHalfHeight())) * cam->getScale().y;
+
+    std::string mousePosText = "Mouse Position: (" + std::to_string((int)mousePos.x) + ", " + std::to_string((int)mousePos.y) + ")";
+    std::string mouseWorldPosText = "Mouse World Position: (" + std::to_string((int)mouseWorldPos.x) + ", " + std::to_string((int)mouseWorldPos.y) + ")";
+    ImGui::Text(mousePosText.c_str());
+    ImGui::Text(mouseWorldPosText.c_str());
+
+    ImGuiChildFlags childFlags =
+        ImGuiChildFlags_Borders |
+        ImGuiChildFlags_AutoResizeY;
+
     ImGui::Spacing();
-    showCamera();
+    showCamera(childFlags);
     ImGui::Spacing();
-    showTransform();
+    showTransform(childFlags);
 
     ImGui::End();
 }
 
-void InspectorScreen::showCamera()
+void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
 {
-    ImGuiChildFlags childFlags =
-        ImGuiChildFlags_Borders |
-        ImGuiChildFlags_AutoResizeX |
-        ImGuiChildFlags_AutoResizeY;
-
     ImGui::BeginChild("Camera", ImVec2(0, 0), childFlags);
     ImGui::Text("Camera");
 
@@ -87,13 +102,8 @@ void InspectorScreen::showCamera()
     ImGui::EndChild();
 }
 
-void InspectorScreen::showTransform()
+void InspectorScreen::showTransform(ImGuiChildFlags childFlags)
 {
-    ImGuiChildFlags childFlags =
-        ImGuiChildFlags_Borders |
-        ImGuiChildFlags_AutoResizeX |
-        ImGuiChildFlags_AutoResizeY;
-
     ImGui::BeginChild("Transform", ImVec2(0, 0), childFlags);
     if (this->selectedObject == NULL)
     {

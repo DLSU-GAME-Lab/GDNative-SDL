@@ -4,9 +4,14 @@
 
 class InspectorScreen : public AUIScreen
 {
+private:
+	AGameObject* selectedObject;
+	Vector2D mousePos;
+
 public:
 	void setSelectedObject(AGameObject* selectedObject);
 	AGameObject* getSelectedObject();
+	void setMousePos(Vector2D mousePos);
 
 protected:
 	InspectorScreen();
@@ -16,9 +21,7 @@ protected:
 	friend class UIManager;
 
 private:
-	AGameObject* selectedObject;
-
-	void showCamera();
-	void showTransform();
+	void showCamera(ImGuiChildFlags childFlags);
+	void showTransform(ImGuiChildFlags childFlags);
 };
 

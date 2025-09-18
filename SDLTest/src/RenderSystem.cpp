@@ -8,6 +8,13 @@
  * * * * * * * * * * * * * * * * * * * * */
 RenderSystem* RenderSystem::P_SHARED_INSTANCE = NULL;
 
+void RenderSystem::updateWindowSize(SDL_Window* pWindow)
+{
+    int w, h;
+    SDL_GetWindowSizeInPixels(pWindow, &w, &h);
+    this->pCamera->setWindowSize(Vector2D(w, h));
+}
+
 void RenderSystem::draw(SDL_Renderer* pRenderer)
 {
     for (auto pSpriteRenderer : this->vecSpriteRenderers)

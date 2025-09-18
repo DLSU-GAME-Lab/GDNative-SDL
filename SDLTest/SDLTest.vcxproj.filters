@@ -138,6 +138,9 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\SceneTransitionManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="include\Camera.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneTransitionManager.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

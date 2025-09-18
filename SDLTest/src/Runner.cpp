@@ -1,4 +1,4 @@
-#define EDITOR_MODE __has_include("EditorModule.h") && 1
+#define EDITOR_MODE __has_include("EditorModule.h") && 0
 
 #if EDITOR_MODE
 #include "EditorModule.h"
@@ -16,6 +16,7 @@
 #include "EnumSceneTag.h"
 #include "Settings.h"
 #include "UIManager.h"
+#include "SceneTransitionManager.h" 
 
 // scenes
 #include "LobbyScene.h"
@@ -74,6 +75,7 @@ Runner::Runner()
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	RenderSystem::initialize();
+	SceneTransitionManager::initialize();
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 
 #if EDITOR_MODE
@@ -97,6 +99,7 @@ Runner::~Runner()
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	EngineTime::destroy();
+	SceneTransitionManager::destroy();
 
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
@@ -130,7 +133,8 @@ void Runner::run()
 				break;
 
 			default:
-#if !EDITOR_MODE
+#if EDITOR_MODE
+#else
 				this->processEvents(&e);
 #endif
 				break;
@@ -139,13 +143,15 @@ void Runner::run()
 
 #if EDITOR_MODE
 		EditorModule::getInstance()->updateGameObjects();
-#elif
+#else
 		this->update();
 #endif
 		
 		this->render();
 
-		SceneManager::getInstance()->checkLoadScene();
+		// scene loading now handled safely after transition
+		if (!SceneTransitionManager::getInstance()->isTransitioning())
+			SceneManager::getInstance()->checkLoadScene();
 
 		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
@@ -161,6 +167,7 @@ void Runner::processEvents(SDL_Event* eEvent)
 void Runner::update()
 {
 	GameObjectManager::getInstance()->update();
+	SceneTransitionManager::getInstance()->update();
 }
 
 void Runner::render()
@@ -175,6 +182,9 @@ void Runner::render()
 #if EDITOR_MODE
 	EditorModule::getInstance()->drawEditor(this->pRenderer);
 #endif
+
+	// draw fade/transition overlay last
+	SceneTransitionManager::getInstance()->draw(this->pRenderer);
 
 	SDL_RenderPresent(this->pRenderer);
 }

@@ -1,5 +1,5 @@
 #include "UIButton.h"
-#include "SceneManager.h"
+#include "SceneTransitionManager.h"
 #include "SpriteRenderer.h"
 #include <iostream>
 
@@ -39,7 +39,12 @@ void UIButton::OnPressed(SDL_MouseButtonEvent eMouseEvent)
 void UIButton::OnReleased(SDL_MouseButtonEvent eMouseEvent)
 {
     std::cout << "[UIButton] Button released: " << this->getName() << std::endl;
-    SceneManager::getInstance()->loadScene(m_eTargetScene); // fixed
+    
+    // fixed
+    SceneTransitionManager::getInstance()->requestTransition(
+        m_eTargetScene,
+        TransitionType::FADE
+    );
 }
 
 void UIButton::OnHovered()

@@ -56,7 +56,7 @@ void Title_Scene::onLoadObjects()
     UIButton* pStartButton = new UIButton(
         "Start_Button_Object",   // object name (can be unique)
         "Start_Button",          // texture key (MUST match TextureManager)
-        Vector2D(-600.f, 0.f),
+        Vector2D(487.f, -430.f),
         Vector2D(0.25f, 0.25f),
         0.0f, false,
         SceneTag::LOBBY_SCENE

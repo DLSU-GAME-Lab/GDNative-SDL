@@ -18,6 +18,7 @@ protected:
 private:
 	AGameObject* selectedObject;
 
+	void showCamera();
 	void showTransform();
 };
 

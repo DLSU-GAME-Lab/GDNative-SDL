@@ -18,7 +18,8 @@ void EditorModule::processEditorInput(const SDL_Event* eEvent)
 
     if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
     {
-        this->mousePos = Vector2D(eEvent->motion.x, eEvent->motion.y);
+        this->mousePos = Vector2D(eEvent->motion.x - 960, eEvent->motion.y - 540);
+        std::cout << this->mousePos << "\n";
     }
 
     if (eEvent->button.button == 1)
@@ -28,11 +29,12 @@ void EditorModule::processEditorInput(const SDL_Event* eEvent)
             this->bIsHolding = true;
 
             std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-            for (int i = 1; i < vecObject.size(); i++)
+            for (auto obj : vecObject)
             {
-                if (contains(vecObject[i]->getPos(), this->mousePos))
+                if (inspector->getSelectedObject() != obj &&
+                    contains(obj->getPos(), this->mousePos))
                 {
-                    inspector->setSelectedObject(vecObject[i]);
+                    inspector->setSelectedObject(obj);
                 }
             }
         }
@@ -62,21 +64,22 @@ void EditorModule::updateGameObjects()
         }
     }
 
-    if (this->bIsDragging) selected->setPos(this->mousePos);
+    if (this->bIsDragging &&
+        contains(selected->getPos(), this->mousePos))
+        selected->setPos(this->mousePos);
 }
 
 void EditorModule::drawEditor(SDL_Renderer* pRenderer)
 {
     std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-    Camera* cam = (Camera*)GameObjectManager::getInstance()->findObjectByName("Game Camera")->findComponentByName("Camera");
-    for (int i = 1; i < vecObject.size(); i++)
+    for (auto obj : vecObject)
     {
         SDL_FRect mDestRect {};
         mDestRect.w = this->fTexW;
         mDestRect.h = this->fTexH;
 
-        mDestRect.x = vecObject[i]->getPos().x - (mDestRect.w * 0.5f)/* - cam->getPos().x*/;
-        mDestRect.y = vecObject[i]->getPos().y - (mDestRect.h * 0.5f)/* - cam->getPos().y*/;
+        mDestRect.x = obj->getPos().x - (mDestRect.w * 0.5f) + 960/* - cam->getPos().x*/;
+        mDestRect.y = obj->getPos().y - (mDestRect.h * 0.5f) + 540/* - cam->getbPos().y*/;
         
         SDL_RenderTexture(pRenderer, this->pWidget, NULL, &mDestRect);
     }

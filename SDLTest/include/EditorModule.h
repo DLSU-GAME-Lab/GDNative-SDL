@@ -11,7 +11,7 @@ private:
     float fTexW = 64.0f;
     float fTexH = 64.0f;
 
-    const double D_MAX_DRAG_TICKS = 0.1;
+    const double D_MAX_DRAG_TICKS = 0.2;
     double dTicks = 0.0;
     bool bIsDragging = false;
     bool bIsHolding = false;

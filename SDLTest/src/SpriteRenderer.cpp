@@ -87,8 +87,8 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
         mDestRect.w = (fTexW * owner->getScale().x) / pCam->getScale().x;
         mDestRect.h = (fTexH * owner->getScale().y) / pCam->getScale().y;
 
-        mDestRect.x = (owner->getPos().x - (pivot.x * mDestRect.w) - pCam->getPos().x) / pCam->getScale().x;
-        mDestRect.y = (owner->getPos().y - (pivot.y * mDestRect.h) - pCam->getPos().y) / pCam->getScale().y;
+        mDestRect.x = (owner->getPos().x - (pivot.x * mDestRect.w) - pCam->getPos().x + 960) / pCam->getScale().x;
+        mDestRect.y = (owner->getPos().y - (pivot.y * mDestRect.h) - pCam->getPos().y + 540) / pCam->getScale().y;
 
         this->dAngle = owner->getRot() - pCam->getRot();
     }

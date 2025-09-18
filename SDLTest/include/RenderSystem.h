@@ -17,6 +17,8 @@ public:
     void registerSpriteRenderer(SpriteRenderer* pSpriteRenderer);
     void unregisterSpriteRenderer(SpriteRenderer* pSpriteRenderer);
 
+    Camera* getCamera();
+
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *
      * * * * * * * * * * * * * * * * * * * * */

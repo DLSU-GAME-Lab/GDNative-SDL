@@ -138,9 +138,6 @@
     <ClCompile Include="src\Camera.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameCamera.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -265,9 +262,6 @@
     </ClInclude>
     <ClInclude Include="include\Camera.h">
       <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameCamera.h">
-      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

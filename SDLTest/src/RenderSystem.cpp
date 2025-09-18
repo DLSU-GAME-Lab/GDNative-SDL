@@ -1,7 +1,6 @@
 #include "RenderSystem.h"
 #include "SpriteRenderer.h"
-#include "GameCamera.h"
-#include "GameObjectManager.h"
+#include "Camera.h"
 #include <iostream>
 
 /* * * * * * * * * * * * * * * * * * * * *
@@ -39,13 +38,16 @@ void RenderSystem::unregisterSpriteRenderer(SpriteRenderer * pSpriteRenderer)
     }
 }
 
+Camera* RenderSystem::getCamera()
+{
+    return this->pCamera;
+}
+
 void RenderSystem::initialize()
 {
     P_SHARED_INSTANCE = new RenderSystem();
 
-    GameCamera* cam = new GameCamera();
-    GameObjectManager::getInstance()->addObject(cam);
-    P_SHARED_INSTANCE->pCamera = (Camera*)cam->findComponentByName("Camera");
+    P_SHARED_INSTANCE->pCamera = new Camera();
 }
 
 void RenderSystem::destroy()

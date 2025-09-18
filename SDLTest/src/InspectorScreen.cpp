@@ -1,6 +1,7 @@
 #include "InspectorScreen.h"
 #include "SceneManager.h"
 #include "GameObjectManager.h"
+#include "RenderSystem.h"
 #include <cmath>
 
 void InspectorScreen::setSelectedObject(AGameObject* selectedObject)
@@ -38,17 +39,62 @@ void InspectorScreen::DrawUI()
         SceneManager::getInstance()->loadScene((SceneTag)sceneIndex);
     }
 
-    if (ImGui::BeginChild("Transform", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AutoResizeY))
+    ImGui::Spacing();
+    showCamera();
+    ImGui::Spacing();
+    showTransform();
+
+    ImGui::End();
+}
+
+void InspectorScreen::showCamera()
+{
+    ImGuiChildFlags childFlags =
+        ImGuiChildFlags_Borders |
+        ImGuiChildFlags_AutoResizeX |
+        ImGuiChildFlags_AutoResizeY;
+
+    ImGui::BeginChild("Camera", ImVec2(0, 0), childFlags);
+    ImGui::Text("Camera");
+
+    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Vector2D pos = cam->getPos();
+    float rot = cam->getRot();
+    Vector2D scale = cam->getScale();
+
+    float scenePos[] = { pos.x, pos.y };
+    float sceneRot = rot;
+    float sceneScale[] = { scale.x, scale.y };
+    
+    
+    if (ImGui::InputFloat2("Position", scenePos) &&
+        ImGui::IsItemDeactivatedAfterEdit())
     {
-        this->showTransform();
-        ImGui::EndChild();
+        cam->setPos(Vector2D(scenePos[0], scenePos[1]));
     }
 
-	ImGui::End();
+    //if (ImGui::InputFloat("Rotation", &sceneRot) &&
+    //    ImGui::IsItemDeactivatedAfterEdit())
+    //{
+    //    cam->setRot(sceneRot);
+    //}
+
+    //if (ImGui::InputFloat2("Scale", sceneScale) &&
+    //    ImGui::IsItemDeactivatedAfterEdit())
+    //{
+    //    cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
+    //}
+    ImGui::EndChild();
 }
 
 void InspectorScreen::showTransform()
 {
+    ImGuiChildFlags childFlags =
+        ImGuiChildFlags_Borders |
+        ImGuiChildFlags_AutoResizeX |
+        ImGuiChildFlags_AutoResizeY;
+
+    ImGui::BeginChild("Transform", ImVec2(0, 0), childFlags);
     if (this->selectedObject == NULL)
     {
         ImGui::Text("No game object selected.");
@@ -82,4 +128,5 @@ void InspectorScreen::showTransform()
             this->selectedObject->setScale(Vector2D(sceneScale[0], sceneScale[1]));
         }
     }
+    ImGui::EndChild();
 }

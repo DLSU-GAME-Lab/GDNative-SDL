@@ -85,16 +85,16 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
 
         if (owner->getIsScreenObject())
         {
-            screenPos = owner->getPos();
+            screenPos = owner->getPos() + screenSize;
         }
         else
         {
-            screenPos = pCam->worldToScreenPoint(owner->getPos());
             screenSize /= pCam->getScale();
+            screenPos = pCam->worldToScreenPoint(owner->getPos());
             this->dAngle -= pCam->getRot();
         }
 
-        screenPos -= this->texSize * this->pivot;
+        screenPos -= screenSize * this->pivot;
 
         mDestRect.x = screenPos.x;
         mDestRect.y = screenPos.y;

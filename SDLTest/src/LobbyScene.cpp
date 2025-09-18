@@ -53,32 +53,32 @@ void LobbyScene::onLoadObjects()
 	Background* pBackground = new Background("Lobby_Background", "Lobby_Background", Vector2D(0.33f, 0.4f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
-	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(600.f, 530.f), Vector2D(1.25f, 1.25f), 0, false);
+	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
 
-	Player* pPlayer = new Player(Vector2D(500.f, 630.f), Vector2D(1.f, 1.f), 0.0f);
+	Player* pPlayer = new Player(Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
 
-	Librarian* pLibrarian = new Librarian(Vector2D(1000.f, 350.f), Vector2D(1.f, 1.f), 0.0f);
+	Librarian* pLibrarian = new Librarian(Vector2D(450, -140), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
 
-	Fairy* pFairy = new Fairy(Vector2D(350, 500),Vector2D(1.f,1.f), 0.0f);
+	Fairy* pFairy = new Fairy(Vector2D(250, -140),Vector2D(1.f,1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
 
-	Prop* pLamps = new Prop("Lamps", "Lamps", Vector2D(0, 0), Vector2D(1.f, 1.f), 0, false);
+	Prop* pLamps = new Prop("Lamps", "Lamps", Vector2D(-550, 350), Vector2D(1.f, 1.f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLamps);
 
 
-	Prop* pChair = new Prop("Chair", "Chair", Vector2D(0, 750.f), Vector2D(0.75f, 0.75f), 0, false);
+	Prop* pChair = new Prop("Chair", "Chair", Vector2D(-600,-365), Vector2D(0.75f, 0.75f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pChair);
 
-	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(1000.f, 650.f), Vector2D(1.25f, 1.25f), 0, false);
+	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
 
-	UIButton* pButtonRight = new UIButton("Button_Right", "Button", Vector2D(1675.f, 450.f), Vector2D(0.25f, 0.25f), 0.0f, true, SceneTag::TITLE_SCENE);
+	UIButton* pButtonRight = new UIButton("Button_Right", "Button", Vector2D(800, 0), Vector2D(0.25f, 0.25f), 0.0f, true, SceneTag::RIGHT_ROOM_SCENE);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pButtonRight);
 
-	UIButton* pButtonLeft = new UIButton("Button_Left", "Button", Vector2D(100.f, 450.f), Vector2D(0.25f, 0.25f), 0.0f, true, SceneTag::TITLE_SCENE);
+	UIButton* pButtonLeft = new UIButton("Button_Left", "Button", Vector2D(-800, 0), Vector2D(0.25f, 0.25f), 0.0f, true, SceneTag::LEFT_ROOM_SCENE);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pButtonLeft);
 	SpriteRenderer* pRenderer = (SpriteRenderer*)pButtonLeft->findComponentByName("SpriteRenderer");
 	pRenderer->setFlipX(true);

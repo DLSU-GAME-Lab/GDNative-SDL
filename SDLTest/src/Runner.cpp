@@ -1,4 +1,4 @@
-#define EDITOR_MODE __has_include("EditorModule.h") && 1
+#define EDITOR_MODE __has_include("EditorModule.h") && 0
 
 #if EDITOR_MODE
 #include "EditorModule.h"
@@ -20,6 +20,7 @@
 // scenes
 #include "LobbyScene.h"
 #include "Title_Scene.h"
+#include "RightRoomScene.h"
 
 Runner::Runner()
 {
@@ -166,9 +167,11 @@ void Runner::registerScenes()
 {
 	auto titleScene = new Title_Scene();
 	auto lobbyScene = new LobbyScene();
+	auto rightRoomScene = new RightRoomScene();
 
 	SceneManager::getInstance()->registerScene(titleScene);
 	SceneManager::getInstance()->registerScene(lobbyScene);
+	SceneManager::getInstance()->registerScene(rightRoomScene);
 
 	//load initial scene
 	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);

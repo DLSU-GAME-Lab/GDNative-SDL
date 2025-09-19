@@ -59,6 +59,7 @@ void Level_2_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Design_BG");
 	TextureManager::getInstance()->unload("Level_Container");
 	TextureManager::getInstance()->unload("Top_UI_Container");
+	TextureManager::getInstance()->unload("Level_Container_Extra");
 
 }
 

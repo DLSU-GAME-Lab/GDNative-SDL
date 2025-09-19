@@ -6,6 +6,7 @@ Background::Background(const std::string& strName, const std::string& strImageNa
     : AGameObject(strName), strImageName(strImageName)
 {
     this->fVecScale = fVecScale;
+    this->fRot = 0.f;
 }
 
 Background::~Background()

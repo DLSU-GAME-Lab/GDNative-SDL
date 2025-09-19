@@ -53,11 +53,13 @@ void Level_3_Scene::onLoadObjects()
 void Level_3_Scene::onUnloadResources()
 {
 	TextureManager::getInstance()->unload("Level_Background");
-	TextureManager::getInstance()->unload("Lower_UI_Container");
+	TextureManager::getInstance()->unload("UI_Container");
 	TextureManager::getInstance()->unload("Settings");
 	TextureManager::getInstance()->unload("Design_BG");
 	TextureManager::getInstance()->unload("Level_Container");
 	TextureManager::getInstance()->unload("Top_UI_Container");
+	TextureManager::getInstance()->unload("Level_Container_Extra");
+
 
 }
 

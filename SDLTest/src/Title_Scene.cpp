@@ -25,11 +25,72 @@ void Title_Scene::onLoadResources()
     TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Green.png", "Green");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "Button_Container");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_LevelEntry_Bg.png", "Level_Button");
+    TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
 }
 
 void Title_Scene::onLoadObjects()
 {
-    
+    Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(70.f, 1.17f));
+    GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
+
+    Prop* pObjectBG = new Prop("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
+
+    Prop* pLogo = new Prop("Title_Logo", "Title_Logo",Vector2D(0, 200), Vector2D(0.5f, 0.35f), 0.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pLogo);
+
+    Prop* pYellow = new Prop("Yellow", "Yellow", Vector2D(-320, 300), Vector2D(.35f, .35f), -45, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pYellow);
+
+    Prop* pFish = new Prop("Fish", "Fish", Vector2D(-450, 150), Vector2D(.35f, .35f), 25.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pFish);
+
+    Prop* pPurple = new Prop("Purple", "Purple", Vector2D(470, 360), Vector2D(.35f, .35f), 45.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pPurple);
+
+    Prop* pRed = new Prop("Red", "Red", Vector2D(450, 150), Vector2D(.35f, .35f), 0.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pRed);
+
+    Prop* pWhite = new Prop("White", "White", Vector2D(-420, 450), Vector2D(.35f, .35f), 0.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pWhite);
+
+    Prop* pGreen = new Prop("Green", "Green", Vector2D(350, 200), Vector2D(.35f, .35f), 0.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pGreen);
+
+    Prop* pLevelSelect = new Prop("Level_Select", "Button_Container", Vector2D(0, -240), Vector2D(7, 3), 0.0f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pLevelSelect);
+
+
+    UIButton* pLevelOne = new UIButton(
+        "Level_1_Button",   // object name (can be unique)
+        "Level_Button",          // texture key (MUST match TextureManager)
+        Vector2D(-360, -230),
+        Vector2D(2.f, 2.f),
+        0.0f, false,
+        SceneTag::LEVEL_1_SCENE
+    );
+    GameObjectManager::getInstance()->addObject((AGameObject*)pLevelOne);
+
+    UIButton* pLevelTwo = new UIButton(
+        "Level_2_Button",   // object name (can be unique)
+        "Level_Button",          // texture key (MUST match TextureManager)
+        Vector2D(0, -230),
+        Vector2D(2.f, 2.f),
+        0.0f, false,
+        SceneTag::LEVEL_2_SCENE
+    );
+    GameObjectManager::getInstance()->addObject((AGameObject*)pLevelTwo);
+
+    UIButton* pLevelThree = new UIButton(
+        "Level_3_Button",   // object name (can be unique)
+        "Level_Button",          // texture key (MUST match TextureManager)
+        Vector2D(360, -230),
+        Vector2D(2.f, 2.f),
+        0.0f, false,
+        SceneTag::LEVEL_3_SCENE
+    );
+    GameObjectManager::getInstance()->addObject((AGameObject*)pLevelThree);
+
 }
 
 void Title_Scene::onUnloadResources()

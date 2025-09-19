@@ -149,7 +149,6 @@
     <ClCompile Include="src\Level_3_Scene.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
-    <ClCompile Include="src\LeftRoomScene.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -159,7 +158,6 @@
     <ClCompile Include="src\Librarian.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\RightRoomScene.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
@@ -203,10 +201,8 @@
     <ClInclude Include="include\Level_3_Scene.h" />
     <ClInclude Include="include\GUIManager.h" />
     <ClInclude Include="include\InspectorScreen.h" />
-    <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\Player.h" />
-    <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />

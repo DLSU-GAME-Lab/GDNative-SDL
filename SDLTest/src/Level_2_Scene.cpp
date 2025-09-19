@@ -12,6 +12,10 @@ void Level_2_Scene::onLoadResources()
 	TextureManager::getInstance()->load("Menu/Sprite_UI_setupicon.png", "Settings");
 	TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
 	TextureManager::getInstance()->load("levels/Level_2.png", "Level_Container");
+	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
+	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
+
+
 
 
 }
@@ -30,8 +34,11 @@ void Level_2_Scene::onLoadObjects()
 	Prop* pLowerUIContainer = new Prop("Lower_UI_Container", "UI_Container", Vector2D(0, -540), Vector2D(20, 2.f), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLowerUIContainer);
 
-	Prop* pUpperUIContainer = new Prop("Upper_UI_Container", "UI_Container", Vector2D(0, 520), Vector2D(20, 2.f), 0.0f, false);
+	Prop* pUpperUIContainer = new Prop("Upper_UI_Container", "Top_UI_Container", Vector2D(0, 520), Vector2D(500, 1.f), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pUpperUIContainer);
+
+	Prop* pUIContainerExtra = new Prop("Level_Container_Extra", "Level_Container_Extra", Vector2D(0, 547), Vector2D(1, 1), 0.0f, false);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pUIContainerExtra);
 
 	UIButton* pSettings = new UIButton(
 		"Settings",   // object name (can be unique)
@@ -51,6 +58,8 @@ void Level_2_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Settings");
 	TextureManager::getInstance()->unload("Design_BG");
 	TextureManager::getInstance()->unload("Level_Container");
+	TextureManager::getInstance()->unload("Top_UI_Container");
+
 }
 
 void Level_2_Scene::onUnloadObjects()

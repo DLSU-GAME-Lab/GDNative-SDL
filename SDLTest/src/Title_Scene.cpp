@@ -18,11 +18,11 @@ void Title_Scene::onLoadResources()
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_bg.png", "Title_Background");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_GemHunterMatch_Logo.png", "Title_Logo");
     TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Yellow.png", "Yellow");
-    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Blue.png", "Fish");
-    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Purple.png", "Purple");
-    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Red.png", "Red");
-    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_White.png", "White");
-    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Green.png", "Green");
+    TextureManager::getInstance()->load("gems/SP_Gem_Blue.png", "Blue");
+    TextureManager::getInstance()->load("gems/SP_Gem_Purple.png", "Purple");
+    TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "Red");
+    TextureManager::getInstance()->load("gems/SP_Gem_White.png", "White");
+    TextureManager::getInstance()->load("gems/SP_Gem_Green.png", "Green");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "Button_Container");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_LevelEntry_Bg.png", "Level_Button");
     TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
@@ -42,7 +42,7 @@ void Title_Scene::onLoadObjects()
     Prop* pYellow = new Prop("Yellow", "Yellow", Vector2D(-320, 300), Vector2D(.35f, .35f), -45, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pYellow);
 
-    Prop* pFish = new Prop("Fish", "Fish", Vector2D(-450, 150), Vector2D(.35f, .35f), 25.0f, false);
+    Prop* pFish = new Prop("Blue", "Blue", Vector2D(-450, 150), Vector2D(.35f, .35f), 25.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pFish);
 
     Prop* pPurple = new Prop("Purple", "Purple", Vector2D(470, 360), Vector2D(.35f, .35f), 45.0f, false);
@@ -98,7 +98,7 @@ void Title_Scene::onUnloadResources()
     TextureManager::getInstance()->unload("Title_Background");
     TextureManager::getInstance()->unload("Title_Logo");
     TextureManager::getInstance()->unload("Yellow");
-    TextureManager::getInstance()->unload("Fish");
+    TextureManager::getInstance()->unload("Blue");
     TextureManager::getInstance()->unload("Green");
     TextureManager::getInstance()->unload("Purple");
     TextureManager::getInstance()->unload("Red");

@@ -7,7 +7,7 @@ Level_1_Scene::Level_1_Scene():AScene(SceneTag::LEVEL_1_SCENE)
 void Level_1_Scene::onLoadResources()
 {
 	TextureManager::getInstance()->load("title_screen_pngs/Sprite_bg.png", "Level_Background");
-	TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "Lower_UI_Container");
+	TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "UI_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_setupicon.png", "Settings");
 	TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
 	TextureManager::getInstance()->load("levels/Level_1.png", "Level_Container");
@@ -28,8 +28,11 @@ void Level_1_Scene::onLoadObjects()
 	Prop* pLevelContainer = new Prop("Level_Container", "Level_Container", Vector2D(0, -20), Vector2D(2, 2), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLevelContainer);
 
-	Prop* pLowerUIContainer = new Prop("Lower_UI_Container", "Lower_UI_Container", Vector2D(0, -540), Vector2D(20, 2.f), 0.0f, false);
+	Prop* pLowerUIContainer = new Prop("Lower_UI_Container", "UI_Container", Vector2D(0, -540), Vector2D(20, 2.f), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLowerUIContainer);
+
+	Prop* pUpperUIContainer = new Prop("Upper_UI_Container", "UI_Container", Vector2D(0, 520), Vector2D(20, 2.f), 0.0f, false);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pUpperUIContainer);
 
 	UIButton* pSettings = new UIButton(
 		"Settings",   // object name (can be unique)

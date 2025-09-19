@@ -8,7 +8,7 @@ Level_3_Scene::Level_3_Scene():AScene(SceneTag::LEVEL_3_SCENE)
 void Level_3_Scene::onLoadResources()
 {
 	TextureManager::getInstance()->load("title_screen_pngs/Sprite_bg.png", "Level_Background");
-	TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "Lower_UI_Container");
+	TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "UI_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_setupicon.png", "Settings");
 	TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
 	TextureManager::getInstance()->load("levels/Level_3.png", "Level_Container");
@@ -28,6 +28,9 @@ void Level_3_Scene::onLoadObjects()
 
 	Prop* pLowerUIContainer = new Prop("Lower_UI_Container", "Lower_UI_Container", Vector2D(0, -540), Vector2D(20, 2.f), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLowerUIContainer);
+
+	Prop* pUpperUIContainer = new Prop("Upper_UI_Container", "UI_Container", Vector2D(0, 520), Vector2D(20, 2.f), 0.0f, false);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pUpperUIContainer);
 
 
 	UIButton* pSettings = new UIButton(

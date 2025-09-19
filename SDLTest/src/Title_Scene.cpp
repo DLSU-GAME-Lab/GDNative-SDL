@@ -105,6 +105,7 @@ void Title_Scene::onUnloadResources()
     TextureManager::getInstance()->unload("White");
     TextureManager::getInstance()->unload("Button_Container");
     TextureManager::getInstance()->unload("Level_Button");
+    TextureManager::getInstance()->unload("Design_BG");
 }
 
 void Title_Scene::onUnloadObjects()

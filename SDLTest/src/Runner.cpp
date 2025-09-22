@@ -16,6 +16,7 @@
 #include "Settings.h"
 #include "UIManager.h"
 #include "SceneTransitionManager.h" 
+#include "FontManager.h"
 
 // scenes
 #include "LobbyScene.h"
@@ -75,6 +76,7 @@ Runner::Runner()
 	TextureManager::initialize(this->pRenderer);
 	RenderSystem::initialize();
 	SceneTransitionManager::initialize();
+	FontManager::initialize();
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 
 #if EDITOR_MODE

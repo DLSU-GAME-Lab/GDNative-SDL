@@ -104,13 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)SDLTest\SDL\lib\x64;$(SolutionDir)SDLTest\SDL3_image-3.2.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL3.lib;SDL3_test.lib;SDL3_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)SDLTest\SDL\lib\x64;$(SolutionDir)SDLTest\SDL3_image-3.2.4\lib\x64;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL3.lib;SDL3_test.lib;SDL3_image.lib;SDL3_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,6 +145,7 @@
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\AGeneralInput.cpp" />
+    <ClCompile Include="src\FontManager.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
@@ -195,6 +197,7 @@
     <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\Fairy.h" />
+    <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\AGeneralInput.h" />
     <ClInclude Include="include\Grid.h" />

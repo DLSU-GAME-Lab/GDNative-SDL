@@ -10,9 +10,6 @@
     <Filter Include="Component">
       <UniqueIdentifier>{f3599f81-6152-4bfb-8ca9-f22c74f95f8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{6541477a-7151-4488-9518-b845ae41fc80}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{6763a1c5-fb3c-4102-bdea-d725d5feb8ef}</UniqueIdentifier>
     </Filter>
@@ -28,6 +25,12 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{8158b3ad-3af1-4797-a9f6-4ba416319dad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Singleton">
+      <UniqueIdentifier>{6541477a-7151-4488-9518-b845ae41fc80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{76f614af-993e-49bf-a98d-fe76b87014db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -37,10 +40,10 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObjectManager.cpp">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureManager.cpp">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\AComponent.cpp">
       <Filter>Component</Filter>
@@ -64,10 +67,10 @@
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneManager.cpp">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\RenderSystem.cpp">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\AScene.cpp">
       <Filter>Scene</Filter>
@@ -133,16 +136,28 @@
       <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineTime.cpp">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneTransitionManager.cpp">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\RightRoomScene.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EmptyObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LeftRoomScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUIManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Grid.cpp">
+      <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,10 +165,10 @@
       <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="include\GameObjectManager.h">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\TextureManager.h">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\AComponent.h">
       <Filter>Component</Filter>
@@ -177,10 +192,10 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\SceneManager.h">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\RenderSystem.h">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumSceneTag.h">
       <Filter>Enum</Filter>
@@ -264,16 +279,28 @@
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="include\EngineTime.h">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\Camera.h">
       <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="include\SceneTransitionManager.h">
-      <Filter>System</Filter>
+      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\RightRoomScene.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EmptyObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LeftRoomScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Grid.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

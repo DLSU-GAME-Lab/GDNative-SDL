@@ -33,7 +33,7 @@ public:
 
 private:
     void processEvents(SDL_Event* eEvent);
-    void update();
+    void update(float fDeltaTime);
     void render();
 
 private:

@@ -1,4 +1,6 @@
 #include "AGameObject.h"
+#include "AGeneralInput.h"
+#include "RenderSystem.h"
 #include <iostream>
 
 AGameObject::AGameObject(std::string strName)
@@ -15,22 +17,35 @@ AGameObject::AGameObject(std::string strName)
 
 void AGameObject::processInput(SDL_Event* eEvent)
 {
-
-}
-
-void AGameObject::update()
-{
-    for (AComponent* pComponent : this->vecComponent)
+    auto vecInput = this->getComponentsRecursively(ComponentType::INPUT);
+    for (AComponent* pComponent : vecInput)
     {
-        pComponent->perform();
+        AGeneralInput* input = (AGeneralInput*)pComponent;
+        input->setEvent(eEvent);
+        input->perform();
     }
 
-    //TODO: update children
 }
 
-void AGameObject::draw(SDL_Window * pWindow)
+void AGameObject::update(float fDeltaTime)
 {
+    auto vecScript = this->getComponentsRecursively(ComponentType::SCRIPT);
+    for (AComponent* pComponent : vecScript)
+    {
+        pComponent->setDeltaTime(fDeltaTime);
+        pComponent->perform();
+    }
+}
 
+void AGameObject::draw(SDL_Renderer* pRenderer)
+{
+    auto vecRenderer = this->getComponentsRecursively(ComponentType::RENDERER);
+    for (AComponent* pComponent : vecRenderer)
+    {
+        SpriteRenderer* renderer = (SpriteRenderer*)pComponent;
+        renderer->draw(pRenderer, RenderSystem::getInstance()->getCamera());
+        pComponent->perform();
+    }
 }
 
 void AGameObject::attachChild(AGameObject * pChild)

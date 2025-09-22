@@ -10,20 +10,21 @@ void GameObjectManager::processInput(SDL_Event* eEvent)
     }
 }
 
-void GameObjectManager::update() {
-    for(AGameObject* pGameObject : this->vecGameObject)
-    {
-        if(pGameObject->isEnabled()/* && !GameStateManager::getInstance()->isPaused()*/)
-            pGameObject->update();
-    }
-}
-
-void GameObjectManager::draw(SDL_Window* pWindow)
+void GameObjectManager::update(float fDeltaTime)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
     {
         if(pGameObject->isEnabled())
-            pGameObject->draw(pWindow);
+            pGameObject->update(fDeltaTime);
+    }
+}
+
+void GameObjectManager::draw(SDL_Renderer* pRenderer)
+{
+    for(AGameObject* pGameObject : this->vecGameObject)
+    {
+        if(pGameObject->isEnabled())
+            pGameObject->draw(pRenderer);
     }
 }
 

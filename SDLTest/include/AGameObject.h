@@ -2,7 +2,6 @@
 
 #include "AComponent.h"
 #include "SpriteRenderer.h"
-#include <SDL3/SDL.h>
 #include "Vector2D.h"
 #include <vector>
 
@@ -29,8 +28,8 @@ public:
 public:
     virtual void initialize() = 0;
     virtual void processInput(SDL_Event* eEvent);
-    virtual void update();
-    virtual void draw(SDL_Window* pWindow);
+    virtual void update(float fDeltaTime);
+    virtual void draw(SDL_Renderer* pRenderer);
 
 public:
     void attachChild(AGameObject* pChild);

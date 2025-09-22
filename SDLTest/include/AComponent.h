@@ -12,6 +12,7 @@ protected:
     AGameObject* pOwner;
     ComponentType EType;
     std::string strName;
+    float fDeltaTime;
 
 public:
     AComponent(std::string strName, ComponentType EType);
@@ -25,6 +26,7 @@ public:
     virtual void perform() = 0;
 
 public:
+    void setDeltaTime(float fDeltaTime);
     AGameObject* getOwner();
     ComponentType getType() const;
     std::string getName() const;

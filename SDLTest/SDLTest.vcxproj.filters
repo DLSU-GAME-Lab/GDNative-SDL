@@ -135,9 +135,6 @@
     <ClCompile Include="src\EditorModule.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\EngineTime.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
     <ClCompile Include="src\Camera.cpp">
       <Filter>Component</Filter>
     </ClCompile>
@@ -157,6 +154,9 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="src\Grid.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AGeneralInput.cpp">
       <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>
@@ -278,9 +278,6 @@
     <ClInclude Include="include\EditorModule.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\EngineTime.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
     <ClInclude Include="include\Camera.h">
       <Filter>Component</Filter>
     </ClInclude>
@@ -300,6 +297,9 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="include\Grid.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AGeneralInput.h">
       <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>

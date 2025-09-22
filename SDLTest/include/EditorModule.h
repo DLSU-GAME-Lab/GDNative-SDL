@@ -23,7 +23,7 @@ namespace Editor
 
     public:
         void processEditorInput(const SDL_Event* eEvent);
-        void updateGameObjects();
+        void updateGameObjects(float fDeltaTime);
         void drawEditor(SDL_Renderer* pRenderer);
 
     private:

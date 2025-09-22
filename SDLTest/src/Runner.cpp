@@ -1,4 +1,4 @@
-#define EDITOR_MODE __has_include("EditorModule.h") && 1
+#define EDITOR_MODE __has_include("EditorModule.h") && 0
 
 #if EDITOR_MODE
 #include "EditorModule.h"
@@ -7,7 +7,6 @@
 #include "Runner.h"
 #include "algorithm"
 
-#include "EngineTime.h"
 #include "TextureManager.h"
 #include "RenderSystem.h"
 #include "GameObjectManager.h"
@@ -71,7 +70,6 @@ Runner::Runner()
 	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
 	//initialize systems
-	EngineTime::initialize();
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
@@ -99,7 +97,6 @@ Runner::~Runner()
 	RenderSystem::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
-	EngineTime::destroy();
 	SceneTransitionManager::destroy();
 
 	SDL_DestroyRenderer(this->pRenderer);
@@ -109,11 +106,11 @@ Runner::~Runner()
 void Runner::run()
 {
 	bool running = true;
+	Uint64 lastTime = 0;
+	Uint64 currentTime = 0;
 
 	while (running)
 	{
-		EngineTime::getInstance()->logFrame();
-
 		// process all pending events
 		SDL_Event e;
 
@@ -142,10 +139,14 @@ void Runner::run()
 			}
 		}
 
+		lastTime = currentTime;
+		currentTime = SDL_GetTicks();
+		float fDeltaTime = (currentTime - lastTime) / 1000.0f;
+
 #if EDITOR_MODE
-		Editor::EditorModule::getInstance()->updateGameObjects();
+		Editor::EditorModule::getInstance()->updateGameObjects(fDeltaTime);
 #else
-		this->update();
+		this->update(fDeltaTime);
 #endif
 		
 		this->render();
@@ -154,7 +155,7 @@ void Runner::run()
 		if (!SceneTransitionManager::getInstance()->isTransitioning())
 			SceneManager::getInstance()->checkLoadScene();
 
-		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
+		Uint64 frameTime = SDL_GetTicks() - currentTime;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
 	}
 }
@@ -165,9 +166,9 @@ void Runner::processEvents(SDL_Event* eEvent)
 	GameObjectManager::getInstance()->processInput(eEvent);
 }
 
-void Runner::update()
+void Runner::update(float fDeltaTime)
 {
-	GameObjectManager::getInstance()->update();
+	GameObjectManager::getInstance()->update(fDeltaTime);
 	SceneTransitionManager::getInstance()->update();
 }
 
@@ -178,7 +179,7 @@ void Runner::render()
 	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(pRenderer);
 
-	RenderSystem::getInstance()->draw(this->pRenderer);
+	GameObjectManager::getInstance()->draw(this->pRenderer);
 
 #if EDITOR_MODE
 	Editor::EditorModule::getInstance()->drawEditor(this->pRenderer);

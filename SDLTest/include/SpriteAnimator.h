@@ -18,8 +18,8 @@ private:
 	AnimationType EType;
 
 	unsigned int nFrameIndex;
-	unsigned int nTicks;
-	unsigned int nTicksPerFrame;
+	float fTicks;
+	float fTicksPerFrame;
 
 public:
 	SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFrameRate);

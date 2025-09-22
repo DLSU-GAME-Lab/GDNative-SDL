@@ -12,14 +12,14 @@ TTF_Font* FontManager::getFont(std::string strFontName)
     
 }
 
-void FontManager::loadFont(std::string strItem, std::string strName)
+void FontManager::loadFont(std::string strItem, std::string strName, int dFontSize)
 {
     std::string strPath = "Assets/Fonts/" + strItem;
     // DEBUG: print what path is being loaded
     std::cout << "[DEBUG] Attempting to load font: " << strPath << std::endl;
     
     TTF_Font* fontLoad;
-    if (fontLoad = TTF_OpenFont(strPath.c_str(), 28) ; fontLoad == nullptr)
+    if (fontLoad = TTF_OpenFont(strPath.c_str(), dFontSize) ; fontLoad == nullptr)
     {
         std::cout << "[ERROR] : Font[" << strName << "] could not be loaded. " << SDL_GetError() << std::endl;
     }
@@ -30,6 +30,7 @@ void FontManager::unloadFont(std::string strName)
 {
     TTF_CloseFont(this->mapFonts[strName]);
     this->mapFonts.erase(strName);
+    std::cout << "Font: " << strName << " Unloaded" << std::endl;
 }
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *

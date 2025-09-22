@@ -6,7 +6,8 @@
 #include "EnumSceneTag.h"
 #include "AnimatedSprite.h"
 #include "FontManager.h"
-
+#include "Settings.h"
+#include "Text.h"
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
 {
@@ -35,7 +36,8 @@ void Title_Scene::onLoadResources()
         std::string strPath = "animations/title_scene/librarian/Set" + std::to_string(i) + ".png";
         TextureManager::getInstance()->load(strPath, "Librarian");
     }
-    FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont");
+    FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont", 90);
+    TextureManager::getInstance()->loadFromText("Start", "LazyFont", "Start Game", colorBlack);
 
 
 }
@@ -65,6 +67,8 @@ void Title_Scene::onLoadObjects()
         SceneTag::LOBBY_SCENE
     );
     GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);
+    Text* pStartText = new Text("Start_Text", "Start", Vector2D(-573, 22), Vector2D(1, 1), 0.f, false);
+    GameObjectManager::getInstance()->addObject((AGameObject*)pStartText);
 }
 
 void Title_Scene::onUnloadResources()
@@ -74,6 +78,7 @@ void Title_Scene::onUnloadResources()
     TextureManager::getInstance()->unload("Player");
     TextureManager::getInstance()->unload("Librarian");
     TextureManager::getInstance()->unload("Fairy");
+    TextureManager::getInstance()->unload("Start");
     FontManager::getInstance()->unloadFont("LazyFont");
 }
 

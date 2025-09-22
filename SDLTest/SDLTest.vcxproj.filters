@@ -159,6 +159,10 @@
     <ClCompile Include="src\AGeneralInput.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\FontManager.cpp" />
+    <ClCompile Include="src\Text.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -301,6 +305,10 @@
     </ClInclude>
     <ClInclude Include="include\AGeneralInput.h">
       <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FontManager.h" />
+    <ClInclude Include="include\Text.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

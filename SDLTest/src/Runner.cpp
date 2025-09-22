@@ -1,4 +1,4 @@
-#define EDITOR_MODE __has_include("EditorModule.h") && 0
+#define EDITOR_MODE __has_include("EditorModule.h") && 1
 
 #if EDITOR_MODE
 #include "EditorModule.h"

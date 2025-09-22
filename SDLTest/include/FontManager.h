@@ -10,7 +10,7 @@ private:
 public:
     // use this
     TTF_Font* getFont(std::string strFontName);
-    void loadFont(std::string strItem, std::string strName);
+    void loadFont(std::string strItem, std::string strName, int dFontSize);
     void unloadFont(std::string strName);
     
     /* * * * * * * * * * * * * * * * * * * * *

@@ -1,11 +1,10 @@
 #pragma once
 #include "AComponent.h"
 #include "Vector2D.h"
-#include <SDL3/SDL.h>
 
 class AGeneralInput : public AComponent
 {
-private:
+protected:
 	SDL_Event* eEvent;
 
 public:

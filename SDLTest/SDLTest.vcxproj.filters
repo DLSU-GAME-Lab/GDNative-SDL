@@ -163,6 +163,15 @@
     <ClCompile Include="src\Text.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="src\MouseInput.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerInput.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerController.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -309,6 +318,15 @@
     <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\Text.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerInput.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MouseInput.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerController.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

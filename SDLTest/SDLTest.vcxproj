@@ -150,6 +150,9 @@
     <ClCompile Include="src\GUIManager.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
+    <ClCompile Include="src\MouseInput.cpp" />
+    <ClCompile Include="src\PlayerController.cpp" />
+    <ClCompile Include="src\PlayerInput.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -207,7 +210,10 @@
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
+    <ClInclude Include="include\MouseInput.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\PlayerController.h" />
+    <ClInclude Include="include\PlayerInput.h" />
     <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />

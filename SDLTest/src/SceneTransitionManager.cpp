@@ -1,6 +1,6 @@
 #include "SceneTransitionManager.h"
 #include "SceneManager.h"
-#include <SDL3/SDL.h>
+#include <iostream>
 
 SceneTransitionManager* SceneTransitionManager::P_SHARED_INSTANCE = nullptr;
 
@@ -12,55 +12,54 @@ void SceneTransitionManager::initialize() {
 }
 
 void SceneTransitionManager::destroy() {
-    if (P_SHARED_INSTANCE != nullptr) {
-        delete P_SHARED_INSTANCE;
-        P_SHARED_INSTANCE = nullptr;
-        std::cout << "[SceneTransitionManager] Destroyed." << std::endl;
-    }
+    delete P_SHARED_INSTANCE;
+    P_SHARED_INSTANCE = nullptr;
+    std::cout << "[SceneTransitionManager] Destroyed." << std::endl;
 }
 
 SceneTransitionManager* SceneTransitionManager::getInstance() {
-    if (!P_SHARED_INSTANCE) {
-        std::cerr << "[SceneTransitionManager ERROR] getInstance() called before initialize!" << std::endl;
-    }
     return P_SHARED_INSTANCE;
 }
 
 void SceneTransitionManager::requestTransition(SceneTag nextScene, TransitionType type) {
     if (inTransition) {
-        std::cout << "[SceneTransitionManager] Transition already in progress, ignoring new request." << std::endl;
+        std::cout << "[SceneTransitionManager] Already transitioning." << std::endl;
         return;
     }
-
-    std::cout << "[SceneTransitionManager] Starting transition to scene: "
-        << (int)nextScene << " with type=" << (int)type << std::endl;
 
     this->targetScene = nextScene;
     this->type = type;
     this->alpha = 0.0f;
     this->speed = 0.02f;
     this->inTransition = true;
+    this->halfway = false;
+
+    std::cout << "[SceneTransitionManager] Transition started." << std::endl;
 }
 
 void SceneTransitionManager::update() {
     if (!inTransition) return;
 
     alpha += speed;
-    std::cout << "[SceneTransitionManager] Updating alpha=" << alpha << " speed=" << speed << std::endl;
 
-    if (alpha >= 1.0f) {
-        std::cout << "[SceneTransitionManager] Halfway reached, loading new scene..." << std::endl;
+    // Hit midpoint (fully black)
+    if (!halfway && alpha >= 1.0f) {
+        halfway = true;
+
+        std::cout << "[SceneTransitionManager] Midpoint reached, loading new scene..." << std::endl;
         SceneManager::getInstance()->loadScene(targetScene);
+        SceneManager::getInstance()->checkLoadScene(); // Force-load immediately
 
-        // start fading back in
+        // Reverse fade direction
         speed = -speed;
     }
 
-    if (alpha <= 0.0f && speed < 0) {
-        std::cout << "[SceneTransitionManager] Transition finished." << std::endl;
+    // End transition
+    if (halfway && alpha <= 0.0f) {
         inTransition = false;
         type = TransitionType::NONE;
         speed = -speed; // reset
+        std::cout << "[SceneTransitionManager] Transition finished." << std::endl;
     }
 }
 
@@ -69,7 +68,9 @@ void SceneTransitionManager::draw(SDL_Renderer* pRenderer) {
 
     SDL_SetRenderDrawBlendMode(pRenderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, (Uint8)(alpha * 255));
+
     SDL_FRect fullscreen = { 0, 0, (float)gameWidth, (float)gameHeight };
     SDL_RenderFillRect(pRenderer, &fullscreen);
+
     SDL_SetRenderDrawBlendMode(pRenderer, SDL_BLENDMODE_NONE);
 }

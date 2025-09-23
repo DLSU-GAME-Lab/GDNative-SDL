@@ -13,8 +13,9 @@ private:
     static SceneTransitionManager* P_SHARED_INSTANCE;
 
     bool inTransition = false;
-    float alpha = 0.0f;              // fade opacity (0–1)
-    float speed = 0.02f;             // fade step per frame
+    bool halfway = false;          // track fade midpoint
+    float alpha = 0.0f;            // fade opacity (0–1)
+    float speed = 0.02f;           // fade step per frame
     TransitionType type = TransitionType::NONE;
     SceneTag targetScene;
 

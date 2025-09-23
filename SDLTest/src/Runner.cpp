@@ -1,3 +1,4 @@
+// Change from 0(non-editor mode) to 1(editor mode)
 #define EDITOR_MODE __has_include("EditorModule.h") && 0
 
 #if EDITOR_MODE

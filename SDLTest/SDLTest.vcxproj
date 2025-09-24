@@ -149,6 +149,7 @@
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\GUIButton.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
+    <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="include\Grid.h" />
     <ClInclude Include="include\GUIButton.h" />
     <ClInclude Include="include\GUIManager.h" />
+    <ClInclude Include="include\GUIUtils.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />

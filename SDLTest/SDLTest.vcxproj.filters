@@ -40,6 +40,9 @@
     <Filter Include="Component\Renderer">
       <UniqueIdentifier>{ad36d0c4-2e17-4527-b0ba-25960e59320d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Utils">
+      <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -189,6 +192,7 @@
     <ClCompile Include="src\SceneSwitcher.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\GUIUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -353,5 +357,6 @@
     <ClInclude Include="include\SceneSwitcher.h">
       <Filter>Component\Script</Filter>
     </ClInclude>
+    <ClInclude Include="include\GUIUtils.h" />
   </ItemGroup>
 </Project>

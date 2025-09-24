@@ -72,6 +72,7 @@ void Title_Scene::onLoadObjects()
     //GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);
 
     GUIButton* pStartButton = new GUIButton("Start_Button", "Start_Button");
+    //GUIUtils::setGUIMidLeft(pStartButton, Vector2D(20.0f, 0.0f));
     pStartButton->setPos(Vector2D(-580.f, 15.f));
     pStartButton->setScale(Vector2D(0.25f, 0.25f));
 

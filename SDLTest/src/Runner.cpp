@@ -62,7 +62,7 @@ Runner::Runner()
 	int windowHeight = gameHeight * scale;
 	int windowWidth = gameWidth * scale;
 
-	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
+	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), gameWidth, gameHeight, SDL_WINDOW_RESIZABLE);
 
 	this->pRenderer = SDL_CreateRenderer(this->pWindow, NULL);
 	if (this->pRenderer == NULL)

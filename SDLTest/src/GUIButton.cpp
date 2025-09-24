@@ -14,6 +14,7 @@ GUIButton::~GUIButton()
 
 void GUIButton::initialize()
 {
+	//this->bIsScreenObject = true;
 	SpriteRenderer* pRenderer = new SpriteRenderer(this->strSpriteName);
 	ButtonInput* pInput = new ButtonInput(pRenderer);
 

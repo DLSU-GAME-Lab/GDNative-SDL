@@ -100,7 +100,6 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
         mDestRect.y = screenPos.y;
         mDestRect.w = screenSize.x;
         mDestRect.h = screenSize.y;
-        //std::cout << screenPos << ", " << owner->getPos() << "\n";
     }
 
     if (pTexture) {

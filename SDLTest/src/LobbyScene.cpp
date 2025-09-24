@@ -8,7 +8,7 @@
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "GUIToggle.h"
-
+#include "EmptyObject.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -57,6 +57,11 @@ void LobbyScene::onLoadResources()
 
 void LobbyScene::onLoadObjects()
 {
+	EmptyObject* pPhysManagerHolder;
+	pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
+	PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
+	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
+
 	Background* pBackground = new Background("Lobby_Background", "Lobby_Background", Vector2D(0.33f, 0.4f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 

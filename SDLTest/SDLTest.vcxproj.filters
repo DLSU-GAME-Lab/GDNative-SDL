@@ -43,6 +43,12 @@
     <Filter Include="Component\Utils">
       <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Physics">
+      <UniqueIdentifier>{e1dc5107-1463-4b4d-ab54-ea021daf0c19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Interface">
+      <UniqueIdentifier>{27c3607a-38f9-4739-aada-b394ac1d5f90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -197,6 +203,13 @@
     </ClCompile>
     <ClCompile Include="src\GUIUtils.cpp">
       <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MetricsManager.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collider.cpp">
+      <Filter>Component\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +380,16 @@
     </ClInclude>
     <ClInclude Include="include\GUIToggle.h">
       <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MetricsManager.h" />
+    <ClInclude Include="include\PhysicsManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Collider.h">
+      <Filter>Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ACollisionListener.hpp">
+      <Filter>Component\Physics\Interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

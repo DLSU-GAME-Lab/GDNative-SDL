@@ -2,6 +2,8 @@
 #include "SDL3/SDL.h"
 #include "Settings.h"
 #include <string>
+#include "EmptyObject.h"
+#include "PhysicsManager.h"
 
 class Runner
 {

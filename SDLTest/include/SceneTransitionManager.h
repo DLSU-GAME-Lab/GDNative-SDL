@@ -14,7 +14,7 @@ private:
 
     bool inTransition = false;
     bool halfway = false;          // track fade midpoint
-    float alpha = 0.0f;            // fade opacity (0–1)
+    float alpha = 0.0f;            // fade opacity (0-1)
     float speed = 0.02f;           // fade step per frame
     TransitionType type = TransitionType::NONE;
     SceneTag targetScene;

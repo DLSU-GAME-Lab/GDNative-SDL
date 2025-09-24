@@ -19,6 +19,12 @@
 #include "SceneTransitionManager.h" 
 #include "FontManager.h"
 
+// metrics
+#include "MetricsManager.h"
+#include "imgui.h" 
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_sdlrenderer3.h"
+
 // scenes
 #include "LobbyScene.h"
 #include "Title_Scene.h"
@@ -57,7 +63,7 @@ Runner::Runner()
 	this->strWindowTitle = "Babaylan Tales";
 	float scaleX = (float)screenWidth / gameWidth;
 	float scaleY = (float)screenHeight / gameHeight;
-	float scale = std::min(scaleX, scaleY);
+	float scale = (std::min)(scaleX, scaleY);
 
 	int windowHeight = gameHeight * scale;
 	int windowWidth = gameWidth * scale;
@@ -79,6 +85,14 @@ Runner::Runner()
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+	MetricsManager::initialize();
+
+	// ImGui init
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplSDL3_InitForSDLRenderer(this->pWindow, this->pRenderer);
+	ImGui_ImplSDLRenderer3_Init(this->pRenderer);
 
 #if EDITOR_MODE
 	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);
@@ -101,6 +115,12 @@ Runner::~Runner()
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SceneTransitionManager::destroy();
+	MetricsManager::destroy();
+
+	// ImGui shutdown
+	ImGui_ImplSDLRenderer3_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
 
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
@@ -119,6 +139,8 @@ void Runner::run()
 
 		while (SDL_PollEvent(&e))
 		{
+			ImGui_ImplSDL3_ProcessEvent(&e); // feed input to ImGui
+
 #if EDITOR_MODE
 			Editor::EditorModule::getInstance()->processEditorInput(&e);
 #endif
@@ -151,7 +173,9 @@ void Runner::run()
 #else
 		this->update(fDeltaTime);
 #endif
-		
+
+		MetricsManager::getInstance()->update();
+
 		this->render();
 
 		// scene loading now handled safely after transition
@@ -191,6 +215,16 @@ void Runner::render()
 	// draw fade/transition overlay last
 	SceneTransitionManager::getInstance()->draw(this->pRenderer);
 
+	// --- ImGui new frame ---
+	ImGui_ImplSDL3_NewFrame();
+	ImGui_ImplSDLRenderer3_NewFrame();
+	ImGui::NewFrame();
+
+	MetricsManager::getInstance()->drawGUI();
+
+	ImGui::Render();
+	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), this->pRenderer);
+
 	SDL_RenderPresent(this->pRenderer);
 }
 
@@ -208,5 +242,4 @@ void Runner::registerScenes()
 
 	//load initial scene
 	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
-
 }

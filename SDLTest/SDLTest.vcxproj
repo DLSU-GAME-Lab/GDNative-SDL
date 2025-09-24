@@ -153,6 +153,7 @@
     <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
+    <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
@@ -217,6 +218,7 @@
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
+    <ClInclude Include="include\MetricsManager.h" />
     <ClInclude Include="include\ButtonInput.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerController.h" />

@@ -1,6 +1,6 @@
 #include "PlayerInput.h"
 
-PlayerInput::PlayerInput() : AGeneralInput("Player Input")
+PlayerInput::PlayerInput() : AGeneralInput("PlayerInput")
 {
 	this->fMoveX = 0.0f;
 	this->bJumped = false;

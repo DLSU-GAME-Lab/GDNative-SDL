@@ -20,7 +20,6 @@ void Prop::initialize()
 	{
 		pSpriteRenderer->setFlipX(true);
 	}
-	RenderSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 	this->attachComponent((AComponent*)pSpriteRenderer);
 }
 

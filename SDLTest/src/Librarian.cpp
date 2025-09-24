@@ -1,6 +1,5 @@
 #include "Librarian.h"
 #include "TextureManager.h"
-#include "RenderSystem.h"
 #include "SpriteAnimator.h"
 
 Librarian::Librarian(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Librarian")
@@ -18,8 +17,6 @@ void Librarian::initialize()
 {
     //1000, 350
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian", this->fVecTranslate.x, this->fVecTranslate.y);
-    RenderSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
-
     auto vecSprite = TextureManager::getInstance()->getTexture("Librarian", 0, 6);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 8);
 

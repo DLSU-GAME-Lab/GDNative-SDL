@@ -15,6 +15,5 @@ Text::~Text()
 void Text::initialize()
 {
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fVecTranslate.x, this->fVecTranslate.y);
-	RenderSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
 	this->attachComponent((AComponent*)pSpriteRenderer);
 }

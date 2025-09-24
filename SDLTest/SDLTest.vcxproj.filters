@@ -31,6 +31,15 @@
     <Filter Include="System">
       <UniqueIdentifier>{76f614af-993e-49bf-a98d-fe76b87014db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Input">
+      <UniqueIdentifier>{821abbc5-bfcb-4844-b8ec-e66f4062d005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Script">
+      <UniqueIdentifier>{ea6aa922-1463-4b05-8e34-b8a309373ced}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Renderer">
+      <UniqueIdentifier>{ad36d0c4-2e17-4527-b0ba-25960e59320d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -77,12 +86,6 @@
     </ClCompile>
     <ClCompile Include="src\LobbyScene.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SpriteRenderer.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SpriteAnimator.cpp">
-      <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="src\Title_Scene.cpp">
       <Filter>Scene</Filter>
@@ -156,21 +159,35 @@
     <ClCompile Include="src\Grid.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\AGeneralInput.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FontManager.cpp" />
     <ClCompile Include="src\Text.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\MouseInput.cpp">
-      <Filter>Component</Filter>
+    <ClCompile Include="src\ButtonInput.cpp">
+      <Filter>Component\Input</Filter>
     </ClCompile>
     <ClCompile Include="src\PlayerInput.cpp">
-      <Filter>Component</Filter>
+      <Filter>Component\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AGeneralInput.cpp">
+      <Filter>Component\Input</Filter>
     </ClCompile>
     <ClCompile Include="src\PlayerController.cpp">
-      <Filter>Component</Filter>
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteAnimator.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUIButton.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneSwitcher.cpp">
+      <Filter>Component\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,12 +241,6 @@
     </ClInclude>
     <ClInclude Include="include\Settings.h">
       <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SpriteRenderer.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SpriteAnimator.h">
-      <Filter>Component</Filter>
     </ClInclude>
     <ClInclude Include="include\Title_Scene.h">
       <Filter>Scene</Filter>
@@ -312,21 +323,35 @@
     <ClInclude Include="include\Grid.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="include\AGeneralInput.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\Text.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="include\PlayerInput.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="include\ButtonInput.h">
+      <Filter>Component\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include\MouseInput.h">
-      <Filter>Component</Filter>
+    <ClInclude Include="include\PlayerInput.h">
+      <Filter>Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AGeneralInput.h">
+      <Filter>Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteAnimator.h">
+      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="include\PlayerController.h">
-      <Filter>Component</Filter>
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIButton.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FontManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneSwitcher.h">
+      <Filter>Component\Script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

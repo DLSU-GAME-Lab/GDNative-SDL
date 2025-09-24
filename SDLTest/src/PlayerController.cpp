@@ -1,7 +1,7 @@
 #include "PlayerController.h"
 #include "AGameObject.h"
 
-PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite) : AComponent("Player Controller", ComponentType::SCRIPT)
+PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite) : AComponent("PlayerController", ComponentType::SCRIPT)
 {
 	this->pInput = pInput;
 	this->pSprite = pSprite;

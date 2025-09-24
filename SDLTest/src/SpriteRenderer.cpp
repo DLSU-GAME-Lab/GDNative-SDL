@@ -95,11 +95,12 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
         }
 
         screenPos -= screenSize * this->pivot;
-
+        //TODO: Fix the negative rect error (screenPos)
         mDestRect.x = screenPos.x;
         mDestRect.y = screenPos.y;
         mDestRect.w = screenSize.x;
         mDestRect.h = screenSize.y;
+        //std::cout << screenPos << ", " << owner->getPos() << "\n";
     }
 
     if (pTexture) {
@@ -111,6 +112,7 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
         if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
         else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
+        //SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
     }
 
     // additional log

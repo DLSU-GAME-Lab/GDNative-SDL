@@ -1,6 +1,5 @@
 #include "Player.h"
 #include "TextureManager.h"
-#include "RenderSystem.h"
 #include "SpriteAnimator.h"
 #include "PlayerController.h"
 
@@ -20,7 +19,6 @@ void Player::initialize()
 {
     //500, 630
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Player", this->fVecTranslate.x, this->fVecTranslate.y);
-    RenderSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
     auto vecSprite = TextureManager::getInstance()->getTexture("Player", 0, 15);
 
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 12);

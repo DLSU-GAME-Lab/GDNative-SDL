@@ -8,6 +8,9 @@
 #include "FontManager.h"
 #include "Settings.h"
 #include "Text.h"
+#include "GUIButton.h"
+#include "SceneSwitcher.h"
+
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
 {
@@ -46,29 +49,38 @@ void Title_Scene::onLoadObjects()
 {
     // create and register game objects for the title scene
     Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(1.f,1.f));
-    GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
+    GameObjectManager::getInstance()->addObject(pBackground);
 
     AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", Vector2D(-50.f, -240), Vector2D(1.f, 1.f), 0.f, 8);
-    GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
+    GameObjectManager::getInstance()->addObject(pLibrarian);
 
     AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy", Vector2D(-100.f, -150.f), Vector2D(1.f, 1.f), 0.f, 8);
-    GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+    GameObjectManager::getInstance()->addObject(pFairy);
 
     AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-300, 60.f), Vector2D(1.f, 1.f), 0.f, 8);
-    GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+    GameObjectManager::getInstance()->addObject(pPlayer);
 
-    // create a button that switches to the Lobby scene when clicked
-    UIButton* pStartButton = new UIButton(
-        "Start_Button_Object",   // object name (can be unique)
-        "Start_Button",          // texture key (MUST match TextureManager)
-        Vector2D(-580.f, 15.f),
-        Vector2D(0.25f, 0.25f),
-        0.0f, false,
-        SceneTag::LOBBY_SCENE
-    );
-    GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);
+    //// create a button that switches to the Lobby scene when clicked
+    //UIButton* pStartButton = new UIButton(
+    //    "Start_Button_Object",   // object name (can be unique)
+    //    "Start_Button",          // texture key (MUST match TextureManager)
+    //    Vector2D(-580.f, 15.f),
+    //    Vector2D(0.25f, 0.25f),
+    //    0.0f, false,
+    //    SceneTag::LOBBY_SCENE
+    //);
+    //GameObjectManager::getInstance()->addObject((AGameObject*)pStartButton);
+
+    GUIButton* pStartButton = new GUIButton("Start_Button", "Start_Button");
+    pStartButton->setPos(Vector2D(-580.f, 15.f));
+    pStartButton->setScale(Vector2D(0.25f, 0.25f));
+
+    SceneSwitcher* pSceneSwitcher = new SceneSwitcher(SceneTag::LOBBY_SCENE);
+    pStartButton->attachComponent(pSceneSwitcher);
+    GameObjectManager::getInstance()->addObject(pStartButton);
+
     Text* pStartText = new Text("Start_Text", "Start", Vector2D(-573, 22), Vector2D(1, 1), 0.f, false);
-    GameObjectManager::getInstance()->addObject((AGameObject*)pStartText);
+    GameObjectManager::getInstance()->addObject(pStartText);
 }
 
 void Title_Scene::onUnloadResources()

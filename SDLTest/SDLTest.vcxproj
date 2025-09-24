@@ -147,10 +147,11 @@
     <ClCompile Include="src\AGeneralInput.cpp" />
     <ClCompile Include="src\FontManager.cpp" />
     <ClCompile Include="src\Grid.cpp" />
+    <ClCompile Include="src\GUIButton.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
-    <ClCompile Include="src\MouseInput.cpp" />
+    <ClCompile Include="src\ButtonInput.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
     <ClCompile Include="src\Prop.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SceneSwitcher.cpp" />
     <ClCompile Include="src\SceneTransitionManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
@@ -205,12 +207,13 @@
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\AGeneralInput.h" />
     <ClInclude Include="include\Grid.h" />
+    <ClInclude Include="include\GUIButton.h" />
     <ClInclude Include="include\GUIManager.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
-    <ClInclude Include="include\MouseInput.h" />
+    <ClInclude Include="include\ButtonInput.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />
@@ -218,6 +221,7 @@
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\SceneSwitcher.h" />
     <ClInclude Include="include\SceneTransitionManager.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />

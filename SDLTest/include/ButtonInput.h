@@ -21,6 +21,7 @@ public:
 	Vector2D getMouseWorldPos() const;
 	bool getHolding() const;
 	bool getClicked() const;
+	void setClicked(bool bClicked);
 
 private:
 	virtual void onMouseHovered(Vector2D mousePos);

@@ -19,5 +19,8 @@ void SceneSwitcher::perform()
 		this->pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
 
 	else if (pInput->getClicked())
+	{
+		pInput->setClicked(false);
 		SceneTransitionManager::getInstance()->requestTransition(this->ETag, TransitionType::FADE);
+	}
 }

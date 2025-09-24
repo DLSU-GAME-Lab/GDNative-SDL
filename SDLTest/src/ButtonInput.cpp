@@ -11,14 +11,14 @@ ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 
 ButtonInput::~ButtonInput()
 {
-
+	this->bHolding = false;
+	this->bClicked = false;
 }
 
 void ButtonInput::perform()
 {
-	this->bClicked = false;
-
-	if (eEvent->type == SDL_EVENT_MOUSE_MOTION) this->onMouseHovered(eEvent->motion.x);
+	if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
+		this->onMouseHovered(Vector2D(eEvent->motion.x, eEvent->motion.y));
 
 	if (this->contains())
 	{
@@ -62,6 +62,11 @@ bool ButtonInput::getHolding() const
 bool ButtonInput::getClicked() const
 {
 	return this->bClicked;
+}
+
+void ButtonInput::setClicked(bool bClicked)
+{
+	this->bClicked = bClicked;
 }
 
 void ButtonInput::onMouseHovered(Vector2D mousePos)

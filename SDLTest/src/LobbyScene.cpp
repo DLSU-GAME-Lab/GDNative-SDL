@@ -7,6 +7,7 @@
 #include "Prop.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
+#include "GUIToggle.h"
 
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
@@ -48,6 +49,9 @@ void LobbyScene::onLoadResources()
 	TextureManager::getInstance()->load("stepladder_revised.png", "Step_Ladder");
 	TextureManager::getInstance()->load("monoblock_revised.png", "Chair");
 	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
+	TextureManager::getInstance()->load("diary.png", "Diary");
+
+	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
 
 }
 
@@ -79,10 +83,16 @@ void LobbyScene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
 
 
+	GUIButton* pDiary = new GUIButton("Diary", "Diary");
+	pDiary->setPos(Vector2D(0, 0));
+	pDiary->setScale(Vector2D(0.25f, 0.25f));
+	GUIToggle* pToggle = new GUIToggle("SWBST_BG");
+	pDiary->attachComponent(pToggle);
+	GameObjectManager::getInstance()->addObject(pDiary);
+
 	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
 	pButtonRight->setPos(Vector2D(800, 0));
 	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
-
 	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::RIGHT_ROOM_SCENE);
 	pButtonRight->attachComponent(pRightRoomSwitch);
 	GameObjectManager::getInstance()->addObject(pButtonRight);
@@ -90,13 +100,16 @@ void LobbyScene::onLoadObjects()
 	GUIButton* pButtonLeft = new GUIButton("Button_Left", "Button");
 	pButtonLeft->setPos(Vector2D(-800, 0));
 	pButtonLeft->setScale(Vector2D(0.25f, 0.25f));
-
 	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::LEFT_ROOM_SCENE);
 	pButtonLeft->attachComponent(pLeftRoomSwitch);
 	GameObjectManager::getInstance()->addObject(pButtonLeft);
 
 	SpriteRenderer* pRenderer = (SpriteRenderer*)pButtonLeft->findComponentByName("SpriteRenderer");
 	pRenderer->setFlipX(true);
+
+	Background* pSWBST_BG = new Background("SWBST_BG", "SWBST_BG", Vector2D(1, 1));
+	pSWBST_BG->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pSWBST_BG);
 }
 
 void LobbyScene::onUnloadResources()
@@ -110,4 +123,6 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Step_Ladder");
 	TextureManager::getInstance()->unload("Chair");
 	TextureManager::getInstance()->unload("Librarian_Desk");
+	TextureManager::getInstance()->unload("Diary");
+	TextureManager::getInstance()->unload("SWBST_BG");
 }

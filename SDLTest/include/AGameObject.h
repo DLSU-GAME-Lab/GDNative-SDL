@@ -43,7 +43,7 @@ public:
     std::vector<AComponent*> getComponentsRecursively(ComponentType EType, bool bInclusive = true);
 
 public:
-    bool isEnabled() const;
+    bool getEnabled() const;
     void setEnabled(bool bEnabled);
     std::string getName() const;
     AGameObject* getParent() const;

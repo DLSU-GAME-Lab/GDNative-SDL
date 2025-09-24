@@ -5,6 +5,9 @@
 #include "Fairy.h"
 #include "UIButton.h"
 #include "Prop.h"
+#include "GUIButton.h"
+#include "SceneSwitcher.h"
+
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -75,14 +78,25 @@ void LobbyScene::onLoadObjects()
 	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
 
-	UIButton* pButtonRight = new UIButton("Button_Right", "Button", Vector2D(800, 0), Vector2D(0.25f, 0.25f), 0.0f, true, SceneTag::RIGHT_ROOM_SCENE);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pButtonRight);
 
-	UIButton* pButtonLeft = new UIButton("Button_Left", "Button", Vector2D(-800, 0), Vector2D(0.25f, 0.25f), 0.0f, true, SceneTag::LEFT_ROOM_SCENE);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pButtonLeft);
+	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
+	pButtonRight->setPos(Vector2D(800, 0));
+	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
+
+	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::RIGHT_ROOM_SCENE);
+	pButtonRight->attachComponent(pRightRoomSwitch);
+	GameObjectManager::getInstance()->addObject(pButtonRight);
+
+	GUIButton* pButtonLeft = new GUIButton("Button_Left", "Button");
+	pButtonLeft->setPos(Vector2D(-800, 0));
+	pButtonLeft->setScale(Vector2D(0.25f, 0.25f));
+
+	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::LEFT_ROOM_SCENE);
+	pButtonLeft->attachComponent(pLeftRoomSwitch);
+	GameObjectManager::getInstance()->addObject(pButtonLeft);
+
 	SpriteRenderer* pRenderer = (SpriteRenderer*)pButtonLeft->findComponentByName("SpriteRenderer");
 	pRenderer->setFlipX(true);
-
 }
 
 void LobbyScene::onUnloadResources()

@@ -5,7 +5,7 @@ void GameObjectManager::processInput(SDL_Event* eEvent)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
     {
-        if(pGameObject->isEnabled())
+        if(pGameObject->getEnabled())
             pGameObject->processInput(eEvent);
     }
 }
@@ -14,7 +14,7 @@ void GameObjectManager::update(float fDeltaTime)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
     {
-        if(pGameObject->isEnabled())
+        if(pGameObject->getEnabled())
             pGameObject->update(fDeltaTime);
     }
 }
@@ -23,7 +23,7 @@ void GameObjectManager::draw(SDL_Renderer* pRenderer)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
     {
-        if(pGameObject->isEnabled())
+        if(pGameObject->getEnabled())
             pGameObject->draw(pRenderer);
     }
 }

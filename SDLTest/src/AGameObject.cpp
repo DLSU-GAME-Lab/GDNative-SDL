@@ -158,7 +158,7 @@ std::vector<AComponent*> AGameObject::getComponentsRecursively(ComponentType ETy
     return vecFound;
 }
 
-bool AGameObject::isEnabled() const
+bool AGameObject::getEnabled() const
 {
     return this->bEnabled;
 }

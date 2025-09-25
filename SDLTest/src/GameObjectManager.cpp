@@ -17,11 +17,6 @@ void GameObjectManager::update(float fDeltaTime)
     {
         if(pGameObject->getEnabled())
             pGameObject->update(fDeltaTime);
-        if (pGameObject->getName() == "Chair")
-        {
-            float moveValue = pGameObject->getPos().x + 100 *fDeltaTime;
-            pGameObject->setPos(Vector2D(moveValue, pGameObject->getPos().y));
-        }
     }
 }
 

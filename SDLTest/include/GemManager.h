@@ -1,31 +1,31 @@
 #pragma once
 #include "AComponent.h"
-#include "Vector2D.h"
+#include "Grid.h"
 #include <vector>
 
-class GemManager : public AComponent
+class GemManager : public Grid
 {
-public:
-    struct CellData
-    {
-        Uint8 c;
-        Uint8 r;
-        Vector2D pos;
-        AGameObject* obj;
-    };
 private:
     int selected[2] = { -1, -1 };
     std::vector<AGameObject*> vecGem;
     std::vector<Vector2D> vecTile;
-    float fCellSize;
 
 public:
     void perform() override;
-    void startLevel();
+
+    static void loadResources();
+    static void unloadResources();
+
+    void startLevel1();
+    void startLevel2();
+    void startLevel3();
 
     AGameObject* getGem();
     void moveGems();
     void matchGems();
+
+private:
+    void createGems();
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *
@@ -34,15 +34,16 @@ private:
     static GemManager* P_SHARED_INSTANCE;
 
 private:
-    GemManager() : AComponent("GUI Manager", ComponentType::SCRIPT) {};
-    GemManager(const GemManager&) : AComponent("GUI Manager", ComponentType::SCRIPT) {};
+    GemManager(Uint8 w, Uint8 h, float fCellSize);
+    GemManager(const GemManager&);
     GemManager& operator = (const GemManager&) {};
 
 public:
-    static void initialize();
+    static void initialize(Uint8 w, Uint8 h, float fCellSize, Vector2D offset);
     static void destroy();
 
     static GemManager* getInstance();
     /* * * * * * * * * * * * * * * * * * * * */
+
 };
 

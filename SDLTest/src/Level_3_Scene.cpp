@@ -1,5 +1,6 @@
 #include "Level_3_Scene.h"
 #include "Prop.h"
+#include "GemManager.h"
 
 Level_3_Scene::Level_3_Scene():AScene(SceneTag::LEVEL_3_SCENE)
 {
@@ -14,9 +15,7 @@ void Level_3_Scene::onLoadResources()
 	TextureManager::getInstance()->load("levels/Level_3.png", "Level_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
-
-
-
+	GemManager::loadResources();
 }
 
 void Level_3_Scene::onLoadObjects()
@@ -48,6 +47,9 @@ void Level_3_Scene::onLoadObjects()
 		SceneTag::TITLE_SCENE
 	);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pSettings);
+
+	GemManager::initialize(12, 14, 60.0f, Vector2D(30.0f, -54.0f));
+	GemManager::getInstance()->startLevel3();
 }
 
 void Level_3_Scene::onUnloadResources()
@@ -59,8 +61,7 @@ void Level_3_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Level_Container");
 	TextureManager::getInstance()->unload("Top_UI_Container");
 	TextureManager::getInstance()->unload("Level_Container_Extra");
-
-
+	GemManager::unloadResources();
 }
 
 void Level_3_Scene::onUnloadObjects()

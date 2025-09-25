@@ -1,4 +1,5 @@
 #include "Level_1_Scene.h"
+#include "GemManager.h"
 
 Level_1_Scene::Level_1_Scene():AScene(SceneTag::LEVEL_1_SCENE)
 {
@@ -13,10 +14,7 @@ void Level_1_Scene::onLoadResources()
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
 	TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
 	TextureManager::getInstance()->load("levels/Level_1.png", "Level_Container");
-
-
-
-
+	GemManager::loadResources();
 }
 
 void Level_1_Scene::onLoadObjects()
@@ -49,6 +47,8 @@ void Level_1_Scene::onLoadObjects()
 	);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pSettings);
 
+	GemManager::initialize(9, 10, 60.0f, Vector2D(30.0f, -54.0f));
+	GemManager::getInstance()->startLevel1();
 }
 
 void Level_1_Scene::onUnloadResources()
@@ -60,7 +60,7 @@ void Level_1_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Level_Container");
 	TextureManager::getInstance()->unload("Level_Container_Extra");
 	TextureManager::getInstance()->unload("Top_UI_Container");
-
+	GemManager::unloadResources();
 }
 
 void Level_1_Scene::onUnloadObjects()

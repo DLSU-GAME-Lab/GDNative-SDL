@@ -148,6 +148,7 @@
     <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\AGeneralInput.cpp" />
     <ClCompile Include="src\FontManager.cpp" />
+    <ClCompile Include="src\GemManager.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\GUIButton.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\AGeneralInput.h" />
+    <ClInclude Include="include\GemManager.h" />
     <ClInclude Include="include\Grid.h" />
     <ClInclude Include="include\GUIButton.h" />
     <ClInclude Include="include\GUIManager.h" />

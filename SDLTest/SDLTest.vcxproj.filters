@@ -1,6 +1,125 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{2822fe87-f176-4f8e-903c-bb9ecdc7a180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{bbe6609a-76d4-42af-a23c-d767988e6c68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{f3599f81-6152-4bfb-8ca9-f22c74f95f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{6763a1c5-fb3c-4102-bdea-d725d5feb8ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enum">
+      <UniqueIdentifier>{24f4b3aa-a3f0-4b00-b085-552c4fcc65fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{74a74283-8f40-48da-9512-f9d5789c68a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{25a0e8d9-193a-40ce-98e5-010e8ee695b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{8158b3ad-3af1-4797-a9f6-4ba416319dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Singleton">
+      <UniqueIdentifier>{6541477a-7151-4488-9518-b845ae41fc80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{76f614af-993e-49bf-a98d-fe76b87014db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Input">
+      <UniqueIdentifier>{821abbc5-bfcb-4844-b8ec-e66f4062d005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Script">
+      <UniqueIdentifier>{ea6aa922-1463-4b05-8e34-b8a309373ced}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Renderer">
+      <UniqueIdentifier>{ad36d0c4-2e17-4527-b0ba-25960e59320d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Utils">
+      <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics">
+      <UniqueIdentifier>{e1dc5107-1463-4b4d-ab54-ea021daf0c19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Interface">
+      <UniqueIdentifier>{27c3607a-38f9-4739-aada-b394ac1d5f90}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Runner.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjectManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AComponent.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AGameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Background.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Fairy.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Librarian.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIButton.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderSystem.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LobbyScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Title_Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AButton.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AnimatedSprite.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Prop.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector2D.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIManager.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AUIScreen.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CustomStyles.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
     <ClCompile Include="imgui\src\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -13,127 +132,167 @@
     <ClCompile Include="imgui\src\imgui_impl_sdl3.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\src\imgui_tables.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui\src\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\AButton.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AGameObject.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AnimatedSprite.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EmptyObject.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Fairy.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UIButton.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Prop.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Player.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Librarian.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AComponent.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SpriteRenderer.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SpriteAnimator.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Level_3_Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Level_2_Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Level_1_Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\LeftRoomScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RightRoomScene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SceneManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SceneTransitionManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderSystem.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameObjectManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EditorModule.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Runner.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AUIScreen.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UIManager.cpp">
-      <Filter>Editor</Filter>
+    <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\InspectorScreen.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\CustomStyles.cpp">
+    <ClCompile Include="src\EditorModule.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Title_Scene.cpp">
-      <Filter>Scene</Filter>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\EngineTime.cpp">
+    <ClCompile Include="src\SceneTransitionManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
-    <ClCompile Include="src\Background.cpp">
+    <ClCompile Include="src\RightRoomScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EmptyObject.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LeftRoomScene.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\GUIManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vector2D.cpp">
-      <Filter>Math</Filter>
+    <ClCompile Include="src\Grid.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Text.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ButtonInput.cpp">
+      <Filter>Component\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerInput.cpp">
+      <Filter>Component\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AGeneralInput.cpp">
+      <Filter>Component\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerController.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteAnimator.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUIButton.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneSwitcher.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="include\GUIToggle.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUIUtils.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MetricsManager.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collider.cpp">
+      <Filter>Component\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="imgui\include\imstb_truetype.h">
-      <Filter>ImGui</Filter>
+    <ClInclude Include="include\Runner.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObjectManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextureManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AGameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Background.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Fairy.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Librarian.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIButton.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RenderSystem.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnumSceneTag.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnumComponentType.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LobbyScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Settings.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Title_Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AButton.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnumAnimationType.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AnimatedSprite.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Prop.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Vector2D.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AUIScreen.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIManager.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UINames.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CustomStyles.h">
+      <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="imgui\include\imconfig.h">
       <Filter>ImGui</Filter>
@@ -142,9 +301,6 @@
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\include\imgui_impl_sdl3.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\include\imgui_impl_sdlrenderer3.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\include\imgui_internal.h">
@@ -156,157 +312,84 @@
     <ClInclude Include="imgui\include\imstb_textedit.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="include\AButton.h">
-      <Filter>GameObject</Filter>
+    <ClInclude Include="imgui\include\imstb_truetype.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="include\AGameObject.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AnimatedSprite.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EmptyObject.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Fairy.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UIButton.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Prop.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Player.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Librarian.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AComponent.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Camera.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SpriteRenderer.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SpriteAnimator.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Level_3_Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Level_2_Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Level_1_Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\LeftRoomScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RightRoomScene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TextureManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SceneManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SceneTransitionManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RenderSystem.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GameObjectManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EditorModule.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Runner.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Settings.h">
-      <Filter>Main</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AUIScreen.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UINames.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UIManager.h">
-      <Filter>Editor</Filter>
+    <ClInclude Include="imgui\include\imgui_impl_sdlrenderer3.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="include\InspectorScreen.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\CustomStyles.h">
+    <ClInclude Include="include\EditorModule.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\Title_Scene.h">
-      <Filter>Scene</Filter>
+    <ClInclude Include="include\Camera.h">
+      <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="include\EngineTime.h">
+    <ClInclude Include="include\SceneTransitionManager.h">
       <Filter>Singleton</Filter>
     </ClInclude>
-    <ClInclude Include="include\EnumAnimationType.h">
-      <Filter>Enum</Filter>
+    <ClInclude Include="include\RightRoomScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="include\EnumComponentType.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="include\EnumSceneTag.h">
-      <Filter>Enum</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Background.h">
+    <ClInclude Include="include\EmptyObject.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LeftRoomScene.h">
+      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\GUIManager.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="include\Vector2D.h">
-      <Filter>Math</Filter>
+    <ClInclude Include="include\Grid.h">
+      <Filter>Component</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{4bd7b53e-86d4-4465-b17d-694b975c031c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameObject">
-      <UniqueIdentifier>{6016d69a-05c7-4eb0-9f46-a48fea0b2f53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component">
-      <UniqueIdentifier>{4758dec7-0261-40f4-956d-3dccf0c52ab1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{2c00833d-cbfe-46a8-b3b0-165337abf23f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Singleton">
-      <UniqueIdentifier>{75a3da09-57d7-4b34-b760-e69c027d7d53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main">
-      <UniqueIdentifier>{834c5820-61a9-4f39-96cf-52655feeb571}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Editor">
-      <UniqueIdentifier>{e0b13971-2f13-48ee-8f77-c2cbb4600d5a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Enum">
-      <UniqueIdentifier>{b9aac6ba-bf90-4b4a-a526-822279cf2c9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System">
-      <UniqueIdentifier>{57ab400d-8e23-445f-9647-8ca199c6973f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math">
-      <UniqueIdentifier>{452b6273-e69f-45cd-a022-d07384c15bc9}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="include\Text.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ButtonInput.h">
+      <Filter>Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerInput.h">
+      <Filter>Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AGeneralInput.h">
+      <Filter>Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteAnimator.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerController.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SpriteRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIButton.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FontManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneSwitcher.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIUtils.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIToggle.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MetricsManager.h" />
+    <ClInclude Include="include\PhysicsManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Collider.h">
+      <Filter>Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ACollisionListener.hpp">
+      <Filter>Component\Physics\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

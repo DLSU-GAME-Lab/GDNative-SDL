@@ -2,8 +2,6 @@
 
 #include "EnumComponentType.h"
 #include "AGameObject.h"
-//#include "GameStateManager.hpp"
-#include <SDL3/SDL.h>
 #include <unordered_map>
 
 class GameObjectManager
@@ -14,8 +12,8 @@ private:
 
 public:
     void processInput(SDL_Event* eEvent);
-    void update();
-    void draw(SDL_Window* pWindow);
+    void update(float fDeltaTime);
+    void draw(SDL_Renderer* pRenderer);
 
     void addObject(AGameObject* pGameObject);
     void deleteObject(AGameObject* pGameObject);

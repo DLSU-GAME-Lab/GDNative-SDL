@@ -1,5 +1,7 @@
 #include "TextureManager.h"
+#include "FontManager.h"
 #include <SDL3_image/SDL_image.h>
+#include "SDL3_ttf/SDL_ttf.h"
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
@@ -26,6 +28,24 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
         return;
     }
 
+    this->mapTexture[strName].push_back(pTexture);
+    this->vecTexture.push_back(pTexture);
+}
+void TextureManager::loadFromText(std::string strName, std::string fontType, std::string textureText, SDL_Color textColor)
+{
+    SDL_Surface* textSurface = TTF_RenderText_Blended(FontManager::getInstance()->getFont(fontType), textureText.c_str(), 0, textColor);
+    if (textSurface == nullptr)
+    {
+        std::cout<<"[ERROR]: Could not render text." << SDL_GetError() << std::endl;
+        return;
+    }
+    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, textSurface);
+    SDL_DestroySurface(textSurface);
+    if (!pTexture) {
+        std::cerr << "[ERROR] : Failed to create texture for [" << strName << "] "
+            << "Error: " << SDL_GetError() << std::endl;
+        return;
+    }
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }

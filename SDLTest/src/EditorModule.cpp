@@ -4,7 +4,6 @@
 #include "RenderSystem.h"
 #include "UIManager.h"
 #include "InspectorScreen.h"
-#include "EngineTime.h"
 #include "Camera.h"
 #include <iostream>
 
@@ -49,7 +48,7 @@ void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
     }
 }
 
-void Editor::EditorModule::updateGameObjects()
+void Editor::EditorModule::updateGameObjects(float fDeltaTime)
 {
     AGameObject* selected = static_cast<InspectorScreen*>(
         UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"))->getSelectedObject();
@@ -58,7 +57,7 @@ void Editor::EditorModule::updateGameObjects()
 
     if (this->bIsHolding)
     {
-        this->dTicks += EngineTime::getInstance()->getDeltaTime();
+        this->dTicks += fDeltaTime;
         if (this->dTicks >= D_MAX_DRAG_TICKS)
         {
             this->dTicks = 0.0;

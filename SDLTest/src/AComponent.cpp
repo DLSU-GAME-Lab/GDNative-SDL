@@ -25,6 +25,11 @@ void AComponent::detachOwner()
     delete this;
 }
 
+void AComponent::setDeltaTime(float fDeltaTime)
+{
+    this->fDeltaTime = fDeltaTime;
+}
+
 AGameObject* AComponent::getOwner()
 {
     return this->pOwner;

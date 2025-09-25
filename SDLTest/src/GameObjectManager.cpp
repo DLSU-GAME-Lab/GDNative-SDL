@@ -1,29 +1,31 @@
 #include "GameObjectManager.h"
+#include "Collider.h"
 #include <iostream>
 
 void GameObjectManager::processInput(SDL_Event* eEvent)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
     {
-        if(pGameObject->isEnabled())
+        if(pGameObject->getEnabled())
             pGameObject->processInput(eEvent);
     }
 }
 
-void GameObjectManager::update() {
-    for(AGameObject* pGameObject : this->vecGameObject)
-    {
-        if(pGameObject->isEnabled()/* && !GameStateManager::getInstance()->isPaused()*/)
-            pGameObject->update();
-    }
-}
-
-void GameObjectManager::draw(SDL_Window* pWindow)
+void GameObjectManager::update(float fDeltaTime)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
     {
-        if(pGameObject->isEnabled())
-            pGameObject->draw(pWindow);
+        if(pGameObject->getEnabled())
+            pGameObject->update(fDeltaTime);
+    }
+}
+
+void GameObjectManager::draw(SDL_Renderer* pRenderer)
+{
+    for(AGameObject* pGameObject : this->vecGameObject)
+    {
+        if(pGameObject->getEnabled())
+            pGameObject->draw(pRenderer);
     }
 }
 

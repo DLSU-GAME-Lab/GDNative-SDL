@@ -1,6 +1,5 @@
 #include "AnimatedSprite.h"
 #include "TextureManager.h"
-#include "RenderSystem.h"
 #include "SpriteAnimator.h"
 
 AnimatedSprite::AnimatedSprite(
@@ -27,7 +26,6 @@ AnimatedSprite::~AnimatedSprite()
 void AnimatedSprite::initialize()
 {
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strSpriteName, this->fVecTranslate.x, this->fVecTranslate.y);
-    RenderSystem::getInstance()->registerSpriteRenderer(pSpriteRenderer);
     auto vecSprite = TextureManager::getInstance()->getTexture(this->strSpriteName);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, this->nFrameRate);
 

@@ -22,8 +22,8 @@ private:
     static GUIManager* P_SHARED_INSTANCE;
 
 private:
-    GUIManager() : AComponent("GUI Manager", ComponentType::GUI) {};
-    GUIManager(const GUIManager&) : AComponent("GUI Manager", ComponentType::GUI) {};
+    GUIManager() : AComponent("GUI Manager", ComponentType::INPUT) {};
+    GUIManager(const GUIManager&) : AComponent("GUI Manager", ComponentType::INPUT) {};
     GUIManager& operator = (const GUIManager&) {};
 
 public:

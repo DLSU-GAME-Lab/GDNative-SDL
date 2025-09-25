@@ -1,3 +1,4 @@
+// Change from 0(non-editor mode) to 1(editor mode)
 #define EDITOR_MODE __has_include("EditorModule.h") && 0
 
 #if EDITOR_MODE
@@ -7,7 +8,6 @@
 #include "Runner.h"
 #include "algorithm"
 
-#include "EngineTime.h"
 #include "TextureManager.h"
 #include "RenderSystem.h"
 #include "GameObjectManager.h"
@@ -17,12 +17,19 @@
 #include "Settings.h"
 #include "UIManager.h"
 #include "SceneTransitionManager.h" 
+#include "FontManager.h"
+
+// metrics
+#include "MetricsManager.h"
+#include "imgui.h" 
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_sdlrenderer3.h"
 
 // scenes
+#include "LobbyScene.h"
 #include "Title_Scene.h"
-#include "Level_1_Scene.h"
-#include "Level_2_Scene.h"
-#include "Level_3_Scene.h"
+#include "RightRoomScene.h"
+#include "LeftRoomScene.h"
 
 Runner::Runner()
 {
@@ -53,15 +60,15 @@ Runner::Runner()
 	// debug
 	std::cout << "Screen size: " << screenWidth << "x" << screenHeight << std::endl;
 
-	this->strWindowTitle = "Gem Hunter Match";
+	this->strWindowTitle = "Babaylan Tales";
 	float scaleX = (float)screenWidth / gameWidth;
 	float scaleY = (float)screenHeight / gameHeight;
-	float scale = std::min(scaleX, scaleY);
+	float scale = (std::min)(scaleX, scaleY);
 
 	int windowHeight = gameHeight * scale;
 	int windowWidth = gameWidth * scale;
 
-	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), windowWidth, windowHeight, SDL_WINDOW_RESIZABLE);
+	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), gameWidth, gameHeight, SDL_WINDOW_RESIZABLE);
 
 	this->pRenderer = SDL_CreateRenderer(this->pWindow, NULL);
 	if (this->pRenderer == NULL)
@@ -71,13 +78,21 @@ Runner::Runner()
 	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
 	//initialize systems
-	EngineTime::initialize();
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	RenderSystem::initialize();
 	SceneTransitionManager::initialize();
+	FontManager::initialize();
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+	MetricsManager::initialize();
+
+	// ImGui init
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplSDL3_InitForSDLRenderer(this->pWindow, this->pRenderer);
+	ImGui_ImplSDLRenderer3_Init(this->pRenderer);
 
 #if EDITOR_MODE
 	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);
@@ -99,8 +114,13 @@ Runner::~Runner()
 	RenderSystem::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
-	EngineTime::destroy();
 	SceneTransitionManager::destroy();
+	MetricsManager::destroy();
+
+	// ImGui shutdown
+	ImGui_ImplSDLRenderer3_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
 
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
@@ -109,16 +129,18 @@ Runner::~Runner()
 void Runner::run()
 {
 	bool running = true;
+	Uint64 lastTime = 0;
+	Uint64 currentTime = 0;
 
 	while (running)
 	{
-		EngineTime::getInstance()->logFrame();
-
 		// process all pending events
 		SDL_Event e;
 
 		while (SDL_PollEvent(&e))
 		{
+			ImGui_ImplSDL3_ProcessEvent(&e); // feed input to ImGui
+
 #if EDITOR_MODE
 			Editor::EditorModule::getInstance()->processEditorInput(&e);
 #endif
@@ -142,19 +164,25 @@ void Runner::run()
 			}
 		}
 
+		lastTime = currentTime;
+		currentTime = SDL_GetTicks();
+		float fDeltaTime = (currentTime - lastTime) / 1000.0f;
+
 #if EDITOR_MODE
-		Editor::EditorModule::getInstance()->updateGameObjects();
+		Editor::EditorModule::getInstance()->updateGameObjects(fDeltaTime);
 #else
-		this->update();
+		this->update(fDeltaTime);
 #endif
-		
+
+		MetricsManager::getInstance()->update();
+
 		this->render();
 
 		// scene loading now handled safely after transition
 		if (!SceneTransitionManager::getInstance()->isTransitioning())
 			SceneManager::getInstance()->checkLoadScene();
 
-		Uint64 frameTime = SDL_GetTicks() - EngineTime::getInstance()->tStart;
+		Uint64 frameTime = SDL_GetTicks() - currentTime;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
 	}
 }
@@ -165,9 +193,9 @@ void Runner::processEvents(SDL_Event* eEvent)
 	GameObjectManager::getInstance()->processInput(eEvent);
 }
 
-void Runner::update()
+void Runner::update(float fDeltaTime)
 {
-	GameObjectManager::getInstance()->update();
+	GameObjectManager::getInstance()->update(fDeltaTime);
 	SceneTransitionManager::getInstance()->update();
 }
 
@@ -178,7 +206,7 @@ void Runner::render()
 	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(pRenderer);
 
-	RenderSystem::getInstance()->draw(this->pRenderer);
+	GameObjectManager::getInstance()->draw(this->pRenderer);
 
 #if EDITOR_MODE
 	Editor::EditorModule::getInstance()->drawEditor(this->pRenderer);
@@ -187,22 +215,31 @@ void Runner::render()
 	// draw fade/transition overlay last
 	SceneTransitionManager::getInstance()->draw(this->pRenderer);
 
+	// --- ImGui new frame ---
+	ImGui_ImplSDL3_NewFrame();
+	ImGui_ImplSDLRenderer3_NewFrame();
+	ImGui::NewFrame();
+
+	MetricsManager::getInstance()->drawGUI();
+
+	ImGui::Render();
+	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), this->pRenderer);
+
 	SDL_RenderPresent(this->pRenderer);
 }
 
 void Runner::registerScenes()
 {
 	auto titleScene = new Title_Scene();
-	auto level1Scene = new Level_1_Scene();
-	auto level2Scene = new Level_2_Scene();
-	auto level3Scene = new Level_3_Scene();
+	auto lobbyScene = new LobbyScene();
+	auto rightRoomScene = new RightRoomScene();
+	auto leftRoomScene = new LeftRoomScene();
 
 	SceneManager::getInstance()->registerScene(titleScene);
-	SceneManager::getInstance()->registerScene(level1Scene);
-	SceneManager::getInstance()->registerScene(level2Scene);
-	SceneManager::getInstance()->registerScene(level3Scene);
+	SceneManager::getInstance()->registerScene(lobbyScene);
+	SceneManager::getInstance()->registerScene(rightRoomScene);
+	SceneManager::getInstance()->registerScene(leftRoomScene);
 
 	//load initial scene
 	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
-
 }

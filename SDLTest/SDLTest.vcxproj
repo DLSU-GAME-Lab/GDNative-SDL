@@ -104,13 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)SDLTest\SDL\lib\x64;$(SolutionDir)SDLTest\SDL3_image-3.2.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL3.lib;SDL3_test.lib;SDL3_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)SDLTest\SDL\lib\x64;$(SolutionDir)SDLTest\SDL3_image-3.2.4\lib\x64;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL3.lib;SDL3_test.lib;SDL3_image.lib;SDL3_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,19 +138,27 @@
     <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
     <ClCompile Include="imgui\src\imgui_tables.cpp" />
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
+    <ClCompile Include="include\GUIToggle.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EmptyObject.cpp" />
-    <ClCompile Include="src\EngineTime.cpp" />
-    <ClCompile Include="src\GemManager.cpp" />
-    <ClCompile Include="src\Level_1_Scene.cpp" />
-    <ClCompile Include="src\Level_2_Scene.cpp" />
-    <ClCompile Include="src\Level_3_Scene.cpp" />
+    <ClCompile Include="src\AGeneralInput.cpp" />
+    <ClCompile Include="src\FontManager.cpp" />
+    <ClCompile Include="src\Grid.cpp" />
+    <ClCompile Include="src\GUIButton.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
+    <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
+    <ClCompile Include="src\LeftRoomScene.cpp" />
+    <ClCompile Include="src\MetricsManager.cpp" />
+    <ClCompile Include="src\ButtonInput.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp" />
+    <ClCompile Include="src\PlayerController.cpp" />
+    <ClCompile Include="src\PlayerInput.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -157,15 +166,19 @@
     <ClCompile Include="src\Fairy.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\Librarian.cpp" />
+    <ClCompile Include="src\LobbyScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\RightRoomScene.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
+    <ClCompile Include="src\SceneSwitcher.cpp" />
     <ClCompile Include="src\SceneTransitionManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
     <ClCompile Include="src\RenderSystem.cpp" />
+    <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\UIButton.cpp" />
@@ -183,36 +196,49 @@
     <ClInclude Include="imgui\include\imstb_textedit.h" />
     <ClInclude Include="imgui\include\imstb_truetype.h" />
     <ClInclude Include="include\AButton.h" />
+    <ClInclude Include="include\ACollisionListener.hpp" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EmptyObject.h" />
-    <ClInclude Include="include\EngineTime.h" />
     <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />
     <ClInclude Include="include\AGameObject.h" />
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\Fairy.h" />
+    <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\GameObjectManager.h" />
-    <ClInclude Include="include\GemManager.h" />
-    <ClInclude Include="include\Level_1_Scene.h" />
-    <ClInclude Include="include\Level_2_Scene.h" />
-    <ClInclude Include="include\Level_3_Scene.h" />
+    <ClInclude Include="include\AGeneralInput.h" />
+    <ClInclude Include="include\Grid.h" />
+    <ClInclude Include="include\GUIButton.h" />
     <ClInclude Include="include\GUIManager.h" />
+    <ClInclude Include="include\GUIToggle.h" />
+    <ClInclude Include="include\GUIUtils.h" />
     <ClInclude Include="include\InspectorScreen.h" />
+    <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Librarian.h" />
+    <ClInclude Include="include\LobbyScene.h" />
+    <ClInclude Include="include\MetricsManager.h" />
+    <ClInclude Include="include\ButtonInput.h" />
+    <ClInclude Include="include\PhysicsManager.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\PlayerController.h" />
+    <ClInclude Include="include\PlayerInput.h" />
+    <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\SceneSwitcher.h" />
     <ClInclude Include="include\SceneTransitionManager.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
     <ClInclude Include="include\RenderSystem.h" />
+    <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\UIButton.h" />

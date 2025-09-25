@@ -3,11 +3,6 @@
 #include "Camera.h"
 #include <iostream>
 
-/* * * * * * * * * * * * * * * * * * * * *
- *       SINGLETON-RELATED CONTENT       *
- * * * * * * * * * * * * * * * * * * * * */
-RenderSystem* RenderSystem::P_SHARED_INSTANCE = NULL;
-
 void RenderSystem::updateWindowSize(SDL_Window* pWindow)
 {
     int w, h;
@@ -28,7 +23,7 @@ void RenderSystem::registerSpriteRenderer(SpriteRenderer* pSpriteRenderer)
     this->vecSpriteRenderers.push_back(pSpriteRenderer);
 }
 
-void RenderSystem::unregisterSpriteRenderer(SpriteRenderer * pSpriteRenderer)
+void RenderSystem::unregisterSpriteRenderer(SpriteRenderer* pSpriteRenderer)
 {
     int nIndex = -1;
 
@@ -49,6 +44,11 @@ Camera* RenderSystem::getCamera()
 {
     return this->pCamera;
 }
+
+/* * * * * * * * * * * * * * * * * * * * *
+ *       SINGLETON-RELATED CONTENT       *
+ * * * * * * * * * * * * * * * * * * * * */
+RenderSystem* RenderSystem::P_SHARED_INSTANCE = NULL;
 
 void RenderSystem::initialize()
 {

@@ -2,6 +2,8 @@
 #include "SDL3/SDL.h"
 #include "Settings.h"
 #include <string>
+#include "EmptyObject.h"
+#include "PhysicsManager.h"
 
 class Runner
 {
@@ -33,7 +35,7 @@ public:
 
 private:
     void processEvents(SDL_Event* eEvent);
-    void update();
+    void update(float fDeltaTime);
     void render();
 
 private:

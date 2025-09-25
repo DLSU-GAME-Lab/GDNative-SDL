@@ -35,7 +35,7 @@ bool Collider::isColliding(Collider* pCollider)
 
 	bool bCollisionX = (fLeftA < fRightB) && (fRightA > fLeftB);
 	bool bCollisionY = (fTopA < fBotB) && (fBotA > fTopB);
-	return bCollisionX || bCollisionY;
+	return bCollisionX && bCollisionY;
 }
 
 int Collider::findCollider(Collider* pCollider)

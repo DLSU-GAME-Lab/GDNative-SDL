@@ -81,10 +81,10 @@ void LobbyScene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLamps);
 
 
-	Prop* pChair = new Prop("Chair", "Chair", Vector2D(-600,-365), Vector2D(0.75f, 0.75f), 0, false);
+	Prop* pChair = new Prop("Chair", "Chair", Vector2D(-600,-365), Vector2D(0.75f, 0.75f), 0, true);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pChair);
 
-	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
+	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, true);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
 
 

@@ -6,6 +6,7 @@
 #include "InspectorScreen.h"
 #include "Camera.h"
 #include <iostream>
+#include "MetricsManager.h"
 
 void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
 {
@@ -100,6 +101,9 @@ void Editor::EditorModule::drawEditor(SDL_Renderer* pRenderer)
     }
 
     UIManager::getInstance()->newFrame();
+
+    MetricsManager::getInstance()->drawGUI();
+
     UIManager::getInstance()->drawAllUI(pRenderer);
 
     ImGuiIO io = ImGui::GetIO();

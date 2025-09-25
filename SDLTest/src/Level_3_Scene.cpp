@@ -48,7 +48,7 @@ void Level_3_Scene::onLoadObjects()
 	);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pSettings);
 
-	GemManager::initialize(12, 14, 60.0f, Vector2D(30.0f, -54.0f));
+	GemManager::initialize(12, 14, 45.0f, Vector2D(23.0f, -46.0f));
 	GemManager::getInstance()->startLevel3();
 }
 

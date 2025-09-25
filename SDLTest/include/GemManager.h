@@ -25,7 +25,7 @@ public:
     void matchGems();
 
 private:
-    void createGems();
+    void createGems(float fScale);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

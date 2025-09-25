@@ -1,5 +1,5 @@
 // Change from 0(non-editor mode) to 1(editor mode)
-#define EDITOR_MODE __has_include("EditorModule.h") && 0
+#define EDITOR_MODE __has_include("EditorModule.h") && 1
 
 #if EDITOR_MODE
 #include "EditorModule.h"
@@ -86,13 +86,6 @@ Runner::Runner()
 	FontManager::initialize();
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 	MetricsManager::initialize();
-
-	// ImGui init
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplSDL3_InitForSDLRenderer(this->pWindow, this->pRenderer);
-	ImGui_ImplSDLRenderer3_Init(this->pRenderer);
 
 #if EDITOR_MODE
 	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);

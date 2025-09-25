@@ -9,6 +9,9 @@
 #include "SceneSwitcher.h"
 #include "GUIToggle.h"
 #include "EmptyObject.h"
+#include "FontManager.h"
+#include "Settings.h"
+#include "Text.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -17,6 +20,15 @@ LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 LobbyScene::~LobbyScene()
 {
 
+}
+
+void LobbyScene::loadReturnDialogue()
+{
+	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont", 90);
+	TextureManager::getInstance()->loadFromText("Return", "LazyFont", "Go Back to Title" , colorBlack);
+	TextureManager::getInstance()->loadFromText("Return2", "LazyFont", " Screen ?" , colorBlack);
+	TextureManager::getInstance()->loadFromText("Decline", "LazyFont", "No" , colorBlack);
+	TextureManager::getInstance()->loadFromText("Accept", "LazyFont", "Yes" , colorBlack);
 }
 
 void LobbyScene::onLoadResources()
@@ -50,8 +62,11 @@ void LobbyScene::onLoadResources()
 	TextureManager::getInstance()->load("monoblock_revised.png", "Chair");
 	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
 	TextureManager::getInstance()->load("diary.png", "Diary");
-
+	TextureManager::getInstance()->load("back.png", "Back");
+	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
+	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
+	this->loadReturnDialogue();
 
 }
 
@@ -62,32 +77,6 @@ void LobbyScene::onLoadObjects()
 	PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
 	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 
-	Background* pBackground = new Background("Lobby_Background", "Lobby_Background", Vector2D(0.33f, 0.4f));
-	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
-
-	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
-
-	Player* pPlayer = new Player(Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
-
-	Librarian* pLibrarian = new Librarian(Vector2D(450, -140), Vector2D(1.f, 1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
-
-	Fairy* pFairy = new Fairy(Vector2D(250, -140),Vector2D(1.f,1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
-
-	Prop* pLamps = new Prop("Lamps", "Lamps", Vector2D(-550, 350), Vector2D(1.f, 1.f), 0, false);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pLamps);
-
-
-	Prop* pChair = new Prop("Chair", "Chair", Vector2D(-600,-365), Vector2D(0.75f, 0.75f), 0, true);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pChair);
-
-	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, true);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
-
-
 	GUIButton* pDiary = new GUIButton("Diary", "Diary");
 	pDiary->setPos(Vector2D(0, 0));
 	pDiary->setScale(Vector2D(0.25f, 0.25f));
@@ -95,26 +84,15 @@ void LobbyScene::onLoadObjects()
 	pDiary->attachComponent(pToggle);
 	GameObjectManager::getInstance()->addObject(pDiary);
 
-	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
-	pButtonRight->setPos(Vector2D(800, 0));
-	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
-	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::RIGHT_ROOM_SCENE);
-	pButtonRight->attachComponent(pRightRoomSwitch);
-	GameObjectManager::getInstance()->addObject(pButtonRight);
-
-	GUIButton* pButtonLeft = new GUIButton("Button_Left", "Button");
-	pButtonLeft->setPos(Vector2D(-800, 0));
-	pButtonLeft->setScale(Vector2D(0.25f, 0.25f));
-	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::LEFT_ROOM_SCENE);
-	pButtonLeft->attachComponent(pLeftRoomSwitch);
-	GameObjectManager::getInstance()->addObject(pButtonLeft);
-
-	SpriteRenderer* pRenderer = (SpriteRenderer*)pButtonLeft->findComponentByName("SpriteRenderer");
-	pRenderer->setFlipX(true);
-
 	Background* pSWBST_BG = new Background("SWBST_BG", "SWBST_BG", Vector2D(1, 1));
 	pSWBST_BG->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pSWBST_BG);
+
+	this->createScene();
+	this->createButtons();
+	this->createExitMenu();
+
+
 }
 
 void LobbyScene::onUnloadResources()
@@ -129,5 +107,106 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Chair");
 	TextureManager::getInstance()->unload("Librarian_Desk");
 	TextureManager::getInstance()->unload("Diary");
+	TextureManager::getInstance()->unload("Back");
 	TextureManager::getInstance()->unload("SWBST_BG");
+	TextureManager::getInstance()->unload("Start");
+	TextureManager::getInstance()->unload("Button_Choices");
+	TextureManager::getInstance()->unload("Return");
+	TextureManager::getInstance()->unload("Return2");
+	TextureManager::getInstance()->unload("Decline");
+	TextureManager::getInstance()->unload("Accept");
+	FontManager::getInstance()->unloadFont("LazyFont");
+}
+void LobbyScene::createButtons()
+{
+	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
+	pButtonRight->setPos(Vector2D(800, 0));
+	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
+	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::RIGHT_ROOM_SCENE);
+	pButtonRight->attachComponent(pRightRoomSwitch);
+	GameObjectManager::getInstance()->addObject(pButtonRight);
+
+	GUIButton* pButtonLeft = new GUIButton("Button_Left", "Button");
+	pButtonLeft->setPos(Vector2D(-800, 0));
+	pButtonLeft->setScale(Vector2D(0.25f, 0.25f));
+	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::LEFT_ROOM_SCENE);
+	pButtonLeft->attachComponent(pLeftRoomSwitch);
+	GameObjectManager::getInstance()->addObject(pButtonLeft);
+	SpriteRenderer* pRenderer = (SpriteRenderer*)pButtonLeft->findComponentByName("SpriteRenderer");
+	pRenderer->setFlipX(true);
+
+	GUIButton* pReturn = new GUIButton("Return_Button", "Back");
+	pReturn->setPos(Vector2D(-850, 450));
+	pReturn->setScale(Vector2D(.075f, .075f));
+	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
+	pReturn->attachComponent(pToggle);
+	GameObjectManager::getInstance()->addObject(pReturn);
+}
+
+void LobbyScene::createScene()
+{
+	Background* pBackground = new Background("Lobby_Background", "Lobby_Background", Vector2D(0.33f, 0.4f));
+	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
+
+	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
+
+	Player* pPlayer = new Player(Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.0f);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+
+	Librarian* pLibrarian = new Librarian(Vector2D(450, -140), Vector2D(1.f, 1.f), 0.0f);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
+
+	Fairy* pFairy = new Fairy(Vector2D(250, -140), Vector2D(1.f, 1.f), 0.0f);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+
+	Prop* pLamps = new Prop("Lamps", "Lamps", Vector2D(-550, 350), Vector2D(1.f, 1.f), 0, false);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pLamps);
+
+
+	Prop* pChair = new Prop("Chair", "Chair", Vector2D(-600, -365), Vector2D(0.75f, 0.75f), 0, false);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pChair);
+
+	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
+}
+
+void LobbyScene::createExitMenu()
+{
+	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
+	GameObjectManager::getInstance()->addObject(pExitBG);
+
+	Text* pExitText = new Text("Exit_Text", "Return", Vector2D(0, 50), Vector2D(.75, .75), 0.f, false);
+	Text* pExitText2 = new Text("Exit_Text2", "Return2", Vector2D(0, -50), Vector2D(.75, .75), 0.f, false);
+	pExitBG->attachChild(pExitText);
+	pExitBG->attachChild(pExitText2);
+	GameObjectManager::getInstance()->addObject(pExitText);
+	GameObjectManager::getInstance()->addObject(pExitText2);
+
+	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
+	pDecline->setPos(Vector2D(-200, -300));
+	pDecline->setScale(Vector2D(.15, .15));
+	GameObjectManager::getInstance()->addObject(pDecline);
+	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
+	pDecline->attachComponent(pToggle);
+
+	Text* pDeclineText = new Text("Decline_Text", "Decline", Vector2D(-200, -300), Vector2D(.75, .75), 0.f, false);
+	pDecline->attachChild(pDeclineText);
+	GameObjectManager::getInstance()->addObject(pDeclineText);
+
+	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
+	pAccept->setPos(Vector2D(250, -300));
+	pAccept->setScale(Vector2D(.15, .15));
+	GameObjectManager::getInstance()->addObject(pAccept);
+	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
+	pAccept->attachComponent(pTitleSwitch);
+	Text* pAcceptText = new Text("Accept_Text", "Accept", Vector2D(250, -300), Vector2D(.75, .75), 0.f, false);
+	pAccept->attachChild(pAcceptText);
+	GameObjectManager::getInstance()->addObject(pAcceptText);
+
+	pExitBG->attachChild(pDecline);
+	pExitBG->attachChild(pAccept);
+
+	pExitBG->setEnabled(false);
+	pExitBG->setPos(Vector2D(0, 100));
 }

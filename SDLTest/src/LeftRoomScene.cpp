@@ -2,7 +2,8 @@
 #include "Background.h"
 #include "Player.h"
 #include "Prop.h"
-#include "UIButton.h"
+#include "GUIButton.h"
+#include "SceneSwitcher.h"
 
 LeftRoomScene::LeftRoomScene():AScene(SceneTag::LEFT_ROOM_SCENE)
 {
@@ -26,6 +27,7 @@ void LeftRoomScene::onLoadResources()
 		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
 		TextureManager::getInstance()->load(strPath, "Player");
 	}
+	TextureManager::getInstance()->load("back.png", "Back");
 }
 
 void LeftRoomScene::onLoadObjects()
@@ -33,10 +35,6 @@ void LeftRoomScene::onLoadObjects()
 	Background* pBackground = new Background("Ruins", "Ruins", Vector2D(1.f, .9f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	pBackground->setPos(Vector2D(0.f, -9.f));
-
-
-	UIButton* pButtonRight = new UIButton("Button_Right", "Button", Vector2D(1200, -330), Vector2D(0.25f, 0.25f), 0.0f, true, SceneTag::LOBBY_SCENE);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pButtonRight);
 
 	Prop* pPedestal[5];
 	for (int i = 0; i < 5; i++)
@@ -52,6 +50,20 @@ void LeftRoomScene::onLoadObjects()
 
 	Player* pPlayer = new Player(Vector2D(-160, -275), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+
+	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
+	pButtonRight->setPos(Vector2D(800, 0));
+	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
+	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::LOBBY_SCENE);
+	pButtonRight->attachComponent(pRightRoomSwitch);
+	GameObjectManager::getInstance()->addObject(pButtonRight);
+
+	GUIButton* pReturn = new GUIButton("Return_Button", "Back");
+	pReturn->setPos(Vector2D(-850, 450));
+	pReturn->setScale(Vector2D(.075f, .075f));
+	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
+	pReturn->attachComponent(pTitleSwitch);
+	GameObjectManager::getInstance()->addObject(pReturn);
 }
 
 void LeftRoomScene::onUnloadResources()
@@ -59,5 +71,6 @@ void LeftRoomScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Ruins");
 	TextureManager::getInstance()->unload("Button");
 	TextureManager::getInstance()->unload("Pedestal");
+	TextureManager::getInstance()->unload("Back");
 	TextureManager::getInstance()->unload("Player");
 }

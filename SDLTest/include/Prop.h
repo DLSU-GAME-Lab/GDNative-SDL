@@ -2,7 +2,7 @@
 #include "RenderSystem.h"
 #include "PhysicsManager.h"
 #include "ACollisionListener.hpp"
-class Prop : public AGameObject, public ACollisionListener
+class Prop : public AGameObject
 {
 private:
 	std::string strImageName;
@@ -14,8 +14,5 @@ public:
 
 	void initialize() override;
 
-	// Inherited via ACollisionListener
-	void onCollisionEnter(Collider* pCollider) override;
-	void onCollisionContinue(Collider* pCollider) override;
-	void onCollisionExit(Collider* pCollider) override;
+
 };

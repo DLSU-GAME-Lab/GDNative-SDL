@@ -8,6 +8,12 @@ public:
     LobbyScene();
     ~LobbyScene();
 
+// Helper Scenes
+public:
+    void loadReturnDialogue();
+    void createButtons();
+    void createScene();
+    void createExitMenu();
 public:
     virtual void onLoadResources() override;
     virtual void onLoadObjects() override;

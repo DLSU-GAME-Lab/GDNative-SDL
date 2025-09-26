@@ -22,61 +22,25 @@ LobbyScene::~LobbyScene()
 
 }
 
-void LobbyScene::loadReturnDialogue()
-{
-	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont", 90);
-	TextureManager::getInstance()->loadFromText("Return", "LazyFont", "Go Back to Title" , colorBlack);
-	TextureManager::getInstance()->loadFromText("Return2", "LazyFont", " Screen ?" , colorBlack);
-	TextureManager::getInstance()->loadFromText("Decline", "LazyFont", "No" , colorBlack);
-	TextureManager::getInstance()->loadFromText("Accept", "LazyFont", "Yes" , colorBlack);
-}
-
 void LobbyScene::onLoadResources()
 {
 	TextureManager::getInstance()->load("library_redo.png", "Lobby_Background");
-	//TextureManager::getInstance()->load("frame1.png", "Player");
-	//TextureManager::getInstance()->load("fairy.png", "Fairy");
-	//TextureManager::getInstance()->load("librarian.png", "Librarian");
 
-	for (int i = 0; i < 16; i++)
-	{
-		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Player");
-	}
-
-	for (int i = 0; i < 19; i++)
-	{
-		std::string strPath = "animations/lobby_scene/fairy/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Fairy");
-	}
-
-	for (int i = 0; i < 7; i++)
-	{
-		std::string strPath = "animations/lobby_scene/librarian/Set" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Librarian");
-	}
-
-	TextureManager::getInstance()->load("button.png", "Button");
-	TextureManager::getInstance()->load("lobby_transition_lamps.png", "Lamps");
-	TextureManager::getInstance()->load("stepladder_revised.png", "Step_Ladder");
-	TextureManager::getInstance()->load("monoblock_revised.png", "Chair");
-	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
-	TextureManager::getInstance()->load("diary.png", "Diary");
-	TextureManager::getInstance()->load("back.png", "Back");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
-	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
+	this->loadAnimatedTextures();
+	this->loadSceneTextures();
 	this->loadReturnDialogue();
 
 }
 
 void LobbyScene::onLoadObjects()
 {
-	EmptyObject* pPhysManagerHolder;
-	pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
-	PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
-	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
+	//code for when a scene needs physics
+	//EmptyObject* pPhysManagerHolder;
+	//pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
+	//PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
+	//GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 
+	this->createScene();
 	GUIButton* pDiary = new GUIButton("Diary", "Diary");
 	pDiary->setPos(Vector2D(0, 0));
 	pDiary->setScale(Vector2D(0.25f, 0.25f));
@@ -87,10 +51,9 @@ void LobbyScene::onLoadObjects()
 	Background* pSWBST_BG = new Background("SWBST_BG", "SWBST_BG", Vector2D(1, 1));
 	pSWBST_BG->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pSWBST_BG);
-
-	this->createScene();
 	this->createButtons();
 	this->createExitMenu();
+
 
 
 }
@@ -111,12 +74,58 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("SWBST_BG");
 	TextureManager::getInstance()->unload("Start");
 	TextureManager::getInstance()->unload("Button_Choices");
+	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
 	TextureManager::getInstance()->unload("Return");
 	TextureManager::getInstance()->unload("Return2");
 	TextureManager::getInstance()->unload("Decline");
 	TextureManager::getInstance()->unload("Accept");
 	FontManager::getInstance()->unloadFont("LazyFont");
 }
+
+void LobbyScene::loadReturnDialogue()
+{
+	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont", 90);
+	TextureManager::getInstance()->loadFromText("Return", "LazyFont", "Go Back to Title", colorBlack);
+	TextureManager::getInstance()->loadFromText("Return2", "LazyFont", " Screen ?", colorBlack);
+	TextureManager::getInstance()->loadFromText("Decline", "LazyFont", "No", colorBlack);
+	TextureManager::getInstance()->loadFromText("Accept", "LazyFont", "Yes", colorBlack);
+}
+
+void LobbyScene::loadAnimatedTextures()
+{
+	for (int i = 0; i < 16; i++)
+	{
+		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
+		TextureManager::getInstance()->load(strPath, "Player");
+	}
+
+	for (int i = 0; i < 19; i++)
+	{
+		std::string strPath = "animations/lobby_scene/fairy/frame" + std::to_string(i + 1) + ".png";
+		TextureManager::getInstance()->load(strPath, "Fairy");
+	}
+
+	for (int i = 0; i < 7; i++)
+	{
+		std::string strPath = "animations/lobby_scene/librarian/Set" + std::to_string(i + 1) + ".png";
+		TextureManager::getInstance()->load(strPath, "Librarian");
+	}
+}
+
+void LobbyScene::loadSceneTextures()
+{
+	TextureManager::getInstance()->load("button.png", "Button");
+	TextureManager::getInstance()->load("lobby_transition_lamps.png", "Lamps");
+	TextureManager::getInstance()->load("stepladder_revised.png", "Step_Ladder");
+	TextureManager::getInstance()->load("monoblock_revised.png", "Chair");
+	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
+	TextureManager::getInstance()->load("diary.png", "Diary");
+	TextureManager::getInstance()->load("back.png", "Back");
+	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
+	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
+}
+
 void LobbyScene::createButtons()
 {
 	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");

@@ -11,5 +11,12 @@ public:
 	virtual void onLoadResources() override;
 	virtual void onLoadObjects() override;
 	virtual void onUnloadResources() override;
+public:
+	void loadReturnDialogue();
+	void loadAnimatedTextures();
+	void loadSceneTextures();
+	void createButtons();
+	void createScene();
+	void createExitMenu();
 };
 

@@ -15,6 +15,11 @@ ButtonInput::~ButtonInput()
 	this->bClicked = false;
 }
 
+void ButtonInput::onAttach()
+{
+
+}
+
 void ButtonInput::perform()
 {
 	if (eEvent->type == SDL_EVENT_MOUSE_MOTION)

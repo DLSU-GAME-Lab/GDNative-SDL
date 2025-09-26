@@ -13,12 +13,14 @@ SceneSwitcher::~SceneSwitcher()
 
 }
 
+void SceneSwitcher::onAttach()
+{
+	this->pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
+}
+
 void SceneSwitcher::perform()
 {
-	if (this->pInput == NULL)
-		this->pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
-
-	else if (pInput->getClicked())
+	if (pInput->getClicked())
 	{
 		pInput->setClicked(false);
 		SceneTransitionManager::getInstance()->requestTransition(this->ETag, TransitionType::FADE);

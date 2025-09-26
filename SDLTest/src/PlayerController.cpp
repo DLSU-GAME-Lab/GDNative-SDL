@@ -14,6 +14,11 @@ PlayerController::~PlayerController()
 
 }
 
+void PlayerController::onAttach()
+{
+
+}
+
 void PlayerController::perform()
 {
 	if (this->pInput == NULL || this->pSprite == NULL) return;

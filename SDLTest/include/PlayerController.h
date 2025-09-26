@@ -15,6 +15,7 @@ public:
 	PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite);
 	~PlayerController();
 
+	void onAttach() override;
 	void perform() override;
 
 	void setMoveSpeed(float fMoveSpeed);

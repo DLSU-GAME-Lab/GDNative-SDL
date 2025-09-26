@@ -120,8 +120,14 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
     }
 }
 
+void SpriteRenderer::onAttach()
+{
+
+}
+
 void SpriteRenderer::perform()
 {
+
 }
 
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)

@@ -10,7 +10,8 @@ private:
     std::vector<Collider*> vecUntrackedCollider;
 
 public:
-    void perform();
+    void onAttach() override;
+    void perform() override;
     void trackCollider(Collider* pCollider);
     void untrackCollider(Collider* pCollider);
     void cleanUp();

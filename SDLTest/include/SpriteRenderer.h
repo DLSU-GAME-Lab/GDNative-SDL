@@ -24,6 +24,7 @@ public:
     ~SpriteRenderer();
 
     void draw(SDL_Renderer* pRenderer, Camera* pCamera);
+    void onAttach() override;
     void perform() override;
 
     // setters

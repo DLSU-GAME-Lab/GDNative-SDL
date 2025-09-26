@@ -25,6 +25,7 @@ public:
 	SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFrameRate);
 	~SpriteAnimator();
 
+	virtual void onAttach() override;
 	virtual void perform() override;
 
 	void stop();

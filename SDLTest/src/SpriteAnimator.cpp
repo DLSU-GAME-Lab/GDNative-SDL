@@ -20,6 +20,11 @@ SpriteAnimator::~SpriteAnimator()
 
 }
 
+void SpriteAnimator::onAttach()
+{
+
+}
+
 void SpriteAnimator::perform()
 {
 	if (this->bIsPlaying)

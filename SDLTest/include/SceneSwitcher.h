@@ -13,6 +13,7 @@ public:
 	SceneSwitcher(SceneTag ETag);
 	~SceneSwitcher();
 
+	void onAttach() override;
 	void perform() override;
 };
 

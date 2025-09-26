@@ -15,6 +15,7 @@ public:
 	ButtonInput(SpriteRenderer* pSprite);
 	~ButtonInput();
 
+	void onAttach() override;
 	void perform() override;
 
 	Vector2D getMousePos() const;

@@ -1,6 +1,5 @@
 #include "GUIToggle.h"
 #include "GameObjectManager.h"
-#include "ButtonInput.h"
 
 GUIToggle::GUIToggle(std::string strGUIName) : AComponent("GUIToggle", ComponentType::SCRIPT)
 {
@@ -12,9 +11,14 @@ GUIToggle::~GUIToggle()
 
 }
 
+void GUIToggle::onAttach()
+{
+	this->pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
+}
+
 void GUIToggle::perform()
 {
-	ButtonInput* pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
+	
 	if (pInput && pInput->getClicked())
 	{
 		pInput->setClicked(false);

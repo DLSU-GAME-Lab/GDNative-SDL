@@ -2,6 +2,11 @@
 #include "GameObjectManager.h"
 #include "EmptyObject.h"
 
+void GUIManager::onAttach()
+{
+
+}
+
 void GUIManager::perform()
 {
 

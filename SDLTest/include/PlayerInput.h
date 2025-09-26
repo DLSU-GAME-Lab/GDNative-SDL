@@ -12,6 +12,7 @@ public:
 	PlayerInput();
 	~PlayerInput();
 
+	void onAttach() override;
 	void perform() override;
 
 	float getMoveX() const;

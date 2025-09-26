@@ -9,6 +9,7 @@ private:
     std::unordered_map<std::string, AGameObject*> vecGUI;
 
 public:
+    void onAttach() override;
     void perform() override;
     void registerGUI(AGameObject* pGameObject);
     void unregisterGUI(std::string strName);

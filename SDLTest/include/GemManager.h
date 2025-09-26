@@ -1,16 +1,16 @@
 #pragma once
 #include "AComponent.h"
 #include "Grid.h"
+#include "Gem.h"
 #include <vector>
 
 class GemManager : public Grid
 {
 private:
-    int selected[2] = { -1, -1 };
-    std::vector<AGameObject*> vecGem;
-    std::vector<Vector2D> vecTile;
+    Gem* pSelected[2];
 
 public:
+    void onAttach() override;
     void perform() override;
 
     static void loadResources();
@@ -20,7 +20,7 @@ public:
     void startLevel2();
     void startLevel3();
 
-    AGameObject* getGem();
+    void setSelected(Gem* pSelected);
     void moveGems();
     void matchGems();
 

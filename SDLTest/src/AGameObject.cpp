@@ -94,6 +94,7 @@ void AGameObject::attachComponent(AComponent* pComponent)
 {
     this->vecComponent.push_back(pComponent);
     pComponent->attachOwner(this);
+    pComponent->onAttach();
 }
 
 void AGameObject::detachComponent(AComponent * pComponent)

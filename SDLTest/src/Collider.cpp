@@ -7,6 +7,10 @@ Collider::Collider(std::string strName, bool bFollowParent):AComponent(strName,C
 	this->bCleanUp = false;
 	this->bFollowParent = bFollowParent;
 }
+void Collider::onAttach()
+{
+
+}
 void Collider::perform()
 {
 	

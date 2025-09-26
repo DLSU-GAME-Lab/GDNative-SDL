@@ -17,7 +17,8 @@ public:
     Collider(std::string strName, bool bFollowParent = true);
 
 public:
-    void perform();
+    void onAttach() override;
+    void perform() override;
     bool isColliding(Collider* pCollider);
 
     int findCollider(Collider* pCollider);

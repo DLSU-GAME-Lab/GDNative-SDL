@@ -11,6 +11,7 @@ public:
 	AGeneralInput(std::string strName);
 	~AGeneralInput();
 
+	virtual void onAttach() = 0;
 	virtual void perform() = 0;
 
 	void setEvent(SDL_Event* eEvent);

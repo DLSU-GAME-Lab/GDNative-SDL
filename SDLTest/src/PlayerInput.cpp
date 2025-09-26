@@ -11,6 +11,11 @@ PlayerInput::~PlayerInput()
 
 }
 
+void PlayerInput::onAttach()
+{
+
+}
+
 void PlayerInput::perform()
 {
 	switch (eEvent->type)

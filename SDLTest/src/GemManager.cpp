@@ -48,7 +48,7 @@ void GemManager::startLevel1()
         }
     }
 
-    this->createGems(0.2f);
+    this->spawnGems(0.2f);
 }
 
 void GemManager::startLevel2()
@@ -67,7 +67,7 @@ void GemManager::startLevel2()
         }
     }
 
-    this->createGems(0.2f);
+    this->spawnGems(0.2f);
 }
 
 void GemManager::startLevel3()
@@ -94,47 +94,58 @@ void GemManager::startLevel3()
         }
     }
 
-    this->createGems(0.15f);
+    this->spawnGems(0.15f);
 }
 
 void GemManager::setSelected(Gem* pSelected)
 {
-    if (this->pSelected[0] == NULL)
-        this->pSelected[0] = pSelected;
-    else if (this->pSelected[1] != pSelected)
+    if (this->pSelectedObjects[0] == NULL)
     {
-        this->pSelected[1] = pSelected;
+        this->pSelectedObjects[0] = pSelected;
+        this->pSelectedCells[0] = getCellFromObject(pSelected);
+    }
+    else if (this->pSelectedObjects[1] != pSelected)
+    {
+        this->pSelectedObjects[1] = pSelected;
+        this->pSelectedCells[1] = getCellFromObject(pSelected);
 
-        Vector2D pos0 = this->pSelected[0]->getPos();
-        Vector2D pos1 = this->pSelected[1]->getPos();
+        Vector2D pos0 = this->pSelectedObjects[0]->getPos();
+        Vector2D pos1 = this->pSelectedObjects[1]->getPos();
         if ((pos0 - pos1).SqrMagnitude() <= this->fCellSize * this->fCellSize)
+        {
             this->moveGems();
+            this->checkMatches();
+            this->spawnGems(0.2f);
+        }
 
         else
         {
-            this->pSelected[0] = NULL;
-            this->pSelected[1] = NULL;
+            this->pSelectedObjects[0] = NULL;
+            this->pSelectedObjects[1] = NULL;
         }
     }
-    else this->pSelected[0] = NULL;
+    else this->pSelectedObjects[0] = NULL;
 }
 
 void GemManager::moveGems()
 {
-    Vector2D pos = pSelected[0]->getPos();
-    pSelected[0]->setPos(pSelected[1]->getPos());
-    pSelected[1]->setPos(pos);
-    std::cout << "Swapped " << pSelected[0]->getName() << " with " << pSelected[1]->getName() << "\n";
+    Vector2D pos = pSelectedObjects[0]->getPos();
+    pSelectedObjects[0]->setPos(pSelectedObjects[1]->getPos());
+    pSelectedObjects[1]->setPos(pos);
 
-    pSelected[0] = NULL;
-    pSelected[1] = NULL;
+    Grid::CellData cell = *pSelectedCells[0];
+    *pSelectedCells[0] = *pSelectedCells[1];
+    *pSelectedCells[1] = cell;
 
-    this->matchGems();
+    std::cout << "Swapped " << pSelectedObjects[0]->getName() << " with " << pSelectedObjects[1]->getName() << "\n";
+
+    pSelectedObjects[0] = NULL;
+    pSelectedObjects[1] = NULL;
 }
 
-void GemManager::matchGems()
+void GemManager::checkMatches()
 {
-    std::vector<AGameObject*> toRemove;
+    std::vector<AGameObject*> removeHorizontal;
     for (Uint8 r = 0; r < this->nHeight; r++)
     {
         GemType type = GemType::WHITE;
@@ -143,7 +154,7 @@ void GemManager::matchGems()
         for (Uint8 c = 0; c < this->nWidth; c++)
         {
             if (this->gridCells[r][c].blocked || this->gridCells[r][c].obj == NULL) continue;
-            GemType currentType = ((Gem*)this->gridCells[r][c].obj)->getType();
+            GemType currentType = static_cast<Gem*>(this->gridCells[r][c].obj)->getType();
 
             if (type != currentType)
             {
@@ -155,15 +166,30 @@ void GemManager::matchGems()
                 count++;
                 if (count == 3)
                 {
-                    toRemove.push_back(this->gridCells[r][c].obj);
-                    toRemove.push_back(this->gridCells[r][c - 1].obj);
-                    toRemove.push_back(this->gridCells[r][c - 2].obj);
+                    removeHorizontal.push_back(this->gridCells[r][c].obj);
+                    removeHorizontal.push_back(this->gridCells[r][c - 1].obj);
+                    removeHorizontal.push_back(this->gridCells[r][c - 2].obj);
+
+                    this->gridCells[r][c].obj = NULL;
+                    this->gridCells[r][c - 1].obj = NULL;
+                    this->gridCells[r][c - 2].obj = NULL;
                     std::cout << "Horizontal Match!" << "\n";
                 }
-                else if (count > 3) toRemove.push_back(this->gridCells[r][c].obj);
+                else if (count > 3)
+                {
+                    removeHorizontal.push_back(this->gridCells[r][c].obj);
+                    this->gridCells[r][c].obj = NULL;
+                }
             }
         }
     }
+
+    for (int i = 0; i < removeHorizontal.size(); i++)
+    {
+        if (removeHorizontal[i] != NULL) GameObjectManager::getInstance()->deleteObject(removeHorizontal[i]);
+    }
+
+    std::vector<AGameObject*> removeVertical;
     for (Uint8 c = 0; c < this->nWidth; c++)
     {
         GemType type = GemType::WHITE;
@@ -172,7 +198,7 @@ void GemManager::matchGems()
         for (Uint8 r = 0; r < this->nHeight; r++)
         {
             if (this->gridCells[r][c].blocked || this->gridCells[r][c].obj == NULL) continue;
-            GemType currentType = ((Gem*)this->gridCells[r][c].obj)->getType();
+            GemType currentType = static_cast<Gem*>(this->gridCells[r][c].obj)->getType();
 
             if (type != currentType)
             {
@@ -184,24 +210,33 @@ void GemManager::matchGems()
                 count++;
                 if (count == 3)
                 {
-                    toRemove.push_back(this->gridCells[r][c].obj);
-                    toRemove.push_back(this->gridCells[r - 1][c].obj);
-                    toRemove.push_back(this->gridCells[r - 2][c].obj);
+                    removeVertical.push_back(this->gridCells[r][c].obj);
+                    removeVertical.push_back(this->gridCells[r - 1][c].obj);
+                    removeVertical.push_back(this->gridCells[r - 2][c].obj);
+
+                    this->gridCells[r][c].obj = NULL;
+                    this->gridCells[r - 1][c].obj = NULL;
+                    this->gridCells[r - 2][c].obj = NULL;
                     std::cout << "Vertical Match!" << "\n";
                 }
-                else if (count > 3) toRemove.push_back(this->gridCells[r][c].obj);
+                else if (count > 3)
+                {
+                    removeVertical.push_back(this->gridCells[r][c].obj);
+                    this->gridCells[r][c].obj = NULL;
+                }
             }
         }
     }
 
-    for (int i = 0; i < toRemove.size(); i++)
+    for (int i = 0; i < removeVertical.size(); i++)
     {
-        if (toRemove[i] != NULL) GameObjectManager::getInstance()->deleteObject(toRemove[i]);
+        if (removeVertical[i] != NULL) GameObjectManager::getInstance()->deleteObject(removeVertical[i]);
     }
 }
 
-void GemManager::createGems(float fScale)
+void GemManager::spawnGems(float fScale)
 {
+    this->fGemSize = fScale;
     srand(time(0));
 
     std::string gemColors[]{ "Yellow", "Blue", "White", "Green", "Purple", "Red" };
@@ -209,12 +244,12 @@ void GemManager::createGems(float fScale)
     {
         for (Uint8 c = 0; c < this->gridCells[r].size(); c++)
         {
-            if (!this->gridCells[r][c].blocked)
+            if (!this->gridCells[r][c].blocked && this->gridCells[r][c].obj == NULL)
             {
                 GemType gemType = GemType(rand() % 6);
                 Gem* pGem = new Gem("gem_" + std::to_string((r + 1) * (c + 1)), gemType);
                 pGem->setPos(this->gridCells[r][c].pos);
-                pGem->setScale(Vector2D(fScale));
+                pGem->setScale(Vector2D(this->fGemSize));
                 this->gridCells[r][c].obj = pGem;
                 GameObjectManager::getInstance()->addObject(pGem);
             }
@@ -226,8 +261,11 @@ GemManager* GemManager::P_SHARED_INSTANCE = NULL;
 
 GemManager::GemManager(Uint8 w, Uint8 h, float fCellSize) : Grid("GemManager", w, h, fCellSize)
 {
-    this->pSelected[0] = NULL;
-    this->pSelected[1] = NULL;
+    this->pSelectedObjects[0] = NULL;
+    this->pSelectedObjects[1] = NULL;
+    this->pSelectedCells[0] = NULL;
+    this->pSelectedCells[1] = NULL;
+    this->fGemSize = 1.0f;
 }
 
 void GemManager::initialize(Uint8 w, Uint8 h, float fCellSize, Vector2D offset)

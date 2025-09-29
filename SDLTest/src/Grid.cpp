@@ -59,3 +59,16 @@ AGameObject* Grid::getCellObject(Uint8 r, Uint8 c)
 	if (r >= this->nWidth || c >= this->nHeight) return nullptr;
 	else this->gridCells[r][c].obj;
 }
+
+Grid::CellData* Grid::getCellFromObject(AGameObject* pObject)
+{
+	for (Uint8 r = 0; r < this->nHeight; r++)
+	{
+		for (Uint8 c = 0; c < this->nWidth; c++)
+		{
+			if (this->gridCells[r][c].obj == pObject) return &this->gridCells[r][c];
+		}
+	}
+
+	return NULL;
+}

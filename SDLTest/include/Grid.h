@@ -33,5 +33,6 @@ public:
     bool setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject);
     Vector2D getCellPosition(Uint8 r, Uint8 c);
     AGameObject* getCellObject(Uint8 r, Uint8 c);
+    CellData* getCellFromObject(AGameObject* pObject);
 };
 

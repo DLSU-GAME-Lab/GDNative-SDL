@@ -7,7 +7,9 @@
 class GemManager : public Grid
 {
 private:
-    Gem* pSelected[2];
+    Gem* pSelectedObjects[2];
+    Grid::CellData* pSelectedCells[2];
+    float fGemSize;
 
 public:
     void onAttach() override;
@@ -22,10 +24,10 @@ public:
 
     void setSelected(Gem* pSelected);
     void moveGems();
-    void matchGems();
+    void checkMatches();
 
 private:
-    void createGems(float fScale);
+    void spawnGems(float fScale);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

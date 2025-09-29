@@ -42,7 +42,7 @@ void LeftRoomScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Player");
 	TextureManager::getInstance()->unload("Button_Choices");
 	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
-	FontManager::getInstance()->unloadFont("LazyFont");
+	FontManager::getInstance()->unloadFont("LazyFont90");
 }
 
 void LeftRoomScene::loadFonts()

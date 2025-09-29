@@ -2,7 +2,7 @@
 #include "AComponent.h"
 #include "AGameObject.h"
 #include "EnumComponentType.h"
-#include "ACollisionListener.hpp"
+#include "ACollisionListener.h"
 #include "vector"
 class Collider : public AComponent
 {

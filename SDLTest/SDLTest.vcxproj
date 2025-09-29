@@ -147,6 +147,7 @@
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\AGeneralInput.cpp" />
+    <ClCompile Include="src\EventBroadcaster.cpp" />
     <ClCompile Include="src\FontManager.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\GUIButton.cpp" />
@@ -181,7 +182,6 @@
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
-    <ClCompile Include="src\UIButton.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
     <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
@@ -196,7 +196,7 @@
     <ClInclude Include="imgui\include\imstb_textedit.h" />
     <ClInclude Include="imgui\include\imstb_truetype.h" />
     <ClInclude Include="include\AButton.h" />
-    <ClInclude Include="include\ACollisionListener.hpp" />
+    <ClInclude Include="include\ACollisionListener.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Background.h" />
@@ -208,7 +208,10 @@
     <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />
     <ClInclude Include="include\AGameObject.h" />
+    <ClInclude Include="include\EnumEventKey.h" />
     <ClInclude Include="include\EnumSceneTag.h" />
+    <ClInclude Include="include\EventBroadcaster.h" />
+    <ClInclude Include="include\EventListener.h" />
     <ClInclude Include="include\Fairy.h" />
     <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\GameObjectManager.h" />
@@ -241,7 +244,6 @@
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\Title_Scene.h" />
-    <ClInclude Include="include\UIButton.h" />
     <ClInclude Include="include\Prop.h" />
     <ClInclude Include="include\UIManager.h" />
     <ClInclude Include="include\UINames.h" />

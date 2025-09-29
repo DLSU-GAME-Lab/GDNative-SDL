@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "Librarian.h"
 #include "Fairy.h"
-#include "UIButton.h"
 #include "Prop.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
@@ -41,17 +40,8 @@ void LobbyScene::onLoadObjects()
 	//GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 
 	this->createScene();
-	GUIButton* pDiary = new GUIButton("Diary", "Diary");
-	pDiary->setPos(Vector2D(0, 0));
-	pDiary->setScale(Vector2D(0.25f, 0.25f));
-	GUIToggle* pToggle = new GUIToggle("SWBST_BG");
-	pDiary->attachComponent(pToggle);
-	GameObjectManager::getInstance()->addObject(pDiary);
-
-	Background* pSWBST_BG = new Background("SWBST_BG", "SWBST_BG", Vector2D(1, 1));
-	pSWBST_BG->setEnabled(false);
-	GameObjectManager::getInstance()->addObject(pSWBST_BG);
 	this->createButtons();
+	this->createDiary();
 	this->createExitMenu();
 
 
@@ -75,12 +65,14 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Start");
 	TextureManager::getInstance()->unload("Button_Choices");
 	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
-	FontManager::getInstance()->unloadFont("LazyFont");
+	FontManager::getInstance()->unloadFont("LazyFont90");
+	FontManager::getInstance()->unloadFont("LazyFont45");
 }
 
 void LobbyScene::loadFonts()
 {
 	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
+	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont45", 45);
 }
 
 void LobbyScene::loadAnimatedTextures()
@@ -116,6 +108,7 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
 	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/Play_Icon.png", "ChangeDisplay");
 }
 
 void LobbyScene::createButtons()
@@ -214,4 +207,60 @@ void LobbyScene::createExitMenu()
 
 	pExitBG->setEnabled(false);
 	pExitBG->setPos(Vector2D(0, 100));
+}
+
+void LobbyScene::createDiary()
+{
+	GUIButton* pDiary = new GUIButton("Diary", "Diary");
+	pDiary->setPos(Vector2D(0, 0));
+	pDiary->setScale(Vector2D(0.25f, 0.25f));
+	GUIToggle* pToggle = new GUIToggle("SWBST_BG");
+	pDiary->attachComponent(pToggle);
+	GameObjectManager::getInstance()->addObject(pDiary);
+
+	Background* pSWBST_BG = new Background("SWBST_BG", "SWBST_BG", Vector2D(1, 1));
+	GameObjectManager::getInstance()->addObject(pSWBST_BG);
+
+	GUIButton* pClose = new GUIButton("Close_Button", "Back");
+	pClose->setPos(Vector2D(-750, 400));
+	pClose->setScale(Vector2D(.05f, .05f));
+	GUIToggle* pToggleClose = new GUIToggle("SWBST_BG");
+	pClose->attachComponent(pToggleClose);
+	GameObjectManager::getInstance()->addObject(pClose);
+	pSWBST_BG->attachChild(pClose);
+
+	EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
+	GameObjectManager::getInstance()->addObject(pFirstPageHolder);
+	this->createPageOne(pFirstPageHolder);
+
+	pSWBST_BG->attachChild(pFirstPageHolder);
+	pSWBST_BG->setEnabled(false);
+
+}
+
+void LobbyScene::createPageOne(AGameObject* pParent)
+{
+	
+	Text* pTitle = new Text("Page1_Title", "Ano ang SWBST?", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
+	pTitle->setFont("LazyFont90");
+	pParent->attachChild(pTitle);
+	GameObjectManager::getInstance()->addObject(pTitle);
+
+	Text* pLine1 = new Text("Page1_Line1", "Ang SWBST ay isang paraan upang madaling amtukoy ang mahahalagang bahagi ng", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
+	pLine1->setFont("LazyFont45");
+	pParent->attachChild(pLine1);
+	GameObjectManager::getInstance()->addObject(pLine1);
+
+	Text* pLine2 = new Text("Page1_Line2", "kuwento at matulungan kang buod ng kuwento.", Vector2D(-275, 250), Vector2D(.75, .75), 0.f, false);
+	pLine2->setFont("LazyFont45");
+	pParent->attachChild(pLine2);
+	GameObjectManager::getInstance()->addObject(pLine2);
+
+	Text* pLine3 = new Text("Page1_Line3", "Ang mga titik ng SWBST ay kumakatawan sa mga sumusunod:", Vector2D(-180, 150), Vector2D(.75, .75), 0.f, false);
+	pLine3->setFont("LazyFont45");
+	pParent->attachChild(pLine3);
+	GameObjectManager::getInstance()->addObject(pLine3);
+
+
+
 }

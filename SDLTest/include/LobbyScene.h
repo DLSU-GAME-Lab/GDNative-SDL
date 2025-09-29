@@ -20,6 +20,8 @@ public:
     void createButtons();
     void createScene();
     void createExitMenu();
+    void createDiary();
+    void createPageOne(AGameObject* pParent);
 
 };
 

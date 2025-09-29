@@ -68,7 +68,7 @@ file(MAKE_DIRECTORY ${SDL3_IMAGE_INSTALL_DIR}/include)
 # ================= Add SDL3 via ExternalProject (CMake Stuff =============================
 ExternalProject_Add(external_sdl3
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG main  # Choose whatever version/tag here you guys want
+        GIT_TAG release-3.2.22  # Choose whatever version/tag here you guys want
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
         PREFIX ${CMAKE_BINARY_DIR}/external/SDL3
@@ -145,11 +145,28 @@ target_compile_definitions(SDL3 INTERFACE
 
 add_dependencies(SDL3 external_sdl3)
 
-add_custom_target(sdl3_prebuild
-        COMMAND ${CMAKE_COMMAND} -E echo "Ensuring SDL3 is built first"
-        DEPENDS external_sdl3
+# ================= ABI-specific output ==========================
+
+if(NOT ANDROID_ABI)
+    message(FATAL_ERROR "ANDROID_ABI not set! Make sure Gradle passes -DANDROID_ABI")
+endif()
+
+set(MERGED_JNI_OUT
+    ${CMAKE_CURRENT_SOURCE_DIR}/app/build/intermediates/merged_jni_libs/${CMAKE_BUILD_TYPE}/out/${ANDROID_ABI}
 )
-# =====================================================================================
+file(MAKE_DIRECTORY ${MERGED_JNI_OUT})
+
+# Copy SDL3.so to correct ABI folder
+add_custom_command(
+    TARGET external_sdl3 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${SDL3_INSTALL_DIR}/lib/libSDL3.so
+        ${MERGED_JNI_OUT}/libSDL3.so
+)
+
+add_custom_target(sdl3_prebuild DEPENDS external_sdl3)
+
+# ================= SDL3 Wrapper ========================================================
 
 # Add SDL3 wrapper to just get all the headers
 add_library(sdl3_wrapper INTERFACE)
@@ -176,7 +193,7 @@ ExternalProject_Add(external_sdl3_image
         # Configure SDL3_image options for Android before fetching
         -DSDL3IMAGE_DEPS_SHARED=OFF
         -DSDL3IMAGE_VENDORED=ON
-        -DSDL3IMAGE_BUILD_SHARED_LIBS=OFF
+        -DSDL3IMAGE_BUILD_SHARED_LIBS=ON
 
         # Disable image formats that might cause linking issues on Android
         -DSDL3IMAGE_JPG_SHARED=OFF
@@ -206,17 +223,36 @@ ExternalProject_Add(external_sdl3_image
         -DANDROID_ABI:STRING=${ANDROID_ABI}
 )
 
+# Import SDL3_image
+add_library(SDL3_image SHARED IMPORTED GLOBAL)
+set_target_properties(SDL3_image PROPERTIES
+    IMPORTED_LOCATION "${SDL3_IMAGE_INSTALL_DIR}/lib/libSDL3_image.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${SDL3_IMAGE_INSTALL_DIR}/include"
+)
+add_dependencies(SDL3_image external_sdl3_image)
+
 # Create wrapper for SDL3_image
 add_library(sdl3_image_wrapper INTERFACE)
-
 target_include_directories(sdl3_image_wrapper INTERFACE
-        ${SDL3_IMAGE_INSTALL_DIR}/include
+    ${SDL3_IMAGE_INSTALL_DIR}/include
 )
+target_link_libraries(sdl3_image_wrapper INTERFACE SDL3 SDL3_image)
+
+# Ensure libSDL3_image.so lands under ABI-specific merged_jni_libs path
+add_custom_command(
+    TARGET external_sdl3_image POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${SDL3_IMAGE_INSTALL_DIR}/lib/libSDL3_image.so
+        ${MERGED_JNI_OUT}/libSDL3_image.so
+)
+
+add_dependencies(sdl3_image_wrapper external_sdl3_image)
+
 # Link to the built SDL3_image library
 target_link_libraries(sdl3_image_wrapper INTERFACE
         ${SDL3_IMAGE_INSTALL_DIR}/lib/libSDL3_image.so
 )
-add_dependencies(sdl3_image_wrapper external_sdl3_image)
+
 # ===========================================================================
 
 # Fetch Content spdlog just for logging

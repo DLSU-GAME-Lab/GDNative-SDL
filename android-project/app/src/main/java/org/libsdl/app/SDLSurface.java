@@ -40,10 +40,10 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     protected float mWidth, mHeight;
 
     // Is SurfaceView ready for rendering
-    protected boolean mIsSurfaceReady;
+    public boolean mIsSurfaceReady;
 
     // Startup
-    protected SDLSurface(Context context) {
+    public SDLSurface(Context context) {
         super(context);
         getHolder().addCallback(this);
 
@@ -66,11 +66,11 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         mIsSurfaceReady = false;
     }
 
-    protected void handlePause() {
+    public void handlePause() {
         enableSensor(Sensor.TYPE_ACCELEROMETER, false);
     }
 
-    protected void handleResume() {
+    public void handleResume() {
         setFocusable(true);
         setFocusableInTouchMode(true);
         requestFocus();
@@ -80,7 +80,7 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         enableSensor(Sensor.TYPE_ACCELEROMETER, true);
     }
 
-    protected Surface getNativeSurface() {
+    public Surface getNativeSurface() {
         return getHolder().getSurface();
     }
 
@@ -121,12 +121,14 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         float density = 1.0f;
         try
         {
-            DisplayMetrics realMetrics = new DisplayMetrics();
-            mDisplay.getRealMetrics( realMetrics );
-            nDeviceWidth = realMetrics.widthPixels;
-            nDeviceHeight = realMetrics.heightPixels;
-            // Use densityDpi instead of density to more closely match what the UI scale is
-            density = (float)realMetrics.densityDpi / 160.0f;
+            if (Build.VERSION.SDK_INT >= 17 /* Android 4.2 (JELLY_BEAN_MR1) */) {
+                DisplayMetrics realMetrics = new DisplayMetrics();
+                mDisplay.getRealMetrics( realMetrics );
+                nDeviceWidth = realMetrics.widthPixels;
+                nDeviceHeight = realMetrics.heightPixels;
+                // Use densityDpi instead of density to more closely match what the UI scale is
+                density = (float)realMetrics.densityDpi / 160.0f;
+            }
         } catch(Exception ignored) {
         }
 
@@ -297,7 +299,7 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     // Sensor events
-    protected void enableSensor(int sensortype, boolean enabled) {
+    public void enableSensor(int sensortype, boolean enabled) {
         // TODO: This uses getDefaultSensor - what if we have >1 accels?
         if (enabled) {
             mSensorManager.registerListener(this,
@@ -361,7 +363,6 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     // Captured pointer events for API 26.
-    @Override
     public boolean onCapturedPointerEvent(MotionEvent event)
     {
         int action = event.getActionMasked();
@@ -400,7 +401,7 @@ public class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     SDLActivity.onNativeMouse(button, action, x, y, true);
                     return true;
             }
-        }
+        }      
 
         return false;
     }

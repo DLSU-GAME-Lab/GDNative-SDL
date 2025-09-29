@@ -23,11 +23,13 @@ public:
     void startLevel3();
 
     void setSelected(Gem* pSelected);
-    void moveGems();
-    void checkMatches();
 
 private:
     void spawnGems(float fScale);
+    void moveGems();
+    bool checkMatches();
+    void cascadeDown();
+    void printGridData();
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

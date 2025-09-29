@@ -49,6 +49,7 @@ void GemManager::startLevel1()
     }
 
     this->spawnGems(0.2f);
+    this->printGridData();
 }
 
 void GemManager::startLevel2()
@@ -114,8 +115,12 @@ void GemManager::setSelected(Gem* pSelected)
         if ((pos0 - pos1).SqrMagnitude() <= this->fCellSize * this->fCellSize)
         {
             this->moveGems();
-            this->checkMatches();
-            this->spawnGems(0.2f);
+            if (this->checkMatches())
+            {
+                this->cascadeDown();
+                this->spawnGems(this->fGemSize);
+            }
+            this->printGridData();
         }
 
         else
@@ -137,14 +142,13 @@ void GemManager::moveGems()
     *pSelectedCells[0] = *pSelectedCells[1];
     *pSelectedCells[1] = cell;
 
-    std::cout << "Swapped " << pSelectedObjects[0]->getName() << " with " << pSelectedObjects[1]->getName() << "\n";
-
     pSelectedObjects[0] = NULL;
     pSelectedObjects[1] = NULL;
 }
 
-void GemManager::checkMatches()
+bool GemManager::checkMatches()
 {
+    bool bMatched = false;
     std::vector<AGameObject*> removeHorizontal;
     for (Uint8 r = 0; r < this->nHeight; r++)
     {
@@ -173,7 +177,7 @@ void GemManager::checkMatches()
                     this->gridCells[r][c].obj = NULL;
                     this->gridCells[r][c - 1].obj = NULL;
                     this->gridCells[r][c - 2].obj = NULL;
-                    std::cout << "Horizontal Match!" << "\n";
+                    bMatched |= true;
                 }
                 else if (count > 3)
                 {
@@ -217,7 +221,7 @@ void GemManager::checkMatches()
                     this->gridCells[r][c].obj = NULL;
                     this->gridCells[r - 1][c].obj = NULL;
                     this->gridCells[r - 2][c].obj = NULL;
-                    std::cout << "Vertical Match!" << "\n";
+                    bMatched |= true;
                 }
                 else if (count > 3)
                 {
@@ -231,6 +235,79 @@ void GemManager::checkMatches()
     for (int i = 0; i < removeVertical.size(); i++)
     {
         if (removeVertical[i] != NULL) GameObjectManager::getInstance()->deleteObject(removeVertical[i]);
+    }
+    std::cout << "Checked for matches." << "\n";
+    this->printGridData();
+    return bMatched;
+}
+
+void GemManager::cascadeDown()
+{
+    for (int r = this->gridCells.size() - 1; r >= 0; r--)
+    {
+        for (int c = this->gridCells[r].size() - 1; c >= 0; c--)
+        {
+            if (!this->gridCells[r][c].blocked && this->gridCells[r][c].obj == NULL)
+            {
+                int indexAbove = r - 1;
+                while (indexAbove >= 0 && this->gridCells[indexAbove][c].obj == NULL) indexAbove--;
+                if (indexAbove >= 0)
+                {
+                    this->gridCells[r][c].obj = this->gridCells[indexAbove][c].obj;
+                    this->gridCells[r][c].obj->setPos(this->gridCells[r][c].pos);
+                    this->gridCells[indexAbove][c].obj = NULL;
+                }
+            }
+        }
+    }
+}
+
+void GemManager::printGridData()
+{
+    std::cout << "\n  ";
+    for (Uint8 c = 0; c < this->nWidth; c++) std::cout << "--- ";
+    std::cout << "\n";
+    for (Uint8 r = 0; r < this->gridCells.size(); r++)
+    {
+        std::cout << " |";
+        for (Uint8 c = 0; c < this->gridCells[r].size(); c++)
+        {
+            if (this->gridCells[r][c].blocked)
+            {
+                std::cout << " * |";
+                continue;
+            }
+            else if (this->gridCells[r][c].obj == NULL)
+            {
+                std::cout << "   |";
+                continue;
+            }
+
+            switch (static_cast<Gem*>(this->gridCells[r][c].obj)->getType())
+            {
+            case GemType::WHITE:
+                std::cout << " W |";
+                break;
+            case GemType::RED:
+                std::cout << " R |";
+                break;
+            case GemType::YELLOW:
+                std::cout << " Y |";
+                break;
+            case GemType::GREEN:
+                std::cout << " G |";
+                break;
+            case GemType::BLUE:
+                std::cout << " B |";
+                break;
+            case GemType::PURPLE:
+                std::cout << " P |";
+                break;
+            }
+        }
+        std::cout << "\n  ";
+        for (Uint8 c = 0; c < this->gridCells[r].size(); c++) std::cout << "--- ";
+        std::cout << "\n";
     }
 }
 

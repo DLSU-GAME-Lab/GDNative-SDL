@@ -28,7 +28,7 @@ void LobbyScene::onLoadResources()
 
 	this->loadAnimatedTextures();
 	this->loadSceneTextures();
-	this->loadReturnDialogue();
+	this->loadFonts();
 
 }
 
@@ -75,20 +75,12 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Start");
 	TextureManager::getInstance()->unload("Button_Choices");
 	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
-	TextureManager::getInstance()->unload("Return");
-	TextureManager::getInstance()->unload("Return2");
-	TextureManager::getInstance()->unload("Decline");
-	TextureManager::getInstance()->unload("Accept");
 	FontManager::getInstance()->unloadFont("LazyFont");
 }
 
-void LobbyScene::loadReturnDialogue()
+void LobbyScene::loadFonts()
 {
-	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont", 90);
-	TextureManager::getInstance()->loadFromText("Return", "LazyFont", "Go Back to Title", colorBlack);
-	TextureManager::getInstance()->loadFromText("Return2", "LazyFont", " Screen ?", colorBlack);
-	TextureManager::getInstance()->loadFromText("Decline", "LazyFont", "No", colorBlack);
-	TextureManager::getInstance()->loadFromText("Accept", "LazyFont", "Yes", colorBlack);
+	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
 }
 
 void LobbyScene::loadAnimatedTextures()
@@ -185,8 +177,10 @@ void LobbyScene::createExitMenu()
 	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
 	GameObjectManager::getInstance()->addObject(pExitBG);
 
-	Text* pExitText = new Text("Exit_Text", "Return", Vector2D(0, 50), Vector2D(.75, .75), 0.f, false);
-	Text* pExitText2 = new Text("Exit_Text2", "Return2", Vector2D(0, -50), Vector2D(.75, .75), 0.f, false);
+	Text* pExitText = new Text("Exit_Text", "Go Back to Title", Vector2D(0, 50), Vector2D(.75, .75), 0.f, false);
+	pExitText->setFont("LazyFont90");
+	Text* pExitText2 = new Text("Exit_Text2", " Screen ?", Vector2D(0, -50), Vector2D(.75, .75), 0.f, false);
+	pExitText2->setFont("LazyFont90");
 	pExitBG->attachChild(pExitText);
 	pExitBG->attachChild(pExitText2);
 	GameObjectManager::getInstance()->addObject(pExitText);
@@ -199,7 +193,8 @@ void LobbyScene::createExitMenu()
 	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
 	pDecline->attachComponent(pToggle);
 
-	Text* pDeclineText = new Text("Decline_Text", "Decline", Vector2D(-200, -300), Vector2D(.75, .75), 0.f, false);
+	Text* pDeclineText = new Text("Decline_Text", "No", Vector2D(-200, -300), Vector2D(.75, .75), 0.f, false);
+	pDeclineText->setFont("LazyFont90");
 	pDecline->attachChild(pDeclineText);
 	GameObjectManager::getInstance()->addObject(pDeclineText);
 
@@ -209,7 +204,8 @@ void LobbyScene::createExitMenu()
 	GameObjectManager::getInstance()->addObject(pAccept);
 	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
 	pAccept->attachComponent(pTitleSwitch);
-	Text* pAcceptText = new Text("Accept_Text", "Accept", Vector2D(250, -300), Vector2D(.75, .75), 0.f, false);
+	Text* pAcceptText = new Text("Accept_Text", "Yes", Vector2D(250, -300), Vector2D(.75, .75), 0.f, false);
+	pAcceptText->setFont("LazyFont90");
 	pAccept->attachChild(pAcceptText);
 	GameObjectManager::getInstance()->addObject(pAcceptText);
 

@@ -52,7 +52,6 @@ void Title_Scene::onUnloadResources()
     TextureManager::getInstance()->unload("Player");
     TextureManager::getInstance()->unload("Librarian");
     TextureManager::getInstance()->unload("Fairy");
-    TextureManager::getInstance()->unload("Start");
     TextureManager::getInstance()->unload("Title_Banner");
     TextureManager::getInstance()->unload("DLSU_Logos");
     FontManager::getInstance()->unloadFont("LazyFont");
@@ -66,8 +65,7 @@ void Title_Scene::onUnloadObjects()
 
 void Title_Scene::loadText()
 {
-    FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont", 90);
-    TextureManager::getInstance()->loadFromText("Start", "LazyFont", "Start Game", colorBlack);
+    FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
 }
 void Title_Scene::loadAnimatedTextures()
 {
@@ -108,7 +106,8 @@ void Title_Scene::createButtons()
     SceneSwitcher* pSceneSwitcher = new SceneSwitcher(SceneTag::LOBBY_SCENE);
     pStartButton->attachComponent(pSceneSwitcher);
     GameObjectManager::getInstance()->addObject(pStartButton);
-    Text* pStartText = new Text("Start_Text", "Start", Vector2D(0, 0), Vector2D(1, 1), 0.f, false);
+    Text* pStartText = new Text("Start_Text", "Start Game", Vector2D(0, 0), Vector2D(1, 1), 0.f, false);
+    pStartText->setFont("LazyFont90");
     pStartButton->attachChild(pStartText);
     GameObjectManager::getInstance()->addObject(pStartText);
     pStartButton->setPos(Vector2D(-580, -150));

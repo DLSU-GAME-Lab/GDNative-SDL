@@ -81,6 +81,7 @@ void TextureManager::unload(std::string strName)
     );
 
     this->mapTexture[strName].clear();
+    std::cout << "Unloaded: " << strName << std::endl;
 }
 
 std::vector<SDL_Texture*> TextureManager::getTexture(std::string strName, int nStart, int nEnd)

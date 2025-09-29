@@ -11,7 +11,7 @@ public:
 	virtual void onLoadObjects() override;
 	virtual void onUnloadResources() override;
 public:
-	void loadReturnDialogue();
+	void loadFonts();
 	void loadAnimatedTextures();
 	void loadSceneTextures();
 	void createButtons();

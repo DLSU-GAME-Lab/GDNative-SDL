@@ -65,6 +65,8 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Start");
 	TextureManager::getInstance()->unload("Button_Choices");
 	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
+	TextureManager::getInstance()->unload("ChangeDisplay");
+	TextureManager::getInstance()->unload("Intro");
 	FontManager::getInstance()->unloadFont("LazyFont90");
 	FontManager::getInstance()->unloadFont("LazyFont45");
 }
@@ -109,6 +111,7 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Play_Icon.png", "ChangeDisplay");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/Intro.png", "Intro");
 }
 
 void LobbyScene::createButtons()
@@ -261,6 +264,8 @@ void LobbyScene::createPageOne(AGameObject* pParent)
 	pParent->attachChild(pLine3);
 	GameObjectManager::getInstance()->addObject(pLine3);
 
-
+	Prop* pIntro = new Prop("FairyIntro", "Intro", Vector2D(0, -0), Vector2D(1, 1), 0, false);
+	pParent->attachChild(pIntro);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pIntro);
 
 }

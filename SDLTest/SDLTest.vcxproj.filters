@@ -81,9 +81,6 @@
     <ClCompile Include="src\Player.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\UIButton.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\SceneManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
@@ -211,6 +208,12 @@
     <ClCompile Include="src\Collider.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="src\EventBroadcaster.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Diary.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -238,9 +241,6 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\Player.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UIButton.h">
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\SceneManager.h">
@@ -388,8 +388,20 @@
     <ClInclude Include="include\Collider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="include\ACollisionListener.hpp">
-      <Filter>Component\Physics\Interface</Filter>
+    <ClInclude Include="include\EventBroadcaster.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EventListener.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Diary.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ACollisionListener.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnumEventKey.h">
+      <Filter>Enum</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

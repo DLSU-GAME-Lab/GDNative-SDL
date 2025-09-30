@@ -7,6 +7,7 @@ AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
     bEnabled = true;
+    bFollowParent = true;
     pParent = NULL;
 
     // defaults:
@@ -168,9 +169,10 @@ void AGameObject::setEnabled(bool bEnabled)
     this->bEnabled = bEnabled;
     if (!this->vecChildren.empty())
     {
-        for (int i = 0; i < this->vecChildren.size(); i++)
+        for (AGameObject* pObject:vecChildren)
         {
-            this->vecChildren[i]->setEnabled(bEnabled);
+            if(pObject->getFollowParent())
+                pObject->setEnabled(bEnabled);
             
         }
     }
@@ -243,6 +245,16 @@ float AGameObject::getRot()
 bool AGameObject::getIsScreenObject() const
 {
     return this->bIsScreenObject;
+}
+
+bool AGameObject::getFollowParent()
+{
+    return this->bFollowParent;
+}
+
+void AGameObject::setFollowParent(bool bFollowParent)
+{
+    this->bFollowParent = bFollowParent;
 }
 
 

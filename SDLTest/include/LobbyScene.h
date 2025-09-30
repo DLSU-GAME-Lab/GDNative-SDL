@@ -22,6 +22,12 @@ public:
     void createExitMenu();
     void createDiary();
     void createPageOne(AGameObject* pParent);
+    void createPageTwo(AGameObject* pParent);
+    void createPageThree(AGameObject* pParent);
+    void createPageFour(AGameObject* pParent);
+    void createPageFive(AGameObject* pParent);
+    void createPageSix(AGameObject* pParent);
+    void createPageSeven(AGameObject* pParent);
 
 };
 

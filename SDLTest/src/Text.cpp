@@ -9,6 +9,7 @@ AGameObject(strName)
 	this->strMessage = strMessage;
 	this->fVecTranslate = fVecTranslate;
 	this->fVecScale = fVecScale;
+	this->color = colorBlack;
 }
 
 Text::~Text()
@@ -23,9 +24,14 @@ void Text::setFont(std::string strFontName)
 	this->strFontName = strFontName;
 }
 
+void Text::setColor(SDL_Color color)
+{
+	this->color = color;
+}
+
 void Text::initialize()
 {
-	TextureManager::getInstance()->loadFromText(this->strName + " Text", this->strFontName, this->strMessage, colorBlack);
+	TextureManager::getInstance()->loadFromText(this->strName + " Text", this->strFontName, this->strMessage, this->color);
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strName + " Text", this->fVecTranslate.x, this->fVecTranslate.y);
 	this->attachComponent((AComponent*)pSpriteRenderer);
 }

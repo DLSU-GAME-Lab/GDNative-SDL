@@ -2,7 +2,7 @@
 #include "GameObjectManager.h"
 #include "ButtonInput.h"
 
-GUIToggle::GUIToggle(std::string strGUIName) : AComponent("GUIToggle", ComponentType::SCRIPT)
+GUIToggle::GUIToggle(std::string strGUIName, std::string strNumber) : AComponent("GUIToggle" + strNumber, ComponentType::SCRIPT)
 {
 	this->strGUIName = strGUIName;
 }
@@ -14,11 +14,22 @@ GUIToggle::~GUIToggle()
 
 void GUIToggle::perform()
 {
+	
 	ButtonInput* pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
 	if (pInput && pInput->getClicked())
 	{
+		std::cout << pOwner->getName() << std::endl;
 		pInput->setClicked(false);
 		AGameObject* pObject = GameObjectManager::getInstance()->findObjectByName(this->strGUIName);
-		if (pObject != NULL) pObject->setEnabled(!pObject->getEnabled());
+		if (pObject != NULL)
+		{
+			//std::cout << pObject->getName()<<std::endl;
+			pObject->setEnabled(!pObject->getEnabled());
+		}
+		else
+		{
+			std::cout << pObject->getName() << " Not Found" << std::endl;
+
+		}
 	}
 }

@@ -8,6 +8,7 @@
 #include "Settings.h"
 #include "Text.h"
 #include "GUIToggle.h"
+#include "EmptyObject.h"
 
 LeftRoomScene::LeftRoomScene():AScene(SceneTag::LEFT_ROOM_SCENE)
 {
@@ -26,6 +27,10 @@ void LeftRoomScene::onLoadResources()
 
 void LeftRoomScene::onLoadObjects()
 {
+	EmptyObject* pPhysManagerHolder;
+	pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
+	PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
+	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 	this->createScene();
 	this->createButtons();
 	this->createExitMenu();

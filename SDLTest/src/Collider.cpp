@@ -1,5 +1,6 @@
 #include "Collider.h"
 
+
 Collider::Collider(std::string strName, bool bFollowParent):AComponent(strName,ComponentType::SCRIPT)
 {
 	this->COffset = SDL_FRect(0.f, 0.f, 0.f, 0.f);
@@ -35,6 +36,47 @@ bool Collider::isColliding(Collider* pCollider)
 
 	bool bCollisionX = (fLeftA < fRightB) && (fRightA > fLeftB);
 	bool bCollisionY = (fTopA < fBotB) && (fBotA > fTopB);
+	if(bCollisionX&& bCollisionY)
+	{
+		float centerAX = fLeftA + (CBoundsA.w / 2.0f);
+		float centerAY = fTopA + (CBoundsA.h / 2.0f);
+		float centerBX = fLeftB + (CBoundsB.w / 2.0f);
+		float centerBY = fTopB + (CBoundsB.h / 2.0f);
+
+		float deltaX = centerAX - centerBX;
+		float deltaY = centerAY - centerBY;
+		if (std::abs(deltaX) > std::abs(deltaY))
+		{
+			if (deltaX > 0)
+			{
+				this->bCollideLeft = true;
+				//std::cout << pCollider->getOwner()->getName() << " collided with " << this->pOwner->getName() << " from LEFT\n";
+			}
+			else
+			{
+				this->bCollideRight = true;
+				//std::cout << pCollider->getOwner()->getName() << " collided with " << this->pOwner->getName() << " from RIGHT\n";
+
+			}
+		}
+		else
+		{
+			if (deltaY > 0)
+			{
+				this->bCollideTop = true;
+				//std::cout << pCollider->getOwner()->getName() << " collided with " << this->pOwner->getName() << " from TOP\n";
+
+			}
+			else
+			{
+				this->bCollideBottom = true;
+				//std::cout << pCollider->getOwner()->getName() << " collided with " << this->pOwner->getName() << " from BOTTOM\n";
+
+			}
+		}
+	}
+
+
 	return bCollisionX && bCollisionY;
 }
 
@@ -73,6 +115,10 @@ void Collider::onCollisionExit(Collider* pCollider)
 {
 	if (this->pListener != NULL) {
 		this->pListener->onCollisionExit(pCollider);
+		this->bCollideLeft = false;
+		this->bCollideTop = false;
+		this->bCollideBottom = false;
+		this->bCollideRight = false;
 	}
 }
 
@@ -110,6 +156,26 @@ void Collider::setCollided(Collider* pCollider, bool bCollided)
 		if (nIndex != -1)
 			this->vecCollided.erase(this->vecCollided.begin() + nIndex);
 	}
+}
+
+bool Collider::isCollidedLeft()
+{
+	return this->bCollideLeft;
+}
+
+bool Collider::isCollidedRight()
+{
+	return this->bCollideRight;
+}
+
+bool Collider::isCollidedTop()
+{
+	return this->bCollideTop;
+}
+
+bool Collider::isCollidedBottom()
+{
+	return this->bCollideBottom;
 }
 
 bool Collider::isCleanUp()

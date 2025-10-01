@@ -34,10 +34,10 @@ void LobbyScene::onLoadResources()
 void LobbyScene::onLoadObjects()
 {
 	//code for when a scene needs physics
-	//EmptyObject* pPhysManagerHolder;
-	//pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
-	//PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
-	//GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
+	EmptyObject* pPhysManagerHolder;
+	pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
+	PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
+	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 
 	this->createScene();
 	this->createButtons();
@@ -250,7 +250,7 @@ void LobbyScene::createDiary()
 	//pDiaryProper->addPage(pSecondPageHolder);
 	//pDiaryProper->addPage(pThirdPageHolder);
 
-	pDiaryProper->setEnabled(true);
+	pDiaryProper->setEnabled(false);
 
 }
 

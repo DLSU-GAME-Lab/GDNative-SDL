@@ -27,10 +27,10 @@ void LeftRoomScene::onLoadResources()
 
 void LeftRoomScene::onLoadObjects()
 {
-	EmptyObject* pPhysManagerHolder;
-	pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
-	PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
-	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
+	//EmptyObject* pPhysManagerHolder;
+	//pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
+	//PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
+	//GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 	this->createScene();
 	this->createButtons();
 	this->createExitMenu();

@@ -2,7 +2,7 @@
 #include "AGameObject.h"
 #include "Collider.h"
 #include "ACollisionListener.h"
-class Player : public AGameObject, ACollisionListener
+class Player : public AGameObject
 {
 public:
 	Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot);
@@ -13,11 +13,11 @@ public:
 
 
 	// Inherited via ACollisionListener
-	void onCollisionEnter(Collider* pCollider) override;
+	//void onCollisionEnter(Collider* pCollider) override;
 
-	void onCollisionContinue(Collider* pCollider) override;
+	//void onCollisionContinue(Collider* pCollider) override;
 
-	void onCollisionExit(Collider* pCollider) override;
+	//void onCollisionExit(Collider* pCollider) override;
 
 };
 

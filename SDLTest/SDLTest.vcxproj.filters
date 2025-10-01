@@ -214,6 +214,9 @@
     <ClCompile Include="src\Diary.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="src\StringUtils.cpp">
+      <Filter>Component\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -402,6 +405,9 @@
     </ClInclude>
     <ClInclude Include="include\EnumEventKey.h">
       <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StringUtils.h">
+      <Filter>Component\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

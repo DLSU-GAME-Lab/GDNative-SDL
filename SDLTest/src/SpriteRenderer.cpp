@@ -107,8 +107,8 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
             << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
         */
-        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL); //replace with both flipped when available
-        if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
+        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle + 180.0f, NULL, SDL_FLIP_NONE);
+        else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
         else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
         //SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());

@@ -85,23 +85,11 @@ void LobbyScene::loadFonts()
 
 void LobbyScene::loadAnimatedTextures()
 {
-	for (int i = 0; i < 16; i++)
-	{
-		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Player");
-	}
+	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
+	TextureManager::getInstance()->loadFromFolder("animations/player_run", "player_run");
 
-	for (int i = 0; i < 19; i++)
-	{
-		std::string strPath = "animations/lobby_scene/fairy/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Fairy");
-	}
-
-	for (int i = 0; i < 7; i++)
-	{
-		std::string strPath = "animations/lobby_scene/librarian/Set" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Librarian");
-	}
+	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/fairy", "Fairy");
+	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/librarian", "Librarian");
 }
 
 void LobbyScene::loadSceneTextures()

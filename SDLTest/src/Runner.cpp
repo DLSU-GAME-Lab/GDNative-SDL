@@ -10,7 +10,7 @@
 #endif
 
 // Toggle editor mode (set to 1 to enable, 0 to disable)
-#define EDITOR_MODE (EDITOR_MODULE_AVAILABLE && 1)   // <- put 1 or 0 here
+#define EDITOR_MODE (EDITOR_MODULE_AVAILABLE && 0)   // <- put 1 or 0 here
 
 #if EDITOR_MODE
 #include "EditorModule.h"

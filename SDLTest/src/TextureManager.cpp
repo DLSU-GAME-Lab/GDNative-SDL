@@ -2,13 +2,18 @@
 #include "FontManager.h"
 #include <SDL3_image/SDL_image.h>
 #include "SDL3_ttf/SDL_ttf.h"
+#include "StringUtils.h"
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
 
 void TextureManager::load(std::string strFolderPath, std::string strName)
 {
-    std::string strPath = "Assets/" + strFolderPath;
+    std::string strPath;
+    auto token = StringUtils::split(strFolderPath, '/');
+    if (token[0] == "Assets") strPath = strFolderPath;
+    else strPath = "Assets/" + strFolderPath;
+
     // DEBUG: print what path is being loaded
     std::cout << "[DEBUG] Attempting to load texture: " << strPath << std::endl;
 
@@ -31,6 +36,26 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }
+
+void TextureManager::loadFromFolder(std::string strPath, std::string strName)
+{
+    std::string directory = "Assets/" + strPath;
+    if (!std::filesystem::exists(directory.c_str()))
+    {
+        std::cerr << "[ERROR] : path [" << directory << "] " << "does no exist." << std::endl;
+        return;
+    }
+    
+    for (const auto& entry : std::filesystem::directory_iterator(directory))
+    {
+        if (std::filesystem::is_regular_file(entry.status()))
+        {
+            std::string path = entry.path().generic_string();
+            this->load(path, strName);
+        }
+    }
+}
+
 void TextureManager::loadFromText(std::string strName, std::string fontType, std::string textureText, SDL_Color textColor)
 {
     SDL_Surface* textSurface = TTF_RenderText_Blended(FontManager::getInstance()->getFont(fontType), textureText.c_str(), 0, textColor);
@@ -49,18 +74,6 @@ void TextureManager::loadFromText(std::string strName, std::string fontType, std
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }
-//
-//void TextureManager::loadFromFolder(std::string strFolderPath, std::string strName)
-//{
-//    std::string strPath = "Assets/" + strFolderPath;
-//    for (const auto& entry : std::filesystem::directory_iterator(strPath))
-//    {
-//        std::string path = entry.path().generic_string();
-//        std::vector<std::string> tokens = StringUtils::split(path, '/');
-//        std::string assetName = StringUtils::split(tokens[tokens.size() - 1], '.')[0];
-//
-//    }
-//}
 
 void TextureManager::unload(std::string strName)
 {

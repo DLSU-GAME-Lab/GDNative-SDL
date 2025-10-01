@@ -32,34 +32,39 @@ void Grid::perform()
 
 }
 
+// set a cell's blocked flag
 void Grid::setBlockedCell(Uint8 r, Uint8 c, bool bBlocked)
 {
-	if (r >= this->nWidth || c >= this->nHeight) return;
+	// note: r is row index (height), c is column index (width)
+	if (r >= this->nHeight || c >= this->nWidth) return;
 
 	this->gridCells[r][c].blocked = bBlocked;
 }
 
+// set cell object, return true on success
 bool Grid::setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject)
 {
-	if (r >= this->nWidth || c >= this->nHeight) return false;
+	if (r >= this->nHeight || c >= this->nWidth) return false;
 
 	this->gridCells[r][c].obj = pGameObject;
-
-	return false;
+	return true;
 }
 
+// get cell world position; return empty vector on bad indices
 Vector2D Grid::getCellPosition(Uint8 r, Uint8 c)
 {
-	if (r >= this->nWidth || c >= this->nHeight) return Vector2D();
-	else this->gridCells[r][c].pos;
+	if (r >= this->nHeight || c >= this->nWidth) return Vector2D();
+	return this->gridCells[r][c].pos;
 }
 
+// get cell object pointer; return nullptr on bad indices
 AGameObject* Grid::getCellObject(Uint8 r, Uint8 c)
 {
-	if (r >= this->nWidth || c >= this->nHeight) return nullptr;
-	else this->gridCells[r][c].obj;
+	if (r >= this->nHeight || c >= this->nWidth) return nullptr;
+	return this->gridCells[r][c].obj;
 }
 
+// find cell by object pointer; returns pointer to cell data or NULL
 Grid::CellData* Grid::getCellFromObject(AGameObject* pObject)
 {
 	for (Uint8 r = 0; r < this->nHeight; r++)

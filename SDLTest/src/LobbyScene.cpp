@@ -264,18 +264,18 @@ void LobbyScene::createDiary()
 	//pFifthPageHolder->setFollowParent(true);
 	//this->createPageFive(pFifthPageHolder);
 
-	EmptyObject* pSixthPageHolder = new EmptyObject("Sixth_Page");
-	GameObjectManager::getInstance()->addObject(pSixthPageHolder);
-	pSixthPageHolder->setEnabled(false);
-	pSixthPageHolder->setFollowParent(true);
-	this->createPageSix(pSixthPageHolder);
+	//EmptyObject* pSixthPageHolder = new EmptyObject("Sixth_Page");
+	//GameObjectManager::getInstance()->addObject(pSixthPageHolder);
+	//pSixthPageHolder->setEnabled(false);
+	//pSixthPageHolder->setFollowParent(true);
+	//this->createPageSix(pSixthPageHolder);
 
 	//pDiaryProper->addPage(pFirstPageHolder);
 	//pDiaryProper->addPage(pSecondPageHolder);
 	//pDiaryProper->addPage(pThirdPageHolder);
 	//pDiaryProper->addPage(pFourthPageHolder);
 	//pDiaryProper->addPage(pFifthPageHolder);
-	pDiaryProper->addPage(pSixthPageHolder);
+	//pDiaryProper->addPage(pSixthPageHolder);
 
 	pDiaryProper->setEnabled(true);
 

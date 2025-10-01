@@ -20,7 +20,7 @@ void Player::initialize()
     //500, 630
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("player_idle", this->fVecTranslate.x, this->fVecTranslate.y);
 
-    SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, 12);
+    SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer);
     PlayerInput* pPlayerInput = new PlayerInput();
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator);
 
@@ -31,8 +31,8 @@ void Player::initialize()
 
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");
-    pSpriteAnimator->addAnimationState("idle", vecIdle);
-    pSpriteAnimator->addAnimationState("run", vecRun);
+    pSpriteAnimator->addAnimationState("idle", vecIdle, 12);
+    pSpriteAnimator->addAnimationState("run", vecRun, 16);
     pSpriteAnimator->setAnimationState("idle");
     pSpriteAnimator->setAnimationType(AnimationType::LOOP);
     pSpriteAnimator->play();

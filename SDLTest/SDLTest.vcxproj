@@ -141,6 +141,7 @@
     <ClCompile Include="include\GUIToggle.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="include\ACollisionListener.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
+    <ClInclude Include="include\Animation.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Collider.h" />

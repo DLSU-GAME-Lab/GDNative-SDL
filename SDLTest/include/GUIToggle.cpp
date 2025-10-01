@@ -2,7 +2,7 @@
 #include "GameObjectManager.h"
 #include "ButtonInput.h"
 
-GUIToggle::GUIToggle(std::string strGUIName, std::string strNumber) : AComponent("GUIToggle" + strNumber, ComponentType::SCRIPT)
+GUIToggle::GUIToggle(std::string strGUIName) : AComponent("GUIToggle", ComponentType::SCRIPT)
 {
 	this->strGUIName = strGUIName;
 }

@@ -69,6 +69,9 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Intro");
 	TextureManager::getInstance()->unload("Somebody");
 	TextureManager::getInstance()->unload("Wanted");
+	TextureManager::getInstance()->unload("But");
+	TextureManager::getInstance()->unload("So");
+	TextureManager::getInstance()->unload("Then");
 	FontManager::getInstance()->unloadFont("LazyFont90");
 	FontManager::getInstance()->unloadFont("Jaini90");
 	FontManager::getInstance()->unloadFont("LazyFont45");
@@ -108,6 +111,9 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Intro.png", "Intro");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Somebody.png", "Somebody");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Wanted.png", "Wanted");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/But.png", "But");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/So.png", "So");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/Then.png", "Then");
 }
 
 void LobbyScene::createButtons()
@@ -246,11 +252,32 @@ void LobbyScene::createDiary()
 	//pThirdPageHolder->setFollowParent(false);
 	//this->createPageThree(pThirdPageHolder);
 
+	//EmptyObject* pFourthPageHolder = new EmptyObject("Fourth_Page");
+	//GameObjectManager::getInstance()->addObject(pFourthPageHolder);
+	//pFourthPageHolder->setEnabled(false);
+	//pFourthPageHolder->setFollowParent(true);
+	//this->createPageFour(pFourthPageHolder);
+
+	//EmptyObject* pFifthPageHolder = new EmptyObject("Fifth_Page");
+	//GameObjectManager::getInstance()->addObject(pFifthPageHolder);
+	//pFifthPageHolder->setEnabled(false);
+	//pFifthPageHolder->setFollowParent(true);
+	//this->createPageFive(pFifthPageHolder);
+
+	EmptyObject* pSixthPageHolder = new EmptyObject("Sixth_Page");
+	GameObjectManager::getInstance()->addObject(pSixthPageHolder);
+	pSixthPageHolder->setEnabled(false);
+	pSixthPageHolder->setFollowParent(true);
+	this->createPageSix(pSixthPageHolder);
+
 	//pDiaryProper->addPage(pFirstPageHolder);
 	//pDiaryProper->addPage(pSecondPageHolder);
 	//pDiaryProper->addPage(pThirdPageHolder);
+	//pDiaryProper->addPage(pFourthPageHolder);
+	//pDiaryProper->addPage(pFifthPageHolder);
+	pDiaryProper->addPage(pSixthPageHolder);
 
-	pDiaryProper->setEnabled(false);
+	pDiaryProper->setEnabled(true);
 
 }
 
@@ -415,25 +442,25 @@ void LobbyScene::createPageThree(AGameObject* pParent)
 	pParent->attachChild(pStudent1);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent1);
 
-	Text* pCat = new Text("Cat", "The cat wanted", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
+	Text* pCat = new Text("Cat", "The cat wanted to", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
 	pCat->setColor(colorYellow);
 	pCat->setFont("Jaini45");
 	pParent->attachChild(pCat);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pCat);
 
-	Text* pCat1 = new Text("Cat1", "to play video games", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
+	Text* pCat1 = new Text("Cat1", "eat a fish", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
 	pCat1->setColor(colorYellow);
 	pCat1->setFont("Jaini45");
 	pParent->attachChild(pCat1);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pCat1);
 
-	Text* pFairy = new Text("Fairy", "The fairy wanted", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
+	Text* pFairy = new Text("Fairy", "The fairy wanted to", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
 	pFairy->setColor(colorBlue);
 	pFairy->setFont("Jaini45");
 	pParent->attachChild(pFairy);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
 
-	Text* pFairy1 = new Text("Fairy1", "to play video games", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
+	Text* pFairy1 = new Text("Fairy1", "become a human", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
 	pFairy1->setColor(colorBlue);
 	pFairy1->setFont("Jaini45");
 	pParent->attachChild(pFairy1);
@@ -443,17 +470,232 @@ void LobbyScene::createPageThree(AGameObject* pParent)
 
 void LobbyScene::createPageFour(AGameObject* pParent)
 {
+	Text* pTitle = new Text("Page4_Title", "But", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
+	pTitle->setFont("Jaini90");
+	pParent->attachChild(pTitle);
+	GameObjectManager::getInstance()->addObject(pTitle);
+
+	Text* pLine1 = new Text("Page4_Line1", "Kapag may karakter, may problemang kinakaharap ang karakter. Tanungin ang iyong sarili, ano", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
+	pLine1->setFont("Jaini45");
+	pParent->attachChild(pLine1);
+	GameObjectManager::getInstance()->addObject(pLine1);
+
+	Text* pLine2 = new Text("Page4_Line2", "ang problema sa kuwento na kinakaharap ng pangunahing tauhan?", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
+	pLine2->setFont("Jaini45");
+	pParent->attachChild(pLine2);
+	GameObjectManager::getInstance()->addObject(pLine2);
+
+	Prop* pBut = new Prop("But", "But", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pBut);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pBut);
+	
+	Text* pStudent = new Text("Page4_Student", "The student had a", Vector2D(-400, -275), Vector2D(1.f, 1.f), 0, false);
+	pStudent->setColor(colorRed);
+	pStudent->setFont("Jaini45");
+	pParent->attachChild(pStudent);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent);
+
+	Text* pStudent1 = new Text("Page4_Student1", "failing grade in ", Vector2D(-400, -320), Vector2D(1.f, 1.f), 0, false);
+	pStudent1->setColor(colorRed);
+	pStudent1->setFont("Jaini45");
+	pParent->attachChild(pStudent1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent1);
+
+	Text* pStudent2 = new Text("Page4_Student2", "English ", Vector2D(-400, -365), Vector2D(1.f, 1.f), 0, false);
+	pStudent2->setColor(colorRed);
+	pStudent2->setFont("Jaini45");
+	pParent->attachChild(pStudent2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent2);
+
+	Text* pCat = new Text("Page4_Cat", "The cat did not have", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
+	pCat->setColor(colorYellow);
+	pCat->setFont("Jaini45");
+	pParent->attachChild(pCat);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat);
+
+	Text* pCat1 = new Text("Page4_Cat1", "enough money to buy", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
+	pCat1->setColor(colorYellow);
+	pCat1->setFont("Jaini45");
+	pParent->attachChild(pCat1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat1);
+
+	Text* pCat2 = new Text("Page4_Cat2", "the fish", Vector2D(0, -365), Vector2D(1.f, 1.f), 0, false);
+	pCat2->setColor(colorYellow);
+	pCat2->setFont("Jaini45");
+	pParent->attachChild(pCat2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat2);
+
+	Text* pFairy = new Text("Page4_Fairy", "The fairy couldn't", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
+	pFairy->setColor(colorBlue);
+	pFairy->setFont("Jaini45");
+	pParent->attachChild(pFairy);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+
+	Text* pFairy1 = new Text("Page4_Fairy1", "leave her duty", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
+	pFairy1->setColor(colorBlue);
+	pFairy1->setFont("Jaini45");
+	pParent->attachChild(pFairy1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy1);
+
+	Text* pFairy2 = new Text("Page4_Fairy2", "behind", Vector2D(400, -365), Vector2D(1.f, 1.f), 0, false);
+	pFairy2->setColor(colorBlue);
+	pFairy2->setFont("Jaini45");
+	pParent->attachChild(pFairy2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy2);
 }
 
 void LobbyScene::createPageFive(AGameObject* pParent)
 {
+	Text* pTitle = new Text("Page5_Title", "So", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
+	pTitle->setFont("Jaini90");
+	pParent->attachChild(pTitle);
+	GameObjectManager::getInstance()->addObject(pTitle);
+
+	Text* pLine1 = new Text("Page5_Line1", "Sinusubukan ng pangunahing tauhan lutasin ang problema. Tanungin ang iyong sarili kung", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
+	pLine1->setFont("Jaini45");
+	pParent->attachChild(pLine1);
+	GameObjectManager::getInstance()->addObject(pLine1);
+
+	Text* pLine2 = new Text("Page5_Line2", "Paano malulutas ng karakte ang problema.", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
+	pLine2->setFont("Jaini45");
+	pParent->attachChild(pLine2);
+	GameObjectManager::getInstance()->addObject(pLine2);
+
+	Prop* pSo = new Prop("So", "So", Vector2D(0, -40), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pSo);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pSo);
+
+	Text* pStudent = new Text("Page5_Student", "The student studied", Vector2D(-400, -275), Vector2D(1.f, 1.f), 0, false);
+	pStudent->setColor(colorRed);
+	pStudent->setFont("Jaini45");
+	pParent->attachChild(pStudent);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent);
+
+	Text* pStudent1 = new Text("Page5_Student1", "hard.", Vector2D(-400, -320), Vector2D(1.f, 1.f), 0, false);
+	pStudent1->setColor(colorRed);
+	pStudent1->setFont("Jaini45");
+	pParent->attachChild(pStudent1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent1);
+
+	Text* pCat = new Text("Page5_Cat", "The cat worked as a", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
+	pCat->setColor(colorYellow);
+	pCat->setFont("Jaini45");
+	pParent->attachChild(pCat);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat);
+
+	Text* pCat1 = new Text("Page5_Cat1", "deliveryman to earn", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
+	pCat1->setColor(colorYellow);
+	pCat1->setFont("Jaini45");
+	pParent->attachChild(pCat1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat1);
+
+	Text* pCat2 = new Text("Page5_Cat2", "enough money.", Vector2D(0, -365), Vector2D(1.f, 1.f), 0, false);
+	pCat2->setColor(colorYellow);
+	pCat2->setFont("Jaini45");
+	pParent->attachChild(pCat2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat2);
+
+	Text* pFairy = new Text("Page5_Fairy", "The fairy accompanied", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
+	pFairy->setColor(colorBlue);
+	pFairy->setFont("Jaini45");
+	pParent->attachChild(pFairy);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+
+	Text* pFairy1 = new Text("Page5_Fairy1", "the student in his", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
+	pFairy1->setColor(colorBlue);
+	pFairy1->setFont("Jaini45");
+	pParent->attachChild(pFairy1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy1);
+
+	Text* pFairy2 = new Text("Page5_Fairy2", "studies.", Vector2D(400, -365), Vector2D(1.f, 1.f), 0, false);
+	pFairy2->setColor(colorBlue);
+	pFairy2->setFont("Jaini45");
+	pParent->attachChild(pFairy2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy2);
 }
 
 void LobbyScene::createPageSix(AGameObject* pParent)
 {
+	Text* pTitle = new Text("Page6_Title", "Then", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
+	pTitle->setFont("Jaini90");
+	pParent->attachChild(pTitle);
+	GameObjectManager::getInstance()->addObject(pTitle);
+
+	Text* pLine1 = new Text("Page6_Line1", "Ano ang mangyayari pagkatapos subukan ng pangunahing tauhan na lutasin ang problema?", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
+	pLine1->setFont("Jaini45");
+	pParent->attachChild(pLine1);
+	GameObjectManager::getInstance()->addObject(pLine1);
+
+	Prop* pThen = new Prop("Then", "Then", Vector2D(0, -0), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pThen);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pThen);
+
+	Text* pStudent = new Text("Page6_Student", "The student got a", Vector2D(-400, -275), Vector2D(1.f, 1.f), 0, false);
+	pStudent->setColor(colorRed);
+	pStudent->setFont("Jaini45");
+	pParent->attachChild(pStudent);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent);
+
+	Text* pStudent1 = new Text("Page6_Student1", "perfect score on his", Vector2D(-400, -320), Vector2D(1.f, 1.f), 0, false);
+	pStudent1->setColor(colorRed);
+	pStudent1->setFont("Jaini45");
+	pParent->attachChild(pStudent1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent1);
+
+	Text* pStudent2 = new Text("Page6_Student2", "next quiz.", Vector2D(-400, -365), Vector2D(1.f, 1.f), 0, false);
+	pStudent2->setColor(colorRed);
+	pStudent2->setFont("Jaini45");
+	pParent->attachChild(pStudent2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pStudent2);
+
+	Text* pCat = new Text("Page6_Cat", "The cat was able to earn", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
+	pCat->setColor(colorYellow);
+	pCat->setFont("Jaini45");
+	pParent->attachChild(pCat);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat);
+
+	Text* pCat1 = new Text("Page6_Cat1", "enough money to buy the", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
+	pCat1->setColor(colorYellow);
+	pCat1->setFont("Jaini45");
+	pParent->attachChild(pCat1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat1);
+
+	Text* pCat2 = new Text("Page6_Cat2", "fish.", Vector2D(0, -365), Vector2D(1.f, 1.f), 0, false);
+	pCat2->setColor(colorYellow);
+	pCat2->setFont("Jaini45");
+	pParent->attachChild(pCat2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pCat2);
+
+	Text* pFairy = new Text("Page6_Fairy", "The fairy became", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
+	pFairy->setColor(colorBlue);
+	pFairy->setFont("Jaini45");
+	pParent->attachChild(pFairy);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
+
+	Text* pFairy1 = new Text("Page6_Fairy1", "human.", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
+	pFairy1->setColor(colorBlue);
+	pFairy1->setFont("Jaini45");
+	pParent->attachChild(pFairy1);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy1);
+
+
 }
 
 void LobbyScene::createPageSeven(AGameObject* pParent)
 {
+	Text* pTitle = new Text("Page7_Title", "Wanted", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
+	pTitle->setFont("Jaini90");
+	pParent->attachChild(pTitle);
+	GameObjectManager::getInstance()->addObject(pTitle);
+
+	Text* pLine1 = new Text("Page7_Line1", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang gusto ng", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
+	pLine1->setFont("Jaini45");
+	pParent->attachChild(pLine1);
+	GameObjectManager::getInstance()->addObject(pLine1);
+
+	Text* pLine2 = new Text("Page7_Line2", "karakter?", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
+	pLine2->setFont("Jaini45");
+	pParent->attachChild(pLine2);
+	GameObjectManager::getInstance()->addObject(pLine2);
 }
 

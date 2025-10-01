@@ -8,7 +8,7 @@ class GemManager : public Grid
 {
 private:
     Gem* pSelectedObjects[2];
-    Grid::CellData* pSelectedCells[2];
+    CellData* pSelectedCells[2];
     float fGemSize;
 
 public:
@@ -18,14 +18,10 @@ public:
     static void loadResources();
     static void unloadResources();
 
-    void startLevel1();
-    void startLevel2();
-    void startLevel3();
-
     void setSelected(Gem* pSelected);
+    void spawnGems(float fScale);
 
 private:
-    void spawnGems(float fScale);
     void moveGems();
     bool checkMatches();
     void cascadeDown();

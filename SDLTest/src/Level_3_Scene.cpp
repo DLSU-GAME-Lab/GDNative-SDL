@@ -49,7 +49,30 @@ void Level_3_Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pSettings);
 
 	GemManager::initialize(12, 14, 45.0f, Vector2D(23.0f, -46.0f));
-	GemManager::getInstance()->startLevel3();
+
+	std::vector< std::vector<Uint8>> rowBlocks;
+
+	rowBlocks.push_back({ 0, 1, 2, 5, 6, 9, 10, 11 });			// r0
+	rowBlocks.push_back({ 0, 5, 6, 11 });						// r1
+	rowBlocks.push_back({ 3, 4, 5, 6, 7, 8 });					// r2
+	rowBlocks.push_back({ 2, 3, 4, 5, 6, 7, 8, 9 });			// r3
+	rowBlocks.push_back({ });									// r4
+	rowBlocks.push_back({ });									// r5
+	rowBlocks.push_back({ 2, 3, 8, 9 });						// r6
+	rowBlocks.push_back({ 2, 3, 4, 7, 8, 9 });					// r7
+	rowBlocks.push_back({ 1, 2, 3, 4, 7, 8, 9, 10 });			// r8
+	rowBlocks.push_back({ 0, 2, 3, 4, 7, 8, 9, 11 });			// r9
+	rowBlocks.push_back({ 4, 7 });								// r10
+	rowBlocks.push_back({ 0, 11 });								// r11
+	rowBlocks.push_back({ 0, 1, 2, 9, 10, 11 });				// r12
+	rowBlocks.push_back({ 0, 1, 2, 3, 4, 7, 8, 9, 10, 11 });	// r13
+
+	for (int i = 0; i < rowBlocks.size(); i++)
+	{
+		GemManager::getInstance()->setBlockedCells(i, rowBlocks[i], true);
+	}
+
+	GemManager::getInstance()->spawnGems(0.15f);
 }
 
 void Level_3_Scene::onUnloadResources()

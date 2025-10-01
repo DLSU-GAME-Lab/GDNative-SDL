@@ -3,19 +3,20 @@
 #include "Vector2D.h"
 
 #include <vector>
+#include <unordered_map>
+
+struct CellData
+{
+    Uint8 r;
+    Uint8 c;
+    Vector2D pos;
+    AGameObject* obj;
+    bool blocked;
+};
 
 class Grid : public AComponent
 {
 protected:
-    struct CellData
-    {
-        Uint8 r;
-        Uint8 c;
-        Vector2D pos;
-        AGameObject* obj;
-        bool blocked;
-    };
-
     typedef std::vector<std::vector<CellData>> GridCells;
 
     Uint8 nWidth;
@@ -30,6 +31,7 @@ public:
     virtual void perform() override;
 
     void setBlockedCell(Uint8 r, Uint8 c, bool bBlocked);
+    void setBlockedCells(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked);
     bool setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject);
     Vector2D getCellPosition(Uint8 r, Uint8 c);
     AGameObject* getCellObject(Uint8 r, Uint8 c);

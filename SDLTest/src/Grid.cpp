@@ -41,6 +41,12 @@ void Grid::setBlockedCell(Uint8 r, Uint8 c, bool bBlocked)
 	this->gridCells[r][c].blocked = bBlocked;
 }
 
+void Grid::setBlockedCells(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked)
+{
+	if (cols.empty()) return;
+	for (Uint8 c : cols) this->gridCells[r][c].blocked = bBlocked;
+}
+
 // set cell object, return true on success
 bool Grid::setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject)
 {
@@ -65,7 +71,7 @@ AGameObject* Grid::getCellObject(Uint8 r, Uint8 c)
 }
 
 // find cell by object pointer; returns pointer to cell data or NULL
-Grid::CellData* Grid::getCellFromObject(AGameObject* pObject)
+CellData* Grid::getCellFromObject(AGameObject* pObject)
 {
 	for (Uint8 r = 0; r < this->nHeight; r++)
 	{

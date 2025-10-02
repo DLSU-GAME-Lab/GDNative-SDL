@@ -91,6 +91,7 @@ void LobbyScene::loadAnimatedTextures()
 {
 	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
 	TextureManager::getInstance()->loadFromFolder("animations/player_run", "player_run");
+	TextureManager::getInstance()->loadFromFolder("animations/player_jump", "player_jump");
 
 	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/fairy", "Fairy");
 	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/librarian", "Librarian");

@@ -37,10 +37,17 @@ void Player::initialize()
     
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");
-    pSpriteAnimator->addAnimationState("idle", vecIdle, 12);
-    pSpriteAnimator->addAnimationState("run", vecRun, 16);
+    auto vecJump = TextureManager::getInstance()->getTexture("player_jump");
+
+    Animation* pIdle = new Animation("idle", vecIdle, 12, AnimationType::LOOP);
+    Animation* pRun = new Animation("run", vecRun, 16, AnimationType::LOOP);
+    Animation* pJump = new Animation("jump", vecJump, 8, AnimationType::ONCE, "idle");
+
+    pSpriteAnimator->addAnimationState(pIdle);
+    pSpriteAnimator->addAnimationState(pRun);
+    pSpriteAnimator->addAnimationState(pJump);
+
     pSpriteAnimator->setAnimationState("idle");
-    pSpriteAnimator->setAnimationType(AnimationType::LOOP);
     pSpriteAnimator->play();
     pPlayerController->setMoveSpeed(300.0f);
     pPlayerController->setJumpForce(500.0f);

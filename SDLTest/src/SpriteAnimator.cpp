@@ -8,7 +8,6 @@ SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer)
 
 	this->bIsPlaying = false;
 	this->bIsReverse = false;
-	this->EType = AnimationType::ONCE;
 
 	this->nFrameIndex = 0;
 	this->fTicks = 0;
@@ -19,13 +18,12 @@ SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_
 {
 	this->pSpriteRenderer = pSpriteRenderer;
 	this->strState = "default";
-	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate);
+	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate, AnimationType::PINGPONG);
 	this->vecAnims.push_back(pAnimation);
 	this->mapAnims[strState] = pAnimation;
 
 	this->bIsPlaying = false;
 	this->bIsReverse = false;
-	this->EType = AnimationType::ONCE;
 
 	this->nFrameIndex = 0;
 	this->fTicks = 0;
@@ -46,14 +44,20 @@ void SpriteAnimator::perform()
 		this->fTicks += fDeltaTime;
 		if (this->fTicks >= mapAnims[strState]->getTicksPerFrame())
 		{
-			this->fTicks -= mapAnims[strState]->getTicksPerFrame();
+			while (this->fTicks >= mapAnims[strState]->getTicksPerFrame())
+				this->fTicks -= mapAnims[strState]->getTicksPerFrame();
+
 			if (!this->bIsReverse) this->nFrameIndex++;
 			else this->nFrameIndex--;
 			
-			switch (this->EType)
+			switch (mapAnims[strState]->getType())
 			{
 			case AnimationType::ONCE:
-				if (this->nFrameIndex == mapAnims[strState]->getFrameCount()) this->stop();
+				if (this->nFrameIndex == mapAnims[strState]->getFrameCount())
+				{
+					if (mapAnims[strState]->getNextState().empty()) this->stop();
+					else this->setAnimationState(mapAnims[strState]->getNextState());
+				}
 				break;
 
 			case AnimationType::LOOP:
@@ -89,11 +93,10 @@ void SpriteAnimator::play()
 	this->bIsPlaying = true;
 }
 
-void SpriteAnimator::addAnimationState(std::string strState, std::vector<SDL_Texture*> vecTexture, Uint8 nFrameRate)
+void SpriteAnimator::addAnimationState(Animation* pAnimation)
 {
-	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate);
 	this->vecAnims.push_back(pAnimation);
-	this->mapAnims[strState] = pAnimation;
+	this->mapAnims[pAnimation->getName()] = pAnimation;
 }
 
 void SpriteAnimator::setAnimationState(std::string strState)
@@ -106,19 +109,10 @@ void SpriteAnimator::setAnimationState(std::string strState)
 		this->stop();
 		this->play();
 	}
-}
-
-void SpriteAnimator::setAnimationType(AnimationType EType)
-{
-	this->EType = EType;
+	else this->play();
 }
 
 std::string SpriteAnimator::getCurrentAnimationState() const
 {
 	return this->strState;
-}
-
-AnimationType SpriteAnimator::getAnimationType() const
-{
-	return this->EType;
 }

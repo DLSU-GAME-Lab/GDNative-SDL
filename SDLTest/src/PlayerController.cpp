@@ -30,6 +30,11 @@ void PlayerController::perform()
 		this->pSprite->setFlipX(this->pInput->getMoveX() < 0.0f);
 	}
 	else this->pAnimator->setAnimationState("idle");
+
+	if (this->pInput->getJumped())
+	{
+		this->pAnimator->setAnimationState("jump");
+	}
 }
 
 void PlayerController::setMoveSpeed(float fMoveSpeed)

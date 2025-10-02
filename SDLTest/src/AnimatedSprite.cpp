@@ -31,6 +31,5 @@ void AnimatedSprite::initialize()
 
     this->attachComponent((AComponent*)pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteAnimator);
-    pSpriteAnimator->setAnimationType(AnimationType::PINGPONG);
     pSpriteAnimator->play();
 }

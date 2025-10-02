@@ -24,6 +24,5 @@ void Librarian::initialize()
     this->attachComponent((AComponent*)pSpriteAnimator);
 
     pSpriteRenderer->setFlipX(true);
-    pSpriteAnimator->setAnimationType(AnimationType::PINGPONG);
     pSpriteAnimator->play();
 }

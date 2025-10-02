@@ -22,5 +22,7 @@ public:
 	void otherPagesFollow();
 	void otherPagesStopFollow();
 	void addPage(EmptyObject* pPage);
+	void progressPage();
+	void regressPage();
 };
 

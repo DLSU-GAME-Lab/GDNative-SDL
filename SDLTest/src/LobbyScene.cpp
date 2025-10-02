@@ -12,6 +12,7 @@
 #include "Text.h"
 #include "Diary.h"
 #include "DiaryToggle.h"
+#include "PageChangeToggle.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -73,6 +74,7 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("But");
 	TextureManager::getInstance()->unload("So");
 	TextureManager::getInstance()->unload("Then");
+	TextureManager::getInstance()->unload("Page_Change");
 	FontManager::getInstance()->unloadFont("LazyFont90");
 	FontManager::getInstance()->unloadFont("Jaini90");
 	FontManager::getInstance()->unloadFont("LazyFont45");
@@ -116,6 +118,7 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("SWBSTWindowHolder/But.png", "But");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/So.png", "So");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Then.png", "Then");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/Play_Icon.png", "Page_Change");
 }
 
 void LobbyScene::createButtons()
@@ -235,6 +238,23 @@ void LobbyScene::createDiary()
 	pClose->attachComponent(pToggleClose);
 	GameObjectManager::getInstance()->addObject(pClose);
 	pDiaryProper->attachChild(pClose);
+	//-755, -365
+	GUIButton* pProgress = new GUIButton("Progress", "Page_Change");
+	pProgress->setPos(Vector2D(770, -365));
+	pProgress->setScale(Vector2D(.05f, .05f));
+	PageChangeToggle* pForward = new PageChangeToggle("Diary", true);
+	pProgress->attachComponent(pForward);
+	GameObjectManager::getInstance()->addObject(pProgress);
+	pDiaryProper->attachChild(pProgress);
+
+	GUIButton* pRegress = new GUIButton("Regress", "Page_Change", true);
+	pRegress->setPos(Vector2D(-755, -365));
+	pRegress->setScale(Vector2D(.05f, .05f));
+	PageChangeToggle* pBackward = new PageChangeToggle("Diary", false);
+	pProgress->attachComponent(pBackward);
+	GameObjectManager::getInstance()->addObject(pRegress);
+	pDiaryProper->attachChild(pRegress);
+
 
 	EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
 	GameObjectManager::getInstance()->addObject(pFirstPageHolder);
@@ -246,7 +266,7 @@ void LobbyScene::createDiary()
 	GameObjectManager::getInstance()->addObject(pSecondPageHolder);
 	this->createPageTwo(pSecondPageHolder);
 	pSecondPageHolder->setEnabled(false);
-	pSecondPageHolder->setFollowParent(true);
+	pSecondPageHolder->setFollowParent(false);
 
 	EmptyObject* pThirdPageHolder = new EmptyObject("Third_Page");
 	GameObjectManager::getInstance()->addObject(pThirdPageHolder);

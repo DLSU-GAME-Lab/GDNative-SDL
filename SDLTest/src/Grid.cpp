@@ -13,11 +13,8 @@ void Grid::onAttach()
 	Vector2D cellSize = Vector2D(this->fCellSize);
 	Vector2D gridSize = Vector2D(this->nWidth, this->nHeight);
 
-	this->gridCells.reserve(this->nHeight);
-
 	for (Uint64 r = 0; r < this->nHeight; r++)
 	{
-		this->gridCells[r].reserve(this->nWidth);
 		std::vector<CellData> col;
 
 		for (Uint64 c = 0; c < this->nWidth; c++)

@@ -6,7 +6,6 @@ import org.libsdl.app.SDLActivity;
 
 public class Babaylan_Tales extends SDLActivity {
 
-
     // Do code here like check permissions or something if needed
     @Override
     public void onCreate(Bundle savedInstanceState) {

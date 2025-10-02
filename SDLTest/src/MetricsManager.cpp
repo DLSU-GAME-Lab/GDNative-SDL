@@ -8,11 +8,14 @@ void MetricsManager::initialize() {
         P_SHARED_INSTANCE = new MetricsManager();
         std::cout << "[MetricsManager] Initialized." << std::endl;
 
-        // Init high-res timer
+    #ifdef _WIN32
         LARGE_INTEGER freq;
         QueryPerformanceFrequency(&freq);
         P_SHARED_INSTANCE->qpcFrequency = double(freq.QuadPart);
         QueryPerformanceCounter(&P_SHARED_INSTANCE->qpcLastTime);
+    #elif defined(__ANDROID__)
+        P_SHARED_INSTANCE->lastTime = SDL_GetPerformanceCounter();
+    #endif
     }
 }
 
@@ -29,24 +32,35 @@ MetricsManager* MetricsManager::getInstance() {
 }
 
 void MetricsManager::update() {
-    // --- FPS (high precision with QPC) ---
+    frameCount++;
+
+    // --- FPS ---
+#ifdef _WIN32
     LARGE_INTEGER now;
     QueryPerformanceCounter(&now);
-    frameCount++;
     double elapsed = double(now.QuadPart - qpcLastTime.QuadPart) / qpcFrequency;
     if (elapsed >= 1.0) {
         fps = float(frameCount / elapsed);
         frameCount = 0;
         qpcLastTime = now;
     }
+#elif defined(__ANDROID__)
+    Uint64 now = SDL_GetPerformanceCounter();
+    double elapsed = (double)(now - lastTime) / SDL_GetPerformanceFrequency();
+    if (elapsed >= 1.0) {
+        fps = float(frameCount / elapsed);
+        frameCount = 0;
+        lastTime = now;
+    }
+#endif
 
     // --- CPU ---
+#ifdef _WIN32
     FILETIME sysIdle, sysKernel, sysUser;
     FILETIME procCreation, procExit, procKernel, procUser;
 
     if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) &&
         GetProcessTimes(GetCurrentProcess(), &procCreation, &procExit, &procKernel, &procUser)) {
-
         if (cpuInitialized) {
             ULONGLONG sysKernelDiff = (((ULONGLONG)sysKernel.dwHighDateTime << 32) | sysKernel.dwLowDateTime) -
                 (((ULONGLONG)prevSysKernel.dwHighDateTime << 32) | prevSysKernel.dwLowDateTime);
@@ -72,12 +86,31 @@ void MetricsManager::update() {
         prevProcUser = procUser;
         cpuInitialized = true;
     }
+#elif defined(__ANDROID__)
+    struct rusage usage;
+    if (getrusage(RUSAGE_SELF, &usage) == 0) {
+        Uint64 currCPUTime = usage.ru_utime.tv_sec * 1000000ULL + usage.ru_utime.tv_usec;
+        if (cpuInitialized) {
+            Uint64 diff = currCPUTime - lastCPUTime;
+            cpuUsage = (double)diff / 10000.0; // rough % estimate
+        }
+        lastCPUTime = currCPUTime;
+        cpuInitialized = true;
+    }
+#endif
 
     // --- Memory ---
+#ifdef _WIN32
     PROCESS_MEMORY_COUNTERS_EX pmc;
     if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc))) {
         memoryUsage = pmc.WorkingSetSize; // bytes
     }
+#elif defined(__ANDROID__)
+    struct rusage mem;
+    if (getrusage(RUSAGE_SELF, &mem) == 0) {
+        memoryUsage = mem.ru_maxrss * 1024; // ru_maxrss is KB
+    }
+#endif
 
     // --- Update history buffers ---
     fpsHistory[offset] = fps;

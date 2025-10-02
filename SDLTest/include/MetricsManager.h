@@ -1,9 +1,17 @@
 #pragma once
-#include <windows.h>
-#include <psapi.h>
 #include <string>
 #include <iostream>
 #include <fstream>
+
+#ifdef _WIN32
+#include <windows.h>
+    #include <psapi.h>
+#elif defined(__ANDROID__)
+#include <SDL3/SDL.h>
+#include <unistd.h>
+#include <sys/resource.h>
+#include <sys/time.h>
+#endif
 
 class MetricsManager {
 private:
@@ -12,17 +20,31 @@ private:
     // FPS tracking
     unsigned long frameCount = 0;
     float fps = 0.0f;
+
+#ifdef _WIN32
     LARGE_INTEGER qpcLastTime{};
     double qpcFrequency = 0.0;
+#elif defined(__ANDROID__)
+    Uint64 lastTime = 0;
+#endif
 
     // CPU tracking
-    FILETIME prevSysKernel{}, prevSysUser{};
-    FILETIME prevProcKernel{}, prevProcUser{};
     bool cpuInitialized = false;
     double cpuUsage = 0.0;
 
+#ifdef _WIN32
+    FILETIME prevSysKernel{}, prevSysUser{};
+    FILETIME prevProcKernel{}, prevProcUser{};
+#elif defined(__ANDROID__)
+    Uint64 lastCPUTime = 0;
+#endif
+
     // Memory tracking
+#ifdef _WIN32
     SIZE_T memoryUsage = 0;
+#elif defined(__ANDROID__)
+    size_t memoryUsage = 0;
+#endif
 
     // Toggles
     bool showFPS = true;
@@ -43,7 +65,7 @@ public:
 
     float getFPS() const { return fps; }
     double getCPUUsage() const { return cpuUsage; }
-    SIZE_T getMemoryUsage() const { return memoryUsage; }
+    size_t getMemoryUsage() const { return memoryUsage; }
 
     // Singleton
     static void initialize();

@@ -30,6 +30,12 @@
 #include "SceneTransitionManager.h" 
 #include "FontManager.h"
 
+#ifdef __ANDROID__
+// android logging
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/android_sink.h"
+#endif
+
 // metrics
 #include "MetricsManager.h"
 #include "imgui.h" 
@@ -87,6 +93,16 @@ Runner::Runner()
 		printf("ERROR");
 	}
 	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+
+#ifdef __ANDROID__
+	auto android_logger = spdlog::android_logger_mt("android", "BabaylanLog");
+	spdlog::set_default_logger(android_logger);
+	spdlog::set_level(spdlog::level::debug); // show debug+ logs
+	spdlog::debug("spdlog initialized on Android");
+#else
+	// just use SDL_Log or std::cout on desktop
+	SDL_Log("Logging initialized on desktop (no spdlog)");
+#endif
 
 	//initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;

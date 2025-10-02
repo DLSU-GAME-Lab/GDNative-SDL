@@ -6,31 +6,133 @@
 #include <algorithm>
 #include <filesystem>
 
+#ifdef __ANDROID__
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/android_sink.h"
+#define LOG_DEBUG(...) spdlog::debug(__VA_ARGS__)
+#define LOG_ERROR(...) spdlog::error(__VA_ARGS__)
+#else
+// on windows/linux: just no-op or printf
+#include <cstdio>
+#define LOG_DEBUG(...) printf(__VA_ARGS__); printf("\n")
+#define LOG_ERROR(...) printf(__VA_ARGS__); printf("\n")
+#endif
+
+// load texture (handles android and desktop separately)
 void TextureManager::load(std::string strFolderPath, std::string strName)
 {
-    std::string strPath = "Assets/" + strFolderPath;
-    // DEBUG: print what path is being loaded
-    std::cout << "[DEBUG] Attempting to load texture: " << strPath << std::endl;
+    SDL_Surface* surface = nullptr;
 
-    SDL_Surface* surface = IMG_Load(strPath.c_str());
-    if (!surface) {
-        std::cerr << "[ERROR] : Problem loading image file [" << strPath << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+#if defined(__ANDROID__)
+    // android: assets are packaged directly, no "Assets/" prefix
+    std::string basePath = strFolderPath;
+#else
+    // desktop: keep using "Assets/" folder
+    std::string basePath = "Assets/" + strFolderPath;
+#endif
+
+    LOG_DEBUG("[TextureManager] load() requested: '{}' -> name='{}'", basePath, strName);
+
+#if defined(__ANDROID__)
+    // try multiple path variants for case and extension
+    std::vector<std::string> tries;
+    tries.push_back(basePath);
+
+    auto extPos = basePath.find_last_of('.');
+    if (extPos != std::string::npos) {
+        std::string nameNoExt = basePath.substr(0, extPos);
+        std::string ext = basePath.substr(extPos);
+        std::string extLower = ext, extUpper = ext;
+        std::transform(extLower.begin(), extLower.end(), extLower.begin(), ::tolower);
+        std::transform(extUpper.begin(), extUpper.end(), extUpper.begin(), ::toupper);
+        if (extLower != ext) tries.push_back(nameNoExt + extLower);
+        if (extUpper != ext) tries.push_back(nameNoExt + extUpper);
+    } else {
+        tries.push_back(basePath + ".png");
+        tries.push_back(basePath + ".PNG");
+    }
+
+    // remove duplicate paths
+    std::vector<std::string> uniqueTries;
+    for (auto &p : tries) {
+        if (std::find(uniqueTries.begin(), uniqueTries.end(), p) == uniqueTries.end())
+            uniqueTries.push_back(p);
+    }
+
+    bool loaded = false;
+    for (auto &pathTry : uniqueTries) {
+        spdlog::debug("[TextureManager] trying '{}'", pathTry);
+
+        SDL_IOStream* file = SDL_IOFromFile(pathTry.c_str(), "rb");
+        if (!file) {
+            spdlog::debug("[TextureManager] SDL_IOFromFile failed '{}': {}", pathTry, SDL_GetError());
+            continue;
+        }
+
+        surface = IMG_Load_IO(file, true);
+        if (!surface) {
+            spdlog::debug("[TextureManager] IMG_Load_IO failed '{}': {}", pathTry, SDL_GetError());
+            continue;
+        }
+
+        spdlog::debug("[TextureManager] loaded '{}' surface={} w={} h={}", pathTry, (void*)surface, surface->w, surface->h);
+        loaded = true;
+        break;
+    }
+
+    if (!loaded) {
+        spdlog::error("[TextureManager] failed to load '{}'. put file in app/src/main/assets. path is case-sensitive.", basePath);
         return;
     }
 
+#else
+    // desktop: try exact and extension variants
+    std::vector<std::string> tries = { basePath };
+    auto extPos = basePath.find_last_of('.');
+    if (extPos == std::string::npos) {
+        tries.push_back(basePath + ".png");
+        tries.push_back(basePath + ".PNG");
+    } else {
+        std::string nameNoExt = basePath.substr(0, extPos);
+        std::string ext = basePath.substr(extPos);
+        std::string extLower = ext, extUpper = ext;
+        std::transform(extLower.begin(), extLower.end(), extLower.begin(), ::tolower);
+        std::transform(extUpper.begin(), extUpper.end(), extUpper.begin(), ::toupper);
+        if (extLower != ext) tries.push_back(nameNoExt + extLower);
+        if (extUpper != ext) tries.push_back(nameNoExt + extUpper);
+    }
+
+    for (auto &pathTry : tries) {
+        LOG_DEBUG("[TextureManager] trying '{}'", pathTry);
+        surface = IMG_Load(pathTry.c_str());
+        if (surface) {
+            LOG_DEBUG("[TextureManager] loaded '{}' surface={} w={} h={}", pathTry, (void*)surface, surface->w, surface->h);
+            break;
+        } else {
+            LOG_DEBUG("[TextureManager] IMG_Load failed '{}': {}", pathTry, SDL_GetError());
+        }
+    }
+
+    if (!surface) {
+        LOG_DEBUG("[TextureManager] failed to load '{}'", basePath);
+        return;
+    }
+#endif
+
+    // make texture from surface
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, surface);
     SDL_DestroySurface(surface);
 
     if (!pTexture) {
-        std::cerr << "[ERROR] : Failed to create texture for [" << strPath << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+        LOG_ERROR("[TextureManager] SDL_CreateTextureFromSurface failed '{}': {}", basePath, SDL_GetError());
         return;
     }
 
+    LOG_DEBUG("[TextureManager] created texture ptr={} name='{}'", (void*)pTexture, strName);
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }
+
 void TextureManager::loadFromText(std::string strName, std::string fontType, std::string textureText, SDL_Color textColor)
 {
     SDL_Surface* textSurface = TTF_RenderText_Blended(FontManager::getInstance()->getFont(fontType), textureText.c_str(), 0, textColor);

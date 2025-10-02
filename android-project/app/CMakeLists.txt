@@ -92,8 +92,8 @@ ExternalProject_Add(external_sdl3
         # Disable unused features
         -DSDL_HAPTIC=OFF
         -DSDL_POWER=OFF
-        -DSDL_OPENGL=OFF
-        -DSDL_OPENGLES=OFF
+        -DSDL_OPENGL=ON
+        -DSDL_OPENGLES=ON
         -DSDL_METAL=OFF
 
         # Keep essential subsystems
@@ -166,7 +166,7 @@ add_custom_command(
 
 add_custom_target(sdl3_prebuild DEPENDS external_sdl3)
 
-# ================= SDL3 Wrapper ========================================================
+# ================= SDL3 Wrapper =================
 
 # Add SDL3 wrapper to just get all the headers
 add_library(sdl3_wrapper INTERFACE)
@@ -176,7 +176,7 @@ target_link_libraries(sdl3_wrapper INTERFACE SDL3)
 # ================= SDL3_image Configuration for Android ==================
 ExternalProject_Add(external_sdl3_image
         GIT_REPOSITORY  https://github.com/libsdl-org/SDL_image.git
-        GIT_TAG main
+        GIT_TAG release-3.2.2
         GIT_SHALLOW FALSE
         GIT_PROGRESS TRUE
         GIT_SUBMODULES ""
@@ -231,7 +231,7 @@ set_target_properties(SDL3_image PROPERTIES
 )
 add_dependencies(SDL3_image external_sdl3_image)
 
-# Create wrapper for SDL3_image
+# ================= SDL3_Image Wrapper =================
 add_library(sdl3_image_wrapper INTERFACE)
 target_include_directories(sdl3_image_wrapper INTERFACE
     ${SDL3_IMAGE_INSTALL_DIR}/include
@@ -253,7 +253,76 @@ target_link_libraries(sdl3_image_wrapper INTERFACE
         ${SDL3_IMAGE_INSTALL_DIR}/lib/libSDL3_image.so
 )
 
-# ===========================================================================
+# ================= SDL_ttf ==================
+set(SDL_TTF_INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/SDL_ttf")
+file(MAKE_DIRECTORY ${SDL_TTF_INSTALL_DIR}/lib)
+file(MAKE_DIRECTORY ${SDL_TTF_INSTALL_DIR}/include)
+
+ExternalProject_Add(external_sdl_ttf
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_ttf.git
+    GIT_TAG release-3.2.2
+    PREFIX ${CMAKE_BINARY_DIR}/external/SDL_ttf
+    CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${SDL_TTF_INSTALL_DIR}
+	-DSDLTTF_SAMPLES=OFF
+	-DSDLTTF_TESTS=OFF
+	-DSDLTTF_INSTALL_CMAKE_CONFIG=OFF
+        -DSDLTTF_INSTALL_PKGCONFIG=OFF
+        -DSDLTTF_VENDORED=ON
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+        -DANDROID_STL=c++_shared
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DBUILD_SHARED_LIBS=ON
+        -DSDL3TTF_INSTALL=ON
+        -DSDL3_DIR=${SDL3_INSTALL_DIR}/lib/cmake/SDL3
+        -DCMAKE_PREFIX_PATH=${SDL3_INSTALL_DIR}
+	-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}  
+    UPDATE_COMMAND ""
+    BUILD_BYPRODUCTS ${SDL_TTF_INSTALL_DIR}/lib/libSDL3_ttf.so
+    DEPENDS SDL3 
+    CMAKE_CACHE_ARGS
+        -DCMAKE_TOOLCHAIN_FILE:PATH=${CMAKE_TOOLCHAIN_FILE}     
+        -DANDROID_PLATFORM:STRING=${ANDROID_PLATFORM}
+        -DANDROID_ABI:STRING=${ANDROID_ABI}
+)
+
+# Import the built library for linking
+add_library(SDL3_ttf SHARED IMPORTED GLOBAL)
+set_target_properties(SDL3_ttf PROPERTIES
+    IMPORTED_LOCATION "${SDL_TTF_INSTALL_DIR}/lib/libSDL3_ttf.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${SDL_TTF_INSTALL_DIR}/include"
+)
+add_dependencies(SDL3_ttf external_sdl_ttf)
+
+# Copy .so to ABI-specific folder
+add_custom_command(
+    TARGET external_sdl_ttf POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${SDL_TTF_INSTALL_DIR}/lib/libSDL3_ttf.so
+        ${MERGED_JNI_OUT}/libSDL3_ttf.so
+)
+
+# ================= SDL_ttf Wrapper ==================
+add_library(sdl3_ttf_wrapper INTERFACE)
+target_include_directories(sdl3_ttf_wrapper INTERFACE "${SDL_TTF_INSTALL_DIR}/include")
+target_link_libraries(sdl3_ttf_wrapper INTERFACE SDL3 SDL3_ttf)
+add_dependencies(sdl3_ttf_wrapper external_sdl_ttf)
+
+# ================= ImGui ==================
+FetchContent_Declare(imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG v1.92.3
+)
+FetchContent_MakeAvailable(imgui)
+
+# ImGui headers + backends
+add_library(imgui_headers INTERFACE)
+target_include_directories(imgui_headers INTERFACE
+    "${imgui_SOURCE_DIR}"
+    "${imgui_SOURCE_DIR}/backends"   
+)
+
+# ================= spdlog =================
 
 # Fetch Content spdlog just for logging
 # Fetch Content should be the norm when getting stuff from github repos
@@ -274,6 +343,7 @@ target_include_directories(spdlog_headers INTERFACE
         ${spdlog_SOURCE_DIR}/include
 )
 
+# ================= Add JNI folder ==================
 
 add_subdirectory(jni)
 

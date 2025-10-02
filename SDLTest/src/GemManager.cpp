@@ -283,12 +283,12 @@ void GemManager::cascadeDown()
 void GemManager::printGridData()
 {
     std::cout << "\n  ";
-    for (Uint8 c = 0; c < this->nWidth; c++) std::cout << "--- ";
+    for (Uint64 c = 0; c < this->nWidth; c++) std::cout << "--- ";
     std::cout << "\n";
-    for (Uint8 r = 0; r < this->gridCells.size(); r++)
+    for (Uint64 r = 0; r < this->gridCells.size(); r++)
     {
         std::cout << " |";
-        for (Uint8 c = 0; c < this->gridCells[r].size(); c++)
+        for (Uint64 c = 0; c < this->gridCells[r].size(); c++)
         {
             if (this->gridCells[r][c].blocked)
             {
@@ -324,7 +324,7 @@ void GemManager::printGridData()
             }
         }
         std::cout << "\n  ";
-        for (Uint8 c = 0; c < this->gridCells[r].size(); c++) std::cout << "--- ";
+        for (Uint64 c = 0; c < this->gridCells[r].size(); c++) std::cout << "--- ";
         std::cout << "\n";
     }
 }
@@ -385,7 +385,7 @@ void GemManager::spawnGems(float fScale)
 
 GemManager* GemManager::P_SHARED_INSTANCE = NULL;
 
-GemManager::GemManager(Uint8 w, Uint8 h, float fCellSize) : Grid("GemManager", w, h, fCellSize)
+GemManager::GemManager(Uint64 w, Uint64 h, float fCellSize) : Grid("GemManager", ComponentType::SCRIPT, w, h, fCellSize)
 {
     this->pSelectedObjects[0] = NULL;
     this->pSelectedObjects[1] = NULL;
@@ -394,7 +394,7 @@ GemManager::GemManager(Uint8 w, Uint8 h, float fCellSize) : Grid("GemManager", w
     this->fGemSize = 1.0f;
 }
 
-void GemManager::initialize(Uint8 w, Uint8 h, float fCellSize, Vector2D offset)
+void GemManager::initialize(Uint64 w, Uint64 h, float fCellSize, Vector2D offset)
 {
     srand((unsigned)time(nullptr)); // seed once
     EmptyObject* pManagerObject = new EmptyObject("GemManager");

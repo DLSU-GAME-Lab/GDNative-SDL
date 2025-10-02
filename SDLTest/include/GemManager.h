@@ -34,12 +34,12 @@ private:
     static GemManager* P_SHARED_INSTANCE;
 
 private:
-    GemManager(Uint8 w, Uint8 h, float fCellSize);
+    GemManager(Uint64 w, Uint64 h, float fCellSize);
     GemManager(const GemManager&);
     GemManager& operator = (const GemManager&) {};
 
 public:
-    static void initialize(Uint8 w, Uint8 h, float fCellSize, Vector2D offset);
+    static void initialize(Uint64 w, Uint64 h, float fCellSize, Vector2D offset);
     static void destroy();
 
     static GemManager* getInstance();

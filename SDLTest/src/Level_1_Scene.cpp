@@ -49,8 +49,8 @@ void Level_1_Scene::onLoadObjects()
 
 	GemManager::initialize(9, 10, 60.0f, Vector2D(30.0f, -54.0f));
 
-	std::vector<Uint8> r0Cols = { 0, 8 };
-	std::vector<Uint8> r9Cols = { 3, 4, 5 };
+	std::vector<Uint64> r0Cols = { 0, 8 };
+	std::vector<Uint64> r9Cols = { 3, 4, 5 };
 
 	GemManager::getInstance()->setBlockedCells(0, r0Cols, true);
 	GemManager::getInstance()->setBlockedCells(9, r9Cols, true);

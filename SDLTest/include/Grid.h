@@ -7,8 +7,8 @@
 
 struct CellData
 {
-    Uint8 r;
-    Uint8 c;
+    Uint64 r;
+    Uint64 c;
     Vector2D pos;
     AGameObject* obj;
     bool blocked;
@@ -19,22 +19,22 @@ class Grid : public AComponent
 protected:
     typedef std::vector<std::vector<CellData>> GridCells;
 
-    Uint8 nWidth;
-    Uint8 nHeight;
+    Uint64 nWidth;
+    Uint64 nHeight;
     float fCellSize;
     GridCells gridCells;
 
 public:
-    Grid(std::string strName, Uint8 w, Uint8 h, float nCellSize);
+    Grid(std::string strName, ComponentType EType, Uint64 w, Uint64 h, float nCellSize);
 
     virtual void onAttach() override;
-    virtual void perform() override;
+    virtual void perform() = 0;
 
-    void setBlockedCell(Uint8 r, Uint8 c, bool bBlocked);
-    void setBlockedCells(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked);
-    bool setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject);
-    Vector2D getCellPosition(Uint8 r, Uint8 c);
-    AGameObject* getCellObject(Uint8 r, Uint8 c);
+    void setBlockedCell(Uint64 r, Uint64 c, bool bBlocked);
+    void setBlockedCells(Uint64 r, const std::vector<Uint64>& cols, bool bBlocked);
+    bool setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject);
+    Vector2D getCellPosition(Uint64 r, Uint64 c);
+    AGameObject* getCellObject(Uint64 r, Uint64 c);
     CellData* getCellFromObject(AGameObject* pObject);
 };
 

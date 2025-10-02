@@ -50,7 +50,7 @@ void Level_3_Scene::onLoadObjects()
 
 	GemManager::initialize(12, 14, 45.0f, Vector2D(23.0f, -46.0f));
 
-	std::vector< std::vector<Uint8>> rowBlocks;
+	std::vector< std::vector<Uint64>> rowBlocks;
 
 	rowBlocks.push_back({ 0, 1, 2, 5, 6, 9, 10, 11 });			// r0
 	rowBlocks.push_back({ 0, 5, 6, 11 });						// r1

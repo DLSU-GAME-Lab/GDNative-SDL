@@ -222,6 +222,9 @@
     <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="src\TileMapRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -415,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="include\PhysicsManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TileMapRenderer.h">
+      <Filter>Component\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

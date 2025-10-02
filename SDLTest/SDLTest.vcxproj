@@ -183,6 +183,7 @@
     <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TileMapRenderer.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\UIButton.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />
+    <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\UIButton.h" />
     <ClInclude Include="include\Prop.h" />

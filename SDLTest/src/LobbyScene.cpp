@@ -11,6 +11,7 @@
 #include "Settings.h"
 #include "Text.h"
 #include "Diary.h"
+#include "DiaryToggle.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -229,55 +230,62 @@ void LobbyScene::createDiary()
 	GUIButton* pClose = new GUIButton("Close_Button", "Back");
 	pClose->setPos(Vector2D(-750, 400));
 	pClose->setScale(Vector2D(.05f, .05f));
-	GUIToggle* pToggleClose = new GUIToggle("Diary");
+	DiaryToggle* pToggleClose = new DiaryToggle("Diary");
 	pClose->attachComponent(pToggleClose);
 	GameObjectManager::getInstance()->addObject(pClose);
 	pDiaryProper->attachChild(pClose);
 
-	//EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
-	//GameObjectManager::getInstance()->addObject(pFirstPageHolder);
-	//this->createPageOne(pFirstPageHolder);
-	//pFirstPageHolder->setEnabled(false);
-	//pFirstPageHolder->setFollowParent(false);
+	EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
+	GameObjectManager::getInstance()->addObject(pFirstPageHolder);
+	this->createPageOne(pFirstPageHolder);
+	pFirstPageHolder->setEnabled(false);
+	pFirstPageHolder->setFollowParent(true);
 
-	//EmptyObject* pSecondPageHolder = new EmptyObject("Second_Page");
-	//GameObjectManager::getInstance()->addObject(pSecondPageHolder);
-	//pSecondPageHolder->setEnabled(false);
-	//pSecondPageHolder->setFollowParent(false);
-	//this->createPageTwo(pSecondPageHolder);
+	EmptyObject* pSecondPageHolder = new EmptyObject("Second_Page");
+	GameObjectManager::getInstance()->addObject(pSecondPageHolder);
+	this->createPageTwo(pSecondPageHolder);
+	pSecondPageHolder->setEnabled(false);
+	pSecondPageHolder->setFollowParent(true);
 
-	//EmptyObject* pThirdPageHolder = new EmptyObject("Third_Page");
-	//GameObjectManager::getInstance()->addObject(pThirdPageHolder);
-	//pThirdPageHolder->setEnabled(false);
-	//pThirdPageHolder->setFollowParent(false);
-	//this->createPageThree(pThirdPageHolder);
+	EmptyObject* pThirdPageHolder = new EmptyObject("Third_Page");
+	GameObjectManager::getInstance()->addObject(pThirdPageHolder);
+	this->createPageThree(pThirdPageHolder);
+	pThirdPageHolder->setEnabled(false);
+	pThirdPageHolder->setFollowParent(false);
 
-	//EmptyObject* pFourthPageHolder = new EmptyObject("Fourth_Page");
-	//GameObjectManager::getInstance()->addObject(pFourthPageHolder);
-	//pFourthPageHolder->setEnabled(false);
-	//pFourthPageHolder->setFollowParent(true);
-	//this->createPageFour(pFourthPageHolder);
+	EmptyObject* pFourthPageHolder = new EmptyObject("Fourth_Page");
+	GameObjectManager::getInstance()->addObject(pFourthPageHolder);
+	this->createPageFour(pFourthPageHolder);
+	pFourthPageHolder->setEnabled(false);
+	pFourthPageHolder->setFollowParent(false);
 
-	//EmptyObject* pFifthPageHolder = new EmptyObject("Fifth_Page");
-	//GameObjectManager::getInstance()->addObject(pFifthPageHolder);
-	//pFifthPageHolder->setEnabled(false);
-	//pFifthPageHolder->setFollowParent(true);
-	//this->createPageFive(pFifthPageHolder);
+	EmptyObject* pFifthPageHolder = new EmptyObject("Fifth_Page");
+	GameObjectManager::getInstance()->addObject(pFifthPageHolder);
+	this->createPageFive(pFifthPageHolder);
+	pFifthPageHolder->setEnabled(false);
+	pFifthPageHolder->setFollowParent(false);
 
-	//EmptyObject* pSixthPageHolder = new EmptyObject("Sixth_Page");
-	//GameObjectManager::getInstance()->addObject(pSixthPageHolder);
-	//pSixthPageHolder->setEnabled(false);
-	//pSixthPageHolder->setFollowParent(true);
-	//this->createPageSix(pSixthPageHolder);
+	EmptyObject* pSixthPageHolder = new EmptyObject("Sixth_Page");
+	GameObjectManager::getInstance()->addObject(pSixthPageHolder);
+	this->createPageSix(pSixthPageHolder);
+	pSixthPageHolder->setEnabled(false);
+	pSixthPageHolder->setFollowParent(false);
 
-	//pDiaryProper->addPage(pFirstPageHolder);
-	//pDiaryProper->addPage(pSecondPageHolder);
-	//pDiaryProper->addPage(pThirdPageHolder);
-	//pDiaryProper->addPage(pFourthPageHolder);
-	//pDiaryProper->addPage(pFifthPageHolder);
-	//pDiaryProper->addPage(pSixthPageHolder);
+	EmptyObject* pSeventhPageHolder = new EmptyObject("Seventh_Page");
+	GameObjectManager::getInstance()->addObject(pSeventhPageHolder);
+	this->createPageSeven(pSeventhPageHolder);
+	pSeventhPageHolder->setEnabled(false);
+	pSeventhPageHolder->setFollowParent(false);
 
-	pDiaryProper->setEnabled(true);
+	pDiaryProper->addPage(pFirstPageHolder);
+	pDiaryProper->addPage(pSecondPageHolder);
+	pDiaryProper->addPage(pThirdPageHolder);
+	pDiaryProper->addPage(pFourthPageHolder);
+	pDiaryProper->addPage(pFifthPageHolder);
+	pDiaryProper->addPage(pSixthPageHolder);
+	pDiaryProper->addPage(pSeventhPageHolder);
+
+	pDiaryProper->setEnabled(false);
 
 }
 
@@ -683,19 +691,109 @@ void LobbyScene::createPageSix(AGameObject* pParent)
 
 void LobbyScene::createPageSeven(AGameObject* pParent)
 {
-	Text* pTitle = new Text("Page7_Title", "Wanted", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
+	Text* pTitle = new Text("Page7_Title", "Summary", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
 	pTitle->setFont("Jaini90");
 	pParent->attachChild(pTitle);
 	GameObjectManager::getInstance()->addObject(pTitle);
 
-	Text* pLine1 = new Text("Page7_Line1", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang gusto ng", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
+	Text* pLine1 = new Text("Page7_Line1", "Upang Ibuod ang mga tanong na dapat mong itanong sa iyong sarili pagkatapos", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
 	pLine1->setFont("Jaini45");
 	pParent->attachChild(pLine1);
 	GameObjectManager::getInstance()->addObject(pLine1);
 
-	Text* pLine2 = new Text("Page7_Line2", "karakter?", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
+	Text* pLine2 = new Text("Page7_Line2", "basahin ang isang kuwento:", Vector2D(-295, 250), Vector2D(.75, .75), 0.f, false);
 	pLine2->setFont("Jaini45");
 	pParent->attachChild(pLine2);
 	GameObjectManager::getInstance()->addObject(pLine2);
+
+	Text* pS = new Text("S_Letter1", "S", Vector2D(-560, 110), Vector2D(1, 1), 0, false);
+	pS->setColor(colorRed);
+	pS->setFont("Jaini90");
+	pParent->attachChild(pS);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pS);
+
+	Text* pOmebody = new Text("omebody1", "omebody", Vector2D(-470, 100), Vector2D(1, 1), 0, false);
+	pOmebody->setColor(colorRed);
+	pOmebody->setFont("Jaini45");
+	pParent->attachChild(pOmebody);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pOmebody);
+
+	Text* pS1Line = new Text("S1_Line", "Sino ang Pangunahiing tauhan?", Vector2D(-195, 100), Vector2D(.75, .75), 0.f, false);
+	pS1Line->setColor(colorRed);
+	pS1Line->setFont("Jaini45");
+	pParent->attachChild(pS1Line);
+	GameObjectManager::getInstance()->addObject(pS1Line);
+
+	Text* pW = new Text("W_Letter1", "W", Vector2D(-560, 15), Vector2D(1, 1), 0, false);
+	pW->setColor(colorYellow);
+	pW->setFont("Jaini90");
+	pParent->attachChild(pW);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pW);
+
+	Text* pAnted = new Text("anted1", "anted", Vector2D(-485, 0), Vector2D(1, 1), 0, false);
+	pAnted->setColor(colorYellow);
+	pAnted->setFont("Jaini45");
+	pParent->attachChild(pAnted);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pAnted);
+
+	Text* pWLine = new Text("W_Line", "Ano ang gusto ng karakter?", Vector2D(-220, 0), Vector2D(.75, .75), 0.f, false);
+	pWLine->setColor(colorYellow);
+	pWLine->setFont("Jaini45");
+	pParent->attachChild(pWLine);
+	GameObjectManager::getInstance()->addObject(pWLine);
+
+	Text* pB = new Text("B_Letter1", "B", Vector2D(-560, -80), Vector2D(1, 1), 0, false);
+	pB->setColor(colorCyan);
+	pB->setFont("Jaini90");
+	pParent->attachChild(pB);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pB);
+
+	Text* pUt = new Text("ut1", "ut", Vector2D(-510, -90), Vector2D(1, 1), 0, false);
+	pUt->setColor(colorCyan);
+	pUt->setFont("Jaini45");
+	pParent->attachChild(pUt);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pUt);
+
+	Text* pBLine = new Text("B_Line", "Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?", Vector2D(-40, -90), Vector2D(.75, .75), 0.f, false);
+	pBLine->setColor(colorCyan);
+	pBLine->setFont("Jaini45");
+	pParent->attachChild(pBLine);
+	GameObjectManager::getInstance()->addObject(pBLine);
+
+	Text* pS2 = new Text("S2_Letter1", "S", Vector2D(-560, -160), Vector2D(1, 1), 0, false);
+	pS2->setColor(colorBlue);
+	pS2->setFont("Jaini90");
+	pParent->attachChild(pS2);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pS2);
+
+	Text* pO = new Text("O_Letter1", "o", Vector2D(-530, -175), Vector2D(1, 1), 0, false);
+	pO->setColor(colorBlue);
+	pO->setFont("Jaini45");
+	pParent->attachChild(pO);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pO);
+
+	Text* pS2Line = new Text("S2_Line", "Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?", Vector2D(-40, -175), Vector2D(.75, .75), 0.f, false);
+	pS2Line->setColor(colorBlue);
+	pS2Line->setFont("Jaini45");
+	pParent->attachChild(pS2Line);
+	GameObjectManager::getInstance()->addObject(pS2Line);
+
+	Text* pT = new Text("T_Letter1", "T", Vector2D(-560, -280), Vector2D(1, 1), 0, false);
+	pT->setColor(colorPurple);
+	pT->setFont("Jaini90");
+	pParent->attachChild(pT);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pT);
+
+	Text* pHen = new Text("hen1", "hen", Vector2D(-520, -295), Vector2D(1, 1), 0, false);
+	pHen->setColor(colorPurple);
+	pHen->setFont("Jaini45");
+	pParent->attachChild(pHen);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pHen);
+
+	Text* pTLine = new Text("T_Line", "Ano ang Nagyari pagkatapos sinubukan ng karakter lutasin ang problema?", Vector2D(35, -295), Vector2D(.75, .75), 0.f, false);
+	pTLine->setColor(colorPurple);
+	pTLine->setFont("Jaini45");
+	pParent->attachChild(pTLine);
+	GameObjectManager::getInstance()->addObject(pTLine);
 }
 

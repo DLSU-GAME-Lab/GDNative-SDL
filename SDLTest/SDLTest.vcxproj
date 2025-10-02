@@ -146,6 +146,7 @@
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\Diary.cpp" />
+    <ClCompile Include="src\DiaryToggle.cpp" />
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\AGeneralInput.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\Diary.h" />
+    <ClInclude Include="include\DiaryToggle.h" />
     <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EmptyObject.h" />
     <ClInclude Include="include\EnumAnimationType.h" />

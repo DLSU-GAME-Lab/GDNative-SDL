@@ -226,6 +226,9 @@
     <ClCompile Include="src\MetricsManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
+    <ClCompile Include="src\DiaryToggle.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -423,6 +426,9 @@
     </ClInclude>
     <ClInclude Include="include\MetricsManager.h">
       <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DiaryToggle.h">
+      <Filter>Component\Script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

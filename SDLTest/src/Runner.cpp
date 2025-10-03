@@ -185,6 +185,12 @@ void Runner::run()
 #endif
 				break;
 			}
+
+			// --- input lag tracking ---
+			// record input lag when user presses a key or clicks mouse
+			if (e.type == SDL_EVENT_KEY_DOWN || e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+				MetricsManager::getInstance()->recordInputEvent();
+			}
 		}
 
 		lastTime = currentTime;
@@ -196,6 +202,9 @@ void Runner::run()
 #else
 		this->update(fDeltaTime);
 #endif
+
+		// mark input as visually handled this frame 
+		MetricsManager::getInstance()->markInputHandled();
 
 		MetricsManager::getInstance()->update();
 
@@ -266,7 +275,12 @@ void Runner::registerScenes()
 	SceneManager::getInstance()->registerScene(level2Scene);
 	SceneManager::getInstance()->registerScene(level3Scene);
 
-	//load initial scene
-	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
+	// --- load time tracking --- 
+	// // start timer before load, end after load completes 
+	MetricsManager::getInstance()->startLoadTimer(); 
 
+	//load initial scene
+	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE); 
+	
+	MetricsManager::getInstance()->endLoadTimer();
 }

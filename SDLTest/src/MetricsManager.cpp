@@ -34,10 +34,25 @@ void MetricsManager::update() {
     QueryPerformanceCounter(&now);
     frameCount++;
     double elapsed = double(now.QuadPart - qpcLastTime.QuadPart) / qpcFrequency;
+
     if (elapsed >= 1.0) {
         fps = float(frameCount / elapsed);
         frameCount = 0;
         qpcLastTime = now;
+
+        // --- Update FPS stats ---
+        // Update min/max
+        if (fps < minFPS) minFPS = fps;
+        if (fps > maxFPS) maxFPS = fps;
+
+        // Compute running average over history buffer
+        float sum = 0.0f;
+        for (int i = 0; i < HISTORY_SIZE; i++) sum += fpsHistory[i];
+        avgFPS = sum / HISTORY_SIZE;
+
+        // Store FPS in history buffer
+        fpsHistory[offset] = fps;
+        offset = (offset + 1) % HISTORY_SIZE;
     }
 
     // --- CPU ---
@@ -98,10 +113,16 @@ void MetricsManager::drawGUI() {
     ImGui::Checkbox("Show FPS", &showFPS);
     ImGui::Checkbox("Show CPU", &showCPU);
     ImGui::Checkbox("Show Memory", &showMemory);
+    ImGui::Checkbox("Show GPU", &showGPU);
+    ImGui::Checkbox("Show Input Lag", &showInputLag); 
+    ImGui::Checkbox("Show Load Time", &showLoadTime);
 
     if (ImGui::BeginTabBar("MetricsTabs")) {
         if (showFPS && ImGui::BeginTabItem("FPS")) {
             ImGui::Text("FPS: %.1f", fps);
+            ImGui::Text("Avg FPS: %.1f", avgFPS);
+            ImGui::Text("Min FPS: %.1f", minFPS);
+            ImGui::Text("Max FPS: %.1f", maxFPS);
             ImGui::PlotLines("FPS History", fpsHistory, HISTORY_SIZE,
                 offset, nullptr, 0.0f, 120.0f, ImVec2(0, 80));
             ImGui::EndTabItem();
@@ -119,6 +140,21 @@ void MetricsManager::drawGUI() {
             ImGui::EndTabItem();
         }
 
+        if (showGPU && ImGui::BeginTabItem("GPU")) { 
+            ImGui::Text("GPU Usage: %.2f %%", gpuUsage); 
+            ImGui::EndTabItem(); 
+        }
+
+        if (showInputLag && ImGui::BeginTabItem("Input Lag")) { 
+            ImGui::Text("Last Input Lag: %.2f ms", inputLagMs); 
+            ImGui::EndTabItem(); 
+        }
+
+        if (showLoadTime && ImGui::BeginTabItem("Load Time")) { 
+            ImGui::Text("Last Load Time: %.2f s", loadTimeSec); 
+            ImGui::EndTabItem(); 
+        }
+
         ImGui::EndTabBar();
     }
 
@@ -132,8 +168,41 @@ void MetricsManager::drawGUI() {
 void MetricsManager::exportCSV(const std::string& filename) {
     std::ofstream out(filename, std::ios::app);
     if (out.is_open()) {
-        out << fps << "," << cpuUsage << "," << (memoryUsage / 1024.0 / 1024.0) << std::endl;
+        out << fps << "," << avgFPS << "," << minFPS << "," << maxFPS << "," 
+            << cpuUsage << "," << (memoryUsage / 1024.0 / 1024.0) <<
+            "," << gpuUsage << "," << inputLagMs << "," << loadTimeSec << std::endl;
         out.close();
         std::cout << "[MetricsManager] Exported metrics to " << filename << std::endl;
     }
+}
+
+// --- load time helpers ---
+void MetricsManager::startLoadTimer() {
+    QueryPerformanceCounter(&loadStart);
+}
+
+void MetricsManager::endLoadTimer() {
+    LARGE_INTEGER end;
+    QueryPerformanceCounter(&end);
+    loadTimeSec = double(end.QuadPart - loadStart.QuadPart) / qpcFrequency;
+}
+
+// --- input lag helpers ---
+// call recordInputEvent() when key or mouse button is pressed
+
+void MetricsManager::recordInputEvent() {
+    LARGE_INTEGER now;
+    QueryPerformanceCounter(&now);
+    inputTimestamp = now.QuadPart;
+}
+
+// call markInputHandled() when the frame reacts visually to input
+void MetricsManager::markInputHandled() {
+    LARGE_INTEGER now;
+    QueryPerformanceCounter(&now);
+    if (inputTimestamp != 0) {
+        double diff = double(now.QuadPart - inputTimestamp) / qpcFrequency; 
+        inputLagMs = diff * 1000.0; 
+        inputTimestamp = 0; // reset 
+    } 
 }

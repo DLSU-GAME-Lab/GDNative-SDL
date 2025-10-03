@@ -219,8 +219,9 @@
     <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="src\TileMapRenderer.cpp">
-      <Filter>Component\Renderer</Filter>
+	  <ClCompile Include="src\TileMapRenderer.cpp">
+		  <Filter>Component\Renderer</Filter>
+	  </ClCompile>
     <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>

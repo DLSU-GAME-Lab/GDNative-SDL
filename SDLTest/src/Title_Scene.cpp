@@ -1,12 +1,12 @@
 #include "Title_Scene.h"
 #include "Background.h"
-#include "UIButton.h"
+#include "GUIButton.h"
 #include "GameObjectManager.h"
 #include "TextureManager.h"
 #include "EnumSceneTag.h"
 #include "Prop.h"
 #include "AnimatedSprite.h"
-
+#include "SceneSwitcher.h"
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
 {
@@ -61,36 +61,27 @@ void Title_Scene::onLoadObjects()
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelSelect);
 
 
-    UIButton* pLevelOne = new UIButton(
-        "Level_1_Button",   // object name (can be unique)
-        "Level_Button",          // texture key (MUST match TextureManager)
-        Vector2D(-360, -230),
-        Vector2D(2.f, 2.f),
-        0.0f, false,
-        SceneTag::LEVEL_1_SCENE
-    );
+    GUIButton* pLevelOne = new GUIButton("Level_1_Button", "Level_Button");
+    pLevelOne->setPos(Vector2D(-360, -230));
+    pLevelOne->setScale(Vector2D(2.f, 2.f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelOne);
+    SceneSwitcher* pLevelOneSwitcher = new SceneSwitcher(SceneTag::LEVEL_1_SCENE);
+    pLevelOne->attachComponent(pLevelOneSwitcher);
 
-    UIButton* pLevelTwo = new UIButton(
-        "Level_2_Button",   // object name (can be unique)
-        "Level_Button",          // texture key (MUST match TextureManager)
-        Vector2D(0, -230),
-        Vector2D(2.f, 2.f),
-        0.0f, false,
-        SceneTag::LEVEL_2_SCENE
-    );
+    GUIButton* pLevelTwo = new GUIButton("Level_2_Button", "Level_Button");
+    pLevelTwo->setPos(Vector2D(-0, -230));
+    pLevelTwo->setScale(Vector2D(2.f, 2.f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelTwo);
+    SceneSwitcher* pLevelTwoSwitcher = new SceneSwitcher(SceneTag::LEVEL_2_SCENE);
+    pLevelTwo->attachComponent(pLevelTwoSwitcher);
 
-    UIButton* pLevelThree = new UIButton(
-        "Level_3_Button",   // object name (can be unique)
-        "Level_Button",          // texture key (MUST match TextureManager)
-        Vector2D(360, -230),
-        Vector2D(2.f, 2.f),
-        0.0f, false,
-        SceneTag::LEVEL_3_SCENE
-    );
+    GUIButton* pLevelThree = new GUIButton("Level_3_Button", "Level_Button");
+    pLevelThree->setPos(Vector2D(360, -230));
+    pLevelThree->setScale(Vector2D(2.f, 2.f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelThree);
-
+    SceneSwitcher* pLevelThreeSwitcher = new SceneSwitcher(SceneTag::LEVEL_3_SCENE);
+    pLevelThree->attachComponent(pLevelThreeSwitcher);
+  
 }
 
 void Title_Scene::onUnloadResources()

@@ -1,5 +1,7 @@
 #include "Level_1_Scene.h"
 #include "GemManager.h"
+#include "GUIButton.h"
+#include "SceneSwitcher.h"
 
 Level_1_Scene::Level_1_Scene():AScene(SceneTag::LEVEL_1_SCENE)
 {
@@ -37,15 +39,13 @@ void Level_1_Scene::onLoadObjects()
 	Prop* pUIContainerExtra = new Prop("Level_Container_Extra", "Level_Container_Extra", Vector2D(0, 547), Vector2D(1, 1), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pUIContainerExtra);
 
-	UIButton* pSettings = new UIButton(
-		"Settings",   // object name (can be unique)
-		"Settings",          // texture key (MUST match TextureManager)
-		Vector2D(910, -490),
-		Vector2D(.75f, .75f),
-		0.0f, false,
-		SceneTag::TITLE_SCENE
-	);
+	GUIButton* pSettings = new GUIButton("Settings", "Settings");
+	pSettings->setPos(Vector2D(910, -490));
+	pSettings->setScale(Vector2D(.75f, .75f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pSettings);
+	SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
+	pSettings->attachComponent(pTitleSwitcher);
+
 
 	GemManager::initialize(9, 10, 60.0f, Vector2D(30.0f, -54.0f));
 

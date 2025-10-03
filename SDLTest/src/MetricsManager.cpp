@@ -98,6 +98,9 @@ void MetricsManager::drawGUI() {
     ImGui::Checkbox("Show FPS", &showFPS);
     ImGui::Checkbox("Show CPU", &showCPU);
     ImGui::Checkbox("Show Memory", &showMemory);
+    ImGui::Checkbox("Show GPU", &showGPU);
+    ImGui::Checkbox("Show Input Lag", &showInputLag); 
+    ImGui::Checkbox("Show Load Time", &showLoadTime);
 
     if (ImGui::BeginTabBar("MetricsTabs")) {
         if (showFPS && ImGui::BeginTabItem("FPS")) {
@@ -119,6 +122,21 @@ void MetricsManager::drawGUI() {
             ImGui::EndTabItem();
         }
 
+        if (showGPU && ImGui::BeginTabItem("GPU")) { 
+            ImGui::Text("GPU Usage: %.2f %%", gpuUsage); 
+            ImGui::EndTabItem(); 
+        }
+
+        if (showInputLag && ImGui::BeginTabItem("Input Lag")) { 
+            ImGui::Text("Last Input Lag: %.2f ms", inputLagMs); 
+            ImGui::EndTabItem(); 
+        }
+
+        if (showLoadTime && ImGui::BeginTabItem("Load Time")) { 
+            ImGui::Text("Last Load Time: %.2f s", loadTimeSec); 
+            ImGui::EndTabItem(); 
+        }
+
         ImGui::EndTabBar();
     }
 
@@ -132,8 +150,40 @@ void MetricsManager::drawGUI() {
 void MetricsManager::exportCSV(const std::string& filename) {
     std::ofstream out(filename, std::ios::app);
     if (out.is_open()) {
-        out << fps << "," << cpuUsage << "," << (memoryUsage / 1024.0 / 1024.0) << std::endl;
+        out << fps << "," << cpuUsage << "," << (memoryUsage / 1024.0 / 1024.0) << 
+            "," << gpuUsage << "," << inputLagMs << "," << loadTimeSec << std::endl;
         out.close();
         std::cout << "[MetricsManager] Exported metrics to " << filename << std::endl;
     }
+}
+
+// --- load time helpers ---
+void MetricsManager::startLoadTimer() {
+    QueryPerformanceCounter(&loadStart);
+}
+
+void MetricsManager::endLoadTimer() {
+    LARGE_INTEGER end;
+    QueryPerformanceCounter(&end);
+    loadTimeSec = double(end.QuadPart - loadStart.QuadPart) / qpcFrequency;
+}
+
+// --- input lag helpers ---
+// call recordInputEvent() when key or mouse button is pressed
+
+void MetricsManager::recordInputEvent() {
+    LARGE_INTEGER now;
+    QueryPerformanceCounter(&now);
+    inputTimestamp = now.QuadPart;
+}
+
+// call markInputHandled() when the frame reacts visually to input
+void MetricsManager::markInputHandled() {
+    LARGE_INTEGER now;
+    QueryPerformanceCounter(&now);
+    if (inputTimestamp != 0) {
+        double diff = double(now.QuadPart - inputTimestamp) / qpcFrequency; 
+        inputLagMs = diff * 1000.0; 
+        inputTimestamp = 0; // reset 
+    } 
 }

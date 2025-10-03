@@ -24,10 +24,24 @@ private:
     // Memory tracking
     SIZE_T memoryUsage = 0;
 
+    // GPU tracking (external only, set 0 here)
+    double gpuUsage = 0.0;
+
+    // Load Time tracking
+    double loadTimeSec = 0.0;
+    LARGE_INTEGER loadStart{};
+
+    // INPUT Lag tracking
+    double inputLagMs = 0.0;
+    LONGLONG inputTimestamp = 0;
+
     // Toggles
     bool showFPS = true;
     bool showCPU = true;
     bool showMemory = true;
+    bool showGPU = true; 
+    bool showInputLag = true; 
+    bool showLoadTime = true;
 
     // History buffers
     static const int HISTORY_SIZE = 100;
@@ -41,9 +55,21 @@ public:
     void drawGUI();
     void exportCSV(const std::string& filename = "metrics_export.csv");
 
+    // getters
     float getFPS() const { return fps; }
     double getCPUUsage() const { return cpuUsage; }
     SIZE_T getMemoryUsage() const { return memoryUsage; }
+    double getGPUUsage() const { return gpuUsage; } // always 0 in code, real gpu logged externally
+    double getInputLag() const { return inputLagMs; }
+    double getLoadTime() const { return loadTimeSec; }
+
+    // helpers for load time
+    void startLoadTimer();
+    void endLoadTimer();
+
+    // helpers for input lag
+    void recordInputEvent(); // call on key press or mouse click
+    void markInputHandled(); // call when the frame reacts to input
 
     // Singleton
     static void initialize();

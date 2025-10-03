@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "MetricsManager.h"
 
 void SceneManager::registerScene(AScene* pScene)
 {
@@ -12,6 +13,9 @@ void SceneManager::loadScene(SceneTag ETag)
         this->bLoading = true;
         this->ESceneToLoad = ETag;
     }
+
+    // start load timer now (actual load finishes in checkLoadScene) 
+    MetricsManager::getInstance()->startLoadTimer();
 }
 
 void SceneManager::unloadScene()
@@ -34,6 +38,9 @@ void SceneManager::checkLoadScene()
         this->pActiveScene->onLoadObjects();
 
         this->bLoading = false;
+
+        // end load timer now (scene is fully loaded and ready) 
+        MetricsManager::getInstance()->endLoadTimer();
     }
 }
 

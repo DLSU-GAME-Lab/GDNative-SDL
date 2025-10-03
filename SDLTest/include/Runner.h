@@ -24,7 +24,11 @@ private:
     unsigned long lFPSTime;
     int nNumOfFPS, nFPS;
 
-
+    // ImGui init tracking (to avoid double-init / double-shutdown)
+    // Defaults set to false to avoid "not initialized" warnings.
+    bool imGuiContextCreated = false;
+    bool imGuiPlatformInitialized = false;
+    bool imGuiRendererInitialized = false;
 
 public:
     Runner();

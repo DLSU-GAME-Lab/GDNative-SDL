@@ -19,10 +19,14 @@ void GUIToggle::onAttach()
 void GUIToggle::perform()
 {
 	
+	ButtonInput* pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
 	if (pInput && pInput->getClicked())
 	{
 		pInput->setClicked(false);
 		AGameObject* pObject = GameObjectManager::getInstance()->findObjectByName(this->strGUIName);
-		if (pObject != NULL) pObject->setEnabled(!pObject->getEnabled());
+		if (pObject != NULL)
+		{
+			pObject->setEnabled(!pObject->getEnabled());
+		}
 	}
 }

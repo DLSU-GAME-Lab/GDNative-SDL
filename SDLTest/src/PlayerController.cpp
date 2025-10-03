@@ -1,10 +1,12 @@
 #include "PlayerController.h"
 #include "AGameObject.h"
 
-PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite) : AComponent("PlayerController", ComponentType::SCRIPT)
+PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator)
+	: AComponent("PlayerController", ComponentType::SCRIPT)
 {
 	this->pInput = pInput;
 	this->pSprite = pSprite;
+	this->pAnimator = pAnimator;
 	this->fMoveSpeed = 0.0f;
 	this->fJumpForce = 0.0f;
 }
@@ -25,11 +27,18 @@ void PlayerController::perform()
 
 	if (this->pInput->getMoveX() != 0.0f)
 	{
+		this->pAnimator->setAnimationState("run");
 		Vector2D pos = this->pOwner->getPos();
 		pos.x += this->pInput->getMoveX() * this->fMoveSpeed * this->fDeltaTime;
 		this->pOwner->setPos(pos);
 
-		if (pos.x != 0.0f) this->pSprite->setFlipX(pos.x < 0.0f);
+		this->pSprite->setFlipX(this->pInput->getMoveX() < 0.0f);
+	}
+	else this->pAnimator->setAnimationState("idle");
+
+	if (this->pInput->getJumped())
+	{
+		this->pAnimator->setAnimationState("jump");
 	}
 }
 

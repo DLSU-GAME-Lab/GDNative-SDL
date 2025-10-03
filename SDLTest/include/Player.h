@@ -1,6 +1,7 @@
 #pragma once
 #include "AGameObject.h"
-
+#include "Collider.h"
+#include "ACollisionListener.h"
 class Player : public AGameObject
 {
 public:
@@ -8,5 +9,15 @@ public:
 	~Player();
 
 	void initialize() override;
+
+
+
+	// Inherited via ACollisionListener
+	//void onCollisionEnter(Collider* pCollider) override;
+
+	//void onCollisionContinue(Collider* pCollider) override;
+
+	//void onCollisionExit(Collider* pCollider) override;
+
 };
 

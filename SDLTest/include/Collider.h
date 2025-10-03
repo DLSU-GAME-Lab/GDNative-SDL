@@ -2,8 +2,9 @@
 #include "AComponent.h"
 #include "AGameObject.h"
 #include "EnumComponentType.h"
-#include "ACollisionListener.hpp"
+#include "ACollisionListener.h"
 #include "vector"
+#include "math.h"
 class Collider : public AComponent
 {
 private:
@@ -12,6 +13,10 @@ private:
     std::vector<Collider*> vecCollided;
     bool bCleanUp;
     bool bFollowParent;
+    bool bCollideLeft;
+    bool bCollideRight;
+    bool bCollideTop;
+    bool bCollideBottom;
 
 public:
     Collider(std::string strName, bool bFollowParent = true);
@@ -34,6 +39,10 @@ public:
     void setOffset(SDL_FRect COffset);
     bool hasCollided(Collider* pCollider);
     void setCollided(Collider* pCollider, bool bCollided);
+    bool isCollidedLeft();
+    bool isCollidedRight();
+    bool isCollidedTop();
+    bool isCollidedBottom();
 
     bool isCleanUp();
     void setCleanUp(bool bCleanUp);

@@ -7,6 +7,7 @@ AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
     bEnabled = true;
+    bFollowParent = true;
     pParent = NULL;
 
     // defaults:
@@ -167,6 +168,15 @@ bool AGameObject::getEnabled() const
 void AGameObject::setEnabled(bool bEnabled)
 {
     this->bEnabled = bEnabled;
+    if (!this->vecChildren.empty())
+    {
+        for (AGameObject* pObject:vecChildren)
+        {
+            if(pObject->getFollowParent())
+                pObject->setEnabled(bEnabled);
+            
+        }
+    }
 }
 
 std::string AGameObject::getName() const
@@ -187,6 +197,24 @@ void AGameObject::setParent(AGameObject* pParent)
 void AGameObject::setPos(Vector2D fVecTranslate)
 {
     this->fVecTranslate = fVecTranslate;
+    if (!this->vecChildren.empty())
+    {
+        for(AGameObject* child: vecChildren)
+        {
+            if (child->pParent->getParent() != nullptr)
+            {
+                child->setPos(child->getParent()->getPos());
+            }
+            else
+            {
+                Vector2D fVecNewPos(child->getPos().x + child->getParent()->getPos().x, child->getPos().y + child->getParent()->getPos().y);
+                child->setPos(fVecNewPos);
+                std::cout << child->getName() << ": " << child->getPos().x << ", " << child->getPos().y << std::endl;
+            }
+  
+        }
+    }
+
 }
 
 void AGameObject::setScale(Vector2D fVecScale)
@@ -218,6 +246,16 @@ float AGameObject::getRot()
 bool AGameObject::getIsScreenObject() const
 {
     return this->bIsScreenObject;
+}
+
+bool AGameObject::getFollowParent()
+{
+    return this->bFollowParent;
+}
+
+void AGameObject::setFollowParent(bool bFollowParent)
+{
+    this->bFollowParent = bFollowParent;
 }
 
 

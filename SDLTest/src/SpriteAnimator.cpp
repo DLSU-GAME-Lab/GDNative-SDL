@@ -1,23 +1,40 @@
 #include "SpriteAnimator.h"
 
-SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFrameRate)
+SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer)
 	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
 {
 	this->pSpriteRenderer = pSpriteRenderer;
-	this->vecTexture = vecTexture;
-	this->nFrameRate = nFrameRate;
+	this->strState = "default";
 
 	this->bIsPlaying = false;
 	this->bIsReverse = false;
-	this->EType = AnimationType::ONCE;
+
 	this->nFrameIndex = 0;
 	this->fTicks = 0;
-	this->fTicksPerFrame = nFrameRate / 60.0f;
+}
+
+SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, Uint8 nFrameRate)
+	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
+{
+	this->pSpriteRenderer = pSpriteRenderer;
+	this->strState = "default";
+	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate, AnimationType::PINGPONG);
+	this->vecAnims.push_back(pAnimation);
+	this->mapAnims[strState] = pAnimation;
+
+	this->bIsPlaying = false;
+	this->bIsReverse = false;
+
+	this->nFrameIndex = 0;
+	this->fTicks = 0;
 }
 
 SpriteAnimator::~SpriteAnimator()
 {
-
+	for (int i = 0; i < this->vecAnims.size(); i++)
+	{
+		delete this->vecAnims[i];
+	}
 }
 
 void SpriteAnimator::onAttach()
@@ -27,29 +44,33 @@ void SpriteAnimator::onAttach()
 
 void SpriteAnimator::perform()
 {
-	if (this->bIsPlaying)
+	if (!this->mapAnims.empty() && this->bIsPlaying)
 	{
 		this->fTicks += fDeltaTime;
-		if (this->fTicks >= this->fTicksPerFrame)
+		if (this->fTicks >= mapAnims[strState]->getTicksPerFrame())
 		{
-			this->fTicks -= this->fTicksPerFrame;
-			//std::cout << this->fTicks << " " << this->fDeltaTime << " " << this->fTicksPerFrame << "\n";
+			while (this->fTicks >= mapAnims[strState]->getTicksPerFrame())
+				this->fTicks -= mapAnims[strState]->getTicksPerFrame();
 
 			if (!this->bIsReverse) this->nFrameIndex++;
 			else this->nFrameIndex--;
 			
-			switch (this->EType)
+			switch (mapAnims[strState]->getType())
 			{
 			case AnimationType::ONCE:
-				if (this->nFrameIndex == this->vecTexture.size()) this->stop();
+				if (this->nFrameIndex == mapAnims[strState]->getFrameCount())
+				{
+					if (mapAnims[strState]->getNextState().empty()) this->stop();
+					else this->setAnimationState(mapAnims[strState]->getNextState());
+				}
 				break;
 
 			case AnimationType::LOOP:
-				this->nFrameIndex %= this->vecTexture.size();
+				this->nFrameIndex %= mapAnims[strState]->getFrameCount();
 				break;
 
 			case AnimationType::PINGPONG:
-				if (this->nFrameIndex == this->vecTexture.size() - 1 ||
+				if (this->nFrameIndex == mapAnims[strState]->getFrameCount() - 1 ||
 					this->nFrameIndex == 0)
 				{
 					this->bIsReverse = !this->bIsReverse;
@@ -60,7 +81,7 @@ void SpriteAnimator::perform()
 				break;
 			}
 
-			this->pSpriteRenderer->setTexture(this->vecTexture[this->nFrameIndex]);
+			this->pSpriteRenderer->setTexture(mapAnims[strState]->getFrames()[this->nFrameIndex]);
 		}
 	}
 }
@@ -74,16 +95,29 @@ void SpriteAnimator::stop()
 
 void SpriteAnimator::play()
 {
-	if (this->bIsPlaying) this->stop();
 	this->bIsPlaying = true;
 }
 
-void SpriteAnimator::setAnimationType(AnimationType EType)
+void SpriteAnimator::addAnimationState(Animation* pAnimation)
 {
-	this->EType = EType;
+	this->vecAnims.push_back(pAnimation);
+	this->mapAnims[pAnimation->getName()] = pAnimation;
 }
 
-AnimationType SpriteAnimator::getAnimationType() const
+void SpriteAnimator::setAnimationState(std::string strState)
 {
-	return this->EType;
+	if (this->strState == strState) return;
+
+	this->strState = strState;
+	if (this->bIsPlaying)
+	{
+		this->stop();
+		this->play();
+	}
+	else this->play();
+}
+
+std::string SpriteAnimator::getCurrentAnimationState() const
+{
+	return this->strState;
 }

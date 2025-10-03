@@ -17,6 +17,7 @@ protected:
 
     // X and Y since 2d
     bool bIsScreenObject;
+    bool bFollowParent;
     Vector2D fVecTranslate;
     Vector2D fVecScale;
     float fRot;
@@ -55,4 +56,6 @@ public:
     void setRot(float fRot);
     float getRot();
     bool getIsScreenObject() const;
+    bool getFollowParent();
+    void setFollowParent(bool bFollowParent);
 };

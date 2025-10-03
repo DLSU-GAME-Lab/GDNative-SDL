@@ -1,5 +1,16 @@
-// Change from 0(non-editor mode) to 1(editor mode)
-#define EDITOR_MODE __has_include("EditorModule.h") && 0
+// Detect EditorModule.h
+#if defined(__has_include)
+	#if __has_include("EditorModule.h")
+		#define EDITOR_MODULE_AVAILABLE 1
+	#else
+		#define EDITOR_MODULE_AVAILABLE 0
+	#endif
+#else
+	#define EDITOR_MODULE_AVAILABLE 0
+#endif
+
+// Toggle editor mode (set to 1 to enable, 0 to disable)
+#define EDITOR_MODE (EDITOR_MODULE_AVAILABLE && 0)   // <- put 1 or 0 here
 
 #if EDITOR_MODE
 #include "EditorModule.h"
@@ -78,6 +89,7 @@ Runner::Runner()
 	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
 	//initialize systems
+	std::cout << "[Runner] Initializing systems..." << std::endl;
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
@@ -85,14 +97,20 @@ Runner::Runner()
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
+	std::cout << "[Runner] MetricsManager initialized." << std::endl;
 
-	// ImGui init
+#if !EDITOR_MODE
+	std::cout << "[Runner] Initializing ImGui (runner-owned)..." << std::endl;
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplSDL3_InitForSDLRenderer(this->pWindow, this->pRenderer);
 	ImGui_ImplSDLRenderer3_Init(this->pRenderer);
+#else
+	std::cout << "[Runner] Editor mode active: UIManager should own ImGui." << std::endl;
+#endif
 
 #if EDITOR_MODE
 	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);
@@ -105,6 +123,13 @@ Runner::~Runner()
 {
 	SceneManager::getInstance()->unloadScene();
 
+#if !EDITOR_MODE
+	// runner only shuts down what it initialized.
+	ImGui_ImplSDLRenderer3_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
+#endif
+
 	//destroy systems
 #if EDITOR_MODE
 	Editor::EditorModule::destroy();
@@ -116,11 +141,6 @@ Runner::~Runner()
 	GameObjectManager::destroy();
 	SceneTransitionManager::destroy();
 	MetricsManager::destroy();
-
-	// ImGui shutdown
-	ImGui_ImplSDLRenderer3_Shutdown();
-	ImGui_ImplSDL3_Shutdown();
-	ImGui::DestroyContext();
 
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
@@ -139,7 +159,10 @@ void Runner::run()
 
 		while (SDL_PollEvent(&e))
 		{
-			ImGui_ImplSDL3_ProcessEvent(&e); // feed input to ImGui
+			// always forward events to ImGui if the platform backend exists
+			if (ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().BackendPlatformUserData != nullptr) {
+				ImGui_ImplSDL3_ProcessEvent(&e);
+			}
 
 #if EDITOR_MODE
 			Editor::EditorModule::getInstance()->processEditorInput(&e);
@@ -208,14 +231,8 @@ void Runner::render()
 
 	GameObjectManager::getInstance()->draw(this->pRenderer);
 
-#if EDITOR_MODE
-	Editor::EditorModule::getInstance()->drawEditor(this->pRenderer);
-#endif
-
-	// draw fade/transition overlay last
-	SceneTransitionManager::getInstance()->draw(this->pRenderer);
-
-	// --- ImGui new frame ---
+#if !EDITOR_MODE
+	// Runner owns ImGui: start frame, draw metrics, render
 	ImGui_ImplSDL3_NewFrame();
 	ImGui_ImplSDLRenderer3_NewFrame();
 	ImGui::NewFrame();
@@ -224,6 +241,15 @@ void Runner::render()
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), this->pRenderer);
+#else
+	#if EDITOR_MODE
+		// Only compile this call when EditorModule.h was detected and included.
+		Editor::EditorModule::getInstance()->drawEditor(this->pRenderer);
+	#endif
+#endif
+
+	// draw fade/transition overlay last
+	SceneTransitionManager::getInstance()->draw(this->pRenderer);
 
 	SDL_RenderPresent(this->pRenderer);
 }

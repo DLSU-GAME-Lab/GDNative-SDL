@@ -15,6 +15,11 @@ private:
     LARGE_INTEGER qpcLastTime{};
     double qpcFrequency = 0.0;
 
+    // FPS stats
+    float avgFPS = 0.0f;
+    float minFPS = FLT_MAX;
+    float maxFPS = 0.0f;
+
     // CPU tracking
     FILETIME prevSysKernel{}, prevSysUser{};
     FILETIME prevProcKernel{}, prevProcUser{};

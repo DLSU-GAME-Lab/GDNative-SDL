@@ -34,10 +34,25 @@ void MetricsManager::update() {
     QueryPerformanceCounter(&now);
     frameCount++;
     double elapsed = double(now.QuadPart - qpcLastTime.QuadPart) / qpcFrequency;
+
     if (elapsed >= 1.0) {
         fps = float(frameCount / elapsed);
         frameCount = 0;
         qpcLastTime = now;
+
+        // --- Update FPS stats ---
+        // Update min/max
+        if (fps < minFPS) minFPS = fps;
+        if (fps > maxFPS) maxFPS = fps;
+
+        // Compute running average over history buffer
+        float sum = 0.0f;
+        for (int i = 0; i < HISTORY_SIZE; i++) sum += fpsHistory[i];
+        avgFPS = sum / HISTORY_SIZE;
+
+        // Store FPS in history buffer
+        fpsHistory[offset] = fps;
+        offset = (offset + 1) % HISTORY_SIZE;
     }
 
     // --- CPU ---
@@ -105,6 +120,9 @@ void MetricsManager::drawGUI() {
     if (ImGui::BeginTabBar("MetricsTabs")) {
         if (showFPS && ImGui::BeginTabItem("FPS")) {
             ImGui::Text("FPS: %.1f", fps);
+            ImGui::Text("Avg FPS: %.1f", avgFPS);
+            ImGui::Text("Min FPS: %.1f", minFPS);
+            ImGui::Text("Max FPS: %.1f", maxFPS);
             ImGui::PlotLines("FPS History", fpsHistory, HISTORY_SIZE,
                 offset, nullptr, 0.0f, 120.0f, ImVec2(0, 80));
             ImGui::EndTabItem();
@@ -150,7 +168,8 @@ void MetricsManager::drawGUI() {
 void MetricsManager::exportCSV(const std::string& filename) {
     std::ofstream out(filename, std::ios::app);
     if (out.is_open()) {
-        out << fps << "," << cpuUsage << "," << (memoryUsage / 1024.0 / 1024.0) << 
+        out << fps << "," << avgFPS << "," << minFPS << "," << maxFPS << "," 
+            << cpuUsage << "," << (memoryUsage / 1024.0 / 1024.0) <<
             "," << gpuUsage << "," << inputLagMs << "," << loadTimeSec << std::endl;
         out.close();
         std::cout << "[MetricsManager] Exported metrics to " << filename << std::endl;

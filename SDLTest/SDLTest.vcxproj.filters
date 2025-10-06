@@ -232,6 +232,9 @@
     <ClCompile Include="src\PageChangeToggle.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\Gravity.cpp">
+      <Filter>Component\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -435,6 +438,9 @@
     </ClInclude>
     <ClInclude Include="include\PageChangeToggle.h">
       <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Gravity.h">
+      <Filter>Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@
 #include "Diary.h"
 #include "DiaryToggle.h"
 #include "PageChangeToggle.h"
+#include "Platform.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -36,10 +37,10 @@ void LobbyScene::onLoadResources()
 void LobbyScene::onLoadObjects()
 {
 	//code for when a scene needs physics
-	/*EmptyObject* pPhysManagerHolder;
+	EmptyObject* pPhysManagerHolder;
 	pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
 	PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
-	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);*/
+	GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 
 	this->createScene();
 	this->createButtons();
@@ -173,6 +174,10 @@ void LobbyScene::createScene()
 
 	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
+
+	Platform* pPlat = new Platform("Walk_Plat", "Button_Choices", Vector2D(-400, -400), Vector2D(.15, .15), 0.f);
+	GameObjectManager::getInstance()->addObject((AGameObject*)pPlat);
+
 }
 
 void LobbyScene::createExitMenu()

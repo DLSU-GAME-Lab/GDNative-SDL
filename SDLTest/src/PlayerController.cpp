@@ -1,6 +1,6 @@
 #include "PlayerController.h"
 #include "AGameObject.h"
-
+#include "Gravity.h"
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator)
 	: AComponent("PlayerController", ComponentType::SCRIPT)
 {
@@ -9,6 +9,7 @@ PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite,
 	this->pAnimator = pAnimator;
 	this->fMoveSpeed = 0.0f;
 	this->fJumpForce = 0.0f;
+	this->bFalling = false;
 }
 
 PlayerController::~PlayerController()
@@ -31,10 +32,40 @@ void PlayerController::perform()
 	}
 	else this->pAnimator->setAnimationState("idle");
 
-	if (this->pInput->getJumped())
+	if (this->pInput->getJumped()&& !this->bJumping)
 	{
 		this->pAnimator->setAnimationState("jump");
+		this->fVelY = this->fJumpForce;
+		this->bJumping = true;
+		this->bFalling = false;
 	}
+	this->jump();
+
+		
+}
+
+void PlayerController::jump()
+{
+	Gravity* pGrav = (Gravity*)this->pOwner->findComponentByName("Gravity");
+	if (pGrav != NULL && this->bJumping)
+	{
+		this->fVelY -= pGrav->getGravValue() * this->fDeltaTime; // Gravity pulls down
+		Vector2D pos = this->pOwner->getPos();
+		pos.y += this->fVelY * this->fDeltaTime;
+		this->pOwner->setPos(pos);
+
+		// Detect apex
+		if (this->fVelY <= 0.0f && !this->bFalling)
+		{
+			this->bFalling = true;
+			this->bJumping = false;
+			this->fVelY = 0;
+			pGrav->setGrounded(false);
+		}
+	}
+	
+
+	
 }
 
 void PlayerController::setMoveSpeed(float fMoveSpeed)
@@ -46,3 +77,5 @@ void PlayerController::setJumpForce(float fJumpForce)
 {
 	this->fJumpForce = fJumpForce;
 }
+
+

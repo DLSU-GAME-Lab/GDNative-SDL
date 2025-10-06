@@ -152,6 +152,7 @@
     <ClCompile Include="src\AGeneralInput.cpp" />
     <ClCompile Include="src\EventBroadcaster.cpp" />
     <ClCompile Include="src\FontManager.cpp" />
+    <ClCompile Include="src\Gravity.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\GUIButton.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\AGeneralInput.h" />
+    <ClInclude Include="include\Gravity.h" />
     <ClInclude Include="include\Grid.h" />
     <ClInclude Include="include\GUIButton.h" />
     <ClInclude Include="include\GUIManager.h" />

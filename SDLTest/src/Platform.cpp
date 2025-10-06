@@ -9,6 +9,9 @@ Platform::Platform(const std::string& strName, const std::string& strImageName, 
 
 Platform::~Platform()
 {
+	Collider* pCollider = new Collider(this->strName + " Collider", true);
+	pCollider->setCleanUp(true);
+	PhysicsManager::getInstance()->cleanUp();
 }
 
 void Platform::initialize()
@@ -24,28 +27,29 @@ void Platform::initialize()
 void Platform::onCollisionEnter(Collider* pCollider)
 {
 	Vector2D newPos = pCollider->getOwner()->getPos();
-	if (pCollider->isCollidedLeft())
-	{
-		std::cout << "Left" << std::endl;
 
-		newPos.x = (this->getPos().x - pCollider->getOwner()->getPos().x / 2) + 320;
-	}
-	else if (pCollider->isCollidedRight())
+	if (pCollider->isCollidedBottom())
 	{
-		std::cout << "Right" << std::endl;
-		newPos.x = (this->getPos().x + pCollider->getOwner()->getPos().x / 5)-450;
-		std::cout << newPos.x << std::endl;
-
+		newPos.y = this->getPos().y - pCollider->getOwner()->getPos().y / 2 + 250;
 	}
-	if (pCollider->isCollidedTop())
+	else if (pCollider->isCollidedTop())
 	{
-		std::cout << "TOP" << std::endl;
-		newPos.y = this->getPos().y + pCollider->getOwner()->getPos().y /2 - 320;
+		newPos.y = this->getPos().y + pCollider->getOwner()->getPos().y / 2 - 250;
 
 		if (abs(newPos.y - this->getPos().y) > 0.1f)
 			pCollider->getOwner()->setPos(newPos);
 
+
 	}
+	if (pCollider->isCollidedLeft())
+	{
+		newPos.x = (this->getPos().x - pCollider->getOwner()->getPos().x / 5) + 500;
+	}
+	else if (pCollider->isCollidedRight())
+	{
+		newPos.x = (this->getPos().x + pCollider->getOwner()->getPos().x / 5)-450;
+	}
+	
 	pCollider->getOwner()->setPos(newPos);
 
 }
@@ -53,7 +57,7 @@ void Platform::onCollisionEnter(Collider* pCollider)
 void Platform::onCollisionContinue(Collider* pCollider)
 {
 	Collider* pHolder = (Collider*)this->findComponentByName(this->strName + " Collider"); 
-	AGameObject* pColOwner =pCollider->getOwner();
+	Gravity* pGrav = (Gravity*)pCollider->getOwner()->findComponentByName("Gravity");
 	SDL_FRect platformBounds = pHolder->getGlobalBounds();
 	SDL_FRect objectBounds = pCollider->getGlobalBounds();
 
@@ -62,11 +66,8 @@ void Platform::onCollisionContinue(Collider* pCollider)
 	
 	 if (pCollider->isCollidedBottom())
 	 {
-		std::cout << "BOT" << std::endl;
-
-		//newPos.y = ((pColOwner->getPos().y) + pCollider->getGlobalBounds().h/2 + (this->getPos().y - pHolder->getGlobalBounds().h / 2)) - 300;  // push up
-		newPos.y = this->getPos().y - pCollider->getOwner()->getPos().y /2 + 175;
-		std::cout << newPos.y << std::endl;
+		//std::cout << newPos.y << std::endl;
+		pGrav->setGrounded(true);
 
 	 }
 

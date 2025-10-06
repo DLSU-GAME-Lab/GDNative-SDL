@@ -11,6 +11,9 @@ private:
 	SpriteAnimator* pAnimator;
 	float fMoveSpeed;
 	float fJumpForce;
+	float fVelY;
+	bool bFalling;
+	bool bJumping;
 
 public:
 	PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator);
@@ -18,6 +21,7 @@ public:
 
 	void perform() override;
 
+	void jump();
 	void setMoveSpeed(float fMoveSpeed);
 	void setJumpForce(float fJumpForce);
 };

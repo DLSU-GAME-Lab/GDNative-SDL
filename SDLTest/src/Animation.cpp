@@ -13,6 +13,81 @@ Animation::Animation(
     this->nFrameRate = nFrameRate;
     this->EType = EType;
     this->strNextState = strNextState;
+
+	this->bIsPlaying = false;
+	this->bIsReverse = false;
+	this->fTicks = 0.0f;
+	this->nFrameIndex = 0;
+
+	if (this->vecFrames.empty()) this->pCurrentFrame = NULL;
+	else this->pCurrentFrame = this->vecFrames[0];
+
+    // sample tween variable that interpolates
+    //this->tween = tweeny::from(0.0f, 0.0f).to(100.0f, 100.0f).during(10.0f, 10.0f).via(tweeny::easing::circularInOut);
+}
+
+void Animation::stop()
+{
+	this->bIsPlaying = false;
+	this->nFrameIndex = 0;
+	this->fTicks = 0;
+}
+
+void Animation::play()
+{
+	this->bIsPlaying = true;
+}
+
+void Animation::step(float fDeltaTime)
+{
+	if (!this->tween.isFinished())
+	{
+		//Use this to animate object movement
+		std::array<float, 2> pos = this->tween.step(fDeltaTime);
+	}
+
+	this->fTicks += fDeltaTime;
+	float ticksPerFrame = this->getTicksPerFrame();
+
+	if (this->fTicks >= ticksPerFrame)
+	{
+		while (this->fTicks >= ticksPerFrame)
+			this->fTicks -= ticksPerFrame;
+
+		if (!this->bIsReverse) this->nFrameIndex++;
+		else this->nFrameIndex--;
+
+		switch (this->EType)
+		{
+		case AnimationType::ONCE:
+			if (this->nFrameIndex == this->vecFrames.size())
+			{
+				this->stop();
+			}
+			break;
+
+		case AnimationType::LOOP:
+			this->nFrameIndex %= this->vecFrames.size();
+			break;
+
+		case AnimationType::PINGPONG:
+			if (this->nFrameIndex == this->vecFrames.size() - 1 ||
+				this->nFrameIndex == 0)
+			{
+				this->bIsReverse = !this->bIsReverse;
+			}
+			break;
+
+		default:
+			break;
+		}
+		this->pCurrentFrame = this->vecFrames[this->nFrameIndex];
+	}
+}
+
+bool Animation::playNext()
+{
+	return this->EType == AnimationType::ONCE && !this->bIsPlaying && !this->strNextState.empty();
 }
 
 void Animation::setFrameRate(Uint8 nFrameRate)
@@ -30,14 +105,19 @@ void Animation::setNextState(std::string strNextState)
     this->strNextState = strNextState;
 }
 
+bool Animation::isPlaying() const
+{
+	return this->bIsPlaying;
+}
+
 std::string Animation::getName() const
 {
     return this->strName;
 }
 
-std::vector<SDL_Texture*>& Animation::getFrames()
+SDL_Texture* Animation::getCurrentFrame() const
 {
-    return this->vecFrames;
+	return this->pCurrentFrame;
 }
 
 unsigned int Animation::getFrameCount()

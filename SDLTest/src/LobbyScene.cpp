@@ -166,8 +166,8 @@ void LobbyScene::createScene()
 	GameObjectManager::getInstance()->addObject(pPlayer);
 	Animation * pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
 	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
-	pSpriteAnim->addAnimationState(pAnim);
-	pSpriteAnim->setAnimationState("idle");
+	pSpriteAnim->addAnimation(pAnim);
+	pSpriteAnim->play("idle");
 
 	Librarian* pLibrarian = new Librarian(Vector2D(450, -140), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);

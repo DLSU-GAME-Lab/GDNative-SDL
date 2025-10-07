@@ -47,12 +47,11 @@ void Player::initialize()
     Animation* pRun = new Animation("run", vecRun, 16, AnimationType::LOOP);
     Animation* pJump = new Animation("jump", vecJump, 8, AnimationType::ONCE, "idle");
 
-    pSpriteAnimator->addAnimationState(pIdle);
-    pSpriteAnimator->addAnimationState(pRun);
-    pSpriteAnimator->addAnimationState(pJump);
+    pSpriteAnimator->addAnimation(pIdle);
+    pSpriteAnimator->addAnimation(pRun);
+    pSpriteAnimator->addAnimation(pJump);
 
-    pSpriteAnimator->setAnimationState("idle");
-    pSpriteAnimator->play();
+    pSpriteAnimator->play("idle");
     pPlayerController->setMoveSpeed(300.0f);
     pPlayerController->setJumpForce(250.f);
 }

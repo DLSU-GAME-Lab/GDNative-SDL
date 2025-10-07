@@ -117,8 +117,8 @@ void LeftRoomScene::createScene()
 	GameObjectManager::getInstance()->addObject(pPlayer);
 	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
 	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
-	pSpriteAnim->addAnimationState(pAnim);
-	pSpriteAnim->setAnimationState("idle");
+	pSpriteAnim->addAnimation(pAnim);
+	pSpriteAnim->play("idle");
 }
 
 void LeftRoomScene::createExitMenu()

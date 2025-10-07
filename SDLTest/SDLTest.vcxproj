@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;$(SolutionDir)SDLTest\tweeny\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -263,6 +263,20 @@
     <ClInclude Include="include\UINames.h" />
     <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
+    <ClInclude Include="tweeny\include\dispatcher.h" />
+    <ClInclude Include="tweeny\include\easing.h" />
+    <ClInclude Include="tweeny\include\easingresolve.h" />
+    <ClInclude Include="tweeny\include\int2type.h" />
+    <ClInclude Include="tweeny\include\tween.h" />
+    <ClInclude Include="tweeny\include\tweenpoint.h" />
+    <ClInclude Include="tweeny\include\tweentraits.h" />
+    <ClInclude Include="tweeny\include\tweeny.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tweeny\include\tween.tcc" />
+    <None Include="tweeny\include\tweenone.tcc" />
+    <None Include="tweeny\include\tweenpoint.tcc" />
+    <None Include="tweeny\include\tweeny.tcc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

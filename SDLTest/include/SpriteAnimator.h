@@ -13,12 +13,6 @@ private:
 	std::vector<Animation*> vecAnims;
 	std::unordered_map<std::string, Animation*> mapAnims;
 
-	bool bIsPlaying;
-	bool bIsReverse;
-
-	unsigned int nFrameIndex;
-	float fTicks;
-
 public:
 	SpriteAnimator(SpriteRenderer* pSpriteRenderer);
 	SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, Uint8 nFrameRate);
@@ -27,11 +21,11 @@ public:
 	virtual void perform() override;
 
 	void stop();
-	void play();
+	void play(std::string strState);
 
-	void addAnimationState(Animation* pAnimation);
+	void addAnimation(Animation* pAnimation);
 	void setAnimationState(std::string strState);
 
-	std::string getCurrentAnimationState() const;
+	Animation* getCurrentAnimation();
 };
 

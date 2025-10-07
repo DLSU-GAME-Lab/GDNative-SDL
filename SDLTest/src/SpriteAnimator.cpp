@@ -4,13 +4,6 @@ SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer)
 	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
 {
 	this->pSpriteRenderer = pSpriteRenderer;
-	this->strState = "default";
-
-	this->bIsPlaying = false;
-	this->bIsReverse = false;
-
-	this->nFrameIndex = 0;
-	this->fTicks = 0;
 }
 
 SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, Uint8 nFrameRate)
@@ -21,12 +14,7 @@ SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_
 	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate, AnimationType::PINGPONG);
 	this->vecAnims.push_back(pAnimation);
 	this->mapAnims[strState] = pAnimation;
-
-	this->bIsPlaying = false;
-	this->bIsReverse = false;
-
-	this->nFrameIndex = 0;
-	this->fTicks = 0;
+	this->mapAnims[strState]->play();
 }
 
 SpriteAnimator::~SpriteAnimator()
@@ -39,61 +27,38 @@ SpriteAnimator::~SpriteAnimator()
 
 void SpriteAnimator::perform()
 {
-	if (!this->mapAnims.empty() && this->bIsPlaying)
+	if (mapAnims.contains(strState))
 	{
-		this->fTicks += fDeltaTime;
-		if (this->fTicks >= mapAnims[strState]->getTicksPerFrame())
-		{
-			while (this->fTicks >= mapAnims[strState]->getTicksPerFrame())
-				this->fTicks -= mapAnims[strState]->getTicksPerFrame();
+		mapAnims[strState]->step(fDeltaTime);
 
-			if (!this->bIsReverse) this->nFrameIndex++;
-			else this->nFrameIndex--;
-			
-			switch (mapAnims[strState]->getType())
-			{
-			case AnimationType::ONCE:
-				if (this->nFrameIndex == mapAnims[strState]->getFrameCount())
-				{
-					if (mapAnims[strState]->getNextState().empty()) this->stop();
-					else this->setAnimationState(mapAnims[strState]->getNextState());
-				}
-				break;
+		if (mapAnims[strState]->playNext())
+			this->strState = mapAnims[strState]->getNextState();
 
-			case AnimationType::LOOP:
-				this->nFrameIndex %= mapAnims[strState]->getFrameCount();
-				break;
-
-			case AnimationType::PINGPONG:
-				if (this->nFrameIndex == mapAnims[strState]->getFrameCount() - 1 ||
-					this->nFrameIndex == 0)
-				{
-					this->bIsReverse = !this->bIsReverse;
-				}
-				break;
-
-			default:
-				break;
-			}
-
-			this->pSpriteRenderer->setTexture(mapAnims[strState]->getFrames()[this->nFrameIndex]);
-		}
+		this->pSpriteRenderer->setTexture(mapAnims[strState]->getCurrentFrame());
+		std::cout << "now playing: " << this->strState << "\n";
 	}
 }
 
 void SpriteAnimator::stop()
 {
-	this->bIsPlaying = false;
-	this->nFrameIndex = 0;
-	this->fTicks = 0;
+	if (this->strState == strState ||
+		this->strState.empty() ||
+		this->mapAnims.empty()) return;
+
+	mapAnims[strState]->stop();
 }
 
-void SpriteAnimator::play()
+void SpriteAnimator::play(std::string strState)
 {
-	this->bIsPlaying = true;
+	if (this->strState == strState ||
+		this->strState.empty() ||
+		this->mapAnims.empty()) return;
+
+	this->strState = strState;
+	mapAnims[strState]->play();
 }
 
-void SpriteAnimator::addAnimationState(Animation* pAnimation)
+void SpriteAnimator::addAnimation(Animation* pAnimation)
 {
 	this->vecAnims.push_back(pAnimation);
 	this->mapAnims[pAnimation->getName()] = pAnimation;
@@ -101,18 +66,16 @@ void SpriteAnimator::addAnimationState(Animation* pAnimation)
 
 void SpriteAnimator::setAnimationState(std::string strState)
 {
-	if (this->strState == strState) return;
-
+	if (this->strState == strState || this->strState.empty()) return;
 	this->strState = strState;
-	if (this->bIsPlaying)
-	{
-		this->stop();
-		this->play();
-	}
-	else this->play();
 }
 
-std::string SpriteAnimator::getCurrentAnimationState() const
+Animation* SpriteAnimator::getCurrentAnimation()
 {
-	return this->strState;
+	if (!strState.empty() &&
+		!mapAnims.empty() &&
+		mapAnims.contains(strState))
+		return mapAnims[strState];
+
+	return NULL;
 }

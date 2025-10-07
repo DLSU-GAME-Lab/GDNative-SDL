@@ -1,13 +1,21 @@
 #include "RenderSystem.h"
 #include "SpriteRenderer.h"
+#include "Settings.h"
 #include "Camera.h"
 #include <iostream>
 
-void RenderSystem::updateWindowSize(SDL_Window* pWindow)
+void RenderSystem::updateWindowSize(SDL_Window* pWindow, SDL_Renderer* pRenderer)
 {
-    int w, h;
-    SDL_GetWindowSizeInPixels(pWindow, &w, &h);
-    this->pCamera->setWindowSize(Vector2D(w, h));
+    this->pRenderer = pRenderer;
+
+    SDL_SetRenderLogicalPresentation(
+            pRenderer,
+            (int)gameWidth,
+            (int)gameHeight,
+            SDL_LOGICAL_PRESENTATION_LETTERBOX
+    );
+
+    this->pCamera->setWindowSize(Vector2D(gameWidth, gameHeight));
 }
 
 void RenderSystem::draw(SDL_Renderer* pRenderer)

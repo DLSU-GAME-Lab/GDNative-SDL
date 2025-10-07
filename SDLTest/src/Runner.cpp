@@ -85,7 +85,11 @@ Runner::Runner()
 	int windowHeight = gameHeight * scale;
 	int windowWidth = gameWidth * scale;
 
-	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), gameWidth, gameHeight, SDL_WINDOW_RESIZABLE);
+    pWindow = SDL_CreateWindow(
+            strWindowTitle.c_str(),
+            0, 0,
+            SDL_WINDOW_FULLSCREEN | SDL_WINDOW_RESIZABLE
+    );
 
 	this->pRenderer = SDL_CreateRenderer(this->pWindow, NULL);
 	if (this->pRenderer == NULL)
@@ -112,7 +116,7 @@ Runner::Runner()
 	RenderSystem::initialize();
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
-	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+	RenderSystem::getInstance()->updateWindowSize(this->pWindow, this->pRenderer);
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
@@ -175,10 +179,21 @@ void Runner::run()
 
 		while (SDL_PollEvent(&e))
 		{
-			// always forward events to ImGui if the platform backend exists
-			if (ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().BackendPlatformUserData != nullptr) {
-				ImGui_ImplSDL3_ProcessEvent(&e);
-			}
+            // 1) Convert event coordinates to renderer/logical coordinates first
+            if (this->pRenderer) {
+                // if available this converts motion/touch coords to the renderer's logical space
+                if (SDL_ConvertEventToRenderCoordinates(this->pRenderer, &e) == 0) {
+                    // success - e now contains render-space coords for mouse/touch
+                } else {
+                    // debug log if conversion fails (not fatal)
+                    SDL_Log("SDL_ConvertEventToRenderCoordinates returned error: %s", SDL_GetError());
+                }
+            }
+
+            // 2) Now forward the (converted) event to ImGui so it receives render/logical coords
+            if (ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().BackendPlatformUserData != nullptr) {
+                ImGui_ImplSDL3_ProcessEvent(&e);
+            }
 
 #if EDITOR_MODE
 			Editor::EditorModule::getInstance()->processEditorInput(&e);
@@ -191,7 +206,7 @@ void Runner::run()
 				break;
 
 			case SDL_EVENT_WINDOW_RESIZED:
-				RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+				RenderSystem::getInstance()->updateWindowSize(this->pWindow, this->pRenderer);
 				break;
 
 			default:
@@ -229,7 +244,32 @@ void Runner::run()
 
 void Runner::processEvents(SDL_Event* eEvent)
 {
-	GameObjectManager::getInstance()->processInput(eEvent);
+    // If ImGui wants the mouse/keyboard, skip game input for those events
+    if (ImGui::GetCurrentContext() != nullptr)
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureMouse)
+        {
+            if (eEvent->type == SDL_EVENT_MOUSE_MOTION ||
+                eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+                eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP ||
+                eEvent->type == SDL_EVENT_FINGER_DOWN ||
+                eEvent->type == SDL_EVENT_FINGER_UP ||
+                eEvent->type == SDL_EVENT_FINGER_MOTION)
+            {
+                return;
+            }
+        }
+        if (io.WantCaptureKeyboard)
+        {
+            if (eEvent->type == SDL_EVENT_KEY_DOWN || eEvent->type == SDL_EVENT_KEY_UP || eEvent->type == SDL_EVENT_TEXT_INPUT)
+            {
+                return;
+            }
+        }
+    }
+
+    GameObjectManager::getInstance()->processInput(eEvent);
 }
 
 void Runner::update(float fDeltaTime)
@@ -246,6 +286,13 @@ void Runner::render()
 	SDL_RenderClear(pRenderer);
 
 	GameObjectManager::getInstance()->draw(this->pRenderer);
+
+    // before starting ImGui frame
+    if (ImGui::GetCurrentContext() != nullptr) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.DisplaySize = ImVec2((float)gameWidth, (float)gameHeight);
+        io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f); // logical->framebuffer scale is 1 after conversion
+    }
 
 #if !EDITOR_MODE
 	// Runner owns ImGui: start frame, draw metrics, render

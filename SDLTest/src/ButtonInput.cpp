@@ -1,6 +1,8 @@
 #include "ButtonInput.h"
 #include "RenderSystem.h"
 #include "Camera.h"
+#include "Settings.h"
+#include "imgui.h"
 
 ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 {
@@ -17,25 +19,53 @@ ButtonInput::~ButtonInput()
 
 void ButtonInput::perform()
 {
-	if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
-		this->onMouseHovered(Vector2D(eEvent->motion.x, eEvent->motion.y));
+    if (!eEvent) return;
 
-	if (this->contains())
-	{
-		switch (eEvent->type)
-		{
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-			this->onMouseButtonDown(eEvent->button.button);
-			break;
+    // If ImGui wants mouse, bail out (prevent game input when ImGui is active)
+    if (ImGui::GetCurrentContext() != nullptr) {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureMouse) return;
+    }
 
-		case SDL_EVENT_MOUSE_BUTTON_UP:
-			this->onMouseButtonUp(eEvent->button.button);
-			break;
+#if defined(__ANDROID__)
+    if (eEvent->type == SDL_EVENT_FINGER_DOWN ||
+        eEvent->type == SDL_EVENT_FINGER_UP ||
+        eEvent->type == SDL_EVENT_FINGER_MOTION)
+    {
+        // After SDL_ConvertEventToRenderCoordinates, tfinger.x/y are in renderer logical coords
+        float logicalX = eEvent->tfinger.x;
+        float logicalY = eEvent->tfinger.y;
+        Vector2D pos(logicalX, logicalY);
 
-		default:
-			break;
-		}
-	}
+        SDL_FRect sRect = this->pSprite ? this->pSprite->getRect() : SDL_FRect{0,0,0,0};
+        SDL_Log("pointer=(%.1f,%.1f) spriteRect=(%.1f,%.1f,%.1f,%.1f)",
+                pos.x, pos.y, sRect.x, sRect.y, sRect.w, sRect.h);
+
+        if (this->contains(pos))
+        {
+            this->onMouseHovered(pos);
+            if (eEvent->type == SDL_EVENT_FINGER_DOWN) this->onMouseButtonDown(SDL_BUTTON_LEFT);
+            else if (eEvent->type == SDL_EVENT_FINGER_UP) this->onMouseButtonUp(SDL_BUTTON_LEFT);
+        }
+    }
+#else
+    if (eEvent->type == SDL_EVENT_MOUSE_MOTION ||
+        eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+        eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP)
+    {
+        // After conversion, motion.x/y are in renderer logical coords
+        float logicalX = static_cast<float>(eEvent->motion.x);
+        float logicalY = static_cast<float>(eEvent->motion.y);
+        Vector2D pos(logicalX, logicalY);
+
+        if (this->contains(pos))
+        {
+            this->onMouseHovered(pos);
+            if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN) this->onMouseButtonDown(eEvent->button.button);
+            else if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP) this->onMouseButtonUp(eEvent->button.button);
+        }
+    }
+#endif
 }
 
 Vector2D ButtonInput::getMousePos() const
@@ -85,12 +115,12 @@ void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 	this->bClicked = true;
 }
 
-bool ButtonInput::contains() const
+bool ButtonInput::contains(const Vector2D& pos) const
 {
 	if (!this->pSprite) return false;
 
 	SDL_FRect spriteRect = this->pSprite->getRect();
-	SDL_FRect pointRect = { this->mousePos.x, this->mousePos.y, 1, 1 };
+    SDL_FRect pointRect = { pos.x, pos.y, 1, 1 };
 
 	return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }

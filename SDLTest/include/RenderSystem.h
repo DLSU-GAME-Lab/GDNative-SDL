@@ -13,7 +13,7 @@ private:
     Camera* pCamera = NULL;
 
 public:
-    void updateWindowSize(SDL_Window* pWindow);
+    void updateWindowSize(SDL_Window* pWindow, SDL_Renderer* pRenderer);
     void draw(SDL_Renderer* pRenderer);
     void registerSpriteRenderer(SpriteRenderer* pSpriteRenderer);
     void unregisterSpriteRenderer(SpriteRenderer* pSpriteRenderer);
@@ -25,6 +25,11 @@ public:
      * * * * * * * * * * * * * * * * * * * * */
 private:
     static RenderSystem* P_SHARED_INSTANCE;
+
+private:
+    SDL_Renderer* pRenderer = nullptr;
+public:
+    SDL_Renderer* getRenderer() const { return this->pRenderer; }
 
 private:
     RenderSystem() {};

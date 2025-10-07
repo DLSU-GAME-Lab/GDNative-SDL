@@ -14,6 +14,9 @@
 #include "DiaryToggle.h"
 #include "PageChangeToggle.h"
 #include "Platform.h"
+#include "AnimatedSprite.h"
+#include "Animation.h"
+#include "SpriteAnimator.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -156,8 +159,15 @@ void LobbyScene::createScene()
 	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
 
-	Player* pPlayer = new Player(Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+	//Player* pPlayer = new Player(Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.0f);
+	//GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+
+	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
+	GameObjectManager::getInstance()->addObject(pPlayer);
+	Animation * pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
+	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
+	pSpriteAnim->addAnimationState(pAnim);
+	pSpriteAnim->setAnimationState("idle");
 
 	Librarian* pLibrarian = new Librarian(Vector2D(450, -140), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
@@ -175,8 +185,8 @@ void LobbyScene::createScene()
 	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
 
-	Platform* pPlat = new Platform("Walk_Plat", "Button_Choices", Vector2D(-400, 200), Vector2D(.15, .15), 0.f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pPlat);
+	//Platform* pPlat = new Platform("Walk_Plat", "Button_Choices", Vector2D(-400, 200), Vector2D(.15, .15), 0.f);
+	//GameObjectManager::getInstance()->addObject((AGameObject*)pPlat);
 
 }
 

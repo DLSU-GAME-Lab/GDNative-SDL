@@ -9,6 +9,9 @@
 #include "GUIToggle.h"
 #include "Settings.h"
 #include "EmptyObject.h"
+#include "SpriteAnimator.h"
+#include "Animation.h"
+#include "AnimatedSprite.h"
 RightRoomScene::RightRoomScene():AScene(SceneTag::RIGHT_ROOM_SCENE)
 {
 }
@@ -107,8 +110,12 @@ void RightRoomScene::createScene()
 	Prop* pRedDragon = new Prop("Red_Dragon", "Red_Dragon", Vector2D(-640.f, -395.f), Vector2D(.5f, .5f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pRedDragon);
 
-	Player* pPlayer = new Player(Vector2D(0, -315), Vector2D(1.f, 1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
+	GameObjectManager::getInstance()->addObject(pPlayer);
+	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
+	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
+	pSpriteAnim->addAnimationState(pAnim);
+	pSpriteAnim->setAnimationState("idle");
 }
 
 void RightRoomScene::createExitMenu()

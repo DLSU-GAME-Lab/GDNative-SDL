@@ -9,7 +9,9 @@
 #include "Text.h"
 #include "GUIToggle.h"
 #include "EmptyObject.h"
-
+#include "SpriteAnimator.h"
+#include "Animation.h"
+#include "AnimatedSprite.h"
 LeftRoomScene::LeftRoomScene():AScene(SceneTag::LEFT_ROOM_SCENE)
 {
 }
@@ -111,8 +113,12 @@ void LeftRoomScene::createScene()
 	pPedestal[3]->setPos(Vector2D(300, -300));
 	pPedestal[4]->setPos(Vector2D(600, -300));
 
-	Player* pPlayer = new Player(Vector2D(-160, -275), Vector2D(1.f, 1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
+	GameObjectManager::getInstance()->addObject(pPlayer);
+	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
+	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
+	pSpriteAnim->addAnimationState(pAnim);
+	pSpriteAnim->setAnimationState("idle");
 }
 
 void LeftRoomScene::createExitMenu()

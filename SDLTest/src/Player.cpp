@@ -27,8 +27,8 @@ void Player::initialize()
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator);
     Gravity* pGrav = new Gravity(100.f);
     Collider* pCollider = new Collider(this->strName + " Collider", true);
+   
     pCollider->setListener(this);
-    this->attachComponent((AComponent*)pCollider);
     PhysicsManager::getInstance()->trackCollider(pCollider);
 
     this->attachComponent(pSpriteRenderer);
@@ -36,7 +36,9 @@ void Player::initialize()
     this->attachComponent(pPlayerInput);
     this->attachComponent(pPlayerController);
     this->attachComponent(pGrav);
-
+    this->attachComponent(pCollider);
+    SDL_FRect COffset = SDL_FRect{ 100 ,25,-220,-50 };
+    pCollider->setOffset(COffset);
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");
     auto vecJump = TextureManager::getInstance()->getTexture("player_jump");
@@ -52,7 +54,7 @@ void Player::initialize()
     pSpriteAnimator->setAnimationState("idle");
     pSpriteAnimator->play();
     pPlayerController->setMoveSpeed(300.0f);
-    pPlayerController->setJumpForce(200.0f);
+    pPlayerController->setJumpForce(250.f);
 }
 
 void Player::onCollisionEnter(Collider* pCollider)

@@ -175,7 +175,7 @@ void LobbyScene::createScene()
 	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
 
-	Platform* pPlat = new Platform("Walk_Plat", "Button_Choices", Vector2D(-400, -400), Vector2D(.15, .15), 0.f);
+	Platform* pPlat = new Platform("Walk_Plat", "Button_Choices", Vector2D(-400, 200), Vector2D(.15, .15), 0.f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pPlat);
 
 }

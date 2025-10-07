@@ -19,9 +19,12 @@ void Platform::initialize()
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fVecTranslate.x, this->fVecTranslate.y);
 	this->attachComponent((AComponent*)pSpriteRenderer);
 	Collider* pCollider = new Collider(this->strName + " Collider", true);
+
 	pCollider->setListener(this);
 	this->attachComponent((AComponent*)pCollider);
 	PhysicsManager::getInstance()->trackCollider(pCollider);
+	
+
 }
 
 void Platform::onCollisionEnter(Collider* pCollider)
@@ -30,11 +33,11 @@ void Platform::onCollisionEnter(Collider* pCollider)
 
 	if (pCollider->isCollidedBottom())
 	{
-		newPos.y = this->getPos().y - pCollider->getOwner()->getPos().y / 2 + 250;
+		newPos.y = this->getPos().y - pCollider->getOwner()->getPos().y / 2 + 125;
 	}
 	else if (pCollider->isCollidedTop())
 	{
-		newPos.y = this->getPos().y + pCollider->getOwner()->getPos().y / 2 - 250;
+		newPos.y = this->getPos().y + pCollider->getOwner()->getPos().y / 2 - 260;
 
 		if (abs(newPos.y - this->getPos().y) > 0.1f)
 			pCollider->getOwner()->setPos(newPos);
@@ -81,3 +84,5 @@ void Platform::onCollisionExit(Collider* pCollider)
 	std::cout << "Collision Exited" << std::endl;
 
 }
+
+

@@ -10,7 +10,7 @@ Collider::Collider(std::string strName, bool bFollowParent):AComponent(strName,C
 }
 void Collider::perform()
 {
-	
+
 }
 
 bool Collider::isColliding(Collider* pCollider)

@@ -52,6 +52,9 @@
     <Filter Include="Component\Animation">
       <UniqueIdentifier>{c3b38311-c13a-445a-b092-6599d035b112}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tweeny">
+      <UniqueIdentifier>{f6131c00-4aa1-406e-ae2f-4c621cd3fde7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -219,7 +222,6 @@
     <ClCompile Include="src\SpriteAnimator.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Platform.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
@@ -234,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="src\Gravity.cpp">
       <Filter>Component\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>Component\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -426,7 +431,6 @@
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Component\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\Animation.h" />
     <ClInclude Include="include\Platform.h">
       <Filter>GameObject</Filter>
     </ClInclude>
@@ -442,5 +446,46 @@
     <ClInclude Include="include\Gravity.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="include\Animation.h">
+      <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\dispatcher.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\easing.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\easingresolve.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\int2type.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tween.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tweenpoint.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tweentraits.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tweeny.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tweeny\include\tween.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
+    <None Include="tweeny\include\tweenone.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
+    <None Include="tweeny\include\tweenpoint.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
+    <None Include="tweeny\include\tweeny.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
   </ItemGroup>
 </Project>

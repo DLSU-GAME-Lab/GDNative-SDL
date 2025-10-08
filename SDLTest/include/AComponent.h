@@ -23,6 +23,7 @@ public:
     void detachOwner();
 
 public:
+    virtual void onAttach() {};
     virtual void perform() = 0;
 
 public:

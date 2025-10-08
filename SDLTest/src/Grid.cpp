@@ -1,106 +1,82 @@
 #include "Grid.h"
+#include "AGameObject.h"
 
-Grid::Grid(std::string strName, Uint8 w, Uint8 h, float nCellSize) : AComponent(strName, ComponentType::SCRIPT)
+Grid::Grid(std::string strName, ComponentType EType, Uint64 w, Uint64 h, float fCellSize) : AComponent(strName, EType)
 {
 	this->nWidth = w;
 	this->nHeight = h;
-	this->nCellSize = nCellSize;
+	this->fCellSize = fCellSize;
+}
 
-	Vector2D cellSize = Vector2D(nCellSize);
-	Vector2D gridSize = Vector2D(w, h);
+void Grid::onAttach()
+{
+	Vector2D cellSize = Vector2D(this->fCellSize);
+	Vector2D gridSize = Vector2D(this->nWidth, this->nHeight);
 
-	for (Uint8 c = 0; c < h; c++)
+	for (Uint64 r = 0; r < this->nHeight; r++)
 	{
-		for (Uint8 r = 0; r < w; r++)
+		std::vector<CellData> col;
+
+		for (Uint64 c = 0; c < this->nWidth; c++)
 		{
-			Vector2D pos = cellSize * (Vector2D(r, c) - gridSize);
-			this->vecCell.push_back({ r, c, pos, NULL, false });
+			Vector2D pos = cellSize * (Vector2D(c, r) - (gridSize * 0.5f));
+			pos.y *= -1.0f;
+			pos += pOwner->getPos();
+			col.push_back({ r, c, pos, NULL, false });
 		}
+
+		this->gridCells.push_back(col);
 	}
 }
 
-void Grid::perform()
+// set a cell's blocked flag
+void Grid::setBlockedCell(Uint64 r, Uint64 c, bool bBlocked)
 {
+	// note: r is row index (height), c is column index (width)
+	if (r >= this->nHeight || c >= this->nWidth) return;
 
+	this->gridCells[r][c].blocked = bBlocked;
 }
 
-std::vector<AGameObject*> Grid::getAdjacentObjects(AGameObject* pGameObject, bool bIncludeDiagonals)
+void Grid::setBlockedCells(Uint64 r, const std::vector<Uint64>& cols, bool bBlocked)
 {
-	std::vector<AGameObject*> vecAdjacent;
-	CellData cell = getCellDataFromObject(pGameObject);
-
-	for (Uint8 c = 0; c < 3; c++)
-	{
-		for (Uint8 r = 0; r < 3; r++)
-		{
-			int row = cell.r - r;
-			int col = cell.c = c;
-
-			if (row < 0 || row >= this->nWidth ||
-				col < 0 || col >= this->nHeight)
-			{
-				continue;
-			}
-			else
-			{
-				vecAdjacent.push_back(getCellObject(row, col));
-			}
-		}
-	}
-
-	return vecAdjacent;
+	if (cols.empty()) return;
+	for (Uint64 c : cols) this->gridCells[r][c].blocked = bBlocked;
 }
 
-void Grid::setBlockedCell(Uint8 r, Uint8 c, bool bBlocked)
+// set cell object, return true on success
+bool Grid::setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject)
 {
-	if (r >= this->nWidth || c >= this->nHeight) return;
+	if (r >= this->nHeight || c >= this->nWidth) return false;
 
-	for (CellData cell : this->vecCell)
-	{
-		if (cell.r == r && cell.c == c)
-		{
-			cell.blocked = bBlocked;
-			return;
-		}
-	}
+	this->gridCells[r][c].obj = pGameObject;
+	return true;
 }
 
-bool Grid::setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject)
+// get cell world position; return empty vector on bad indices
+Vector2D Grid::getCellPosition(Uint64 r, Uint64 c)
 {
-	if (r >= this->nWidth || c >= this->nHeight) return false;
+	if (r >= this->nHeight || c >= this->nWidth) return Vector2D();
+	return this->gridCells[r][c].pos;
+}
 
-	for (CellData cell : this->vecCell)
+// get cell object pointer; return nullptr on bad indices
+AGameObject* Grid::getCellObject(Uint64 r, Uint64 c)
+{
+	if (r >= this->nHeight || c >= this->nWidth) return nullptr;
+	return this->gridCells[r][c].obj;
+}
+
+// find cell by object pointer; returns pointer to cell data or NULL
+CellData* Grid::getCellFromObject(AGameObject* pObject)
+{
+	for (Uint64 r = 0; r < this->nHeight; r++)
 	{
-		if (cell.r == r && cell.c == c)
+		for (Uint64 c = 0; c < this->nWidth; c++)
 		{
-			if (cell.blocked) return false;
-			else
-			{
-				cell.obj = pGameObject;
-				return true;
-			}
+			if (this->gridCells[r][c].obj == pObject) return &this->gridCells[r][c];
 		}
 	}
 
-	return false;
-}
-
-Grid::CellData Grid::getCellDataFromObject(AGameObject* pGameObject)
-{
-	for (CellData cell : this->vecCell)
-	{
-		if (cell.obj == pGameObject) return cell;
-	}
-}
-
-AGameObject* Grid::getCellObject(Uint8 r, Uint8 c)
-{
-	if (r >= this->nWidth || c >= this->nHeight) return nullptr;
-
-	for (CellData cell : this->vecCell)
-	{
-		if (cell.r == r && cell.c == c) return cell.obj;
-	}
-
-	return nullptr;
+	return NULL;
 }

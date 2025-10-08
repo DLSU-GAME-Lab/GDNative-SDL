@@ -227,6 +227,7 @@
     <ClInclude Include="include\GUIManager.h" />
     <ClInclude Include="include\GUIToggle.h" />
     <ClInclude Include="include\GUIUtils.h" />
+    <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\Level_1_Scene.h" />
     <ClInclude Include="include\Level_2_Scene.h" />

@@ -30,6 +30,10 @@ void TweenAnimator::perform()
 			{
 			case AnimationType::ONCE:
 				this->stop();
+				for (auto pListener : this->vecListener)
+				{
+					pListener->onAnimationFinished();
+				}
 				break;
 
 			case AnimationType::LOOP:
@@ -43,7 +47,6 @@ void TweenAnimator::perform()
 					this->tweenPos.forward();
 					std::array<float, 2> pos = this->tweenPos.seek(0.0f);
 					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
-					std::cout << "forward" << "\n";
 				}
 				else
 				{
@@ -125,6 +128,22 @@ void TweenAnimator::stop()
 
 	//this->tweenScale.seek(0);
 	//this->tweenRot.seek(0);
+}
+
+void TweenAnimator::addListener(IAnimatorListener* pListener)
+{
+	this->vecListener.push_back(pListener);
+}
+
+void TweenAnimator::removeListener(IAnimatorListener* pListener)
+{
+	int nIndex = -1;
+	for (int i = 0; i < this->vecListener.size() && nIndex == -1; i++)
+	{
+		if (this->vecListener[i] == pListener) nIndex = i;
+	}
+
+	if (nIndex != -1) this->vecListener.erase(this->vecListener.begin() + nIndex);
 }
 
 void TweenAnimator::setAnimationType(AnimationType EType)

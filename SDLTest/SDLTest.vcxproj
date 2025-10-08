@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;$(SolutionDir)SDLTest\tweeny\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -145,8 +145,6 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
-    <ClCompile Include="src\Diary.cpp" />
-    <ClCompile Include="src\DiaryToggle.cpp" />
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\AGeneralInput.cpp" />
@@ -165,20 +163,13 @@
     <ClCompile Include="src\Level_3_Scene.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
-    <ClCompile Include="src\PageChangeToggle.cpp" />
     <ClCompile Include="src\PhysicsManager.cpp" />
-    <ClCompile Include="src\Platform.cpp" />
-    <ClCompile Include="src\PlayerController.cpp" />
-    <ClCompile Include="src\PlayerInput.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\Background.cpp" />
-    <ClCompile Include="src\Fairy.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
-    <ClCompile Include="src\Librarian.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
@@ -192,6 +183,7 @@
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\TileMapRenderer.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
+    <ClCompile Include="src\TweenAnimator.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
     <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
@@ -214,8 +206,6 @@
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\CustomStyles.h" />
-    <ClInclude Include="include\Diary.h" />
-    <ClInclude Include="include\DiaryToggle.h" />
     <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EmptyObject.h" />
     <ClInclude Include="include\EnumAnimationType.h" />
@@ -226,7 +216,6 @@
     <ClInclude Include="include\EnumSceneTag.h" />
     <ClInclude Include="include\EventBroadcaster.h" />
     <ClInclude Include="include\EventListener.h" />
-    <ClInclude Include="include\Fairy.h" />
     <ClInclude Include="include\FontManager.h" />
     <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\AGeneralInput.h" />
@@ -242,15 +231,9 @@
     <ClInclude Include="include\Level_1_Scene.h" />
     <ClInclude Include="include\Level_2_Scene.h" />
     <ClInclude Include="include\Level_3_Scene.h" />
-    <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\MetricsManager.h" />
     <ClInclude Include="include\ButtonInput.h" />
-    <ClInclude Include="include\PageChangeToggle.h" />
     <ClInclude Include="include\PhysicsManager.h" />
-    <ClInclude Include="include\Platform.h" />
-    <ClInclude Include="include\Player.h" />
-    <ClInclude Include="include\PlayerController.h" />
-    <ClInclude Include="include\PlayerInput.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />
@@ -266,10 +249,25 @@
     <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\Prop.h" />
+    <ClInclude Include="include\TweenAnimator.h" />
     <ClInclude Include="include\UIManager.h" />
     <ClInclude Include="include\UINames.h" />
     <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
+    <ClInclude Include="tweeny\include\dispatcher.h" />
+    <ClInclude Include="tweeny\include\easing.h" />
+    <ClInclude Include="tweeny\include\easingresolve.h" />
+    <ClInclude Include="tweeny\include\int2type.h" />
+    <ClInclude Include="tweeny\include\tween.h" />
+    <ClInclude Include="tweeny\include\tweenpoint.h" />
+    <ClInclude Include="tweeny\include\tweentraits.h" />
+    <ClInclude Include="tweeny\include\tweeny.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tweeny\include\tween.tcc" />
+    <None Include="tweeny\include\tweenone.tcc" />
+    <None Include="tweeny\include\tweenpoint.tcc" />
+    <None Include="tweeny\include\tweeny.tcc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

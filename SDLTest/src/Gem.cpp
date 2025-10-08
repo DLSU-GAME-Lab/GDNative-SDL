@@ -1,5 +1,6 @@
 #include "Gem.h"
 #include "GemSwapper.h"
+#include "TweenAnimator.h"
 
 Gem::Gem(std::string strName, GemType EType) : AGameObject(strName)
 {
@@ -22,6 +23,9 @@ void Gem::initialize()
 
 	GemSwapper* pSwapper = new GemSwapper(pInput);
 	this->attachComponent(pSwapper);
+
+	TweenAnimator* pTween = new TweenAnimator();
+	this->attachComponent(pTween);
 }
 
 GemType Gem::getType() const

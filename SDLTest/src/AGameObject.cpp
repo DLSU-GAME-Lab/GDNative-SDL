@@ -2,7 +2,7 @@
 #include "AGeneralInput.h"
 #include "RenderSystem.h"
 #include <iostream>
-
+#include "Collider.h"
 AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
@@ -40,12 +40,21 @@ void AGameObject::update(float fDeltaTime)
 
 void AGameObject::draw(SDL_Renderer* pRenderer)
 {
+
     auto vecRenderer = this->getComponentsRecursively(ComponentType::RENDERER);
     for (AComponent* pComponent : vecRenderer)
     {
         SpriteRenderer* renderer = (SpriteRenderer*)pComponent;
         renderer->draw(pRenderer, RenderSystem::getInstance()->getCamera());
         pComponent->perform();
+    }
+    if (this->componentExists(this->strName + " Collider"))
+    {
+        Collider* pCollider = (Collider*)this->findComponentByName(this->strName + " Collider");
+        SDL_FRect bounds = pCollider->getGlobalBounds();
+        SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
+        SDL_RenderRect(pRenderer, &bounds);
+
     }
 }
 
@@ -158,6 +167,16 @@ std::vector<AComponent*> AGameObject::getComponentsRecursively(ComponentType ETy
     }
 
     return vecFound;
+}
+
+bool AGameObject::componentExists(std::string strName)
+{
+    for (AComponent* pComponent : this->vecComponent)
+    {
+        if (pComponent->getName() == strName)
+            return true;
+    }
+    return false;
 }
 
 bool AGameObject::getEnabled() const

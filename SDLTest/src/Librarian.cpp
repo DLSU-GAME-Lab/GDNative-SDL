@@ -24,5 +24,4 @@ void Librarian::initialize()
     this->attachComponent((AComponent*)pSpriteAnimator);
 
     pSpriteRenderer->setFlipX(true);
-    pSpriteAnimator->play();
 }

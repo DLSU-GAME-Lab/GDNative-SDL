@@ -10,10 +10,16 @@ class Animation
 private:
 	std::string strName;
 	std::vector<SDL_Texture*> vecFrames;
-	Uint8 nFrameRate;
+	SDL_Texture* pCurrentFrame;
 
 	AnimationType EType;
+	Uint8 nFrameRate;
 	std::string strNextState;
+
+	bool bIsPlaying;
+	bool bIsReverse;
+	unsigned int nFrameIndex;
+	float fTicks;
 
 public:
 	Animation(
@@ -24,12 +30,18 @@ public:
 		std::string strNextState = ""
 	);
 
+	void stop();
+	void play();
+	void step(float fDeltaTime);
+	bool playNext();
+
 	void setFrameRate(Uint8 nFrameRate);
 	void setType(AnimationType EType);
 	void setNextState(std::string strNextState);
 
+	bool isPlaying() const;
 	std::string getName() const;
-	std::vector<SDL_Texture*>& getFrames();
+	SDL_Texture* getCurrentFrame() const;
 	unsigned int getFrameCount();
 	float getTicksPerFrame() const;
 	float getFrameRate() const;

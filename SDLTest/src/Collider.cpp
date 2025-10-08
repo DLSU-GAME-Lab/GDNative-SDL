@@ -14,7 +14,7 @@ void Collider::onAttach()
 }
 void Collider::perform()
 {
-	
+
 }
 
 bool Collider::isColliding(Collider* pCollider)

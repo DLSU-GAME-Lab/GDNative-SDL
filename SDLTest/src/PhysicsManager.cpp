@@ -1,12 +1,12 @@
 #include "PhysicsManager.h"
 
-void PhysicsManager::onAttach()
+void PhysicsManager::perform() 
 {
-
+    this->checkCollision();
 }
 
-void PhysicsManager::perform() {
-
+void PhysicsManager::checkCollision()
+{
     Collider* pColliderA = NULL;
     Collider* pColliderB = NULL;
 
@@ -65,7 +65,11 @@ void PhysicsManager::cleanUp() {
 
     for (Collider* pCollider : this->vecTrackedCollider) {
         if (pCollider->isCleanUp())
+        {
             this->vecUntrackedCollider.push_back(pCollider);
+            std::cout << "Collider: " << pCollider->getName() << " is being removed from tracking." << std::endl;
+        }
+    
     }
 
     for (int i = 0; i < this->vecUntrackedCollider.size(); i++) {

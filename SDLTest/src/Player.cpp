@@ -3,6 +3,7 @@
 #include "SpriteAnimator.h"
 #include "PlayerController.h"
 #include "PhysicsManager.h"
+#include "Gravity.h"
 Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Player")
 {
     this->fVecTranslate = fVecTranslate;
@@ -24,17 +25,20 @@ void Player::initialize()
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer);
     PlayerInput* pPlayerInput = new PlayerInput();
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator);
-    //Collider* pCollider = new Collider(this->strName + " Collider", true);
-    //pCollider->setListener(this);
-    //this->attachComponent((AComponent*)pCollider);
-    //PhysicsManager::getInstance()->trackCollider(pCollider);
+    Gravity* pGrav = new Gravity(150.f);
+    Collider* pCollider = new Collider(this->strName + " Collider", true);
+   
+    pCollider->setListener(this);
+    PhysicsManager::getInstance()->trackCollider(pCollider);
 
     this->attachComponent(pSpriteRenderer);
     this->attachComponent(pSpriteAnimator);
     this->attachComponent(pPlayerInput);
     this->attachComponent(pPlayerController);
-    //std::cout << pCollider->getGlobalBounds().w << ", " << pCollider->getGlobalBounds().h << std::endl;
-    
+    this->attachComponent(pGrav);
+    this->attachComponent(pCollider);
+    SDL_FRect COffset = SDL_FRect{ 100 ,25,-220,-50 };
+    pCollider->setOffset(COffset);
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");
     auto vecJump = TextureManager::getInstance()->getTexture("player_jump");
@@ -43,24 +47,23 @@ void Player::initialize()
     Animation* pRun = new Animation("run", vecRun, 16, AnimationType::LOOP);
     Animation* pJump = new Animation("jump", vecJump, 8, AnimationType::ONCE, "idle");
 
-    pSpriteAnimator->addAnimationState(pIdle);
-    pSpriteAnimator->addAnimationState(pRun);
-    pSpriteAnimator->addAnimationState(pJump);
+    pSpriteAnimator->addAnimation(pIdle);
+    pSpriteAnimator->addAnimation(pRun);
+    pSpriteAnimator->addAnimation(pJump);
 
-    pSpriteAnimator->setAnimationState("idle");
-    pSpriteAnimator->play();
+    pSpriteAnimator->play("idle");
     pPlayerController->setMoveSpeed(300.0f);
-    pPlayerController->setJumpForce(500.0f);
+    pPlayerController->setJumpForce(250.f);
 }
 
-//void Player::onCollisionEnter(Collider* pCollider)
-//{
-//}
-//
-//void Player::onCollisionContinue(Collider* pCollider)
-//{
-//}
-//
-//void Player::onCollisionExit(Collider* pCollider)
-//{
-//}
+void Player::onCollisionEnter(Collider* pCollider)
+{
+}
+
+void Player::onCollisionContinue(Collider* pCollider)
+{
+}
+
+void Player::onCollisionExit(Collider* pCollider)
+{
+}

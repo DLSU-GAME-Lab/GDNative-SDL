@@ -42,6 +42,7 @@ public:
     AComponent* findComponentByName(std::string strName);
     std::vector<AComponent*> getComponents(ComponentType EType);
     std::vector<AComponent*> getComponentsRecursively(ComponentType EType, bool bInclusive = true);
+    bool componentExists(std::string strName);
 
 public:
     bool getEnabled() const;

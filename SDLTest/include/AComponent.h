@@ -23,12 +23,13 @@ public:
     void detachOwner();
 
 public:
-    virtual void onAttach() = 0;
+    virtual void onAttach() {};
     virtual void perform() = 0;
 
 public:
     void setDeltaTime(float fDeltaTime);
-    AGameObject* getOwner();
+    float getDeltaTime() const;
+    AGameObject* getOwner() const;
     ComponentType getType() const;
     std::string getName() const;
 };

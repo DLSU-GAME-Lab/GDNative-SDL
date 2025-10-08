@@ -3,15 +3,15 @@
 #include "AComponent.h"
 #include "EnumComponentType.h"
 #include "Collider.h"
+#include "Gravity.h"
 class PhysicsManager: AComponent
 {
 private:
     std::vector<Collider*> vecTrackedCollider;
     std::vector<Collider*> vecUntrackedCollider;
-
 public:
-    void onAttach() override;
-    void perform() override;
+    void perform();
+    void checkCollision();
     void trackCollider(Collider* pCollider);
     void untrackCollider(Collider* pCollider);
     void cleanUp();

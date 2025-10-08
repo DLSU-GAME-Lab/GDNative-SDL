@@ -1,10 +1,12 @@
 #include "Gem.h"
 #include "GemSwapper.h"
 #include "TweenAnimator.h"
+#include "GemManager.h"
 
 Gem::Gem(std::string strName, GemType EType) : AGameObject(strName)
 {
 	this->EType = EType;
+	this->pTween = NULL;
 }
 
 Gem::~Gem()
@@ -24,11 +26,22 @@ void Gem::initialize()
 	GemSwapper* pSwapper = new GemSwapper(pInput);
 	this->attachComponent(pSwapper);
 
-	TweenAnimator* pTween = new TweenAnimator();
+	this->pTween = new TweenAnimator();
+	this->pTween->addListener(this);
 	this->attachComponent(pTween);
+}
+
+void Gem::onAnimationFinished()
+{
+	GemManager::getInstance()->finishAnimation();
 }
 
 GemType Gem::getType() const
 {
 	return this->EType;
+}
+
+TweenAnimator* Gem::getTweenAnimator() const
+{
+	return this->pTween;
 }

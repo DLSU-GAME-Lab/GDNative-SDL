@@ -10,6 +10,7 @@ private:
     Gem* pSelectedObjects[2];
     CellData* pSelectedCells[2];
     float fGemSize;
+    bool bAnimating;
 
 public:
     void onAttach() override;
@@ -20,9 +21,12 @@ public:
 
     void setSelected(Gem* pSelected);
     void spawnGems(float fScale);
+    void finishAnimation();
 
 private:
     void moveGems();
+    void setTween(Gem* pGem, Vector2D pos);
+
     bool checkMatches();
     void cascadeDown();
     void printGridData();

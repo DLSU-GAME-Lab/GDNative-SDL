@@ -38,6 +38,8 @@ void GemManager::unloadResources()
 // user selected a gem; handle selection, swapping, checking, and chain reactions
 void GemManager::setSelected(Gem* pSelected)
 {
+    if (this->bAnimating) return;
+
     if (this->pSelectedObjects[0] == NULL)
     {
         // first selection
@@ -60,22 +62,22 @@ void GemManager::setSelected(Gem* pSelected)
             // perform swap (swap obj pointers and update positions)
             this->moveGems();
 
-            // if swap produces no match, revert swap
-            if (!this->checkMatches())
-            {
-                // swap back immediately
-                this->moveGems();
-            }
-            else
-            {
-                // chain reaction: keep cascading and filling while new matches appear
-                do
-                {
-                    this->cascadeDown();
-                    this->spawnGems(this->fGemSize);
-                    // loop while another match is found after fill
-                } while (this->checkMatches());
-            }
+            //// if swap produces no match, revert swap
+            //if (!this->checkMatches())
+            //{
+            //    // swap back immediately
+            //    this->moveGems();
+            //}
+            //else
+            //{
+            //    // chain reaction: keep cascading and filling while new matches appear
+            //    do
+            //    {
+            //        this->cascadeDown();
+            //        this->spawnGems(this->fGemSize);
+            //        // loop while another match is found after fill
+            //    } while (this->checkMatches());
+            //}
 
             this->printGridData();
         }
@@ -100,16 +102,34 @@ void GemManager::moveGems()
 {
     if (this->pSelectedCells[0] == NULL || this->pSelectedCells[1] == NULL) return;
 
-    AGameObject* objA = this->pSelectedCells[0]->obj;
-    AGameObject* objB = this->pSelectedCells[1]->obj;
+    Gem* objA = (Gem*)this->pSelectedCells[0]->obj;
+    Gem* objB = (Gem*)this->pSelectedCells[1]->obj;
 
     // swap object pointers in the cells
     this->pSelectedCells[0]->obj = objB;
     this->pSelectedCells[1]->obj = objA;
 
     // update world positions of the swapped objects so sprites render at correct places
-    if (objB != NULL) objB->setPos(this->pSelectedCells[0]->pos);
-    if (objA != NULL) objA->setPos(this->pSelectedCells[1]->pos);
+
+    if (objB != NULL) this->setTween(objB, this->pSelectedCells[0]->pos);
+    if (objA != NULL) this->setTween(objA, this->pSelectedCells[1]->pos);
+    this->bAnimating = true;
+
+    //if (objB != NULL) objB->setPos(this->pSelectedCells[0]->pos);
+    //if (objA != NULL) objA->setPos(this->pSelectedCells[1]->pos);
+
+}
+
+void GemManager::setTween(Gem* pGem, Vector2D pos)
+{
+    pGem->getTweenAnimator()->setTweenPos(
+        Tween2D::from(pGem->getPos().x, pGem->getPos().y)
+                .to(pos.x, pos.y)
+                .during(500)
+                .via(tweeny::easing::quadraticInOut)
+    );
+
+    pGem->getTweenAnimator()->play();
 }
 
 // detect and remove matches horizontally and vertically
@@ -272,7 +292,8 @@ void GemManager::cascadeDown()
                 {
                     // move object pointer down and update its world position
                     this->gridCells[r][c].obj = this->gridCells[indexAbove][c].obj;
-                    this->gridCells[r][c].obj->setPos(this->gridCells[r][c].pos);
+                    Gem* pGem = (Gem*)this->gridCells[r][c].obj;
+                    this->setTween(pGem, this->gridCells[r][c].pos);
                     this->gridCells[indexAbove][c].obj = NULL;
                 }
             }
@@ -383,6 +404,29 @@ void GemManager::spawnGems(float fScale)
     }
 }
 
+void GemManager::finishAnimation()
+{
+    this->bAnimating = false;
+
+    // if swap produces no match, revert swap
+    if (!this->checkMatches())
+    {
+        // swap back immediately
+        this->moveGems();
+    }
+    else
+    {
+        // chain reaction: keep cascading and filling while new matches appear
+        do
+        {
+            this->cascadeDown();
+            this->spawnGems(this->fGemSize);
+            // loop while another match is found after fill
+        } while (this->checkMatches());
+    }
+
+}
+
 GemManager* GemManager::P_SHARED_INSTANCE = NULL;
 
 GemManager::GemManager(Uint64 w, Uint64 h, float fCellSize) : Grid("GemManager", ComponentType::SCRIPT, w, h, fCellSize)
@@ -392,6 +436,7 @@ GemManager::GemManager(Uint64 w, Uint64 h, float fCellSize) : Grid("GemManager",
     this->pSelectedCells[0] = NULL;
     this->pSelectedCells[1] = NULL;
     this->fGemSize = 1.0f;
+    this->bAnimating = false;
 }
 
 void GemManager::initialize(Uint64 w, Uint64 h, float fCellSize, Vector2D offset)

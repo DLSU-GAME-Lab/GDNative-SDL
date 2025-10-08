@@ -20,20 +20,37 @@ file(GLOB SOURCES
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
         ${SOURCES}
-	${HEADERS}
 )
 
+# Expose your local include dir
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
-        sdl3_wrapper
-	sdl3_image_wrapper
-	sdl3_ttf_wrapper
-	imgui_headers
-        spdlog_headers
-        ${android}
-        ${log}
-	${GLESv3-lib}
+# Make sure we include ImGui headers and SDL include directories produced by top-level
+# The following variables (SDL3_INSTALL_DIR etc.) are defined in the top-level CMake
+# and are visible here because add_subdirectory(jni) is used.
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+    ${imgui_SOURCE_DIR}
+    ${imgui_SOURCE_DIR}/backends
+    ${SDL3_INSTALL_DIR}/include
+    ${SDL3_IMAGE_INSTALL_DIR}/include
+    ${SDL_TTF_INSTALL_DIR}/include
 )
+
+# Link against the imported SDL (and image/ttf) targets directly.
+# Also link against ImGui headers (interface), spdlog headers (interface), and platform libs.
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
+    SDL3
+    SDL3_image
+    SDL3_ttf
+    imgui_headers
+    spdlog_headers
+    ${android}
+    ${log}
+    ${GLESv3-lib}
+)
+
+# Ensure the external_prebuild target (which builds SDL and copies .so files) runs before your native library builds.
+# NOTE: external_prebuild is defined in the top-level CMake (see previous instructions).
+add_dependencies(${CMAKE_PROJECT_NAME} external_prebuild)

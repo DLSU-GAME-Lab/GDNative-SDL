@@ -2,6 +2,7 @@
 #include "AComponent.h"
 #include "tweeny.h"
 #include "EnumAnimationType.h"
+#include "IAnimatorListener.h"
 
 typedef tweeny::tween<float> Tween;
 typedef tweeny::tween<float, float> Tween2D;
@@ -17,6 +18,8 @@ private:
 	bool bIsPlaying;
 	bool bIsReverse;
 
+	std::vector<IAnimatorListener*> vecListener;
+
 public:
 	TweenAnimator();
 	~TweenAnimator();
@@ -25,6 +28,9 @@ public:
 	void play();
 	void pause();
 	void stop();
+
+	void addListener(IAnimatorListener* pListener);
+	void removeListener(IAnimatorListener* pListener);
 
 	void setAnimationType(AnimationType EType);
 

@@ -1,6 +1,7 @@
 #include "Diary.h"
 #include "Background.h"
 #include "GameObjectManager.h"
+
 Diary::Diary(const std::string& strBackroundIMG, Vector2D fVecTranslate, Vector2D fVecScale):AGameObject("Diary")
 {
 	this->strBackroundIMG = strBackroundIMG;
@@ -14,7 +15,8 @@ Diary::~Diary()
 void Diary::initialize()
 {
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strBackroundIMG, this->fVecTranslate.x, this->fVecTranslate.y);
-	this->attachComponent((AComponent*)pSpriteRenderer);
+	this->attachComponent(pSpriteRenderer);
+
 }
 
 int Diary::getCurrentPage()

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EnumAnimationType.h"
-#include "tweeny.h"
 #include <SDL3/SDL.h>
 #include <string>
 #include <vector>
@@ -16,7 +15,6 @@ private:
 	AnimationType EType;
 	Uint8 nFrameRate;
 	std::string strNextState;
-	tweeny::tween<float, float> tween;
 
 	bool bIsPlaying;
 	bool bIsReverse;

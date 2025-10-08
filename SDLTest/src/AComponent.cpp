@@ -30,7 +30,12 @@ void AComponent::setDeltaTime(float fDeltaTime)
     this->fDeltaTime = fDeltaTime;
 }
 
-AGameObject* AComponent::getOwner()
+float AComponent::getDeltaTime() const
+{
+    return this->fDeltaTime;
+}
+
+AGameObject* AComponent::getOwner() const
 {
     return this->pOwner;
 }

@@ -240,6 +240,9 @@
     <ClCompile Include="src\Animation.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="src\TweenAnimator.cpp">
+      <Filter>Component\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -472,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="tweeny\include\tweeny.h">
       <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TweenAnimator.h">
+      <Filter>Component\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

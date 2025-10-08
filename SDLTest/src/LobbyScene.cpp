@@ -17,6 +17,7 @@
 #include "AnimatedSprite.h"
 #include "Animation.h"
 #include "SpriteAnimator.h"
+#include "TweenAnimator.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -241,6 +242,14 @@ void LobbyScene::createDiary()
 	pDiary->setScale(Vector2D(0.25f, 0.25f));
 	GUIToggle* pToggle = new GUIToggle("Diary");
 	pDiary->attachComponent(pToggle);
+	Vector2D start = Vector2D(0, 0);
+	Vector2D end = Vector2D(0, 50);
+	TweenAnimator* pTween = new TweenAnimator();
+	pTween->setAnimationType(AnimationType::PINGPONG);
+	pTween->setTweenPos(Tween2D::from(start.x, start.y).to(end.x, end.y).during(2000));
+	pTween->play();
+	pDiary->attachComponent(pTween);
+
 	GameObjectManager::getInstance()->addObject(pDiary);
 
 	Diary* pDiaryProper = new Diary("SWBST_BG", Vector2D(0, 0), Vector2D(1, 1));

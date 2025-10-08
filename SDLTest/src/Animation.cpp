@@ -22,8 +22,6 @@ Animation::Animation(
 	if (this->vecFrames.empty()) this->pCurrentFrame = NULL;
 	else this->pCurrentFrame = this->vecFrames[0];
 
-    // sample tween variable that interpolates
-    //this->tween = tweeny::from(0.0f, 0.0f).to(100.0f, 100.0f).during(10.0f, 10.0f).via(tweeny::easing::circularInOut);
 }
 
 void Animation::stop()
@@ -40,12 +38,6 @@ void Animation::play()
 
 void Animation::step(float fDeltaTime)
 {
-	if (!this->tween.isFinished())
-	{
-		//Use this to animate object movement
-		std::array<float, 2> pos = this->tween.step(fDeltaTime);
-	}
-
 	this->fTicks += fDeltaTime;
 	float ticksPerFrame = this->getTicksPerFrame();
 

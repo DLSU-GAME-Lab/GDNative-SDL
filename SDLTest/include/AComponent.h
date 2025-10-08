@@ -28,7 +28,8 @@ public:
 
 public:
     void setDeltaTime(float fDeltaTime);
-    AGameObject* getOwner();
+    float getDeltaTime() const;
+    AGameObject* getOwner() const;
     ComponentType getType() const;
     std::string getName() const;
 };

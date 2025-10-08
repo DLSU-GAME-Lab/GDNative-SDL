@@ -35,7 +35,6 @@ void SpriteAnimator::perform()
 			this->strState = mapAnims[strState]->getNextState();
 
 		this->pSpriteRenderer->setTexture(mapAnims[strState]->getCurrentFrame());
-		std::cout << "now playing: " << this->strState << "\n";
 	}
 }
 

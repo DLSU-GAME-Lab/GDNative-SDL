@@ -24,5 +24,6 @@ public:
 	void jump();
 	void setMoveSpeed(float fMoveSpeed);
 	void setJumpForce(float fJumpForce);
+	void setVelY(float fVelY);
 };
 

@@ -25,7 +25,7 @@ void Player::initialize()
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer);
     PlayerInput* pPlayerInput = new PlayerInput();
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator);
-    Gravity* pGrav = new Gravity(100.f);
+    Gravity* pGrav = new Gravity(150.f);
     Collider* pCollider = new Collider(this->strName + " Collider", true);
    
     pCollider->setListener(this);

@@ -27,7 +27,6 @@ void PlayerController::perform()
 		Vector2D pos = this->pOwner->getPos();
 		pos.x += this->pInput->getMoveX() * this->fMoveSpeed * this->fDeltaTime;
 		this->pOwner->setPos(pos);
-
 		this->pSprite->setFlipX(this->pInput->getMoveX() < 0.0f);
 	}
 	else this->pAnimator->setAnimationState("idle");
@@ -40,7 +39,6 @@ void PlayerController::perform()
 		this->bFalling = false;
 	}
 	this->jump();
-
 		
 }
 
@@ -76,6 +74,11 @@ void PlayerController::setMoveSpeed(float fMoveSpeed)
 void PlayerController::setJumpForce(float fJumpForce)
 {
 	this->fJumpForce = fJumpForce;
+}
+
+void PlayerController::setVelY(float fVelY)
+{
+	this->fVelY = fVelY;
 }
 
 

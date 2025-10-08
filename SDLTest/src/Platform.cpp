@@ -1,5 +1,6 @@
 #include "Platform.h"
 #include "Settings.h"
+#include "PlayerController.h"
 Platform::Platform(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject(strName)
 {
 	this->strImageName = strImageName;
@@ -29,52 +30,50 @@ void Platform::initialize()
 
 void Platform::onCollisionEnter(Collider* pCollider)
 {
-	Vector2D newPos = pCollider->getOwner()->getPos();
-
-	if (pCollider->isCollidedBottom())
+	if(pCollider->getOwner()->getName().find("Player") != std::string::npos)
 	{
-		newPos.y = this->getPos().y - pCollider->getOwner()->getPos().y / 2 + 125;
-	}
-	else if (pCollider->isCollidedTop())
-	{
-		newPos.y = this->getPos().y + pCollider->getOwner()->getPos().y / 2 - 260;
+		Vector2D newPos = pCollider->getOwner()->getPos();
+		Gravity* pGrav = (Gravity*)pCollider->getOwner()->findComponentByName("Gravity");
+		Collider* pHolder = (Collider*)this->findComponentByName(this->strName + " Collider");
+		PlayerController* pController = (PlayerController*)pCollider->getOwner()->findComponentByName("PlayerController");
 
-		if (abs(newPos.y - this->getPos().y) > 0.1f)
-			pCollider->getOwner()->setPos(newPos);
+		if (pCollider->isCollidedBottom())
+		{
+			//turning them from world pos 
+			float fTopPush = ((this->getPos().y + 600) + pHolder->getGlobalBounds().h / 2) + (pCollider->getOwner()->getPos().x + 600) / 1.1f;
+			newPos.y = fTopPush - 600;
+			pGrav->setGrounded(true);
 
+		}
+		else if (pCollider->isCollidedTop())
+		{
+			//turning them from world pos 
+			float fBotPush = ((this->getPos().y + 600)) - (pCollider->getOwner()->getPos().x + 600) / 1.3f;
+			newPos.y = fBotPush - 600;
+			pController->setVelY(0);
+		}
+		if (pCollider->isCollidedLeft())
+		{
+			//turning them from world pos 
+			float fRightPush = (this->getPos().x + 1000) + (pCollider->getOwner()->getPos().x + 1000) / 2.6;
+			newPos.x = fRightPush - 1000;
+		}
+		else if (pCollider->isCollidedRight())
+		{
+			//turning them from world pos 
+			float fLeftPush = ((this->getPos().x + 1000) - pHolder->getGlobalBounds().w / 2) - (pCollider->getOwner()->getPos().x + 1000) / 1.8f;
+			newPos.x = fLeftPush - 1000;
 
+		}
+
+		pCollider->getOwner()->setPos(newPos);
 	}
-	if (pCollider->isCollidedLeft())
-	{
-		newPos.x = (this->getPos().x - pCollider->getOwner()->getPos().x / 5) + 500;
-	}
-	else if (pCollider->isCollidedRight())
-	{
-		newPos.x = (this->getPos().x + pCollider->getOwner()->getPos().x / 5)-450;
-	}
-	
-	pCollider->getOwner()->setPos(newPos);
 
 }
 
 void Platform::onCollisionContinue(Collider* pCollider)
 {
-	Collider* pHolder = (Collider*)this->findComponentByName(this->strName + " Collider"); 
-	Gravity* pGrav = (Gravity*)pCollider->getOwner()->findComponentByName("Gravity");
-	SDL_FRect platformBounds = pHolder->getGlobalBounds();
-	SDL_FRect objectBounds = pCollider->getGlobalBounds();
 
-
-	Vector2D newPos = pCollider->getOwner()->getPos();
-	
-	 if (pCollider->isCollidedBottom())
-	 {
-		//std::cout << newPos.y << std::endl;
-		pGrav->setGrounded(true);
-
-	 }
-
-	pCollider->getOwner()->setPos(newPos);
 
 
 }

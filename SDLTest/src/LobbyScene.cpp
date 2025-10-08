@@ -246,7 +246,7 @@ void LobbyScene::createDiary()
 	Vector2D end = Vector2D(0, 50);
 	TweenAnimator* pTween = new TweenAnimator();
 	pTween->setAnimationType(AnimationType::PINGPONG);
-	pTween->setTweenPos(Tween2D::from(start.x, start.y).to(end.x, end.y).during(2000));
+	pTween->setTweenPos(Tween2D::from(start.x, start.y).to(end.x, end.y).during(1000).via(tweeny::easing::quadraticInOut));
 	pTween->play();
 	pDiary->attachComponent(pTween);
 

@@ -18,6 +18,12 @@ void TweenAnimator::perform()
 	if (this->bIsPlaying)
 	{
 		int ms = fDeltaTime * 1000;
+		if (!this->tweenPos.isFinished())
+		{
+			std::array<float, 2> pos = this->tweenPos.step(ms);
+			this->pOwner->setPos(Vector2D(pos[0], pos[1]));
+		}
+
 		if (this->tweenPos.isFinished())
 		{
 			switch (this->EType)
@@ -35,23 +41,20 @@ void TweenAnimator::perform()
 				{
 					this->bIsReverse = false;
 					this->tweenPos.forward();
-					this->tweenPos.seek(0.0f);
+					std::array<float, 2> pos = this->tweenPos.seek(0.0f);
+					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
+					std::cout << "forward" << "\n";
 				}
 				else
 				{
 					this->bIsReverse = true;
 					this->tweenPos.backward();
-					this->tweenPos.seek(0.98f);
+					std::array<float, 2> pos = this->tweenPos.seek(0.99f);
+					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
 				}
 				break;
 			}
 		}
-		else
-		{
-			std::array<float, 2> pos = this->tweenPos.step(ms);
-			this->pOwner->setPos(Vector2D(pos[0], pos[1]));
-		}
-
 
 		//if (!this->tweenScale.isFinished())
 		//{
@@ -119,8 +122,9 @@ void TweenAnimator::stop()
 {
 	this->bIsPlaying = false;
 	this->tweenPos.seek(0);
-	this->tweenScale.seek(0);
-	this->tweenRot.seek(0);
+
+	//this->tweenScale.seek(0);
+	//this->tweenRot.seek(0);
 }
 
 void TweenAnimator::setAnimationType(AnimationType EType)

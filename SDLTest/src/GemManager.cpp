@@ -71,6 +71,7 @@ void GemManager::setSelected(Gem* pGem)
         if ((pos0 - pos1).SqrMagnitude() <= this->fGemSize * this->fGemSize)
         {
             // perform swap (swap obj pointers and update positions)
+            this->pSelected[0]->gem->setActive(true);
             this->moveGems();
             this->printGridData();
             this->bAnimating = true;
@@ -93,13 +94,6 @@ void GemManager::moveGems()
     // swap object pointers in the cells
     this->pSelected[0]->gem = objB;
     this->pSelected[1]->gem = objA;
-
-    //if (!this->checkMatches())
-    //{
-    //    objA->setRevert(true);
-    //    objA->setActive(true);
-    //}
-    //else objA->setActive(true);
 
     this->setTween(*this->pSelected[0]);
     this->setTween(*this->pSelected[1]);
@@ -240,7 +234,6 @@ bool GemManager::checkMatches()
 void GemManager::cascadeDown()
 {
     // iterate bottom-to-top so we move lower empty cells first
-    Gem* pLastGem = NULL;
     for (int r = (int)this->data.size() - 1; r >= 0; --r)
     {
         for (int c = (int)this->data[r].size() - 1; c >= 0; --c)
@@ -265,7 +258,6 @@ void GemManager::cascadeDown()
                 if (indexAbove >= 0)
                 {
                     // move object pointer down and update its world position
-                    pLastGem = this->data[r][c].gem;
                     this->data[r][c].gem = this->data[indexAbove][c].gem;
                     this->setTween(this->data[r][c]);
                     this->data[indexAbove][c].gem = NULL;
@@ -273,8 +265,6 @@ void GemManager::cascadeDown()
             }
         }
     }
-
-    if (pLastGem != NULL) pLastGem->setActive(true);
 }
 
 void GemManager::printGridData()
@@ -383,25 +373,35 @@ void GemManager::finishAnimation()
 {
     this->bAnimating = false;
 
+}
+
+void GemManager::destroyMatches()
+{
+    this->finishAnimation();
+
+    //// delete the collected vertical objects
+    //for (auto pGem : toRemove)
+    //{
+    //    if (pGem != NULL)
+    //    {
+    //        GemData* gemData = getDataFromGem(pGem);
+    //        if (gemData != NULL) gemData->gem = NULL;
+    //        GameObjectManager::getInstance()->deleteObject(pGem);
+    //    }
+    //}
+
+    //this->cascadeDown();
+    //this->spawnGems(this->fGemSize);
+
+}
+
+void GemManager::clearSelection()
+{
+
     // clear selection regardless
     this->pSelected[0] = NULL;
     this->pSelected[1] = NULL;
 
-    // delete the collected vertical objects
-    for (auto obj : toRemove)
-    {
-        if (obj != NULL) GameObjectManager::getInstance()->deleteObject(obj);
-    }
-
-    this->cascadeDown();
-
-    //// chain reaction: keep cascading and filling while new matches appear
-    //do
-    //{
-    //    this->cascadeDown();
-    //    this->spawnGems(this->fGemScale);
-    //    // loop while another match is found after fill
-    //} while (this->checkMatches());
 }
 
 void GemManager::setBlocked(Uint8 r, Uint8 c, bool bBlocked)

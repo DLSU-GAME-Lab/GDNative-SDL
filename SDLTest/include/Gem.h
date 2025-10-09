@@ -9,7 +9,6 @@ class Gem : public AGameObject, public IAnimatorListener
 private:
 	GemType EType;
 	TweenAnimator* pTween;
-	bool bRevert;
 	bool bActive;
 
 public:
@@ -18,8 +17,6 @@ public:
 
 	void initialize() override;
 	void onAnimationFinished() override;
-
-	void setRevert(bool bRevert);
 	void setActive(bool bActive);
 
 	GemType getType() const;

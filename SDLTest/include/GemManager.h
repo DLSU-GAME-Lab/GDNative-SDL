@@ -38,6 +38,10 @@ public:
     void moveGems();
     void spawnGems(float fScale);
     void finishAnimation();
+    void destroyMatches();
+    void clearSelection();
+
+    bool checkMatches();
 
     void setBlocked(Uint8 r, Uint8 c, bool bBlocked);
     void setBlocked(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked);
@@ -48,7 +52,6 @@ private:
 
     void setTween(GemData gemData);
 
-    bool checkMatches();
     void cascadeDown();
     void printGridData();
 

@@ -62,7 +62,7 @@ void Animation::step(float fDeltaTime)
 			this->nFrameIndex %= this->vecFrames.size();
 			break;
 
-		case AnimationType::PINGPONG:
+		case AnimationType::YOYO:
 			if (this->nFrameIndex == this->vecFrames.size() - 1 ||
 				this->nFrameIndex == 0)
 			{
@@ -70,7 +70,16 @@ void Animation::step(float fDeltaTime)
 			}
 			break;
 
-		default:
+		case AnimationType::YOYO_ONCE:
+			if (this->nFrameIndex == this->vecFrames.size() - 1)
+			{
+				this->bIsReverse = true;
+			}
+			else if (this->nFrameIndex == 0)
+			{
+				this->bIsReverse = false;
+				this->stop();
+			}
 			break;
 		}
 		this->pCurrentFrame = this->vecFrames[this->nFrameIndex];

@@ -49,17 +49,17 @@ void Level_2_Scene::onLoadObjects()
 
 	GemManager::initialize(10, 8, 60.0f, Vector2D(21.0f, -54.0f));
 
-	std::vector<Uint64> r0Cols = { 4, 5 };
-	std::vector<Uint64> r0r6Cols = { 0, 1, 8, 9 };
-	std::vector<Uint64> r1r5Cols = { 0, 9 };
-	std::vector<Uint64> r7Cols = { 0, 1, 2, 7, 8, 9 };
+	std::vector<Uint8> r0Cols = { 4, 5 };
+	std::vector<Uint8> r0r6Cols = { 0, 1, 8, 9 };
+	std::vector<Uint8> r1r5Cols = { 0, 9 };
+	std::vector<Uint8> r7Cols = { 0, 1, 2, 7, 8, 9 };
 
-	GemManager::getInstance()->setBlockedCells(0, r0Cols, true);
-	GemManager::getInstance()->setBlockedCells(0, r0r6Cols, true);
-	GemManager::getInstance()->setBlockedCells(1, r1r5Cols, true);
-	GemManager::getInstance()->setBlockedCells(5, r1r5Cols, true);
-	GemManager::getInstance()->setBlockedCells(6, r0r6Cols, true);
-	GemManager::getInstance()->setBlockedCells(7, r7Cols, true);
+	GemManager::getInstance()->setBlocked(0, r0Cols, true);
+	GemManager::getInstance()->setBlocked(0, r0r6Cols, true);
+	GemManager::getInstance()->setBlocked(1, r1r5Cols, true);
+	GemManager::getInstance()->setBlocked(5, r1r5Cols, true);
+	GemManager::getInstance()->setBlocked(6, r0r6Cols, true);
+	GemManager::getInstance()->setBlocked(7, r7Cols, true);
 
 	GemManager::getInstance()->spawnGems(0.2f);
 }

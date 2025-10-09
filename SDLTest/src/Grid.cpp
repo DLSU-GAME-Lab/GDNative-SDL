@@ -10,19 +10,13 @@ Grid::Grid(std::string strName, ComponentType EType, Uint64 w, Uint64 h, float f
 
 void Grid::onAttach()
 {
-	Vector2D cellSize = Vector2D(this->fCellSize);
-	Vector2D gridSize = Vector2D(this->nWidth, this->nHeight);
-
 	for (Uint64 r = 0; r < this->nHeight; r++)
 	{
 		std::vector<CellData> col;
 
 		for (Uint64 c = 0; c < this->nWidth; c++)
 		{
-			Vector2D pos = cellSize * (Vector2D(c, r) - (gridSize * 0.5f));
-			pos.y *= -1.0f;
-			pos += pOwner->getPos();
-			col.push_back({ r, c, pos, NULL, false });
+			col.push_back({ r, c, NULL, false });
 		}
 
 		this->gridCells.push_back(col);
@@ -53,11 +47,25 @@ bool Grid::setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject)
 	return true;
 }
 
+Vector2D Grid::getCellPosition(CellData cell)
+{
+	Vector2D cellSize = Vector2D(this->fCellSize);
+	Vector2D gridSize = Vector2D(this->nWidth, this->nHeight);
+	Vector2D pos = cellSize * (Vector2D(cell.c, cell.r) - (gridSize * 0.5f));
+	pos.y *= -1.0f;
+	pos += pOwner->getPos();
+	return pos;
+}
+
 // get cell world position; return empty vector on bad indices
 Vector2D Grid::getCellPosition(Uint64 r, Uint64 c)
 {
-	if (r >= this->nHeight || c >= this->nWidth) return Vector2D();
-	return this->gridCells[r][c].pos;
+	Vector2D cellSize = Vector2D(this->fCellSize);
+	Vector2D gridSize = Vector2D(this->nWidth, this->nHeight);
+	Vector2D pos = cellSize * (Vector2D(c, r) - (gridSize * 0.5f));
+	pos.y *= -1.0f;
+	pos += pOwner->getPos();
+	return pos;
 }
 
 // get cell object pointer; return nullptr on bad indices

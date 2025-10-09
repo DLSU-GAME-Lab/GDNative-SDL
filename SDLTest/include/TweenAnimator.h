@@ -37,5 +37,17 @@ public:
 	void setTweenPos(const Tween2D& tweenPos);
 	void setTweenScale(const Tween2D& tweenScale);
 	void setTweenRot(const Tween& tweenRot);
+
+private:
+	template<typename... Ts>
+	struct loop { bool operator()(tweeny::tween<Ts...>& t, Ts...); };
+
+	template<typename... Ts>
+	struct yoyo { bool operator()(tweeny::tween<Ts...>& t, Ts...); };
+
+	template<typename... Ts>
+	struct yoyoOnce { bool operator()(tweeny::tween<Ts...>& t, Ts...); };
+
+
 };
 

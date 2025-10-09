@@ -7,6 +7,8 @@ Gem::Gem(std::string strName, GemType EType) : AGameObject(strName)
 {
 	this->EType = EType;
 	this->pTween = NULL;
+	this->bRevert = false;
+	this->bActive = false;
 }
 
 Gem::~Gem()
@@ -33,7 +35,24 @@ void Gem::initialize()
 
 void Gem::onAnimationFinished()
 {
-	GemManager::getInstance()->finishAnimation();
+	if (!this->bActive) return;
+
+	if (this->bRevert)
+	{
+		this->bRevert = false;
+		GemManager::getInstance()->moveGems();
+	}
+	else GemManager::getInstance()->finishAnimation();
+}
+
+void Gem::setRevert(bool bRevert)
+{
+	this->bRevert = bRevert;
+}
+
+void Gem::setActive(bool bActive)
+{
+	this->bActive = bActive;
 }
 
 GemType Gem::getType() const

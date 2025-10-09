@@ -52,6 +52,9 @@
     <Filter Include="Component\Animation">
       <UniqueIdentifier>{c3b38311-c13a-445a-b092-6599d035b112}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Animation\Interface">
+      <UniqueIdentifier>{2552ddbc-a30d-485b-8a1c-2227724db05e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -73,15 +76,6 @@
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="src\Background.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Fairy.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Librarian.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Player.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneManager.cpp">
@@ -165,14 +159,8 @@
     <ClCompile Include="src\ButtonInput.cpp">
       <Filter>Component\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\PlayerInput.cpp">
-      <Filter>Component\Input</Filter>
-    </ClCompile>
     <ClCompile Include="src\AGeneralInput.cpp">
       <Filter>Component\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PlayerController.cpp">
-      <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component\Renderer</Filter>
@@ -219,9 +207,9 @@
     <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-	  <ClCompile Include="src\TileMapRenderer.cpp">
-		  <Filter>Component\Renderer</Filter>
-	  </ClCompile>
+    <ClCompile Include="src\TileMapRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
@@ -231,27 +219,20 @@
     <ClCompile Include="src\EventBroadcaster.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="src\Diary.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\StringUtils.cpp">
       <Filter>Component\Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\SpriteAnimator.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="src\Platform.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\MetricsManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
-    <ClCompile Include="src\DiaryToggle.cpp">
-      <Filter>Component\Script</Filter>
+    <ClCompile Include="src\TweenAnimator.cpp">
+      <Filter>Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\PageChangeToggle.cpp">
-      <Filter>Component\Script</Filter>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>Component\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,15 +252,6 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\Background.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Fairy.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Librarian.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Player.h">
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\SceneManager.h">
@@ -381,14 +353,8 @@
     <ClInclude Include="include\ButtonInput.h">
       <Filter>Component\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include\PlayerInput.h">
-      <Filter>Component\Input</Filter>
-    </ClInclude>
     <ClInclude Include="include\AGeneralInput.h">
       <Filter>Component\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="include\PlayerController.h">
-      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component\Renderer</Filter>
@@ -420,9 +386,6 @@
     <ClInclude Include="include\EventListener.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="include\Diary.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\ACollisionListener.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -435,18 +398,8 @@
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Component\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\Animation.h" />
-    <ClInclude Include="include\Platform.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\MetricsManager.h">
       <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DiaryToggle.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\PageChangeToggle.h">
-      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumGemType.h">
       <Filter>Enum</Filter>
@@ -478,5 +431,28 @@
     <ClInclude Include="include\TileMapRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="tweeny\include\dispatcher.h" />
+    <ClInclude Include="tweeny\include\easing.h" />
+    <ClInclude Include="tweeny\include\easingresolve.h" />
+    <ClInclude Include="tweeny\include\int2type.h" />
+    <ClInclude Include="tweeny\include\tween.h" />
+    <ClInclude Include="tweeny\include\tweenpoint.h" />
+    <ClInclude Include="tweeny\include\tweentraits.h" />
+    <ClInclude Include="tweeny\include\tweeny.h" />
+    <ClInclude Include="include\TweenAnimator.h">
+      <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Animation.h">
+      <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IAnimatorListener.h">
+      <Filter>Component\Animation\Interface</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tweeny\include\tween.tcc" />
+    <None Include="tweeny\include\tweenone.tcc" />
+    <None Include="tweeny\include\tweenpoint.tcc" />
+    <None Include="tweeny\include\tweeny.tcc" />
   </ItemGroup>
 </Project>

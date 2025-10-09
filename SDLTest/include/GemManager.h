@@ -4,13 +4,28 @@
 #include "Gem.h"
 #include <vector>
 
-class GemManager : public Grid
+struct GemData
+{
+    Uint8 r;
+    Uint8 c;
+    Gem* gem;
+    bool blocked;
+};
+
+class GemManager : public AComponent
 {
 private:
-    Gem* pSelectedObjects[2];
-    CellData* pSelectedCells[2];
+    typedef std::vector<std::vector<GemData>> GemData2D;
+
+    Uint8 nWidth;
+    Uint8 nHeight;
     float fGemSize;
+    GemData2D data;
+
+    GemData* pSelected[2];
+    float fGemScale;
     bool bAnimating;
+    std::vector<Gem*> toRemove;
 
 public:
     void onAttach() override;
@@ -19,13 +34,19 @@ public:
     static void loadResources();
     static void unloadResources();
 
-    void setSelected(Gem* pSelected);
+    void setSelected(Gem* pGem);
+    void moveGems();
     void spawnGems(float fScale);
     void finishAnimation();
 
+    void setBlocked(Uint8 r, Uint8 c, bool bBlocked);
+    void setBlocked(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked);
+
 private:
-    void moveGems();
-    void setTween(Gem* pGem, Vector2D pos);
+    Vector2D getGemDataPosition(GemData gemData);
+    GemData* getDataFromGem(Gem* pGem);
+
+    void setTween(GemData gemData);
 
     bool checkMatches();
     void cascadeDown();
@@ -38,12 +59,12 @@ private:
     static GemManager* P_SHARED_INSTANCE;
 
 private:
-    GemManager(Uint64 w, Uint64 h, float fCellSize);
+    GemManager(Uint8 w, Uint8 h, float fCellSize);
     GemManager(const GemManager&);
     GemManager& operator = (const GemManager&) {};
 
 public:
-    static void initialize(Uint64 w, Uint64 h, float fCellSize, Vector2D offset);
+    static void initialize(Uint8 w, Uint8 h, float fCellSize, Vector2D offset);
     static void destroy();
 
     static GemManager* getInstance();

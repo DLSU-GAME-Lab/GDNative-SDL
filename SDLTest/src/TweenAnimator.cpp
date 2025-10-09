@@ -40,7 +40,7 @@ void TweenAnimator::perform()
 				this->tweenPos.seek(0.0f);
 				break;
 
-			case AnimationType::PINGPONG:
+			case AnimationType::YOYO:
 				if (this->bIsReverse)
 				{
 					this->bIsReverse = false;
@@ -56,6 +56,25 @@ void TweenAnimator::perform()
 					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
 				}
 				break;
+
+			case AnimationType::YOYO_ONCE:
+				if (this->bIsReverse)
+				{
+					this->bIsPlaying = false;
+					for (auto pListener : this->vecListener)
+					{
+						pListener->onAnimationFinished();
+					}
+				}
+				else
+				{
+					this->bIsReverse = true;
+					this->tweenPos.backward();
+					std::array<float, 2> pos = this->tweenPos.seek(0.99f);
+					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
+				}
+				break;
+
 			}
 		}
 
@@ -149,6 +168,23 @@ void TweenAnimator::removeListener(IAnimatorListener* pListener)
 void TweenAnimator::setAnimationType(AnimationType EType)
 {
 	this->EType = EType;
+
+	//switch (this->EType)
+	//{
+	//case AnimationType::LOOP:
+	//	this->tweenPos.onStep(loop<float,float>());
+	//	break;
+
+	//case AnimationType::YOYO:
+	//	this->tweenPos.onStep(yoyo<float, float>());
+	//	break;
+
+	//case AnimationType::YOYO_ONCE:
+	//	this->tweenPos.onStep(yoyoOnce<float, float>());
+	//	break;
+
+	//}
+
 }
 
 void TweenAnimator::setTweenPos(const Tween2D& tweenPos)
@@ -164,4 +200,27 @@ void TweenAnimator::setTweenScale(const Tween2D& tweenScale)
 void TweenAnimator::setTweenRot(const Tween & tweenRot)
 {
 	this->tweenRot = tweenRot;
+}
+
+template<typename... Ts>
+bool TweenAnimator::loop<Ts...>::operator()(tweeny::tween<Ts...>& t, Ts...)
+{
+	if (t.progress() < 1.0f) return false;
+	t.seek(0);
+	return false;
+}
+
+template<typename... Ts>
+bool TweenAnimator::yoyo<Ts...>::operator()(tweeny::tween<Ts...>& t, Ts...)
+{
+	if (t.progress() <= 0.001f) { t.forward(); }
+	if (t.progress() >= 1.0f) { t.backward(); }
+	return false;
+}
+template<typename... Ts>
+bool TweenAnimator::yoyoOnce<Ts...>::operator()(tweeny::tween<Ts...>& t, Ts...)
+{
+	if (t.progress() <= 0.001f) { return true; }
+	if (t.progress() >= 1.0f) { t.backward(); }
+	return false;
 }

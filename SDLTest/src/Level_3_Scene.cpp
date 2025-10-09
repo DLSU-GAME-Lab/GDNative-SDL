@@ -49,7 +49,7 @@ void Level_3_Scene::onLoadObjects()
 
 	GemManager::initialize(12, 14, 45.0f, Vector2D(23.0f, -46.0f));
 
-	std::vector< std::vector<Uint64>> rowBlocks;
+	std::vector< std::vector<Uint8>> rowBlocks;
 
 	rowBlocks.push_back({ 0, 1, 2, 5, 6, 9, 10, 11 });			// r0
 	rowBlocks.push_back({ 0, 5, 6, 11 });						// r1
@@ -68,7 +68,7 @@ void Level_3_Scene::onLoadObjects()
 
 	for (int i = 0; i < rowBlocks.size(); i++)
 	{
-		GemManager::getInstance()->setBlockedCells(i, rowBlocks[i], true);
+		GemManager::getInstance()->setBlocked(i, rowBlocks[i], true);
 	}
 
 	GemManager::getInstance()->spawnGems(0.15f);

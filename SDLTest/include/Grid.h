@@ -9,7 +9,6 @@ struct CellData
 {
     Uint64 r;
     Uint64 c;
-    Vector2D pos;
     AGameObject* obj;
     bool blocked;
 };
@@ -33,6 +32,8 @@ public:
     void setBlockedCell(Uint64 r, Uint64 c, bool bBlocked);
     void setBlockedCells(Uint64 r, const std::vector<Uint64>& cols, bool bBlocked);
     bool setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject);
+
+    Vector2D getCellPosition(CellData cell);
     Vector2D getCellPosition(Uint64 r, Uint64 c);
     AGameObject* getCellObject(Uint64 r, Uint64 c);
     CellData* getCellFromObject(AGameObject* pObject);

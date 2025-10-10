@@ -26,6 +26,7 @@ private:
     float fGemScale;
     bool bAnimating;
     std::vector<Gem*> toRemove;
+    Uint64 nGemNum;
 
 public:
     void onAttach() override;

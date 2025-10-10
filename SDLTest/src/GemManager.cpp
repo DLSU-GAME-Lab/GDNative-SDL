@@ -325,7 +325,7 @@ void GemManager::spawnGems(float fScale)
     {
         for (int c = 0; c < (int)this->data[r].size(); ++c)
         {
-            if (!this->data[r][c].blocked)
+            if (!this->data[r][c].blocked && this->data[r][c].gem == NULL)
             {
                 GemType gemType;
                 bool valid = false;
@@ -359,7 +359,9 @@ void GemManager::spawnGems(float fScale)
                 }
 
                 // safe to spawn gem now
-                Gem* pGem = new Gem("gem_" + std::to_string(r) + "_" + std::to_string(c), gemType);
+                Gem* pGem = new Gem("gem_" + std::to_string(this->nGemNum), gemType);
+                this->nGemNum++;
+
                 pGem->setPos(this->getGemDataPosition(this->data[r][c]));
                 pGem->setScale(Vector2D(this->fGemScale));
                 this->data[r][c].gem = pGem;
@@ -379,19 +381,19 @@ void GemManager::destroyMatches()
 {
     this->finishAnimation();
 
-    //// delete the collected vertical objects
-    //for (auto pGem : toRemove)
-    //{
-    //    if (pGem != NULL)
-    //    {
-    //        GemData* gemData = getDataFromGem(pGem);
-    //        if (gemData != NULL) gemData->gem = NULL;
-    //        GameObjectManager::getInstance()->deleteObject(pGem);
-    //    }
-    //}
+    for (auto pGem : toRemove)
+    {
+        if (pGem != NULL)
+        {
+            GemData* gemData = getDataFromGem(pGem);
+            if (gemData != NULL) gemData->gem = NULL;
+            GameObjectManager::getInstance()->deleteObject(pGem);
+        }
+    }
+    toRemove.clear();
 
-    //this->cascadeDown();
-    //this->spawnGems(this->fGemSize);
+    this->cascadeDown();
+    this->spawnGems(this->fGemScale);
 
 }
 

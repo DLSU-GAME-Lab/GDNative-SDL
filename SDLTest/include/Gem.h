@@ -1,8 +1,8 @@
 #pragma once
 #include "AGameObject.h"
 #include "EnumGemType.h"
-#include "IAnimatorListener.h"
 #include "TweenAnimator.h"
+#include "IAnimatorListener.h"
 
 class Gem : public AGameObject, public IAnimatorListener
 {

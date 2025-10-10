@@ -36,13 +36,10 @@ public:
     static void unloadResources();
 
     void setSelected(Gem* pGem);
-    void moveGems();
+    
     void spawnGems(float fScale);
+    void updateBoard();
     void finishAnimation();
-    void destroyMatches();
-    void clearSelection();
-
-    bool checkMatches();
 
     void setBlocked(Uint8 r, Uint8 c, bool bBlocked);
     void setBlocked(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked);
@@ -51,8 +48,11 @@ private:
     Vector2D getGemDataPosition(GemData gemData);
     GemData* getDataFromGem(Gem* pGem);
 
-    void setTween(GemData gemData);
+    void setTween(GemData gemData, Vector2D startOffset = Vector2D());
 
+    bool checkMatches();
+
+    void moveGems();
     void cascadeDown();
     void printGridData();
 

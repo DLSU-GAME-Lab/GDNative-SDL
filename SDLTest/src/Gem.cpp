@@ -38,12 +38,7 @@ void Gem::onAnimationFinished()
 	if (this->bActive)
 	{
 		this->bActive = false;
-		if (GemManager::getInstance()->checkMatches())
-		{
-			GemManager::getInstance()->destroyMatches();
-		}
-		else GemManager::getInstance()->moveGems();
-		GemManager::getInstance()->clearSelection();
+		GemManager::getInstance()->updateBoard();
 	}
 	else 
 	{

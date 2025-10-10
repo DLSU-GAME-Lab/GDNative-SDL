@@ -99,9 +99,9 @@ void GemManager::moveGems()
     this->setTween(*this->pSelected[1]);
 }
 
-void GemManager::setTween(GemData gemData)
+void GemManager::setTween(GemData gemData, Vector2D startOffset)
 {
-    Vector2D startPos = gemData.gem->getPos();
+    Vector2D startPos = gemData.gem->getPos() + startOffset;
     Vector2D endPos = getGemDataPosition(gemData);
     TweenAnimator* pTween = gemData.gem->getTweenAnimator();
     pTween->setTweenPos(
@@ -321,7 +321,7 @@ void GemManager::spawnGems(float fScale)
     this->fGemScale = fScale;
     std::string gemColors[]{ "Yellow", "Blue", "White", "Green", "Purple", "Red" };
 
-    for (int r = 0; r < (int)this->data.size(); ++r)
+    for (int r = (int)this->data.size() - 1; r >= 0; --r)
     {
         for (int c = 0; c < (int)this->data[r].size(); ++c)
         {
@@ -361,48 +361,50 @@ void GemManager::spawnGems(float fScale)
                 // safe to spawn gem now
                 Gem* pGem = new Gem("gem_" + std::to_string(this->nGemNum), gemType);
                 this->nGemNum++;
-
-                pGem->setPos(this->getGemDataPosition(this->data[r][c]));
-                pGem->setScale(Vector2D(this->fGemScale));
                 this->data[r][c].gem = pGem;
+
+                pGem->setPos(this->getGemDataPosition(this->data[0][c]));
+                pGem->setScale(Vector2D(this->fGemScale));
                 GameObjectManager::getInstance()->addObject(pGem);
+
+                this->setTween(this->data[r][c], Vector2D(0.0f, this->fGemSize));
+                //pause after each row
             }
         }
     }
 }
 
-void GemManager::finishAnimation()
+void GemManager::updateBoard()
 {
-    this->bAnimating = false;
-
-}
-
-void GemManager::destroyMatches()
-{
-    this->finishAnimation();
-
-    for (auto pGem : toRemove)
+    if (this->checkMatches())
     {
-        if (pGem != NULL)
+        do
         {
-            GemData* gemData = getDataFromGem(pGem);
-            if (gemData != NULL) gemData->gem = NULL;
-            GameObjectManager::getInstance()->deleteObject(pGem);
-        }
+            for (auto pGem : toRemove)
+            {
+                if (pGem != NULL)
+                {
+                    GemData* gemData = getDataFromGem(pGem);
+                    if (gemData != NULL) gemData->gem = NULL;
+                    GameObjectManager::getInstance()->deleteObject(pGem);
+                }
+            }
+            toRemove.clear();
+
+            this->cascadeDown();
+            this->spawnGems(this->fGemScale);
+        } while (this->checkMatches());
     }
-    toRemove.clear();
-
-    this->cascadeDown();
-    this->spawnGems(this->fGemScale);
-
-}
-
-void GemManager::clearSelection()
-{
+    else this->moveGems();
 
     // clear selection regardless
     this->pSelected[0] = NULL;
     this->pSelected[1] = NULL;
+}
+
+void GemManager::finishAnimation()
+{
+    this->bAnimating = false;
 
 }
 
@@ -455,6 +457,7 @@ GemManager::GemManager(Uint8 w, Uint8 h, float fGemSize) : AComponent("GemManage
     this->pSelected[1] = NULL;
     this->fGemScale = 1.0f;
     this->bAnimating = false;
+    this->nGemNum = 0;
 }
 
 void GemManager::initialize(Uint8 w, Uint8 h, float fGemSize, Vector2D offset)

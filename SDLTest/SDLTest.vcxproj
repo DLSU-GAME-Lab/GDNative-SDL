@@ -163,6 +163,7 @@
     <ClCompile Include="src\Level_3_Scene.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
+    <ClCompile Include="src\MouseInput.cpp" />
     <ClCompile Include="src\PhysicsManager.cpp" />
     <ClCompile Include="src\Prop.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -228,12 +229,14 @@
     <ClInclude Include="include\GUIToggle.h" />
     <ClInclude Include="include\GUIUtils.h" />
     <ClInclude Include="include\IAnimatorListener.h" />
+    <ClInclude Include="include\IMouseInputListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\Level_1_Scene.h" />
     <ClInclude Include="include\Level_2_Scene.h" />
     <ClInclude Include="include\Level_3_Scene.h" />
     <ClInclude Include="include\MetricsManager.h" />
     <ClInclude Include="include\ButtonInput.h" />
+    <ClInclude Include="include\MouseInput.h" />
     <ClInclude Include="include\PhysicsManager.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />

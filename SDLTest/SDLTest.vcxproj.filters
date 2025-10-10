@@ -55,6 +55,12 @@
     <Filter Include="Component\Animation\Interface">
       <UniqueIdentifier>{2552ddbc-a30d-485b-8a1c-2227724db05e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tweeny">
+      <UniqueIdentifier>{d5d66669-f8cc-4718-998a-c1692d5cbace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Input\Interface">
+      <UniqueIdentifier>{b0e1fdb9-532b-410e-95ef-fb9e4f68d028}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -233,6 +239,9 @@
     </ClCompile>
     <ClCompile Include="src\Animation.cpp">
       <Filter>Component\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MouseInput.cpp">
+      <Filter>Component\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -431,14 +440,6 @@
     <ClInclude Include="include\TileMapRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="tweeny\include\dispatcher.h" />
-    <ClInclude Include="tweeny\include\easing.h" />
-    <ClInclude Include="tweeny\include\easingresolve.h" />
-    <ClInclude Include="tweeny\include\int2type.h" />
-    <ClInclude Include="tweeny\include\tween.h" />
-    <ClInclude Include="tweeny\include\tweenpoint.h" />
-    <ClInclude Include="tweeny\include\tweentraits.h" />
-    <ClInclude Include="tweeny\include\tweeny.h" />
     <ClInclude Include="include\TweenAnimator.h">
       <Filter>Component\Animation</Filter>
     </ClInclude>
@@ -448,11 +449,49 @@
     <ClInclude Include="include\IAnimatorListener.h">
       <Filter>Component\Animation\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="include\MouseInput.h">
+      <Filter>Component\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\dispatcher.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\easing.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\easingresolve.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\int2type.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tween.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tweenpoint.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tweentraits.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="tweeny\include\tweeny.h">
+      <Filter>Tweeny</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IMouseInputListener.h">
+      <Filter>Component\Input\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="tweeny\include\tween.tcc" />
-    <None Include="tweeny\include\tweenone.tcc" />
-    <None Include="tweeny\include\tweenpoint.tcc" />
-    <None Include="tweeny\include\tweeny.tcc" />
+    <None Include="tweeny\include\tween.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
+    <None Include="tweeny\include\tweenone.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
+    <None Include="tweeny\include\tweenpoint.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
+    <None Include="tweeny\include\tweeny.tcc">
+      <Filter>Tweeny</Filter>
+    </None>
   </ItemGroup>
 </Project>

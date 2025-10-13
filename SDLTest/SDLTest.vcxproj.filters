@@ -479,6 +479,7 @@
     <ClInclude Include="include\TweenAnimator.h">
       <Filter>Component\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="include\IAnimatorListener.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

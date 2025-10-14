@@ -1,5 +1,8 @@
 #include "Level1Scene.h"
 #include "TextureManager.h"
+#include "GameObjectManager.h"
+#include "TileMap.h"
+#include "TileMapRenderer.h"
 
 Level1Scene::Level1Scene() : AScene(SceneTag::LEVEL_1_SCENE)
 {
@@ -26,7 +29,22 @@ void Level1Scene::onLoadResources()
 
 void Level1Scene::onLoadObjects()
 {
+	TileMap* tileMap = new TileMap("Platforms");
+	GameObjectManager::getInstance()->addObject(tileMap);
+	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
+	SDL_Texture* pTileBL = TextureManager::getInstance()->get("Grass_Tile_BL");
+
+	pTMR->setTileSize(512, 512);
+	tileMap->setScale(Vector2D(0.2f));
+
+	for (Uint64 r = 0; r < 5; r++)
+	{
+		for (Uint64 c = 0; c < 5; c++)
+		{
+			pTMR->addTile(r, c, pTileBL);
+		}
+	}
 }
 
 void Level1Scene::onUnloadResources()

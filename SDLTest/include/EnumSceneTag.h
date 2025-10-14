@@ -5,5 +5,6 @@ enum class SceneTag : int {
     TITLE_SCENE = 0,
     LOBBY_SCENE,
     RIGHT_ROOM_SCENE,
-    LEFT_ROOM_SCENE
+    LEFT_ROOM_SCENE,
+    LEVEL_1_SCENE
 };

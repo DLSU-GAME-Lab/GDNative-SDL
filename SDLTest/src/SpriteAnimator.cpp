@@ -11,7 +11,7 @@ SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_
 {
 	this->pSpriteRenderer = pSpriteRenderer;
 	this->strState = "default";
-	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate, AnimationType::PINGPONG);
+	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate, AnimationType::YOYO);
 	this->vecAnims.push_back(pAnimation);
 	this->mapAnims[strState] = pAnimation;
 	this->mapAnims[strState]->play();

@@ -159,6 +159,7 @@
     <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
+    <ClCompile Include="src\Level1Scene.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
     <ClCompile Include="src\PageChangeToggle.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TileMapRenderer.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\TweenAnimator.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
@@ -236,6 +238,7 @@
     <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
+    <ClInclude Include="include\Level1Scene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\MetricsManager.h" />
@@ -259,6 +262,7 @@
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />
+    <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\Prop.h" />
     <ClInclude Include="include\TweenAnimator.h" />

@@ -9,9 +9,7 @@ struct CellData
 {
     Uint64 r;
     Uint64 c;
-    Vector2D pos;
     AGameObject* obj;
-    bool blocked;
 };
 
 class Grid : public AComponent
@@ -19,19 +17,16 @@ class Grid : public AComponent
 protected:
     typedef std::vector<std::vector<CellData>> GridCells;
 
-    Uint64 nWidth;
-    Uint64 nHeight;
-    float fCellSize;
+    float fWidth;
+    float fHeight;
     GridCells gridCells;
 
 public:
-    Grid(std::string strName, ComponentType EType, Uint64 w, Uint64 h, float nCellSize);
+    Grid(std::string strName, ComponentType EType, float fWidth = 1.0f, float fHeight = 1.0f);
 
     virtual void onAttach() override;
     virtual void perform() = 0;
 
-    void setBlockedCell(Uint64 r, Uint64 c, bool bBlocked);
-    void setBlockedCells(Uint64 r, const std::vector<Uint64>& cols, bool bBlocked);
     bool setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject);
     Vector2D getCellPosition(Uint64 r, Uint64 c);
     AGameObject* getCellObject(Uint64 r, Uint64 c);

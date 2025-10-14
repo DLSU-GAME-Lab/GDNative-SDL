@@ -13,6 +13,8 @@ class EventBroadcaster {
         std::vector<EventListener*> vecListener;
         
     public:
+        static void initialize();
+        static void destroy();
         void registerListener(EventListener* pListener);
         void unregisterListener(EventListener* pListener);
         void unregisterAllListeners();

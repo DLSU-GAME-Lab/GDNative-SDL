@@ -29,6 +29,7 @@
 #include "UIManager.h"
 #include "SceneTransitionManager.h" 
 #include "FontManager.h"
+#include "EventBroadcaster.h"
 
 // metrics
 #include "MetricsManager.h"
@@ -97,6 +98,7 @@ Runner::Runner()
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
 	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+	EventBroadcaster::initialize();
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
@@ -140,6 +142,7 @@ Runner::~Runner()
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SceneTransitionManager::destroy();
+	EventBroadcaster::destroy();
 	MetricsManager::destroy();
 
 	SDL_DestroyRenderer(this->pRenderer);

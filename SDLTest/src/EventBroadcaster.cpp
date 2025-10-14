@@ -1,6 +1,14 @@
 #include "EventBroadcaster.h"
 
-
+void EventBroadcaster::initialize()
+{
+    if (P_SHARED_INSTANCE == NULL)
+        P_SHARED_INSTANCE = new EventBroadcaster();
+}
+void EventBroadcaster::destroy()
+{
+    delete P_SHARED_INSTANCE;
+}
 void EventBroadcaster::registerListener(EventListener* pListener) {
     EventKey EKey = pListener->getKey();
     this->mapListener[EKey].push_back(pListener);
@@ -58,8 +66,6 @@ EventBroadcaster::EventBroadcaster() {}
 EventBroadcaster::EventBroadcaster(const EventBroadcaster&) {}
 
 EventBroadcaster* EventBroadcaster::getInstance() {
-    if(P_SHARED_INSTANCE == NULL)
-        P_SHARED_INSTANCE = new EventBroadcaster();
 
     return P_SHARED_INSTANCE;
 }

@@ -222,9 +222,6 @@
     <ClCompile Include="src\Collider.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\EventBroadcaster.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="src\StringUtils.cpp">
       <Filter>Component\Utils</Filter>
     </ClCompile>
@@ -242,6 +239,12 @@
     </ClCompile>
     <ClCompile Include="src\MouseInput.cpp">
       <Filter>Component\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tracker.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EventBroadcaster.cpp">
+      <Filter>Singleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,9 +392,6 @@
     <ClInclude Include="include\Collider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="include\EventBroadcaster.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="include\EventListener.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -478,6 +478,12 @@
     </ClInclude>
     <ClInclude Include="include\IMouseInputListener.h">
       <Filter>Component\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tracker.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EventBroadcaster.h">
+      <Filter>Singleton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

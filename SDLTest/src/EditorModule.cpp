@@ -1,10 +1,9 @@
 #include "EditorModule.h"
 #include "TextureManager.h"
 #include "GameObjectManager.h"
-#include "RenderSystem.h"
 #include "UIManager.h"
 #include "InspectorScreen.h"
-#include "Camera.h"
+#include "CameraManager.h"
 #include <iostream>
 #include "MetricsManager.h"
 
@@ -82,7 +81,7 @@ void Editor::EditorModule::updateGameObjects(float fDeltaTime)
 
 void Editor::EditorModule::drawEditor(SDL_Renderer* pRenderer)
 {
-    Camera* pCam = RenderSystem::getInstance()->getCamera();
+    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
 
     //SDL_RenderLine(pRenderer, 0, 540, 1920, 540);
 
@@ -114,7 +113,7 @@ bool Editor::EditorModule::contains(Vector2D objPos, Vector2D mousePos)
 {
     if (!this->pWidget) return false;
 
-    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Camera* cam = CameraManager::getInstance()->getCurrentCamera();
 
     SDL_FRect pointRect = { mousePos.x, mousePos.y, 1, 1};
     SDL_FRect spriteRect = {};
@@ -131,7 +130,7 @@ bool Editor::EditorModule::contains(Vector2D objPos, Vector2D mousePos)
 
 Vector2D Editor::EditorModule::getMouseWorldPos() const
 {
-    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Camera* cam = CameraManager::getInstance()->getCurrentCamera();
     Vector2D mouseWorldPos;
 
     mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;

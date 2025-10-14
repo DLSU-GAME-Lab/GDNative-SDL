@@ -5,14 +5,13 @@
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
-#include "RenderSystem.h"
 #include "AGameObject.h"
 #include "Settings.h"
 
 // Constructor: texture lookup may be O(T) where T is number of
 // textures stored under a name (small in typical cases). Overall O(1) prep.
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
-    : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr), m_textureKey(textureName)
+    : ARenderer("SpriteRenderer"), pTexture(nullptr), m_textureKey(textureName)
 {
     // Constructor setup: mostly O(1) except for texture lookup.
     this->flipX = false;
@@ -74,24 +73,23 @@ void SpriteRenderer::initialize() {
             << m_textureKey << std::endl;
     }
 
-    // register this sprite with the system
-    RenderSystem::getInstance()->registerSpriteRenderer(this);
 }
 
 // Destructor: deregisters from RenderSystem — deregistration cost is O(S).
 SpriteRenderer::~SpriteRenderer() {
     // O(R): deregistration scans list in RenderSystem.
     // unregister when destroyed
-    RenderSystem::getInstance()->unregisterSpriteRenderer(this);
+
 }
 
-// draw: per-sprite O(1) math and single GPU draw call. As number of sprites R
+// perform: per-sprite O(1) math and single GPU draw call. As number of sprites R
 // increases, total cost per-frame increases linearly (O(R)). GPU cost per
-// draw is a significant constant-time cost in wall-time.
-void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
+// perform is a significant constant-time cost in wall-time.
+void SpriteRenderer::perform() {
     // O(1): All operations are per-sprite math and rendering.
     // Real runtime cost dominated by GPU draw call.
     AGameObject* owner = this->getOwner();
+    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
     if (owner)
     {
         //TODO: fix the rotations. better if we used a transform matrix.
@@ -132,13 +130,10 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
     }
 
     // additional log
-    else if (SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect) < 0) {
+    else if (SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect) < 0)
+    {
         SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
     }
-}
-
-void SpriteRenderer::perform()
-{
 }
 
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)

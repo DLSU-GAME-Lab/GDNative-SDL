@@ -1,5 +1,4 @@
 #include "AButton.h"
-#include "RenderSystem.h"
 #include <iostream>
 
 AButton::AButton(std::string strName) : AGameObject(strName)

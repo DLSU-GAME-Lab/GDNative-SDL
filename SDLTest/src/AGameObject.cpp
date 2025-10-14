@@ -1,6 +1,5 @@
 #include "AGameObject.h"
 #include "AGeneralInput.h"
-#include "RenderSystem.h"
 #include <iostream>
 #include "Collider.h"
 AGameObject::AGameObject(std::string strName)
@@ -48,8 +47,8 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
         if (!pOwner || !pOwner->isGloballyEnabled())
             continue;
 
-        SpriteRenderer* renderer = (SpriteRenderer*)pComponent;
-        renderer->draw(pRenderer, RenderSystem::getInstance()->getCamera());
+        ARenderer* renderer = (ARenderer*)pComponent;
+        renderer->setSDLRenderer(pRenderer);
         pComponent->perform();
     }
     if (this->componentExists(this->strName + " Collider"))

@@ -1,7 +1,7 @@
 #include "InspectorScreen.h"
 #include "SceneManager.h"
 #include "GameObjectManager.h"
-#include "RenderSystem.h"
+#include "CameraManager.h"
 #include <cmath>
 
 void Editor::InspectorScreen::setSelectedObject(AGameObject* selectedObject)
@@ -44,7 +44,7 @@ void Editor::InspectorScreen::DrawUI()
         SceneManager::getInstance()->loadScene((SceneTag)sceneIndex);
     }
 
-    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Camera* cam = CameraManager::getInstance()->getCurrentCamera();
 
     Vector2D mouseWorldPos;
     mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
@@ -72,7 +72,7 @@ void Editor::InspectorScreen::showCamera(ImGuiChildFlags childFlags)
     ImGui::BeginChild("Camera", ImVec2(0, 0), childFlags);
     ImGui::Text("Camera");
 
-    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Camera* cam = CameraManager::getInstance()->getCurrentCamera();
     Vector2D pos = cam->getPos();
     float rot = cam->getRot();
     Vector2D scale = cam->getScale();

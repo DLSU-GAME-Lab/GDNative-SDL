@@ -1,12 +1,12 @@
 #pragma once
 
-#include "AComponent.h"
+#include "ARenderer.h"
 #include "Vector2D.h"
-#include "Camera.h"
+#include "CameraManager.h"
 #include <SDL3/SDL.h>
 #include <string>
 
-class SpriteRenderer : public AComponent
+class SpriteRenderer : public ARenderer
 {
 private:
     SDL_Texture* pTexture;

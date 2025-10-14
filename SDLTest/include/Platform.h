@@ -1,8 +1,8 @@
 #pragma once
 #include "AGameObject.h"
-#include "RenderSystem.h"
 #include "PhysicsManager.h"
 #include "ACollisionListener.h"
+
 class Platform:public AGameObject, ACollisionListener
 {
 private:

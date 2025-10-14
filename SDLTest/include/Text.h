@@ -1,7 +1,5 @@
 #pragma once
 #include "AGameObject.h"
-#include "RenderSystem.h"
-#include "string.h"
 
 class Text:public AGameObject
 {

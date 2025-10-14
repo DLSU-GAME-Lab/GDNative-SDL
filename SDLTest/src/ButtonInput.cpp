@@ -1,6 +1,5 @@
 #include "ButtonInput.h"
-#include "RenderSystem.h"
-#include "Camera.h"
+#include "CameraManager.h"
 
 ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 {
@@ -45,7 +44,7 @@ Vector2D ButtonInput::getMousePos() const
 
 Vector2D ButtonInput::getMouseWorldPos() const
 {
-	Camera* cam = RenderSystem::getInstance()->getCamera();
+	Camera* cam = CameraManager::getInstance()->getCurrentCamera();
 	Vector2D mouseWorldPos;
 
 	mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;

@@ -142,7 +142,9 @@
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\ARenderer.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\CameraManager.cpp" />
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\Diary.cpp" />
@@ -185,10 +187,10 @@
     <ClCompile Include="src\SceneTransitionManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
-    <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\TileMapRenderer.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\TweenAnimator.cpp" />
@@ -210,8 +212,10 @@
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="include\ARenderer.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\CameraManager.h" />
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\Diary.h" />
@@ -258,10 +262,10 @@
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
-    <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />
+    <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\Prop.h" />

@@ -27,7 +27,7 @@
 #include "algorithm"
 
 #include "TextureManager.h"
-#include "RenderSystem.h"
+#include "CameraManager.h"
 #include "GameObjectManager.h"
 #include "SceneManager.h"
 #include "AGameObject.h"
@@ -105,10 +105,11 @@ Runner::Runner()
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
-	RenderSystem::initialize();
+	CameraManager::initialize();
+	// setWindowSize likely O(1) or O(#render targets)
+	CameraManager::getInstance()->setWindowSize(this->pWindow);
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
-	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
@@ -149,7 +150,7 @@ Runner::~Runner()
 #endif
 
 	TextureManager::destroy();
-	RenderSystem::destroy();
+	CameraManager::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SceneTransitionManager::destroy();
@@ -216,8 +217,8 @@ void Runner::run()
 				break;
 
 			case SDL_EVENT_WINDOW_RESIZED:
-				// updateWindowSize likely O(1) or O(#render targets)
-				RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+				// setWindowSize likely O(1) or O(#render targets)
+				CameraManager::getInstance()->setWindowSize(this->pWindow);
 				break;
 
 			default:

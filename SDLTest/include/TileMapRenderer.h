@@ -1,21 +1,19 @@
 #pragma once
-#include "AComponent.h"
+#include "ARenderer.h"
 #include "Camera.h"
 #include <SDL3/SDL.h>
 #include <vector>
 
-class TileMapRenderer : public AComponent
+class TileMapRenderer : public ARenderer
 {
 private:
-	SDL_Renderer* pRenderer;
-	Camera* pCamera;
 	std::vector<std::vector<SDL_Texture*>> vecTile;
 
-	float fWidth;
-	float fHeight;
+	float fTileWidth;
+	float fTileHeight;
 
 public:
-	TileMapRenderer(float fWidth, float fHeight);
+	TileMapRenderer(float fTileWidth = 1.0f, float fTileHeight = 1.0f);
 	~TileMapRenderer();
 
 	void onAttach() override;
@@ -23,5 +21,7 @@ public:
 
 	void addTile(Uint64 r, Uint64 c, SDL_Texture* pTile);
 	void removeTile(Uint64 r, Uint64 c);
+
+	void setTileSize(float fTileWidth, float fTileHeight);
 };
 

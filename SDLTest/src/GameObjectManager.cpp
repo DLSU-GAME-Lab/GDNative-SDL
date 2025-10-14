@@ -1,7 +1,16 @@
+// ---------------------------------------------------------------------------
+// Responsibilities: manage and iterate over game objects for input, update, draw.
+// ---------------------------------------------------------------------------
+
 #include "GameObjectManager.h"
 #include "Collider.h"
 #include <iostream>
 
+// processInput: forwards a single SDL_Event to every enabled object.
+// Complexity: O(G) per call.
+// Scaling note: If there are E events this frame and processInput is called
+// once per event, total input-processing work per frame is O(E * G). As G or
+// E increase, this term can dominate frame cost.
 void GameObjectManager::processInput(SDL_Event* eEvent)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
@@ -11,6 +20,11 @@ void GameObjectManager::processInput(SDL_Event* eEvent)
     }
 }
 
+// update: call each object's update(fDeltaTime)
+// Complexity: O(G) per call when each object's update is constant-time.
+// Scaling note: If object updates involve pairwise checks (e.g., collisions
+// by brute-force), the inside of update may be O(G^2) leading to quadratic
+// scaling as G increases.
 void GameObjectManager::update(float fDeltaTime)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
@@ -20,6 +34,10 @@ void GameObjectManager::update(float fDeltaTime)
     }
 }
 
+// draw: call each object's draw(pRenderer)
+// Complexity: O(R) per call where R is number of renderable/enabled objects.
+// Scaling note: As R grows, GPU draw calls and driver overhead increase; even
+// if algorithmic complexity is linear, wall-time may grow steeply with R.
 void GameObjectManager::draw(SDL_Renderer* pRenderer)
 {
     for(AGameObject* pGameObject : this->vecGameObject)
@@ -29,6 +47,10 @@ void GameObjectManager::draw(SDL_Renderer* pRenderer)
     }
 }
 
+// addObject: push_back to vector and add to map by name
+// Complexity: amortized O(1) for insertion; map insertion average-case O(1)
+// (unordered_map). As object count G increases, memory and traversal costs
+// later scale with G.
 void GameObjectManager::addObject(AGameObject* pGameObject)
 {
     this->vecGameObject.push_back(pGameObject);
@@ -36,6 +58,11 @@ void GameObjectManager::addObject(AGameObject* pGameObject)
     pGameObject->initialize();
 }
 
+// deleteObject: find by scanning vector, erase, and delete
+// Complexity: O(G) for search + O(G) for erase shifting => O(G).
+// Scaling note: repeated per-object deletion across G elements (e.g. scene
+// teardown) can accumulate to O(G^2) total work if each deletion performs a
+// linear search or causes shifting.
 void GameObjectManager::deleteObject(AGameObject* pGameObject)
 {
     std::string strName = pGameObject->getName();
@@ -55,6 +82,8 @@ void GameObjectManager::deleteObject(AGameObject* pGameObject)
     }
 }
 
+// deleteObjectByName: name lookup (map) then delete
+// Complexity: average-case O(1) for map lookup + O(G) for deletion step.
 void GameObjectManager::deleteObjectByName(std::string strName)
 {
     AGameObject* pGameObject = this->findObjectByName(strName);
@@ -62,17 +91,27 @@ void GameObjectManager::deleteObjectByName(std::string strName)
         this->deleteObject(pGameObject);
 }
 
+// deleteAllObjects: current implementation iterates and deletes each object
+// Complexity: depends on deleteObject implementation. If deleteObject performs
+// a linear search each call, deleteAllObjects accumulates to O(G^2).
+// Scaling note: large G during teardown can produce long blocking spikes.
 void GameObjectManager::deleteAllObjects()
 {
     std::vector<AGameObject*> vecGameObject = this->vecGameObject;
 
+    // Iterate once: erase from map and delete each pointer.
     for(AGameObject* pGameObject : vecGameObject)
         this->deleteObject(pGameObject);
 
+    // Clear containers, O(1) operations relative to content
     this->vecGameObject.clear();
     this->mapGameObject.clear();
 }
 
+// findObjectByName: map lookup
+// Complexity: average-case O(1) (unordered_map) or O(log G) (ordered map).
+// Note: using operator[] for lookup has side-effects (insertion) which may
+// affect behavior as G grows
 AGameObject* GameObjectManager::findObjectByName(std::string strName)
 {
     if(this->mapGameObject[strName] != NULL)
@@ -84,6 +123,7 @@ AGameObject* GameObjectManager::findObjectByName(std::string strName)
     }
 }
 
+// getAllObjects: O(1) to return reference; iterating callers will pay O(G).
 std::vector<AGameObject*>& GameObjectManager::getAllObjects()
 {
     return this->vecGameObject;

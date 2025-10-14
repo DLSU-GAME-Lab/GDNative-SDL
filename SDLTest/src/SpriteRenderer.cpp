@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------------------
+// Responsibilities: per-object transform and texture draw.
+// ---------------------------------------------------------------------------
+
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
@@ -5,9 +9,12 @@
 #include "AGameObject.h"
 #include "Settings.h"
 
+// Constructor: texture lookup may be O(T) where T is number of
+// textures stored under a name (small in typical cases). Overall O(1) prep.
 SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
     : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr), m_textureKey(textureName)
 {
+    // Constructor setup: mostly O(1) except for texture lookup.
     this->flipX = false;
     this->flipY = false;
     this->dAngle = 0.0;
@@ -17,7 +24,7 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
     if (!textures.empty()) {
-        pTexture = textures[0];
+        pTexture = textures[0]; // O(1) fetch from vector
     }
     else {
         std::cerr << "[ERROR] : Texture not found: " << textureName << std::endl;
@@ -44,7 +51,10 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
 }
 
+// Initialize: texture lookup may be O(T) where T is number of
+// textures stored under a name (small in typical cases). Overall O(1) prep.
 void SpriteRenderer::initialize() {
+    // O(T): retrieves texture, updates size, registers sprite.
     auto textures = TextureManager::getInstance()->getTexture(m_textureKey);
     if (!textures.empty()) {
         pTexture = textures[0];
@@ -68,12 +78,19 @@ void SpriteRenderer::initialize() {
     RenderSystem::getInstance()->registerSpriteRenderer(this);
 }
 
+// Destructor: deregisters from RenderSystem — deregistration cost is O(S).
 SpriteRenderer::~SpriteRenderer() {
+    // O(R): deregistration scans list in RenderSystem.
     // unregister when destroyed
     RenderSystem::getInstance()->unregisterSpriteRenderer(this);
 }
 
+// draw: per-sprite O(1) math and single GPU draw call. As number of sprites R
+// increases, total cost per-frame increases linearly (O(R)). GPU cost per
+// draw is a significant constant-time cost in wall-time.
 void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
+    // O(1): All operations are per-sprite math and rendering.
+    // Real runtime cost dominated by GPU draw call.
     AGameObject* owner = this->getOwner();
     if (owner)
     {
@@ -102,6 +119,7 @@ void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
         mDestRect.h = screenSize.y;
     }
 
+    // GPU draw call: theoretical O(1), but expensive constant cost.
     if (pTexture) {
         /*std::cout << "[Draw] Texture=" << m_textureKey
             << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"

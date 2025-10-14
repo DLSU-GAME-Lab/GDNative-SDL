@@ -1,3 +1,10 @@
+// ---------------------------------------------------------------------------
+// Responsibilities: initialize SDL, systems, run main loop (event -> update -> render),
+// and manage timing/frame limiting.
+// Comments below state Big-O, dominating terms as n increases, and potential
+// runtime spikes when certain operations are invoked.
+// ---------------------------------------------------------------------------
+
 // Detect EditorModule.h
 #if defined(__has_include)
 	#if __has_include("EditorModule.h")
@@ -42,6 +49,11 @@
 #include "RightRoomScene.h"
 #include "LeftRoomScene.h"
 
+// Constructor / Destructor: startup and teardown costs are not per-frame.
+// - Startup work: O(1) for SDL init and renderer creation, plus O(S) for
+// registering S scenes in registerScenes() (startup-time growth with S).
+// - These do not affect steady-state per-frame complexity except by
+// increasing sizes of G/R/M at runtime if more content is created.
 Runner::Runner()
 {
 	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) == 0)
@@ -119,6 +131,7 @@ Runner::Runner()
 	this->registerScenes();
 }
 
+// ------- DESTRUCTOR -------
 Runner::~Runner()
 {
 	SceneManager::getInstance()->unloadScene();
@@ -146,6 +159,24 @@ Runner::~Runner()
 	SDL_DestroyWindow(this->pWindow);
 }
 
+
+// -----------------------
+// MAIN LOOP: run()
+// -----------------------
+// Notation used below:
+// - E = number of SDL events per frame
+// - G = number of game objects
+// - R = number of renderable objects (<= G)
+// - M = number of GUI/metrics items drawn per frame
+// - S = number of registered sprite renderers
+// - V = number of textures in global texture vector
+// - T = number of textures associated with a single name
+// - load_work = cost of scene resource loading when triggered
+// Overall per-frame complexity expressed as:
+// cost(frame) = O(E * costPerEvent + G * costUpdate + R * costDraw + M + C)
+// where C represents any heavy subsystem costs (collision checks, pathfinding,
+// or blocking resource loads). As n increases, dominant terms will be those
+// that scale with G, R, S, V, or E depending on system behavior.
 void Runner::run()
 {
 	bool running = true;
@@ -154,16 +185,26 @@ void Runner::run()
 
 	while (running)
 	{
+		// ---------- EVENT PROCESSING LOOP ----------
+		// Complexity: O(E * costPerEvent)
+		// - SDL_PollEvent yields E events this frame
+		// - costPerEvent includes: forwarding to ImGui (O(1)), Editor processing (O(1) or more),
+		// and this->processEvents(&e) -> GameObjectManager::processInput(e).
+		// - If processInput scans all game objects to find listeners, costPerEvent = O(G)
+		// so entire event loop can become O(E * G).
+		
 		// process all pending events
 		SDL_Event e;
 
 		while (SDL_PollEvent(&e))
 		{
+			// ImGui forwarding: O(1)
 			// always forward events to ImGui if the platform backend exists
 			if (ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().BackendPlatformUserData != nullptr) {
 				ImGui_ImplSDL3_ProcessEvent(&e);
 			}
 
+// Editor mode input may have its own costs (dependent on editor internals)
 #if EDITOR_MODE
 			Editor::EditorModule::getInstance()->processEditorInput(&e);
 #endif
@@ -171,21 +212,25 @@ void Runner::run()
 			switch (e.type)
 			{
 			case SDL_EVENT_QUIT:
-				running = false;
+				running = false; // constant-time action
 				break;
 
 			case SDL_EVENT_WINDOW_RESIZED:
+				// updateWindowSize likely O(1) or O(#render targets)
 				RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 				break;
 
 			default:
 #if EDITOR_MODE
 #else
+				// processEvents delegates to GameObjectManager::processInput which is O(G)
+				// This line is where per-event scanning becomes expensive if events are many.
 				this->processEvents(&e);
 #endif
 				break;
 			}
 
+			// Metrics: record input event -> O(1)
 			// --- input lag tracking ---
 			// record input lag when user presses a key or clicks mouse
 			if (e.type == SDL_EVENT_KEY_DOWN || e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
@@ -193,76 +238,103 @@ void Runner::run()
 			}
 		}
 
+		// ---------- TIMING ----------
+		// constant-time arithmetic
 		lastTime = currentTime;
 		currentTime = SDL_GetTicks();
 		float fDeltaTime = (currentTime - lastTime) / 1000.0f;
 
+		// ---------- UPDATE PHASE ----------
+		// GameObjectManager::update -> typically O(G)
+		// SceneTransitionManager::update -> O(1)
+		// If update contains collision checks, pathfinding, or nested loops, costs escalate
 #if EDITOR_MODE
 		Editor::EditorModule::getInstance()->updateGameObjects(fDeltaTime);
 #else
 		this->update(fDeltaTime);
 #endif
 
+		// Metrics: mark input handled and update internal metrics (O(1) to O(M))
 		// mark input as visually handled this frame 
 		MetricsManager::getInstance()->markInputHandled();
-
 		MetricsManager::getInstance()->update();
 
+		// ---------- RENDER PHASE ----------
+		// GameObjectManager::draw -> loops over R renderable objects => O(R)
+		// ImGui rendering: NewFrame() O(1), Metrics draw O(M), RenderDrawData O(I)
 		this->render();
 
+		// scene loading check -> O(1)
 		// scene loading now handled safely after transition
 		if (!SceneTransitionManager::getInstance()->isTransitioning())
 			SceneManager::getInstance()->checkLoadScene();
 
+		// frame delay / sleep -> O(1) (affects timing, not algorithmic complexity)
 		Uint64 frameTime = SDL_GetTicks() - currentTime;
 		if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
 	}
 }
 
-
+// processEvents: delegates to GameObjectManager::processInput
+// - Complexity per call: O(G) (it iterates over all game objects).
+// - If called for each event, event-processing cost per frame scales as O(E*G).
 void Runner::processEvents(SDL_Event* eEvent)
 {
 	GameObjectManager::getInstance()->processInput(eEvent);
 }
 
+// update: delegates to GameObjectManager::update and SceneTransitionManager::update
+// - GameObjectManager::update is O(G) per call (one update per object).
+// - SceneTransitionManager::update is O(1) per call.
+// - If updates include pairwise operations (e.g., naive collisions), update
+// can become O(G^2). Thus as G grows, update cost may transition from
+// linear to quadratic depending on object internals.
 void Runner::update(float fDeltaTime)
 {
 	GameObjectManager::getInstance()->update(fDeltaTime);
 	SceneTransitionManager::getInstance()->update();
 }
 
+// render: clears, draws, and presents
+// - GameObjectManager::draw -> O(R) per frame (draw each renderable once).
+// - ImGui/metrics work -> O(M) per frame.
+// - SDL_RenderPresent and texture draw calls are O(1) algorithmically but
+// can dominate wall-clock time (expensive constants) especially as R grows.
 void Runner::render()
 {
 	// pick a clear color once (optional)
 	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
-	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255);
-	SDL_RenderClear(pRenderer);
+	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255); // O(1)
+	SDL_RenderClear(pRenderer); // O(1)
 
-	GameObjectManager::getInstance()->draw(this->pRenderer);
+	GameObjectManager::getInstance()->draw(this->pRenderer); // O(R)
 
 #if !EDITOR_MODE
 	// Runner owns ImGui: start frame, draw metrics, render
-	ImGui_ImplSDL3_NewFrame();
-	ImGui_ImplSDLRenderer3_NewFrame();
-	ImGui::NewFrame();
+	ImGui_ImplSDL3_NewFrame(); // O(1)
+	ImGui_ImplSDLRenderer3_NewFrame(); // O(1)
+	ImGui::NewFrame(); // O(1)
 
-	MetricsManager::getInstance()->drawGUI();
+	MetricsManager::getInstance()->drawGUI(); // O(M)
 
-	ImGui::Render();
-	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), this->pRenderer);
+	ImGui::Render(); // O(I)
+	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), this->pRenderer); // O(I)
 #else
 	#if EDITOR_MODE
 		// Only compile this call when EditorModule.h was detected and included.
-		Editor::EditorModule::getInstance()->drawEditor(this->pRenderer);
+		Editor::EditorModule::getInstance()->drawEditor(this->pRenderer); // editor draw cost
 	#endif
 #endif
 
 	// draw fade/transition overlay last
-	SceneTransitionManager::getInstance()->draw(this->pRenderer);
+	SceneTransitionManager::getInstance()->draw(this->pRenderer); // O(1)
 
-	SDL_RenderPresent(this->pRenderer);
+	// present the frame. This call may block until GPU / vsync flush depending
+	// on renderer configuration - it's expensive in time but constant in ops.
+	SDL_RenderPresent(this->pRenderer); // O(1) but expensive in time
 }
 
+// registerScenes: startup cost O(S) where S = number of scenes registered
 void Runner::registerScenes()
 {
 	auto titleScene = new Title_Scene();

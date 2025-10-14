@@ -29,7 +29,6 @@ public:
 
     bool setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject);
 
-    Vector2D getCellPosition(CellData cell);
     Vector2D getCellPosition(Uint64 r, Uint64 c);
     AGameObject* getCellObject(Uint64 r, Uint64 c);
     CellData* getCellFromObject(AGameObject* pObject);

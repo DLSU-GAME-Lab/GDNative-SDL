@@ -21,15 +21,6 @@ bool Grid::setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject)
 	return true;
 }
 
-Vector2D Grid::getCellPosition(CellData cell)
-{
-	Vector2D cellSize = Vector2D(this->fCellSize);
-	Vector2D gridSize = Vector2D(this->nWidth, this->nHeight);
-	Vector2D pos = cellSize * (Vector2D(cell.c, cell.r) - (gridSize * 0.5f));
-	pos.y *= -1.0f;
-	pos += pOwner->getPos();
-	return pos;
-}
 
 // get cell world position; return empty vector on bad indices
 Vector2D Grid::getCellPosition(Uint64 r, Uint64 c)

@@ -132,34 +132,31 @@ void LeftRoomScene::createExitMenu()
 	pExitText2->setFont("LazyFont90");
 	pExitBG->attachChild(pExitText);
 	pExitBG->attachChild(pExitText2);
-	GameObjectManager::getInstance()->addObject(pExitText);
-	GameObjectManager::getInstance()->addObject(pExitText2);
+
 
 	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
 	pDecline->setPos(Vector2D(-200, -300));
 	pDecline->setScale(Vector2D(.15, .15));
-	GameObjectManager::getInstance()->addObject(pDecline);
 	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
 	pDecline->attachComponent(pToggle);
 
 	Text* pDeclineText = new Text("Decline_Text", "No", Vector2D(-200, -300), Vector2D(.75, .75), 0.f, false);
 	pDeclineText->setFont("LazyFont90");
-	pDecline->attachChild(pDeclineText);
-	GameObjectManager::getInstance()->addObject(pDeclineText);
 
 	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
 	pAccept->setPos(Vector2D(250, -300));
 	pAccept->setScale(Vector2D(.15, .15));
-	GameObjectManager::getInstance()->addObject(pAccept);
 	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
 	pAccept->attachComponent(pTitleSwitch);
 	Text* pAcceptText = new Text("Accept_Text", "Yes", Vector2D(250, -300), Vector2D(.75, .75), 0.f, false);
 	pAcceptText->setFont("LazyFont90");
-	pAccept->attachChild(pAcceptText);
-	GameObjectManager::getInstance()->addObject(pAcceptText);
 
 	pExitBG->attachChild(pDecline);
+	pDecline->attachChild(pDeclineText);
+
 	pExitBG->attachChild(pAccept);
+	pAccept->attachChild(pAcceptText);
+
 
 	pExitBG->setEnabled(false);
 	pExitBG->setPos(Vector2D(0, 100));

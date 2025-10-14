@@ -50,6 +50,7 @@ void GameObjectManager::deleteObject(AGameObject* pGameObject)
     if(nIndex != -1) {
         this->mapGameObject.erase(this->vecGameObject[nIndex]->getName());
         this->vecGameObject.erase(this->vecGameObject.begin() + nIndex);
+        pGameObject->deleteAllChildren();
         delete pGameObject;
     }
 }

@@ -109,7 +109,6 @@ void Title_Scene::createButtons()
     Text* pStartText = new Text("Start_Text", "Start Game", Vector2D(0, 0), Vector2D(1, 1), 0.f, false);
     pStartText->setFont("LazyFont90");
     pStartButton->attachChild(pStartText);
-    GameObjectManager::getInstance()->addObject(pStartText);
     pStartButton->setPos(Vector2D(-580, -150));
 
 }

@@ -43,7 +43,7 @@ public:
     std::vector<AComponent*> getComponents(ComponentType EType);
     std::vector<AComponent*> getComponentsRecursively(ComponentType EType, bool bInclusive = true);
     bool componentExists(std::string strName);
-
+    void deleteAllChildren();
 public:
     bool getEnabled() const;
     void setEnabled(bool bEnabled);
@@ -59,4 +59,7 @@ public:
     bool getIsScreenObject() const;
     bool getFollowParent();
     void setFollowParent(bool bFollowParent);
+    bool isGloballyEnabled() const;
+ 
+
 };

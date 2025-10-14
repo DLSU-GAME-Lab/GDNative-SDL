@@ -69,17 +69,18 @@ void Diary::progressPage()
 
 void Diary::regressPage()
 {
-	if (this->dCurrentPage > 0)
+	if (this->dCurrentPage  > 0)
 	{
 		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->dCurrentPage--;
 		this->vecPages[dCurrentPage]->setEnabled(true);
+
 	}
-	else
+	else if(this->dCurrentPage <= 0)
 	{
 		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->vecPages[this->vecPages.size() - 1]->setEnabled(true);
-		this->dCurrentPage = 0;
+		this->dCurrentPage = this->vecPages.size()-1;
 	}
 }
 

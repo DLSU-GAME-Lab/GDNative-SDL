@@ -14,7 +14,6 @@ AGameObject(strName)
 
 Text::~Text()
 {
-	std::cout << "Destroying: "<<this->strName << std::endl;
 	TextureManager::getInstance()->unload(this->strName + " Text");
 }
 

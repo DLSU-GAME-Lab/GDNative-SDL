@@ -1,17 +1,27 @@
 #pragma once
-#include "Grid.h"
+#include "AComponent.h"
+#include "Camera.h"
 #include <SDL3/SDL.h>
+#include <vector>
 
-class TileMapRenderer : public Grid
+class TileMapRenderer : public AComponent
 {
+private:
+	SDL_Renderer* pRenderer;
+	Camera* pCamera;
+	std::vector<std::vector<SDL_Texture*>> vecTile;
+
+	float fWidth;
+	float fHeight;
+
 public:
-	TileMapRenderer(Uint64 w, Uint64 h, float fCellSize);
+	TileMapRenderer(float fWidth, float fHeight);
 	~TileMapRenderer();
 
 	void onAttach() override;
 	void perform() override;
 
-	void addTile(Uint64 w, Uint64 h, SDL_Texture* pTile);
-	void removeTile(Uint64 w, Uint64 h);
+	void addTile(Uint64 r, Uint64 c, SDL_Texture* pTile);
+	void removeTile(Uint64 r, Uint64 c);
 };
 

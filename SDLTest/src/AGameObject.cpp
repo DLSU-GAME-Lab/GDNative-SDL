@@ -44,6 +44,10 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
     auto vecRenderer = this->getComponentsRecursively(ComponentType::RENDERER);
     for (AComponent* pComponent : vecRenderer)
     {
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled())
+            continue;
+
         SpriteRenderer* renderer = (SpriteRenderer*)pComponent;
         renderer->draw(pRenderer, RenderSystem::getInstance()->getCamera());
         pComponent->perform();
@@ -159,12 +163,10 @@ std::vector<AComponent*> AGameObject::getComponentsRecursively(ComponentType ETy
 
     for (AGameObject* pChild : this->vecChildren)
     {
-        for (AComponent* pComponent : pChild->getComponents(EType))
-        {
-            if (pComponent->getType() == EType)
-                vecFound.push_back(pComponent);
-        }
+        std::vector<AComponent*> childComponents = pChild->getComponentsRecursively(EType, bInclusive);
+        vecFound.insert(vecFound.end(), childComponents.begin(), childComponents.end());
     }
+    
 
     return vecFound;
 }
@@ -177,6 +179,31 @@ bool AGameObject::componentExists(std::string strName)
             return true;
     }
     return false;
+}
+
+void AGameObject::deleteAllChildren()
+{
+    for (AGameObject* pChild : vecChildren)
+    {
+        if (pChild)
+        {
+            // Recursively delete child’s children
+            pChild->deleteAllChildren();
+
+            // Delete components
+            for (AComponent* pComponent : pChild->vecComponent)
+            {
+                delete pComponent;
+            }
+            pChild->vecComponent.clear();
+
+            // Delete the child itself
+            delete pChild;
+        }
+    }
+
+    vecChildren.clear();
+
 }
 
 bool AGameObject::getEnabled() const
@@ -192,7 +219,9 @@ void AGameObject::setEnabled(bool bEnabled)
         for (AGameObject* pObject:vecChildren)
         {
             if(pObject->getFollowParent())
+            {
                 pObject->setEnabled(bEnabled);
+            }
             
         }
     }
@@ -228,7 +257,6 @@ void AGameObject::setPos(Vector2D fVecTranslate)
             {
                 Vector2D fVecNewPos(child->getPos().x + child->getParent()->getPos().x, child->getPos().y + child->getParent()->getPos().y);
                 child->setPos(fVecNewPos);
-                std::cout << child->getName() << ": " << child->getPos().x << ", " << child->getPos().y << std::endl;
             }
   
         }
@@ -276,5 +304,17 @@ void AGameObject::setFollowParent(bool bFollowParent)
 {
     this->bFollowParent = bFollowParent;
 }
+
+bool AGameObject::isGloballyEnabled() const
+{
+    if (!this->bEnabled)
+        return false;
+
+    if (this->pParent)
+        return this->pParent->isGloballyEnabled();
+
+    return true;
+}
+
 
 

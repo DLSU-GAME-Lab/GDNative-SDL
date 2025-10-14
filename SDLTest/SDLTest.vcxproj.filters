@@ -485,6 +485,7 @@
     <ClInclude Include="include\EventBroadcaster.h">
       <Filter>Singleton</Filter>
     </ClInclude>
+    <ClInclude Include="include\IAnimatorListener.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

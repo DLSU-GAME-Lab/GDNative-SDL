@@ -17,7 +17,7 @@ void Title_Scene::onLoadResources()
     // naming convention (TextureManager prefixes "Assets/")
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_bg.png", "Title_Background");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_GemHunterMatch_Logo.png", "Title_Logo");
-    TextureManager::getInstance()->load("title_screen_pngs/SP_Gem_Yellow.png", "Yellow");
+    TextureManager::getInstance()->load("gems/SP_Gem_Yellow.png", "Yellow");
     TextureManager::getInstance()->load("gems/SP_Gem_Blue.png", "Blue");
     TextureManager::getInstance()->load("gems/SP_Gem_Purple.png", "Purple");
     TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "Red");

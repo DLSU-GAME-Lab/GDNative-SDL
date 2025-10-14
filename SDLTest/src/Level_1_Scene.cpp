@@ -2,7 +2,8 @@
 #include "GemManager.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
-
+#include "FontManager.h"
+#include "Tracker.h"
 Level_1_Scene::Level_1_Scene():AScene(SceneTag::LEVEL_1_SCENE)
 {
 }
@@ -16,6 +17,7 @@ void Level_1_Scene::onLoadResources()
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
 	TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
 	TextureManager::getInstance()->load("levels/Level_1.png", "Level_Container");
+	FontManager::getInstance()->loadFont("Maragsa.otf", "Maragasa45", 45);
 	GemManager::loadResources();
 }
 
@@ -46,7 +48,29 @@ void Level_1_Scene::onLoadObjects()
 	SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
 	pSettings->attachComponent(pTitleSwitcher);
 
+	Tracker* pRedTracker = new Tracker("Red_Tracker", "Red", 7);
+	GameObjectManager::getInstance()->addObject(pRedTracker);
+	pRedTracker->setPos(Vector2D(-300, 500));
 
+	Tracker* pBlueTracker = new Tracker("Blue_Tracker", "Blue", 7);
+	GameObjectManager::getInstance()->addObject(pBlueTracker);
+	pBlueTracker->setPos(Vector2D(-350, 500));
+
+	Tracker* pYellowTracker = new Tracker("Yellow_Tracker", "Yellow", 7);
+	GameObjectManager::getInstance()->addObject(pYellowTracker);
+	pYellowTracker->setPos(Vector2D(-400, 500));
+
+	Tracker* pPurpleTracker = new Tracker("Purple_Tracker", "Purple", 7);
+	GameObjectManager::getInstance()->addObject(pPurpleTracker);
+	pPurpleTracker->setPos(Vector2D(-300, 450));
+
+	Tracker* pWhiteTracker = new Tracker("White_Tracker", "White", 7);
+	GameObjectManager::getInstance()->addObject(pWhiteTracker);
+	pWhiteTracker->setPos(Vector2D(-350, 450));
+
+	Tracker* pGreenTracker = new Tracker("Green_Tracker", "Green", 7);
+	GameObjectManager::getInstance()->addObject(pGreenTracker);
+	pGreenTracker->setPos(Vector2D(-400, 450));
 	GemManager::initialize(9, 10, 60.0f, Vector2D(30.0f, -54.0f));
 
 	std::vector<Uint8> r0Cols = { 0, 8 };
@@ -67,6 +91,7 @@ void Level_1_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Level_Container");
 	TextureManager::getInstance()->unload("Level_Container_Extra");
 	TextureManager::getInstance()->unload("Top_UI_Container");
+	FontManager::getInstance()->unloadFont("Maragasa45");
 	GemManager::unloadResources();
 }
 

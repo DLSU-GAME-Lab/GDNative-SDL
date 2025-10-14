@@ -3,7 +3,6 @@
 #include "EnumSceneTag.h"
 #include <SDL3/SDL.h>
 #include "Background.h"
-#include "Prop.h"
 
 class Level_1_Scene : public AScene
 {

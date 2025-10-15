@@ -11,6 +11,7 @@ private:
 
 	float fTileWidth;
 	float fTileHeight;
+	Vector2D offset;
 
 public:
 	TileMapRenderer(float fTileWidth = 1.0f, float fTileHeight = 1.0f);

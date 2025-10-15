@@ -92,29 +92,47 @@ void SpriteRenderer::perform() {
     Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
     if (owner)
     {
+
+        ////TODO: fix the rotations. better if we used a transform matrix.
+        //this->dAngle = owner->getRot();
+
+        //Vector2D screenPos;
+        //Vector2D screenSize = this->texSize * owner->getScale();
+
+        //if (owner->getIsScreenObject())
+        //{
+        //    screenPos = owner->getPos() + screenSize;
+        //}
+        //else
+        //{
+        //    screenSize /= pCam->getScale();
+        //    screenPos = pCam->worldToScreenPoint(owner->getPos());
+        //    this->dAngle -= pCam->getRot();
+        //}
+
+        //screenPos -= screenSize * this->pivot;
+        ////TODO: Fix the negative rect error (screenPos)
+        //mDestRect.x = screenPos.x;
+        //mDestRect.y = screenPos.y;
+        //mDestRect.w = screenSize.x;
+        //mDestRect.h = screenSize.y;
+
         //TODO: fix the rotations. better if we used a transform matrix.
         this->dAngle = owner->getRot();
 
-        Vector2D screenPos;
-        Vector2D screenSize = this->texSize * owner->getScale();
+        Vector2D scale = owner->getScale();
+        Vector2D size = this->texSize * scale;
+        Vector2D pos = owner->getPos();
+        pos.y += size.y;
+        pos -= size * this->pivot;
 
-        if (owner->getIsScreenObject())
-        {
-            screenPos = owner->getPos() + screenSize;
-        }
-        else
-        {
-            screenSize /= pCam->getScale();
-            screenPos = pCam->worldToScreenPoint(owner->getPos());
-            this->dAngle -= pCam->getRot();
-        }
+        mDestRect.x = pos.x;
+        mDestRect.y = pos.y;
+        mDestRect.w = size.x;
+        mDestRect.h = size.y;
 
-        screenPos -= screenSize * this->pivot;
-        //TODO: Fix the negative rect error (screenPos)
-        mDestRect.x = screenPos.x;
-        mDestRect.y = screenPos.y;
-        mDestRect.w = screenSize.x;
-        mDestRect.h = screenSize.y;
+        if (!owner->getIsScreenObject()) mDestRect = pCam->worldToScreenRect(mDestRect);
+
     }
 
     // GPU draw call: theoretical O(1), but expensive constant cost.

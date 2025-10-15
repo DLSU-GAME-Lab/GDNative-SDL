@@ -25,7 +25,7 @@ void TileMapRenderer::onAttach()
 
 void TileMapRenderer::perform()
 {
-    Camera* pCamera = CameraManager::getInstance()->getCurrentCamera();
+    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
 
     for (Uint64 r = 0; r < this->vecTile.size(); r++)
     {
@@ -34,19 +34,29 @@ void TileMapRenderer::perform()
             if (this->vecTile[r][c] != nullptr)
             {
                 SDL_FRect destRect = {};
+                SDL_Texture* tile = this->vecTile[r][c];
                 Vector2D scale = this->pOwner->getScale();
                 Vector2D pos = this->pOwner->getPos();
+                Vector2D tileSize;
+                Vector2D cellSize;
 
-                pos.x += c * this->fTileWidth * scale.x;
-                pos.y += r * this->fTileHeight * scale.y;
-                pos = pCamera->worldToScreenPoint(pos);
+                tileSize.x = tile->w * scale.x;
+                tileSize.y = tile->h * scale.y;
 
-                destRect.w = this->vecTile[r][c]->w * scale.x;
-                destRect.h = this->vecTile[r][c]->h * scale.y;
+                cellSize.x = this->fTileWidth * scale.x;
+                cellSize.y = this->fTileHeight * scale.y;
+                
+                pos.x += cellSize.x * (c + this->offset.x);
+                pos.y += cellSize.y * (r + this->offset.y) + cellSize.y;
+
                 destRect.x = pos.x;
-                destRect.y = pos.y - destRect.h;
+                destRect.y = pos.y;
+                destRect.w = tileSize.x;
+                destRect.h = tileSize.y;
 
-                SDL_RenderTexture(this->pRenderer, this->vecTile[r][c], nullptr, &destRect);
+                destRect = pCam->worldToScreenRect(destRect);
+
+                SDL_RenderTexture(this->pRenderer, tile, nullptr, &destRect);
             }
         }
     }

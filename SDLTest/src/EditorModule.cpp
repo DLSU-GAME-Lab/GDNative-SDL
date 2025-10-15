@@ -78,13 +78,20 @@ void Editor::EditorModule::updateGameObjects(float fDeltaTime)
         deltaMousePos.x *= -1;
 
         cam->setPos(camPos + (deltaMousePos * fDeltaTime * inspector->getCamMoveSpeed()));
-        std::cout << "Camera moved" << std::endl;
     }
 
     if (this->fDeltaScroll != 0.0f)
     {
         Vector2D camScale = cam->getScale();
-        cam->setScale(camScale + (this->fDeltaScroll * fDeltaTime * inspector->getCamScaleSpeed()));
+        camScale += this->fDeltaScroll * fDeltaTime * inspector->getCamScaleSpeed();
+
+        if (camScale.x < 0.0f)
+        {
+            camScale.x = 0.0f;
+            camScale.y = 0.0f;
+        }
+
+        cam->setScale(camScale);
     }
 
     AGameObject* selected = static_cast<InspectorScreen*>(

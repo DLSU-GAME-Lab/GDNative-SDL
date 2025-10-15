@@ -90,9 +90,6 @@
     <ClCompile Include="src\SceneManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderSystem.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
     <ClCompile Include="src\AScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -204,9 +201,6 @@
     <ClCompile Include="src\GUIUtils.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\PhysicsManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
     <ClCompile Include="src\Collider.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
@@ -243,6 +237,14 @@
     <ClCompile Include="src\TweenAnimator.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="src\ARenderer.cpp" />
+    <ClCompile Include="src\CameraManager.cpp" />
+    <ClCompile Include="src\Level1Scene.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\TileMapRenderer.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -273,9 +275,6 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\SceneManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RenderSystem.h">
       <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumSceneTag.h">
@@ -407,9 +406,6 @@
     <ClInclude Include="include\GUIToggle.h">
       <Filter>Component\Script</Filter>
     </ClInclude>
-    <ClInclude Include="include\PhysicsManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
     <ClInclude Include="include\Collider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
@@ -480,6 +476,14 @@
       <Filter>Component\Animation</Filter>
     </ClInclude>
     <ClInclude Include="include\IAnimatorListener.h" />
+    <ClInclude Include="include\ARenderer.h" />
+    <ClInclude Include="include\CameraManager.h" />
+    <ClInclude Include="include\Level1Scene.h" />
+    <ClInclude Include="include\TileMap.h" />
+    <ClInclude Include="include\TileMapRenderer.h" />
+    <ClInclude Include="include\PhysicsManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

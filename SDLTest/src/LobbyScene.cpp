@@ -58,7 +58,9 @@ void LobbyScene::onLoadObjects()
 void LobbyScene::onUnloadResources()
 {
 	TextureManager::getInstance()->unload("Lobby_Background");
-	TextureManager::getInstance()->unload("Player");
+	TextureManager::getInstance()->unload("player_idle");
+	TextureManager::getInstance()->unload("player_run");
+	TextureManager::getInstance()->unload("player_jump");
 	TextureManager::getInstance()->unload("Librarian");
 	TextureManager::getInstance()->unload("Fairy");
 	TextureManager::getInstance()->unload("Button");

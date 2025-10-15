@@ -1,5 +1,6 @@
 #include "Level_3_Scene.h"
-#include "Prop.h"
+#include "FontManager.h"
+#include "TrackerManager.h"
 #include "GemManager.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
@@ -17,11 +18,17 @@ void Level_3_Scene::onLoadResources()
 	TextureManager::getInstance()->load("levels/Level_3.png", "Level_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
+	FontManager::getInstance()->loadFont("Maragsa.otf", "Maragasa45", 45);
 	GemManager::loadResources();
 }
 
 void Level_3_Scene::onLoadObjects()
 { 
+	EmptyObject* pTrackerManagerHolder = new EmptyObject("TrackerManagerHolder");
+	TrackerManager::initialize("TrackerManager", pTrackerManagerHolder);
+	GameObjectManager::getInstance()->addObject(pTrackerManagerHolder);
+	EventBroadcaster::getInstance()->registerListener((EventListener*)TrackerManager::getInstance());
+
 	Background* pBackground = new Background("Level_Background", "Level_Background", Vector2D(125.f, 1.17f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
@@ -46,6 +53,36 @@ void Level_3_Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pSettings);
 	SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
 	pSettings->attachComponent(pTitleSwitcher);
+
+	Tracker* pRedTracker = new Tracker("Red_Tracker", "Red", GemType::RED, 7);
+	GameObjectManager::getInstance()->addObject(pRedTracker);
+	pRedTracker->setPos(Vector2D(-300, 500));
+	TrackerManager::getInstance()->registerTracker(pRedTracker);
+
+	Tracker* pBlueTracker = new Tracker("Blue_Tracker", "Blue", GemType::BLUE, 7);
+	GameObjectManager::getInstance()->addObject(pBlueTracker);
+	pBlueTracker->setPos(Vector2D(-350, 500));
+	TrackerManager::getInstance()->registerTracker(pBlueTracker);
+
+	Tracker* pYellowTracker = new Tracker("Yellow_Tracker", "Yellow", GemType::YELLOW, 7);
+	GameObjectManager::getInstance()->addObject(pYellowTracker);
+	pYellowTracker->setPos(Vector2D(-400, 500));
+	TrackerManager::getInstance()->registerTracker(pYellowTracker);
+
+	Tracker* pPurpleTracker = new Tracker("Purple_Tracker", "Purple", GemType::PURPLE, 7);
+	GameObjectManager::getInstance()->addObject(pPurpleTracker);
+	pPurpleTracker->setPos(Vector2D(-300, 450));
+	TrackerManager::getInstance()->registerTracker(pPurpleTracker);
+
+	Tracker* pWhiteTracker = new Tracker("White_Tracker", "White", GemType::WHITE, 7);
+	GameObjectManager::getInstance()->addObject(pWhiteTracker);
+	pWhiteTracker->setPos(Vector2D(-350, 450));
+	TrackerManager::getInstance()->registerTracker(pWhiteTracker);
+
+	Tracker* pGreenTracker = new Tracker("Green_Tracker", "Green", GemType::GREEN, 7);
+	GameObjectManager::getInstance()->addObject(pGreenTracker);
+	pGreenTracker->setPos(Vector2D(-400, 450));
+	TrackerManager::getInstance()->registerTracker(pGreenTracker);
 
 	GemManager::initialize(12, 14, 45.0f, Vector2D(23.0f, -46.0f));
 
@@ -83,6 +120,14 @@ void Level_3_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Level_Container");
 	TextureManager::getInstance()->unload("Top_UI_Container");
 	TextureManager::getInstance()->unload("Level_Container_Extra");
+	TextureManager::getInstance()->unload("Red");
+	TextureManager::getInstance()->unload("Green");
+	TextureManager::getInstance()->unload("Blue");
+	TextureManager::getInstance()->unload("Purple");
+	TextureManager::getInstance()->unload("Yellow");
+	TextureManager::getInstance()->unload("White");
+	EventBroadcaster::getInstance()->unregisterAllListeners();
+	TrackerManager::destroy();
 	GemManager::unloadResources();
 }
 

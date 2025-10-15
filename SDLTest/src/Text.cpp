@@ -34,3 +34,13 @@ void Text::initialize()
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strName + " Text", this->fVecTranslate.x, this->fVecTranslate.y);
 	this->attachComponent((AComponent*)pSpriteRenderer);
 }
+
+void Text::modifyText(std::string strNewText)
+{
+	TextureManager::getInstance()->unload(this->strName + " Text");
+	TextureManager::getInstance()->loadFromText(this->strName + " Text", this->strFontName, strNewText, this->color);
+	SpriteRenderer* pRenderer = (SpriteRenderer*)this->findComponentByName("SpriteRenderer");
+	SDL_Texture* pTex = TextureManager::getInstance()->get(this->strName + " Text");
+	pRenderer->setTexture(pTex);
+
+}

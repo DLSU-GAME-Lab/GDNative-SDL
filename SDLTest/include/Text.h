@@ -16,5 +16,6 @@ public:
 	void setFont(std::string strFontName);
 	void setColor(SDL_Color color);
 	void initialize() override;
+	void modifyText(std::string strNewText);
 };
 

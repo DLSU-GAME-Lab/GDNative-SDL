@@ -2,8 +2,8 @@
 #define ENUM_EVENT_KEY_HPP
 
 enum class EventKey : int {
-    GAME_KEY = 0,
-    GAME_KEY_INPUT
+    COLOR_MATCH = 0,
+    
 };
 
 #endif

@@ -210,9 +210,6 @@
     <ClCompile Include="src\GemSwapper.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\PhysicsManager.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="src\TileMapRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
@@ -245,6 +242,12 @@
     </ClCompile>
     <ClCompile Include="src\EventBroadcaster.cpp">
       <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TrackerManager.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,9 +389,6 @@
     <ClInclude Include="include\GUIToggle.h">
       <Filter>Component\Script</Filter>
     </ClInclude>
-    <ClInclude Include="include\PhysicsManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
     <ClInclude Include="include\Collider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
@@ -486,6 +486,12 @@
       <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\IAnimatorListener.h" />
+    <ClInclude Include="include\PhysicsManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TrackerManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

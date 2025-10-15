@@ -20,12 +20,10 @@ void EventBroadcaster::unregisterListener(EventListener* pListener) {
     std::vector<EventListener*> vecListener = this->mapListener[EKey];
     int nIndex = this->findListener(pListener, vecListener);
 
-    delete this->mapListener[EKey][nIndex];
     this->mapListener[EKey].erase(this->mapListener[EKey].begin() + nIndex);
 
     nIndex = this->findListener(pListener);
     if(nIndex != -1) {
-        delete this->vecListener[nIndex];
         this->vecListener.erase(this->vecListener.begin() + nIndex);
     }
 }

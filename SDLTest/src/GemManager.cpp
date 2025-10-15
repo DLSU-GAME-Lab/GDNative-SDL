@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include <ctime>
 #include <cstdlib>
-
+#include "EventBroadcaster.h"
 void GemManager::onAttach()
 {
     for (Uint8 r = 0; r < this->nHeight; r++)
@@ -119,6 +119,7 @@ void GemManager::setTween(GemData gemData, Vector2D startOffset)
 bool GemManager::checkMatches()
 {
     bool bMatched = false;
+    std::unordered_map<std::string, void*> mapParameter;
 
     // horizontal scan
     for (int r = 0; r < (int)this->nHeight; ++r)
@@ -158,12 +159,20 @@ bool GemManager::checkMatches()
                     this->data[r][c - 1].gem = NULL;
                     this->data[r][c - 2].gem = NULL;
                     bMatched = true;
+                    mapParameter["GemType"] = static_cast<void*>(&currentType);
+                    mapParameter["RemovedNumber"] = static_cast<void*>(&count);
+                    EventBroadcaster::getInstance()->broadcast(EventKey::COLOR_MATCH, mapParameter);
+
                 }
                 else if (count > 3)
                 {
                     // longer run; add current one
                     toRemove.push_back(this->data[r][c].gem);
                     this->data[r][c].gem = NULL;
+                    mapParameter["GemType"] = static_cast<void*>(&currentType);
+                    mapParameter["RemovedNumber"] = static_cast<void*>(&count);
+                    std::cout << count << std::endl;
+                    EventBroadcaster::getInstance()->broadcast(EventKey::COLOR_MATCH, mapParameter);
                 }
             }
             else
@@ -211,11 +220,18 @@ bool GemManager::checkMatches()
                     this->data[r - 1][c].gem = NULL;
                     this->data[r - 2][c].gem = NULL;
                     bMatched = true;
+                    mapParameter["GemType"] = static_cast<void*>(&currentType);
+                    mapParameter["RemovedNumber"] = static_cast<void*>(&count);
+                    EventBroadcaster::getInstance()->broadcast(EventKey::COLOR_MATCH, mapParameter);
                 }
                 else if (count > 3)
                 {
                     toRemove.push_back(this->data[r][c].gem);
                     this->data[r][c].gem = NULL;
+                    mapParameter["GemType"] = static_cast<void*>(&currentType);
+                    mapParameter["RemovedNumber"] = static_cast<void*>(&count);
+                    std::cout << count << std::endl;
+                    EventBroadcaster::getInstance()->broadcast(EventKey::COLOR_MATCH, mapParameter);
                 }
             }
             else

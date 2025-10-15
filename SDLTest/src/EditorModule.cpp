@@ -11,10 +11,16 @@ void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
 {
     UIManager::getInstance()->processEvent(eEvent);
 
-    //ImGuiIO io = ImGui::GetIO();
-    //io.WantCaptureMouse = false;
     InspectorScreen* inspector = static_cast<InspectorScreen*>(
         UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"));
+
+    this->fDeltaScroll = 0.0f;
+    this->lastMousePos = this->mousePos;
+
+    if (eEvent->type == SDL_EVENT_MOUSE_WHEEL)
+    {
+        this->fDeltaScroll = eEvent->wheel.y;
+    }
 
     if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
     {
@@ -46,10 +52,41 @@ void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
             this->bIsDragging = false;
         }
     }
+    else if (eEvent->button.button == 3)
+    {
+        if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+        {
+            this->bIsMovingCam = true;
+        }
+        else if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP)
+        {
+            this->bIsMovingCam = false;
+        }
+    }
 }
 
 void Editor::EditorModule::updateGameObjects(float fDeltaTime)
 {
+    Camera* cam = CameraManager::getInstance()->getCurrentCamera();
+    InspectorScreen* inspector = static_cast<InspectorScreen*>(
+        UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"));
+
+    if (this->bIsMovingCam)
+    {
+        Vector2D camPos = cam->getPos();
+        Vector2D deltaMousePos = this->mousePos - this->lastMousePos;
+        deltaMousePos.x *= -1;
+
+        cam->setPos(camPos + (deltaMousePos * fDeltaTime * inspector->getCamMoveSpeed()));
+        std::cout << "Camera moved" << std::endl;
+    }
+
+    if (this->fDeltaScroll != 0.0f)
+    {
+        Vector2D camScale = cam->getScale();
+        cam->setScale(camScale + (this->fDeltaScroll * fDeltaTime * inspector->getCamScaleSpeed()));
+    }
+
     AGameObject* selected = static_cast<InspectorScreen*>(
         UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"))->getSelectedObject();
 
@@ -119,7 +156,7 @@ bool Editor::EditorModule::contains(Vector2D objPos, Vector2D mousePos)
     SDL_FRect spriteRect = {};
     
     Vector2D objScreenPos = cam->worldToScreenPoint(objPos);
-    std::cout << objPos << " " << objScreenPos << "\n";
+    //std::cout << objPos << " " << objScreenPos << "\n";
     spriteRect.x = objScreenPos.x - (fTexW * 0.5f);
     spriteRect.y = objScreenPos.y - (fTexH * 0.5f);
     spriteRect.w = fTexW;

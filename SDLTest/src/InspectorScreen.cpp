@@ -19,6 +19,16 @@ void Editor::InspectorScreen::setMousePos(Vector2D mousePos)
     this->mousePos = mousePos;
 }
 
+float Editor::InspectorScreen::getCamMoveSpeed() const
+{
+    return this->fCamMoveSpeed;
+}
+
+float Editor::InspectorScreen::getCamScaleSpeed() const
+{
+    return this->fCamScaleSpeed;
+}
+
 Editor::InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
 {
 	this->selectedObject = NULL;
@@ -50,7 +60,7 @@ void Editor::InspectorScreen::DrawUI()
     mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
     mouseWorldPos.y = (-(this->mousePos.y - cam->getPos().y - cam->getHalfHeight())) * cam->getScale().y;
 
-    std::string mousePosText = "Mouse Position: (" + std::to_string((int)mousePos.x) + ", " + std::to_string((int)mousePos.y) + ")";
+    std::string mousePosText = "Mouse Screen Position: (" + std::to_string((int)mousePos.x) + ", " + std::to_string((int)mousePos.y) + ")";
     std::string mouseWorldPosText = "Mouse World Position: (" + std::to_string((int)mouseWorldPos.x) + ", " + std::to_string((int)mouseWorldPos.y) + ")";
     ImGui::Text(mousePosText.c_str());
     ImGui::Text(mouseWorldPosText.c_str());
@@ -69,35 +79,37 @@ void Editor::InspectorScreen::DrawUI()
 
 void Editor::InspectorScreen::showCamera(ImGuiChildFlags childFlags)
 {
-    ImGui::BeginChild("Camera", ImVec2(0, 0), childFlags);
+    ImGui::BeginChild("Camera", ImVec2(320, 0), childFlags);
     ImGui::Text("Camera");
 
     Camera* cam = CameraManager::getInstance()->getCurrentCamera();
     Vector2D pos = cam->getPos();
-    float rot = cam->getRot();
     Vector2D scale = cam->getScale();
+    float rot = cam->getRot();
 
     float scenePos[] = { pos.x, pos.y };
-    float sceneRot = rot;
     float sceneScale[] = { scale.x, scale.y };
+    float sceneRot = rot;
+
+    ImGui::DragFloat("Move Speed", &this->fCamMoveSpeed);
+    ImGui::DragFloat("Scale Speed", &this->fCamScaleSpeed);
     
-    
-    if (ImGui::InputFloat2("Position", scenePos) &&
+    if (ImGui::DragFloat2("Position", scenePos) &&
         ImGui::IsItemDeactivatedAfterEdit())
     {
         cam->setPos(Vector2D(scenePos[0], scenePos[1]));
     }
 
-    //if (ImGui::InputFloat("Rotation", &sceneRot) &&
+    if (ImGui::DragFloat2("Scale", sceneScale) &&
+        ImGui::IsItemDeactivatedAfterEdit())
+    {
+        cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
+    }
+
+    //if (ImGui::DragFloat("Rotation", &sceneRot) &&
     //    ImGui::IsItemDeactivatedAfterEdit())
     //{
     //    cam->setRot(sceneRot);
-    //}
-
-    //if (ImGui::InputFloat2("Scale", sceneScale) &&
-    //    ImGui::IsItemDeactivatedAfterEdit())
-    //{
-    //    cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
     //}
 
     ImGui::EndChild();

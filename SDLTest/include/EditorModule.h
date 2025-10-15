@@ -18,6 +18,10 @@ namespace Editor
         double dTicks = 0.0;
         bool bIsDragging = false;
         bool bIsHolding = false;
+        bool bIsMovingCam = false;
+
+        float fDeltaScroll = 0.0f;
+        Vector2D lastMousePos;
         Vector2D mousePos;
         Vector2D offsetPos;
 

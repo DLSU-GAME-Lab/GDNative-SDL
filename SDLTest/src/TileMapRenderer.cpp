@@ -35,16 +35,16 @@ void TileMapRenderer::perform()
             {
                 SDL_FRect destRect = {};
                 Vector2D scale = this->pOwner->getScale();
-                Vector2D pos = Vector2D();
+                Vector2D pos = this->pOwner->getPos();
 
-                pos.x = c * this->fTileWidth * scale.x;
-                pos.y = r * this->fTileHeight * scale.y;
+                pos.x += c * this->fTileWidth * scale.x;
+                pos.y += r * this->fTileHeight * scale.y;
                 pos = pCamera->worldToScreenPoint(pos);
 
-                destRect.x = pos.x;
-                destRect.y = pos.y;
                 destRect.w = this->vecTile[r][c]->w * scale.x;
                 destRect.h = this->vecTile[r][c]->h * scale.y;
+                destRect.x = pos.x;
+                destRect.y = pos.y - destRect.h;
 
                 SDL_RenderTexture(this->pRenderer, this->vecTile[r][c], nullptr, &destRect);
             }

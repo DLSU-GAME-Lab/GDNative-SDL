@@ -1,6 +1,7 @@
 #include "Level1Scene.h"
 #include "TextureManager.h"
 #include "GameObjectManager.h"
+#include "CameraManager.h"
 #include "TileMap.h"
 #include "TileMapRenderer.h"
 
@@ -45,6 +46,8 @@ void Level1Scene::onLoadObjects()
 			pTMR->addTile(r, c, pTileBL);
 		}
 	}
+
+	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(800, 500));
 }
 
 void Level1Scene::onUnloadResources()

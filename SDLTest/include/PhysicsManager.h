@@ -32,7 +32,7 @@ private:
 
 public:
     static PhysicsManager* getInstance();
-    static void initialize(std::string strName, AGameObject* pParent);
+    static void initialize();
     static void destroy();
     /* * * * * * * * * * * * * * * * * * * * */
 };

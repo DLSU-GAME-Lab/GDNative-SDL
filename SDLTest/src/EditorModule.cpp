@@ -19,7 +19,7 @@ void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
 
     if (eEvent->type == SDL_EVENT_MOUSE_WHEEL)
     {
-        this->fDeltaScroll = eEvent->wheel.y;
+        this->fDeltaScroll = -eEvent->wheel.y;
     }
 
     if (eEvent->type == SDL_EVENT_MOUSE_MOTION)

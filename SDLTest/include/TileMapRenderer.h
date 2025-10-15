@@ -24,5 +24,6 @@ public:
 	void removeTile(Uint64 r, Uint64 c);
 
 	void setTileSize(float fTileWidth, float fTileHeight);
+	void setOffset(Vector2D offset);
 };
 

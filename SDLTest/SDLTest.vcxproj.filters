@@ -55,6 +55,9 @@
     <Filter Include="Tweeny">
       <UniqueIdentifier>{f6131c00-4aa1-406e-ae2f-4c621cd3fde7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Animation\Interface">
+      <UniqueIdentifier>{e194bc77-0d97-49ee-af6f-b68e0c01108f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -237,13 +240,23 @@
     <ClCompile Include="src\TweenAnimator.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\ARenderer.cpp" />
-    <ClCompile Include="src\CameraManager.cpp" />
-    <ClCompile Include="src\Level1Scene.cpp" />
-    <ClCompile Include="src\TileMap.cpp" />
-    <ClCompile Include="src\TileMapRenderer.cpp" />
     <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TileMapRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Level1Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TileMap.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ARenderer.cpp">
+      <Filter>Component\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,14 +488,26 @@
     <ClInclude Include="include\TweenAnimator.h">
       <Filter>Component\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\IAnimatorListener.h" />
-    <ClInclude Include="include\ARenderer.h" />
-    <ClInclude Include="include\CameraManager.h" />
-    <ClInclude Include="include\Level1Scene.h" />
-    <ClInclude Include="include\TileMap.h" />
-    <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\PhysicsManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TileMapRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Level1Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TileMap.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CameraManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ARenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IAnimatorListener.h">
+      <Filter>Component\Animation\Interface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

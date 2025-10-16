@@ -4,21 +4,7 @@
 // Comments below state Big-O, dominating terms as n increases, and potential
 // runtime spikes when certain operations are invoked.
 // ---------------------------------------------------------------------------
-
-// Detect EditorModule.h
-#if defined(__has_include)
-	#if __has_include("EditorModule.h")
-		#define EDITOR_MODULE_AVAILABLE 1
-	#else
-		#define EDITOR_MODULE_AVAILABLE 0
-	#endif
-#else
-	#define EDITOR_MODULE_AVAILABLE 0
-#endif
-
-// Toggle editor mode (set to 1 to enable, 0 to disable)
-#define EDITOR_MODE (EDITOR_MODULE_AVAILABLE && 1)   // <- put 1 or 0 here
-
+#include "EditorMode.h"
 #if EDITOR_MODE
 #include "EditorModule.h"
 #endif
@@ -114,20 +100,9 @@ Runner::Runner()
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
-
-#if !EDITOR_MODE
-	std::cout << "[Runner] Initializing ImGui (runner-owned)..." << std::endl;
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplSDL3_InitForSDLRenderer(this->pWindow, this->pRenderer);
-	ImGui_ImplSDLRenderer3_Init(this->pRenderer);
-#else
-	std::cout << "[Runner] Editor mode active: UIManager should own ImGui." << std::endl;
-#endif
-
+	UIManager::initialize(this->pWindow, this->pRenderer);
 #if EDITOR_MODE
-	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);
+	Editor::EditorModule::initialize();
 #endif
 
 	this->registerScenes();
@@ -138,18 +113,12 @@ Runner::~Runner()
 {
 	SceneManager::getInstance()->unloadScene();
 
-#if !EDITOR_MODE
-	// runner only shuts down what it initialized.
-	ImGui_ImplSDLRenderer3_Shutdown();
-	ImGui_ImplSDL3_Shutdown();
-	ImGui::DestroyContext();
-#endif
-
 	//destroy systems
 #if EDITOR_MODE
 	Editor::EditorModule::destroy();
 #endif
 
+	UIManager::destroy();
 	TextureManager::destroy();
 	CameraManager::destroy();
 	SceneManager::destroy();
@@ -200,12 +169,7 @@ void Runner::run()
 
 		while (SDL_PollEvent(&e))
 		{
-			// ImGui forwarding: O(1)
-			// always forward events to ImGui if the platform backend exists
-			if (ImGui::GetCurrentContext() != nullptr && ImGui::GetIO().BackendPlatformUserData != nullptr) {
-				ImGui_ImplSDL3_ProcessEvent(&e);
-			}
-
+			UIManager::getInstance()->processEvent(&e);
 // Editor mode input may have its own costs (dependent on editor internals)
 #if EDITOR_MODE
 			Editor::EditorModule::getInstance()->processEditorInput(&e);
@@ -309,27 +273,18 @@ void Runner::render()
 	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255); // O(1)
 	SDL_RenderClear(pRenderer); // O(1)
 
+	UIManager::getInstance()->newFrame();
 	GameObjectManager::getInstance()->draw(this->pRenderer); // O(R)
 
-#if !EDITOR_MODE
-	// Runner owns ImGui: start frame, draw metrics, render
-	ImGui_ImplSDL3_NewFrame(); // O(1)
-	ImGui_ImplSDLRenderer3_NewFrame(); // O(1)
-	ImGui::NewFrame(); // O(1)
-
-	MetricsManager::getInstance()->drawGUI(); // O(M)
-
-	ImGui::Render(); // O(I)
-	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), this->pRenderer); // O(I)
-#else
-	#if EDITOR_MODE
+#if EDITOR_MODE
 		// Only compile this call when EditorModule.h was detected and included.
 		Editor::EditorModule::getInstance()->drawEditor(this->pRenderer); // editor draw cost
-	#endif
 #endif
 
 	// draw fade/transition overlay last
 	SceneTransitionManager::getInstance()->draw(this->pRenderer); // O(1)
+
+	UIManager::getInstance()->drawAllUI(this->pRenderer);
 
 	// present the frame. This call may block until GPU / vsync flush depending
 	// on renderer configuration - it's expensive in time but constant in ops.

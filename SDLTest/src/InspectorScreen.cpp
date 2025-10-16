@@ -4,42 +4,42 @@
 #include "CameraManager.h"
 #include <cmath>
 
-void Editor::InspectorScreen::setSelectedObject(AGameObject* selectedObject)
+void InspectorScreen::setSelectedObject(AGameObject* selectedObject)
 {
     this->selectedObject = selectedObject;
 }
 
-AGameObject* Editor::InspectorScreen::getSelectedObject()
+AGameObject* InspectorScreen::getSelectedObject()
 {
     return this->selectedObject;
 }
 
-void Editor::InspectorScreen::setMousePos(Vector2D mousePos)
+void InspectorScreen::setMousePos(Vector2D mousePos)
 {
     this->mousePos = mousePos;
 }
 
-float Editor::InspectorScreen::getCamMoveSpeed() const
+float InspectorScreen::getCamMoveSpeed() const
 {
     return this->fCamMoveSpeed;
 }
 
-float Editor::InspectorScreen::getCamScaleSpeed() const
+float InspectorScreen::getCamScaleSpeed() const
 {
     return this->fCamScaleSpeed;
 }
 
-Editor::InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
+InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
 {
 	this->selectedObject = NULL;
 }
 
-Editor::InspectorScreen::~InspectorScreen()
+InspectorScreen::~InspectorScreen()
 {
 
 }
 
-void Editor::InspectorScreen::DrawUI()
+void InspectorScreen::DrawUI()
 {
 	ImGui::Begin("Inspector", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
     const int scenes = SceneManager::getInstance()->getRegisteredSceneAmount();
@@ -77,7 +77,7 @@ void Editor::InspectorScreen::DrawUI()
     ImGui::End();
 }
 
-void Editor::InspectorScreen::showCamera(ImGuiChildFlags childFlags)
+void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
 {
     ImGui::BeginChild("Camera", ImVec2(320, 0), childFlags);
     ImGui::Text("Camera");
@@ -115,7 +115,7 @@ void Editor::InspectorScreen::showCamera(ImGuiChildFlags childFlags)
     ImGui::EndChild();
 }
 
-void Editor::InspectorScreen::showTransform(ImGuiChildFlags childFlags)
+void InspectorScreen::showTransform(ImGuiChildFlags childFlags)
 {
     ImGui::BeginChild("Transform", ImVec2(0, 0), childFlags);
     if (this->selectedObject == NULL)

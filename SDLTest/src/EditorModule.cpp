@@ -9,8 +9,6 @@
 
 void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
 {
-    UIManager::getInstance()->processEvent(eEvent);
-
     InspectorScreen* inspector = static_cast<InspectorScreen*>(
         UIManager::getInstance()->getUIScreen("INSPECTOR_SCREEN"));
 
@@ -143,14 +141,7 @@ void Editor::EditorModule::drawEditor(SDL_Renderer* pRenderer)
         SDL_RenderTexture(pRenderer, this->pWidget, NULL, &mDestRect);
     }
 
-    UIManager::getInstance()->newFrame();
-
     MetricsManager::getInstance()->drawGUI();
-
-    UIManager::getInstance()->drawAllUI(pRenderer);
-
-    ImGuiIO io = ImGui::GetIO();
-    SDL_SetRenderScale(pRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
 }
 
 bool Editor::EditorModule::contains(Vector2D objPos, Vector2D mousePos)
@@ -195,9 +186,8 @@ Editor::EditorModule::EditorModule()
 
 Editor::EditorModule* Editor::EditorModule::P_SHARED_INSTANCE = NULL;
 
-void Editor::EditorModule::initialize(SDL_Window* window, SDL_Renderer* renderer)
+void Editor::EditorModule::initialize()
 {
-    UIManager::initialize(window, renderer);
     P_SHARED_INSTANCE = new EditorModule();
 }
 

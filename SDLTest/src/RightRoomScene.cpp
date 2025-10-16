@@ -29,6 +29,7 @@ void RightRoomScene::onLoadResources()
 
 void RightRoomScene::onLoadObjects()
 {
+	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0));
 	//EmptyObject* pPhysManagerHolder;
 	//pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
 	//PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);

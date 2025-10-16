@@ -3,6 +3,7 @@
 #include <vector>
 #include "Vector2D.h"
 #include "AUIScreen.h"
+#include "AGameObject.h"
 
 namespace Editor
 {
@@ -30,7 +31,7 @@ namespace Editor
         void drawEditor(SDL_Renderer* pRenderer);
 
     private:
-        bool contains(Vector2D objPos, Vector2D mousePos);
+        bool contains(AGameObject* pObject, Vector2D mousePos);
         Vector2D getMouseWorldPos() const;
 
         /* * * * * * * * * * * * * * * * * * * * *

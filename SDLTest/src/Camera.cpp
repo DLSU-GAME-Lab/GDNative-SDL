@@ -46,10 +46,10 @@ SDL_FRect Camera::screenToWorldRect(const SDL_FRect& screenRect) const
 	SDL_FRect worldRect = {};
 	Vector2D worldPos = screenToWorldPoint(Vector2D(screenRect.x, screenRect.y));
 
-	worldRect.x = worldPos.x;
-	worldRect.y = worldPos.y;
 	worldRect.w = screenRect.w * this->scale.x;
 	worldRect.h = screenRect.h * this->scale.y;
+	worldRect.x = worldPos.x;
+	worldRect.y = worldPos.y + worldRect.h;
 
 	return worldRect;
 }
@@ -59,10 +59,10 @@ SDL_FRect Camera::worldToScreenRect(const SDL_FRect& worldRect) const
 	SDL_FRect screenRect = {};
 	Vector2D screenPos = worldToScreenPoint(Vector2D(worldRect.x, worldRect.y));
 
-	screenRect.x = screenPos.x;
-	screenRect.y = screenPos.y;
 	screenRect.w = worldRect.w / this->scale.x;
 	screenRect.h = worldRect.h / this->scale.y;
+	screenRect.x = screenPos.x;
+	screenRect.y = screenPos.y - screenRect.h;
 
 	return screenRect;
 }

@@ -47,7 +47,7 @@ void TileMapRenderer::perform()
                 cellSize.y = this->fTileHeight * scale.y;
                 
                 pos.x += cellSize.x * (c - this->offset.x);
-                pos.y += cellSize.y * (r - this->offset.y) + cellSize.y;
+                pos.y += cellSize.y * (r - this->offset.y);
 
                 destRect.x = pos.x;
                 destRect.y = pos.y;

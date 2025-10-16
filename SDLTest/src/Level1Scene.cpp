@@ -8,6 +8,7 @@
 #include "TileMapRenderer.h"
 #include "AnimatedSprite.h"
 #include "SpriteAnimator.h"
+#include "Background.h"
 
 Level1Scene::Level1Scene() : AScene(SceneTag::LEVEL_1_SCENE)
 {
@@ -25,6 +26,7 @@ void Level1Scene::onLoadResources()
 	TextureManager::getInstance()->loadFromFolder("animations/player_run", "player_run");
 	TextureManager::getInstance()->loadFromFolder("animations/player_jump", "player_jump");
 
+	TextureManager::getInstance()->load("platformer/trees.png", "Trees_BG");
 	TextureManager::getInstance()->load("tilemaps/bottom.png", "Grass_Tile_BC");
 	TextureManager::getInstance()->load("tilemaps/bottomleft.png", "Grass_Tile_BL");
 	TextureManager::getInstance()->load("tilemaps/bottomright.png", "Grass_Tile_BR");
@@ -43,11 +45,20 @@ void Level1Scene::onLoadResources()
 
 void Level1Scene::onLoadObjects()
 {
+	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(1350, 700));
 
 	//PhysicsManager::initialize();
 
 	//Player* pPlayer = new Player(Vector2D(200, 200), Vector2D(), 0.0f);
 	//GameObjectManager::getInstance()->addObject(pPlayer);
+
+	Background* pBackground = new Background("Trees_BG", "Trees_BG", 0.5f);
+	pBackground->setPos(Vector2D(0.0f, -200.0f));
+	GameObjectManager::getInstance()->addObject(pBackground);
+
+	TileMap* tileMap = new TileMap("Platforms");
+	GameObjectManager::getInstance()->addObject(tileMap);
+	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
 	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(1000, 380), Vector2D(0.6f, 0.6f), 0.f, 8);
 	GameObjectManager::getInstance()->addObject(pPlayer);
@@ -55,10 +66,6 @@ void Level1Scene::onLoadObjects()
 	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
 	pSpriteAnim->addAnimation(pAnim);
 	pSpriteAnim->play("idle");
-
-	TileMap* tileMap = new TileMap("Platforms");
-	GameObjectManager::getInstance()->addObject(tileMap);
-	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
 	std::vector<SDL_Texture*> tile;
 	tile.push_back(TextureManager::getInstance()->get("Grass_Tile_TL"));	//0
@@ -207,8 +214,6 @@ void Level1Scene::onLoadObjects()
 	pTMR->addTile(5, 31, tile[13]);
 	pTMR->addTile(4, 34, tile[13]);
 	pTMR->addTile(3, 37, tile[13]);
-
-	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(800, 500));
 }
 
 void Level1Scene::onUnloadResources()
@@ -217,6 +222,7 @@ void Level1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("player_run");
 	TextureManager::getInstance()->unload("player_jump");
 
+	TextureManager::getInstance()->unload("Trees_BG");
 	TextureManager::getInstance()->unload("Grass_Tile_BC");
 	TextureManager::getInstance()->unload("Grass_Tile_BL");
 	TextureManager::getInstance()->unload("Grass_Tile_BR");

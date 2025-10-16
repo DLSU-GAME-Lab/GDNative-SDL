@@ -25,6 +25,7 @@ void Title_Scene::onLoadResources()
 
 void Title_Scene::onLoadObjects()
 {
+    CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0));
     // create and register game objects for the title scene
     this->createScene();
     this->createButtons();

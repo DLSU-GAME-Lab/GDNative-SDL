@@ -97,6 +97,8 @@ void LeftRoomScene::createButtons()
 
 void LeftRoomScene::createScene()
 {
+	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0));
+
 	Background* pBackground = new Background("Ruins", "Ruins", Vector2D(1.f, .9f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	pBackground->setPos(Vector2D(0.f, -9.f));

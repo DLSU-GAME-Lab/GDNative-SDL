@@ -35,7 +35,7 @@ void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
             std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
             for (auto obj : vecObject)
             {
-                if (contains(obj->getPos(), this->mousePos))
+                if (contains(obj, this->mousePos))
                 {
                     inspector->setSelectedObject(obj);
                     this->offsetPos = this->getMouseWorldPos() - obj->getPos();
@@ -107,17 +107,10 @@ void Editor::EditorModule::updateGameObjects(float fDeltaTime)
         }
     }
 
-    if (this->bIsDragging &&
-        contains(selected->getPos(), this->mousePos))
+    if (this->bIsDragging && contains(selected, this->mousePos))
     {
-        if (selected->getIsScreenObject())
-        {
-            selected->setPos(this->mousePos - this->offsetPos);
-        }
-        else
-        {
-            selected->setPos(this->getMouseWorldPos() - this->offsetPos);
-        }
+        if (selected->getIsScreenObject()) selected->setPos(this->mousePos);
+        else selected->setPos(this->getMouseWorldPos());
     }
 }
 
@@ -134,7 +127,10 @@ void Editor::EditorModule::drawEditor(SDL_Renderer* pRenderer)
         mDestRect.w = this->fTexW;
         mDestRect.h = this->fTexH;
 
-        Vector2D screenPos = pCam->worldToScreenPoint(obj->getPos());
+        Vector2D screenPos;
+        if (obj->getIsScreenObject()) screenPos = obj->getPos();
+        else screenPos = pCam->worldToScreenPoint(obj->getPos());
+
         mDestRect.x = screenPos.x - (mDestRect.w * 0.5f);
         mDestRect.y = screenPos.y - (mDestRect.h * 0.5f);
 
@@ -144,7 +140,7 @@ void Editor::EditorModule::drawEditor(SDL_Renderer* pRenderer)
     MetricsManager::getInstance()->drawGUI();
 }
 
-bool Editor::EditorModule::contains(Vector2D objPos, Vector2D mousePos)
+bool Editor::EditorModule::contains(AGameObject* pObject, Vector2D mousePos)
 {
     if (!this->pWidget) return false;
 
@@ -152,11 +148,14 @@ bool Editor::EditorModule::contains(Vector2D objPos, Vector2D mousePos)
 
     SDL_FRect pointRect = { mousePos.x, mousePos.y, 1, 1};
     SDL_FRect spriteRect = {};
-    
-    Vector2D objScreenPos = cam->worldToScreenPoint(objPos);
+    Vector2D objPos;
+
+    if (pObject->getIsScreenObject()) objPos = pObject->getPos();
+    else objPos = cam->worldToScreenPoint(pObject->getPos());
     //std::cout << objPos << " " << objScreenPos << "\n";
-    spriteRect.x = objScreenPos.x - (fTexW * 0.5f);
-    spriteRect.y = objScreenPos.y - (fTexH * 0.5f);
+
+    spriteRect.x = objPos.x - (fTexW * 0.5f);
+    spriteRect.y = objPos.y - (fTexH * 0.5f);
     spriteRect.w = fTexW;
     spriteRect.h = fTexH;
 

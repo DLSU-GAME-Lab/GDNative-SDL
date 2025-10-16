@@ -294,6 +294,11 @@ bool AGameObject::getIsScreenObject() const
     return this->bIsScreenObject;
 }
 
+void AGameObject::setIsScreenObject(bool bIsScreenObject)
+{
+    this->bIsScreenObject = bIsScreenObject;
+}
+
 bool AGameObject::getFollowParent()
 {
     return this->bFollowParent;

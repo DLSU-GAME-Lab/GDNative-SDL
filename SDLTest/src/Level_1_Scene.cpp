@@ -5,7 +5,7 @@
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "Tracker.h"
-
+#include "TurnCounter.h"
 Level_1_Scene::Level_1_Scene():AScene(SceneTag::LEVEL_1_SCENE)
 {
 }
@@ -30,6 +30,7 @@ void Level_1_Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pTrackerManagerHolder);
 	EventListener* pListener = (EventListener*)TrackerManager::getInstance();
 	EventBroadcaster::getInstance()->registerListener(pListener);
+
 	Background* pBackground = new Background("Level_Background", "Level_Background", Vector2D(125.f, 1.17f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
@@ -85,6 +86,10 @@ void Level_1_Scene::onLoadObjects()
 	pGreenTracker->setPos(Vector2D(-400, 450));
 	TrackerManager::getInstance()->registerTracker(pGreenTracker);
 
+	TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 15, Vector2D(400, 475), Vector2D(1, 1));
+	GameObjectManager::getInstance()->addObject(pTurnCount);
+	EventBroadcaster::getInstance()->registerListener((EventListener*)pTurnCount);
+
 	GemManager::initialize(9, 10, 60.0f, Vector2D(30.0f, -54.0f));
 	std::vector<Uint8> r0Cols = { 0, 8 };
 	std::vector<Uint8> r9Cols = { 3, 4, 5 };
@@ -112,11 +117,13 @@ void Level_1_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Yellow");
 	TextureManager::getInstance()->unload("White");
 	GemManager::unloadResources();
-	EventBroadcaster::getInstance()->unregisterAllListeners();
-	TrackerManager::destroy();
 }
 
 void Level_1_Scene::onUnloadObjects()
 {
+
+	EventBroadcaster::getInstance()->unregisterAllListeners();
+	TrackerManager::destroy();
 	AScene::onUnloadObjects();
+
 }

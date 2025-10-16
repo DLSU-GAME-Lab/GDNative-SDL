@@ -4,6 +4,7 @@
 #include "GemManager.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
+#include "TurnCounter.h"
 
 Level_3_Scene::Level_3_Scene():AScene(SceneTag::LEVEL_3_SCENE)
 {
@@ -84,6 +85,10 @@ void Level_3_Scene::onLoadObjects()
 	pGreenTracker->setPos(Vector2D(-400, 450));
 	TrackerManager::getInstance()->registerTracker(pGreenTracker);
 
+	TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 15, Vector2D(400, 475), Vector2D(1, 1));
+	GameObjectManager::getInstance()->addObject(pTurnCount);
+	EventBroadcaster::getInstance()->registerListener((EventListener*)pTurnCount);
+
 	GemManager::initialize(12, 14, 45.0f, Vector2D(23.0f, -46.0f));
 
 	std::vector< std::vector<Uint8>> rowBlocks;
@@ -126,12 +131,12 @@ void Level_3_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Purple");
 	TextureManager::getInstance()->unload("Yellow");
 	TextureManager::getInstance()->unload("White");
-	EventBroadcaster::getInstance()->unregisterAllListeners();
-	TrackerManager::destroy();
 	GemManager::unloadResources();
 }
 
 void Level_3_Scene::onUnloadObjects()
 {
+	EventBroadcaster::getInstance()->unregisterAllListeners();
+	TrackerManager::destroy();
 	AScene::onUnloadObjects();
 }

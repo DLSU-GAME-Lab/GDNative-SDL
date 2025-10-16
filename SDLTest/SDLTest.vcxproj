@@ -186,6 +186,7 @@
     <ClCompile Include="src\Title_Scene.cpp" />
     <ClCompile Include="src\Tracker.cpp" />
     <ClCompile Include="src\TrackerManager.cpp" />
+    <ClCompile Include="src\TurnCounter.cpp" />
     <ClCompile Include="src\TweenAnimator.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
     <ClCompile Include="src\AUIScreen.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="include\Prop.h" />
     <ClInclude Include="include\Tracker.h" />
     <ClInclude Include="include\TrackerManager.h" />
+    <ClInclude Include="include\TurnCounter.h" />
     <ClInclude Include="include\TweenAnimator.h" />
     <ClInclude Include="include\UIManager.h" />
     <ClInclude Include="include\UINames.h" />

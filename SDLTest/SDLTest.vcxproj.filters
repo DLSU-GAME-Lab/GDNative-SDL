@@ -213,9 +213,6 @@
     <ClCompile Include="src\TileMapRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\PhysicsManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
     <ClCompile Include="src\Collider.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
@@ -247,6 +244,12 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="src\TrackerManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TurnCounter.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
@@ -491,6 +494,9 @@
     </ClInclude>
     <ClInclude Include="include\TrackerManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TurnCounter.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

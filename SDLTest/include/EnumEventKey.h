@@ -3,6 +3,7 @@
 
 enum class EventKey : int {
     COLOR_MATCH = 0,
+    COUNTER_SUBTRACT,
     
 };
 

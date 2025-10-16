@@ -394,6 +394,7 @@ void GemManager::updateBoard()
 {
     if (this->checkMatches())
     {
+        EventBroadcaster::getInstance()->broadcast(EventKey::COUNTER_SUBTRACT);
         do
         {
             for (auto pGem : toRemove)

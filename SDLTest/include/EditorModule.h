@@ -6,7 +6,6 @@
 
 namespace Editor
 {
-
     class EditorModule
     {
     private:
@@ -46,7 +45,7 @@ namespace Editor
         EditorModule& operator = (const EditorModule&) {};
 
     public:
-        static void initialize(SDL_Window* window, SDL_Renderer* renderer);
+        static void initialize();
         static void destroy();
 
         static EditorModule* getInstance();

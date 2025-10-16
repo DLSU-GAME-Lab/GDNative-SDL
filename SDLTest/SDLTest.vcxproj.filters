@@ -58,6 +58,9 @@
     <Filter Include="Component\Animation\Interface">
       <UniqueIdentifier>{e194bc77-0d97-49ee-af6f-b68e0c01108f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{07981001-7933-49b9-9172-4b13320e3787}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -114,15 +117,6 @@
     <ClCompile Include="src\Vector2D.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\UIManager.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AUIScreen.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CustomStyles.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\src\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -143,9 +137,6 @@
     </ClCompile>
     <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp">
       <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InspectorScreen.cpp">
-      <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="src\EditorModule.cpp">
       <Filter>Editor</Filter>
@@ -258,6 +249,18 @@
     <ClCompile Include="src\ARenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\AUIScreen.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CustomStyles.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InspectorScreen.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIManager.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -323,18 +326,6 @@
     <ClInclude Include="include\Vector2D.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="include\AUIScreen.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UIManager.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\UINames.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CustomStyles.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\include\imconfig.h">
       <Filter>ImGui</Filter>
     </ClInclude>
@@ -358,9 +349,6 @@
     </ClInclude>
     <ClInclude Include="imgui\include\imgui_impl_sdlrenderer3.h">
       <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InspectorScreen.h">
-      <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="include\EditorModule.h">
       <Filter>Editor</Filter>
@@ -508,6 +496,24 @@
     </ClInclude>
     <ClInclude Include="include\IAnimatorListener.h">
       <Filter>Component\Animation\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AUIScreen.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CustomStyles.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InspectorScreen.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UIManager.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UINames.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EditorMode.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -220,6 +220,7 @@
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\Diary.h" />
     <ClInclude Include="include\DiaryToggle.h" />
+    <ClInclude Include="include\EditorMode.h" />
     <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EmptyObject.h" />
     <ClInclude Include="include\EnumAnimationType.h" />

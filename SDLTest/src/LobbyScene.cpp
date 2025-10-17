@@ -57,8 +57,6 @@ void LobbyScene::onUnloadResources()
 {
 	TextureManager::getInstance()->unload("Lobby_Background");
 	TextureManager::getInstance()->unload("player_idle");
-	TextureManager::getInstance()->unload("player_run");
-	TextureManager::getInstance()->unload("player_jump");
 	TextureManager::getInstance()->unload("Librarian");
 	TextureManager::getInstance()->unload("Fairy");
 	TextureManager::getInstance()->unload("Button");
@@ -97,8 +95,6 @@ void LobbyScene::loadFonts()
 void LobbyScene::loadAnimatedTextures()
 {
 	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
-	TextureManager::getInstance()->loadFromFolder("animations/player_run", "player_run");
-	TextureManager::getInstance()->loadFromFolder("animations/player_jump", "player_jump");
 
 	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/fairy", "Fairy");
 	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/librarian", "Librarian");
@@ -131,7 +127,7 @@ void LobbyScene::createButtons()
 	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
 	pButtonRight->setPos(Vector2D(800, 0));
 	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
-	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::RIGHT_ROOM_SCENE);
+	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::LEVEL_1_SCENE);
 	pButtonRight->attachComponent(pRightRoomSwitch);
 	GameObjectManager::getInstance()->addObject(pButtonRight);
 

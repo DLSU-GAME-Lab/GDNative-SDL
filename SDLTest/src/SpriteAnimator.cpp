@@ -1,5 +1,4 @@
 #include "SpriteAnimator.h"
-
 SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer)
 	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
 {

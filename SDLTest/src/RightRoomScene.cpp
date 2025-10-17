@@ -59,11 +59,8 @@ void RightRoomScene::loadFonts()
 
 void RightRoomScene::loadAnimatedTextures() 
 {
-	for (int i = 0; i < 16; i++)
-	{
-		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Player");
-	}
+	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
+
 }
 
 void RightRoomScene::loadSceneTextures()

@@ -1,13 +1,13 @@
 #include "Platform.h"
 #include "Settings.h"
 #include "PlayerController.h"
-Platform::Platform(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject(strName)
+Platform::Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D fVecSize, float fRot) :AGameObject(strName)
 {
 	this->strImageName = strImageName;
+	this->bounds = SDL_FRect{ fVecTranslate.x,  fVecTranslate.y ,fVecSize.x,fVecSize.y };
 	this->fVecTranslate = fVecTranslate;
-	this->fVecScale = fVecScale;
+	this->fVecScale = Vector2D(1, 1);
 }
-
 Platform::~Platform()
 {
 	Collider* pCollider = new Collider(this->strName + " Collider", true);
@@ -17,15 +17,22 @@ Platform::~Platform()
 
 void Platform::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fVecTranslate.x, this->fVecTranslate.y);
-	this->attachComponent((AComponent*)pSpriteRenderer);
-	Collider* pCollider = new Collider(this->strName + " Collider", true);
+	std::cout << this->bounds.x << std::endl;
+	std::cout << this->bounds.y << std::endl;
+	this->Rect = new RectangleShape(this->bounds.w, this->bounds.h);
+	this->Rect->setPosition(bounds.x, bounds.y);
 
+	Collider* pCollider = new Collider(this->strName + " Collider", true);
 	pCollider->setListener(this);
 	this->attachComponent((AComponent*)pCollider);
 	PhysicsManager::getInstance()->trackCollider(pCollider);
 	
 
+}
+
+SDL_FRect Platform::getGlobalBounds()
+{
+	return this->Rect->getGlobalBounds();
 }
 
 void Platform::onCollisionEnter(Collider* pCollider)
@@ -36,11 +43,13 @@ void Platform::onCollisionEnter(Collider* pCollider)
 		Gravity* pGrav = (Gravity*)pCollider->getOwner()->findComponentByName("Gravity");
 		Collider* pHolder = (Collider*)this->findComponentByName(this->strName + " Collider");
 		PlayerController* pController = (PlayerController*)pCollider->getOwner()->findComponentByName("PlayerController");
+		std::cout << "X: " << newPos.x << "Y: " << newPos.y << std::endl;
+
 
 		if (pCollider->isCollidedBottom())
 		{
 			//turning them from world pos 
-			float fTopPush = ((this->getPos().y + 600) + pHolder->getGlobalBounds().h / 2) + (pCollider->getOwner()->getPos().x + 600) / 1.1f;
+			float fTopPush = ((this->getPos().y ) + pHolder->getGlobalBounds().h / 2) + (pCollider->getOwner()->getPos().x ) / 1.1f;
 			newPos.y = fTopPush - 600;
 			pGrav->setGrounded(true);
 
@@ -55,18 +64,20 @@ void Platform::onCollisionEnter(Collider* pCollider)
 		if (pCollider->isCollidedLeft())
 		{
 			//turning them from world pos 
-			float fRightPush = (this->getPos().x + 1000) + (pCollider->getOwner()->getPos().x + 1000) / 2.6;
+			float fRightPush = (this->getPos().x + 1000) + (pCollider->getOwner()->getPos().x + 1000) / 5;
 			newPos.x = fRightPush - 1000;
 		}
 		else if (pCollider->isCollidedRight())
 		{
 			//turning them from world pos 
-			float fLeftPush = ((this->getPos().x + 1000) - pHolder->getGlobalBounds().w / 2) - (pCollider->getOwner()->getPos().x + 1000) / 1.8f;
-			newPos.x = fLeftPush - 1000;
+			float fLeftPush = ((this->getPos().x ) - pHolder->getGlobalBounds().w / 2) - (pCollider->getOwner()->getPos().x ) / 10.f;
+			newPos.x = fLeftPush ;
 
 		}
-
+		std::cout << "X: " << this->getPos().x << "Y: " << this->getPos().y << std::endl;
+		std::cout << "X: " << newPos.x << "Y: " << newPos.y << std::endl;
 		pCollider->getOwner()->setPos(newPos);
+
 	}
 
 }

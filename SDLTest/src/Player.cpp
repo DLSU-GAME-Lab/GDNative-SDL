@@ -37,7 +37,7 @@ void Player::initialize()
     this->attachComponent(pPlayerController);
     this->attachComponent(pGrav);
     this->attachComponent(pCollider);
-    SDL_FRect COffset = SDL_FRect{ 100 ,25,-220,-50 };
+    SDL_FRect COffset = SDL_FRect{ 100 ,25,-150,-50 };
     pCollider->setOffset(COffset);
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");

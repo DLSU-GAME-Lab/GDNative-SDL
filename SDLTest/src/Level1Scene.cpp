@@ -9,7 +9,7 @@
 #include "AnimatedSprite.h"
 #include "SpriteAnimator.h"
 #include "Background.h"
-
+#include "Platform.h"
 Level1Scene::Level1Scene() : AScene(SceneTag::LEVEL_1_SCENE)
 {
 
@@ -47,11 +47,11 @@ void Level1Scene::onLoadObjects()
 {
 	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(1350, 700));
 
-	//PhysicsManager::initialize();
+	PhysicsManager::initialize();
 
 	//Player* pPlayer = new Player(Vector2D(200, 200), Vector2D(), 0.0f);
 	//GameObjectManager::getInstance()->addObject(pPlayer);
-
+	
 	Background* pBackground = new Background("Trees_BG", "Trees_BG", 0.5f);
 	pBackground->setPos(Vector2D(0.0f, -200.0f));
 	GameObjectManager::getInstance()->addObject(pBackground);
@@ -60,7 +60,7 @@ void Level1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(tileMap);
 	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
-	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(1000, 380), Vector2D(0.6f, 0.6f), 0.f, 8);
+	Player* pPlayer = new Player(Vector2D(1000, 380), Vector2D(0.6f, 0.6f), 0.f);
 	GameObjectManager::getInstance()->addObject(pPlayer);
 	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
 	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
@@ -214,6 +214,10 @@ void Level1Scene::onLoadObjects()
 	pTMR->addTile(5, 31, tile[13]);
 	pTMR->addTile(4, 34, tile[13]);
 	pTMR->addTile(3, 37, tile[13]);
+	Platform* pPlatform = new Platform("Temp Plat", Vector2D(0,0),Vector2D(200,300), 0.f);
+	pPlatform->setPos(Vector2D(0, 0));
+
+	GameObjectManager::getInstance()->addObject(pPlatform);
 }
 
 void Level1Scene::onUnloadResources()

@@ -7,11 +7,15 @@ class Platform:public AGameObject, ACollisionListener
 {
 private:
 	std::string strImageName;
+	SDL_FRect bounds;
+	RectangleShape* Rect;
 public:
-	Platform(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot);
+	Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D fVecSize, float fRot);
 	~Platform();
 
 	void initialize() override;
+
+	SDL_FRect getGlobalBounds() override;
 
 	// Inherited via ACollisionListener
 	void onCollisionEnter(Collider* pCollider) override;

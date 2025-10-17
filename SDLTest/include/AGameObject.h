@@ -31,6 +31,7 @@ public:
     virtual void processInput(SDL_Event* eEvent);
     virtual void update(float fDeltaTime);
     virtual void draw(SDL_Renderer* pRenderer);
+    virtual SDL_FRect getGlobalBounds();
 
 public:
     void attachChild(AGameObject* pChild);
@@ -56,6 +57,7 @@ public:
     Vector2D getScale();
     void setRot(float fRot);
     float getRot();
+
     bool getIsScreenObject() const;
     void setIsScreenObject(bool bIsScreenObject);
     bool getFollowParent();

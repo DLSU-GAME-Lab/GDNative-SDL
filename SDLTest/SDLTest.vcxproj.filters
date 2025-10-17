@@ -261,6 +261,9 @@
     <ClCompile Include="src\UIManager.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\ColliderRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -514,6 +517,9 @@
     </ClInclude>
     <ClInclude Include="include\EditorMode.h">
       <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderRenderer.h">
+      <Filter>Component\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

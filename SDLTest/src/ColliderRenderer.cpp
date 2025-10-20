@@ -13,16 +13,14 @@ void ColliderRenderer::perform()
     if (owner)
     {
        
-        if(!pOwner->getIsScreenObject() && pOwner->findComponentByName("SpriteRenderer") == NULL)
+        if(!pOwner->getIsScreenObject() && !pOwner->componentExists("SpriteRenderer"))
         {
-            std::cout << pOwner->getName() << std::endl;
-            std::cout << Rect.x << ", " << Rect.y << std::endl;
             tempRect = pCam->worldToScreenRect(this->Rect);
             SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
 
         }
 
-        else
+        else if(!pOwner->getIsScreenObject() && pOwner->componentExists("SpriteRenderer"))
         {
             tempRect.x = owner->getGlobalBounds().x;
             tempRect.y = owner->getGlobalBounds().y;

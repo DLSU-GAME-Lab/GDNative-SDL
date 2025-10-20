@@ -20,8 +20,7 @@ public:
 	void onAttach() override;
 	void perform() override;
 
-	void addTile(Uint64 r, Uint64 c, SDL_Texture* pTile);
-	void removeTile(Uint64 r, Uint64 c);
+	void addTile(Uint64 c, Uint64 r, SDL_Texture* pTile);
 
 	void setTileSize(float fTileWidth, float fTileHeight);
 	void setOffset(Vector2D offset);

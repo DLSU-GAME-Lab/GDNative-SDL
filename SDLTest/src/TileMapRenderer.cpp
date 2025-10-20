@@ -9,8 +9,8 @@ TileMapRenderer::TileMapRenderer(float fTileWidth, float fTileHeight) : ARendere
     const Uint64 initialSize = 64;
     this->vecTile.resize(initialSize);
 
-    for (Uint64 r = 0; r < this->vecTile.size(); r++)
-        this->vecTile[r].resize(initialSize);
+    for (Uint64 c = 0; c < this->vecTile.size(); c++)
+        this->vecTile[c].resize(initialSize);
 }
 
 TileMapRenderer::~TileMapRenderer()
@@ -27,14 +27,14 @@ void TileMapRenderer::perform()
 {
     Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
 
-    for (Uint64 r = 0; r < this->vecTile.size(); r++)
+    for (Uint64 c = 0; c < this->vecTile.size(); c++)
     {
-        for (Uint64 c = 0; c < this->vecTile[r].size(); c++)
+        for (Uint64 r = 0; r < this->vecTile[c].size(); r++)
         {
-            if (this->vecTile[r][c] != nullptr)
+            if (this->vecTile[c][r] != nullptr)
             {
                 SDL_FRect destRect = {};
-                SDL_Texture* tile = this->vecTile[r][c];
+                SDL_Texture* tile = this->vecTile[c][r];
                 Vector2D scale = this->pOwner->getScale();
                 Vector2D pos = this->pOwner->getPos();
                 Vector2D tileSize;
@@ -62,18 +62,11 @@ void TileMapRenderer::perform()
     }
 }
 
-void TileMapRenderer::addTile(Uint64 r, Uint64 c, SDL_Texture* pTile)
+void TileMapRenderer::addTile(Uint64 c, Uint64 r, SDL_Texture* pTile)
 {
-    if (this->vecTile.size() <= r) this->vecTile.resize(r + 1);
-    if (this->vecTile[r].size() <= c) this->vecTile[r].resize(c + 1);
-
-    this->vecTile[r][c] = pTile;
-}
-
-void TileMapRenderer::removeTile(Uint64 r, Uint64 c)
-{
-    if (this->vecTile.size() <= r || this->vecTile[r].size() <= c) return;
-    this->vecTile[r][c] = nullptr;
+    if (this->vecTile.size() <= c) this->vecTile.resize(c + 1);
+    if (this->vecTile[c].size() <= r) this->vecTile[c].resize(r + 1);
+    this->vecTile[c][r] = pTile;
 }
 
 void TileMapRenderer::setTileSize(float fTileWidth, float fTileHeight)

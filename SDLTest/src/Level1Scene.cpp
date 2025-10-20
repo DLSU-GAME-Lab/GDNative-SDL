@@ -52,9 +52,13 @@ void Level1Scene::onLoadObjects()
 	//Player* pPlayer = new Player(Vector2D(200, 200), Vector2D(), 0.0f);
 	//GameObjectManager::getInstance()->addObject(pPlayer);
 	
-	Background* pBackground = new Background("Trees_BG", "Trees_BG", 0.5f);
-	pBackground->setPos(Vector2D(0.0f, -200.0f));
-	GameObjectManager::getInstance()->addObject(pBackground);
+	Background* pBG1 = new Background("Trees_BG1", "Trees_BG", 0.36f);
+	pBG1->setPos(Vector2D(0.0f, 0.0f));
+	GameObjectManager::getInstance()->addObject(pBG1);
+	
+	Background* pBG2 = new Background("Trees_BG2", "Trees_BG", 0.36f);
+	pBG2->setPos(Vector2D(1440.0f, 0.0f));
+	GameObjectManager::getInstance()->addObject(pBG2);
 
 	TileMap* tileMap = new TileMap("Platforms");
 	GameObjectManager::getInstance()->addObject(tileMap);
@@ -89,131 +93,210 @@ void Level1Scene::onLoadObjects()
 
 	//left wall
 	pTMR->addTile(0, 0, tile[6]);
-	pTMR->addTile(0, 1, tile[7]);
-	pTMR->addTile(0, 2, tile[7]);
-	pTMR->addTile(0, 3, tile[7]);
-	pTMR->addTile(0, 4, tile[7]);
-	pTMR->addTile(0, 5, tile[8]);
+	pTMR->addTile(1, 0, tile[7]);
+	pTMR->addTile(2, 0, tile[7]);
+	pTMR->addTile(3, 0, tile[7]);
+	pTMR->addTile(4, 0, tile[7]);
+	pTMR->addTile(5, 0, tile[8]);
 
-	for (Uint64 i = 1; i < 24; i++)
+	for (Uint64 i = 1; i < 25; i++)
 	{
-		pTMR->addTile(i, 0, tile[3]);
-		pTMR->addTile(i, 1, tile[4]);
-		pTMR->addTile(i, 2, tile[4]);
-		pTMR->addTile(i, 3, tile[4]);
-		pTMR->addTile(i, 4, tile[4]);
-		pTMR->addTile(i, 5, tile[5]);
+		pTMR->addTile(0, i, tile[3]);
+		pTMR->addTile(1, i, tile[4]);
+		pTMR->addTile(2, i, tile[4]);
+		pTMR->addTile(3, i, tile[4]);
+		pTMR->addTile(4, i, tile[4]);
+		pTMR->addTile(5, i, tile[5]);
 	}
 
-	pTMR->addTile(24, 0, tile[0]);
-	pTMR->addTile(24, 1, tile[1]);
-	pTMR->addTile(24, 2, tile[1]);
-	pTMR->addTile(24, 3, tile[1]);
-	pTMR->addTile(24, 4, tile[1]);
-	pTMR->addTile(24, 5, tile[2]);
+	pTMR->addTile(0, 25, tile[0]);
+	pTMR->addTile(1, 25, tile[1]);
+	pTMR->addTile(2, 25, tile[1]);
+	pTMR->addTile(3, 25, tile[1]);
+	pTMR->addTile(4, 25, tile[1]);
+	pTMR->addTile(5, 25, tile[2]);
 
 	//left wall ledge
-	pTMR->addTile(10, 5, tile[11]);
-	pTMR->addTile(11, 5, tile[4]);
-	pTMR->addTile(12, 5, tile[4]);
-	pTMR->addTile(13, 5, tile[4]);
-	pTMR->addTile(14, 5, tile[10]);
+	pTMR->addTile(5, 10, tile[11]);
+	pTMR->addTile(5, 11, tile[4]);
+	pTMR->addTile(5, 12, tile[4]);
+	pTMR->addTile(5, 13, tile[4]);
+	pTMR->addTile(5, 14, tile[10]);
 
 	for (Uint64 i = 6; i <= 9; i++)
 	{
-		pTMR->addTile(10, i, tile[7]);
-		pTMR->addTile(11, i, tile[4]);
-		pTMR->addTile(12, i, tile[4]);
-		pTMR->addTile(13, i, tile[4]);
-		pTMR->addTile(14, i, tile[1]);
+		pTMR->addTile(i, 10, tile[7]);
+		pTMR->addTile(i, 11, tile[4]);
+		pTMR->addTile(i, 12, tile[4]);
+		pTMR->addTile(i, 13, tile[4]);
+		pTMR->addTile(i, 14, tile[1]);
 	}
 
 	pTMR->addTile(10, 10, tile[8]);
-	pTMR->addTile(11, 10, tile[5]);
-	pTMR->addTile(12, 10, tile[5]);
-	pTMR->addTile(13, 10, tile[5]);
-	pTMR->addTile(14, 10, tile[2]);
+	pTMR->addTile(10, 11, tile[5]);
+	pTMR->addTile(10, 12, tile[5]);
+	pTMR->addTile(10, 13, tile[5]);
+	pTMR->addTile(10, 14, tile[2]);
 
 	//floor
-	pTMR->addTile(0, 6, tile[6]);
-	pTMR->addTile(1, 6, tile[3]);
-	pTMR->addTile(2, 6, tile[0]);
+	pTMR->addTile(6, 0, tile[6]);
+	pTMR->addTile(6, 1, tile[3]);
+	pTMR->addTile(6, 2, tile[0]);
 
 	for (Uint64 i = 7; i < 90; i++)
 	{
-		pTMR->addTile(0, i, tile[7]);
-		pTMR->addTile(1, i, tile[4]);
-		pTMR->addTile(2, i, tile[1]);
+		pTMR->addTile(i, 0, tile[7]);
+		pTMR->addTile(i, 1, tile[4]);
+		pTMR->addTile(i, 2, tile[1]);
 	}
+
+	for (Uint64 i = 90; i < 104; i++)
+	{
+		pTMR->addTile(i, 0, tile[7]);
+		pTMR->addTile(i, 1, tile[4]);
+		pTMR->addTile(i, 2, tile[4]);
+	}
+
+	pTMR->addTile(90, 2, tile[9]);
+	pTMR->addTile(90, 3, tile[3]);
+	pTMR->addTile(90, 4, tile[3]);
+	pTMR->addTile(90, 5, tile[0]);
+	pTMR->addTile(91, 3, tile[4]);
+	pTMR->addTile(91, 4, tile[4]);
+	pTMR->addTile(91, 5, tile[1]);
+
+	for (Uint64 i = 92; i < 95; i++)
+	{
+		for (Uint64 j = 3; j < 8; j++)
+		{
+			pTMR->addTile(i, j, tile[4]);
+		}
+	}
+
+	pTMR->addTile(92, 5, tile[9]);
+	pTMR->addTile(92, 6, tile[3]);
+	pTMR->addTile(92, 7, tile[0]);
+	pTMR->addTile(93, 5, tile[4]);
+	pTMR->addTile(93, 6, tile[4]);
+	pTMR->addTile(93, 7, tile[1]);
+	pTMR->addTile(94, 7, tile[9]);
+	pTMR->addTile(94, 8, tile[0]);
+
+	//right wall
+	for (Uint64 i = 95; i < 105; i++)
+	{
+		pTMR->addTile(i, 3, tile[4]);
+		pTMR->addTile(i, 4, tile[4]);
+		pTMR->addTile(i, 5, tile[4]);
+		pTMR->addTile(i, 6, tile[4]);
+		pTMR->addTile(i, 7, tile[4]);
+		pTMR->addTile(i, 8, tile[1]);
+	}
+	pTMR->addTile(104, 8, tile[9]);
+
+	// First bottom corner of floor
+	pTMR->addTile(104, 0, tile[8]);
+	pTMR->addTile(104, 1, tile[5]);
+
+	pTMR->addTile(104, 2, tile[11]);
+	pTMR->addTile(105, 2, tile[7]);
+	pTMR->addTile(106, 2, tile[7]);
+	pTMR->addTile(107, 2, tile[7]);
+	pTMR->addTile(108, 2, tile[7]);
+	pTMR->addTile(109, 2, tile[8]);
+
+	for (Uint64 i = 3; i < 25; i++)
+	{
+		if (i > 8)
+			pTMR->addTile(104, i, tile[3]);
+
+		pTMR->addTile(105, i, tile[4]);
+		pTMR->addTile(106, i, tile[4]);
+		pTMR->addTile(107, i, tile[4]);
+		pTMR->addTile(108, i, tile[4]);
+		pTMR->addTile(109, i, tile[5]);
+	}
+
+	pTMR->addTile(104, 25, tile[0]);
+	pTMR->addTile(105, 25, tile[1]);
+	pTMR->addTile(106, 25, tile[1]);
+	pTMR->addTile(107, 25, tile[1]);
+	pTMR->addTile(108, 25, tile[1]);
+	pTMR->addTile(109, 25, tile[2]);
 
 	//sky platform 1
 	//X = 49-51, Y = 10-14
-	pTMR->addTile(10, 49, tile[6]);
-	pTMR->addTile(11, 49, tile[3]);
-	pTMR->addTile(12, 49, tile[3]);
-	pTMR->addTile(13, 49, tile[3]);
-	pTMR->addTile(14, 49, tile[0]);
+	pTMR->addTile(49, 10, tile[6]);
+	pTMR->addTile(50, 10, tile[7]);
+	pTMR->addTile(51, 10, tile[8]);
 
-	pTMR->addTile(10, 50, tile[7]);
-	pTMR->addTile(11, 50, tile[4]);
-	pTMR->addTile(12, 50, tile[4]);
-	pTMR->addTile(13, 50, tile[4]);
-	pTMR->addTile(14, 50, tile[1]);
+	for (Uint64 i = 11; i < 14; i++)
+	{
+		pTMR->addTile(49, i, tile[3]);
+		pTMR->addTile(50, i, tile[4]);
+		pTMR->addTile(51, i, tile[5]);
+	}
 
-	pTMR->addTile(10, 51, tile[8]);
-	pTMR->addTile(11, 51, tile[5]);
-	pTMR->addTile(12, 51, tile[5]);
-	pTMR->addTile(13, 51, tile[5]);
-	pTMR->addTile(14, 51, tile[2]);
+	pTMR->addTile(49, 14, tile[0]);
+	pTMR->addTile(50, 14, tile[1]);
+	pTMR->addTile(51, 14, tile[2]);
 
 	//sky platform 2
 	//X = 60-82, Y = 6-13
-	pTMR->addTile(6, 60, tile[6]);
-	pTMR->addTile(7, 60, tile[3]);
-	pTMR->addTile(8, 60, tile[3]);
-	pTMR->addTile(9, 60, tile[3]);
-	pTMR->addTile(10, 60, tile[3]);
-	pTMR->addTile(11, 60, tile[3]);
-	pTMR->addTile(12, 60, tile[3]);
-	pTMR->addTile(13, 60, tile[0]);
+	pTMR->addTile(60, 6, tile[6]);
+	for (Uint64 i = 7; i < 13; i++)
+		pTMR->addTile(60, i, tile[3]);
+	pTMR->addTile(60, 13, tile[0]);
 
 	for (Uint64 i = 61; i < 82; i++)
 	{
-		pTMR->addTile(6, i, tile[7]);
-		pTMR->addTile(7, i, tile[4]);
-		pTMR->addTile(8, i, tile[4]);
-		pTMR->addTile(9, i, tile[4]);
-		pTMR->addTile(10, i, tile[4]);
-		pTMR->addTile(11, i, tile[4]);
-		pTMR->addTile(12, i, tile[4]);
-		pTMR->addTile(13, i, tile[1]);
+		pTMR->addTile(i, 6, tile[7]);
+		for (Uint64 j = 7; j < 13; j++)
+			pTMR->addTile(i, j, tile[4]);
+		pTMR->addTile(i, 13, tile[1]);
 	}
 
-	pTMR->addTile(6, 82, tile[8]);
-	pTMR->addTile(7, 82, tile[5]);
-	pTMR->addTile(8, 82, tile[5]);
-	pTMR->addTile(9, 82, tile[5]);
-	pTMR->addTile(10, 82, tile[5]);
-	pTMR->addTile(11, 82, tile[5]);
-	pTMR->addTile(12, 82, tile[5]);
-	pTMR->addTile(13, 82, tile[2]);
+	pTMR->addTile(82, 6, tile[8]);
+	for (Uint64 i = 7; i < 13; i++)
+		pTMR->addTile(82, i, tile[5]);
+	pTMR->addTile(82, 13, tile[2]);
+
+	//sky platform 3
+	//X = 96-98, Y = 13-25
+	pTMR->addTile(96, 13, tile[6]);
+	pTMR->addTile(97, 13, tile[7]);
+	pTMR->addTile(98, 13, tile[8]);
+
+	for (Uint64 i = 14; i < 25; i++)
+	{
+		pTMR->addTile(96, i, tile[3]);
+		pTMR->addTile(97, i, tile[4]);
+		pTMR->addTile(98, i, tile[5]);
+	}
+
+	pTMR->addTile(96, 25, tile[0]);
+	pTMR->addTile(97, 25, tile[1]);
+	pTMR->addTile(98, 25, tile[2]);
 
 	//platforms
-	pTMR->addTile(9, 11, tile[13]);
-	pTMR->addTile(9, 16, tile[13]);
-	pTMR->addTile(9, 21, tile[13]);
+	pTMR->addTile(11, 9, tile[13]);
+	pTMR->addTile(16, 9, tile[13]);
+	pTMR->addTile(21, 9, tile[13]);
 
-	pTMR->addTile(9, 36, tile[13]);
-	pTMR->addTile(9, 41, tile[13]);
-	pTMR->addTile(9, 46, tile[13]);
+	pTMR->addTile(36, 9, tile[13]);
+	pTMR->addTile(41, 9, tile[13]);
+	pTMR->addTile(46, 9, tile[13]);
 
-	pTMR->addTile(3, 19, tile[13]);
-	pTMR->addTile(4, 22, tile[13]);
-	pTMR->addTile(5, 25, tile[13]);
-	pTMR->addTile(7, 28, tile[13]);
-	pTMR->addTile(5, 31, tile[13]);
-	pTMR->addTile(4, 34, tile[13]);
-	pTMR->addTile(3, 37, tile[13]);
+	pTMR->addTile(19, 3, tile[13]);
+	pTMR->addTile(22, 4, tile[13]);
+	pTMR->addTile(25, 5, tile[13]);
+	pTMR->addTile(28, 7, tile[13]);
+	pTMR->addTile(32, 5, tile[13]);
+	pTMR->addTile(35, 4, tile[13]);
+	pTMR->addTile(38, 3, tile[13]);
+
+	pTMR->addTile(87, 4, tile[13]);
+
 	Platform* pPlatform = new Platform("Temp Plat", Vector2D(0,0),Vector2D(200,300), 0.f);
 	pPlatform->setPos(Vector2D(0, 0));
 

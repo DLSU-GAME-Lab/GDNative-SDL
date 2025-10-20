@@ -4,6 +4,7 @@
 #include "PlayerController.h"
 #include "PhysicsManager.h"
 #include "Gravity.h"
+#include "ColliderRenderer.h"
 Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Player")
 {
     this->fVecTranslate = fVecTranslate;
@@ -21,24 +22,32 @@ void Player::initialize()
     //500, 630
     
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("player_idle", this->fVecTranslate.x, this->fVecTranslate.y);
+    this->attachComponent(pSpriteRenderer);
 
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer);
+    this->attachComponent(pSpriteAnimator);
+
     PlayerInput* pPlayerInput = new PlayerInput();
+    this->attachComponent(pPlayerInput);
+
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator);
+    this->attachComponent(pPlayerController);
+
     Gravity* pGrav = new Gravity(150.f);
+    this->attachComponent(pGrav);
+
     Collider* pCollider = new Collider(this->strName + " Collider", true);
-   
+    SDL_FRect COffset = SDL_FRect{ 75 ,25,-150,-50 };
+    pCollider->setOffset(COffset);
     pCollider->setListener(this);
     PhysicsManager::getInstance()->trackCollider(pCollider);
-
-    this->attachComponent(pSpriteRenderer);
-    this->attachComponent(pSpriteAnimator);
-    this->attachComponent(pPlayerInput);
-    this->attachComponent(pPlayerController);
-    this->attachComponent(pGrav);
     this->attachComponent(pCollider);
-    SDL_FRect COffset = SDL_FRect{ 100 ,25,-150,-50 };
-    pCollider->setOffset(COffset);
+
+
+    ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider->getGlobalBounds());
+    this->attachComponent(pColRenderer);
+
+
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");
     auto vecJump = TextureManager::getInstance()->getTexture("player_jump");

@@ -51,14 +51,7 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
         renderer->setSDLRenderer(pRenderer);
         pComponent->perform();
     }
-    if (this->componentExists(this->strName + " Collider"))
-    {
-        Collider* pCollider = (Collider*)this->findComponentByName(this->strName + " Collider");
-        SDL_FRect bounds = pCollider->getGlobalBounds();
-        SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
-        SDL_RenderFillRect(pRenderer, &bounds);
 
-    }
 }
 SDL_FRect  AGameObject::getGlobalBounds()
 {

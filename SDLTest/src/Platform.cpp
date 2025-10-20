@@ -1,10 +1,12 @@
 #include "Platform.h"
 #include "Settings.h"
 #include "PlayerController.h"
+#include "ColliderRenderer.h"
 Platform::Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D fVecSize, float fRot) :AGameObject(strName)
 {
 	this->strImageName = strImageName;
-	this->bounds = SDL_FRect{ fVecTranslate.x,  fVecTranslate.y ,fVecSize.x,fVecSize.y };
+	Vector2D tempVec = CameraManager::getInstance()->getCurrentCamera()->screenToWorldPoint(fVecTranslate);
+	this->bounds = SDL_FRect{ tempVec.x, tempVec.y, fVecSize.x, fVecSize.y };
 	this->fVecTranslate = fVecTranslate;
 	this->fVecScale = Vector2D(1, 1);
 }
@@ -17,17 +19,15 @@ Platform::~Platform()
 
 void Platform::initialize()
 {
-	std::cout << this->bounds.x << std::endl;
-	std::cout << this->bounds.y << std::endl;
 	this->Rect = new RectangleShape(this->bounds.w, this->bounds.h);
-	this->Rect->setPosition(bounds.x, bounds.y);
 
 	Collider* pCollider = new Collider(this->strName + " Collider", true);
 	pCollider->setListener(this);
 	this->attachComponent((AComponent*)pCollider);
 	PhysicsManager::getInstance()->trackCollider(pCollider);
 	
-
+	ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider->getGlobalBounds());
+	this->attachComponent(pColRenderer);
 }
 
 SDL_FRect Platform::getGlobalBounds()
@@ -64,7 +64,7 @@ void Platform::onCollisionEnter(Collider* pCollider)
 		if (pCollider->isCollidedLeft())
 		{
 			//turning them from world pos 
-			float fRightPush = (this->getPos().x + 1000) + (pCollider->getOwner()->getPos().x + 1000) / 5;
+			float fRightPush = (this->getPos().x + 1000) + (pCollider->getOwner()->getPos().x + 1000) ;
 			newPos.x = fRightPush - 1000;
 		}
 		else if (pCollider->isCollidedRight())

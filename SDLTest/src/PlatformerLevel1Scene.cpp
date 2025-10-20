@@ -1,4 +1,4 @@
-#include "Level1Scene.h"
+#include "PlatformerLevel1Scene.h"
 #include "TextureManager.h"
 #include "GameObjectManager.h"
 #include "CameraManager.h"
@@ -10,17 +10,17 @@
 #include "SpriteAnimator.h"
 #include "Background.h"
 #include "Platform.h"
-Level1Scene::Level1Scene() : AScene(SceneTag::LEVEL_1_SCENE)
+PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
 }
 
-Level1Scene::~Level1Scene()
+PlatformerLevel1Scene::~PlatformerLevel1Scene()
 {
 
 }
 
-void Level1Scene::onLoadResources()
+void PlatformerLevel1Scene::onLoadResources()
 {
 	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
 	TextureManager::getInstance()->loadFromFolder("animations/player_run", "player_run");
@@ -43,7 +43,7 @@ void Level1Scene::onLoadResources()
 	TextureManager::getInstance()->load("tilemaps/grass_platform.png", "Grass_Platform");
 }
 
-void Level1Scene::onLoadObjects()
+void PlatformerLevel1Scene::onLoadObjects()
 {
 	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(1350, 700));
 
@@ -303,7 +303,7 @@ void Level1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pPlatform);
 }
 
-void Level1Scene::onUnloadResources()
+void PlatformerLevel1Scene::onUnloadResources()
 {
 	TextureManager::getInstance()->unload("player_idle");
 	TextureManager::getInstance()->unload("player_run");

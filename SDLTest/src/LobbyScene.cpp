@@ -127,7 +127,7 @@ void LobbyScene::createButtons()
 	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
 	pButtonRight->setPos(Vector2D(800, 0));
 	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
-	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::LEVEL_1_SCENE);
+	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::PLATFORMER_LEVEL_1_SCENE);
 	pButtonRight->attachComponent(pRightRoomSwitch);
 	GameObjectManager::getInstance()->addObject(pButtonRight);
 

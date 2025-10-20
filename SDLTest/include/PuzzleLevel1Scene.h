@@ -1,10 +1,10 @@
 #pragma once
 #include "AScene.h"
-class Level1Scene : public AScene
+class PuzzleLevel1Scene : public AScene
 {
 public:
-    Level1Scene();
-    ~Level1Scene();
+    PuzzleLevel1Scene();
+    ~PuzzleLevel1Scene();
 
 public:
     virtual void onLoadResources() override;

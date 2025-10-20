@@ -34,7 +34,8 @@
 #include "Title_Scene.h"
 #include "RightRoomScene.h"
 #include "LeftRoomScene.h"
-#include "Level1Scene.h"
+#include "PlatformerLevel1Scene.h"
+#include "PuzzleLevel1Scene.h"
 
 // Constructor / Destructor: startup and teardown costs are not per-frame.
 // - Startup work: O(1) for SDL init and renderer creation, plus O(S) for
@@ -298,13 +299,17 @@ void Runner::registerScenes()
 	auto lobbyScene = new LobbyScene();
 	auto rightRoomScene = new RightRoomScene();
 	auto leftRoomScene = new LeftRoomScene();
-	auto level1Scene = new Level1Scene();
+
+	auto platformerL1 = new PlatformerLevel1Scene();
+	auto puzzleL1 = new PuzzleLevel1Scene();
 
 	SceneManager::getInstance()->registerScene(titleScene);
 	SceneManager::getInstance()->registerScene(lobbyScene);
 	SceneManager::getInstance()->registerScene(rightRoomScene);
 	SceneManager::getInstance()->registerScene(leftRoomScene);
-	SceneManager::getInstance()->registerScene(level1Scene);
+
+	SceneManager::getInstance()->registerScene(platformerL1);
+	SceneManager::getInstance()->registerScene(puzzleL1);
 
 	// --- load time tracking --- 
 	// // start timer before load, end after load completes 

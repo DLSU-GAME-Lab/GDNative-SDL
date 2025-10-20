@@ -162,7 +162,7 @@
     <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
-    <ClCompile Include="src\Level1Scene.cpp" />
+    <ClCompile Include="src\PlatformerLevel1Scene.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
     <ClCompile Include="src\PageChangeToggle.cpp" />
@@ -180,6 +180,7 @@
     <ClCompile Include="src\LobbyScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PuzzleLevel1Scene.cpp" />
     <ClCompile Include="src\RightRoomScene.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
@@ -245,7 +246,7 @@
     <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
-    <ClInclude Include="include\Level1Scene.h" />
+    <ClInclude Include="include\PlatformerLevel1Scene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\MetricsManager.h" />
@@ -256,6 +257,7 @@
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />
+    <ClInclude Include="include\PuzzleLevel1Scene.h" />
     <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />

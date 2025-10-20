@@ -7,7 +7,7 @@ private:
 	bool bFlipX;
 	int dCount = 0;
 public:
-	Prop(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX);
+	Prop(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate = Vector2D(), Vector2D fVecScale = Vector2D(), float fRot = 0.0f, bool bFlipX = false);
 	~Prop();
 
 	void initialize() override;

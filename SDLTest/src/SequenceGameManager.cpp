@@ -5,7 +5,7 @@
 
 void SequenceGameManager::perform()
 {
-    // Check for dropped tokens (occurs when the token had been clicke and dragged).
+    // Checks for dropped tokens (occurs when the token had been clicked and dragged).
     for (auto pToken : this->vecToken)
     {
         if (pToken->getDropped())

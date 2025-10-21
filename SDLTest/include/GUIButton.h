@@ -8,7 +8,6 @@ private:
 	bool bFlipX;
 public:
 	GUIButton(std::string strName, std::string strSpriteName, bool bFlipX = false);
-	~GUIButton();
 
 	void initialize() override;
 };

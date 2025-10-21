@@ -273,6 +273,9 @@
     <ClCompile Include="src\PuzzleToken.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="src\SequenceGameManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -538,6 +541,9 @@
     </ClInclude>
     <ClInclude Include="include\PuzzleToken.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SequenceGameManager.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

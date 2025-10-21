@@ -12,11 +12,6 @@ Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObje
     this->fRot = fRot;
 }
 
-Player::~Player()
-{
-
-}
-
 void Player::initialize()
 {
     //500, 630

@@ -9,11 +9,6 @@ Fairy::Fairy(Vector2D fVecTranslate, Vector2D fVecScale, float fRot) : AGameObje
     this->fRot = fRot;
 }
 
-Fairy::~Fairy()
-{
-
-}
-
 void Fairy::initialize()
 {
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy", this->fVecTranslate.x, this->fVecTranslate.y);

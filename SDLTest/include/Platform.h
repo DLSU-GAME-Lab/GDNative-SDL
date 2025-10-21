@@ -11,7 +11,7 @@ private:
 	RectangleShape* Rect;
 public:
 	Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D fVecSize, float fRot);
-	~Platform();
+	~Platform() override;
 
 	void initialize() override;
 

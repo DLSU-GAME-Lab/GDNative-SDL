@@ -15,6 +15,28 @@ AGameObject::AGameObject(std::string strName)
     this->bIsScreenObject = false;
 }
 
+AGameObject::~AGameObject()
+{
+    // Delete components
+    for (int i = 0; i < this->vecComponent.size(); i++)
+    {
+        if (this->vecComponent[i])
+        {
+            delete this->vecComponent[i];
+        }
+    }
+
+    // Delete children
+    for (int i = 0; i < this->vecChildren.size(); i++)
+    {
+        if (this->vecChildren[i])
+        {
+            delete this->vecChildren[i];
+        }
+    }
+    vecChildren.clear();
+}
+
 void AGameObject::processInput(SDL_Event* eEvent)
 {
     auto vecInput = this->getComponentsRecursively(ComponentType::INPUT);
@@ -176,31 +198,6 @@ bool AGameObject::componentExists(std::string strName)
             return true;
     }
     return false;
-}
-
-void AGameObject::deleteAllChildren()
-{
-    for (AGameObject* pChild : vecChildren)
-    {
-        if (pChild)
-        {
-            // Recursively delete child’s children
-            pChild->deleteAllChildren();
-
-            // Delete components
-            for (AComponent* pComponent : pChild->vecComponent)
-            {
-                delete pComponent;
-            }
-            pChild->vecComponent.clear();
-
-            // Delete the child itself
-            delete pChild;
-        }
-    }
-
-    vecChildren.clear();
-
 }
 
 bool AGameObject::getEnabled() const

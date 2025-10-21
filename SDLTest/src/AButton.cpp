@@ -6,11 +6,6 @@ AButton::AButton(std::string strName) : AGameObject(strName)
     this->pSprite = NULL;
 }
 
-AButton::~AButton()
-{
-
-}
-
 void AButton::processInput(SDL_Event* eEvent)
 {
     if (this->contains(eEvent->motion.x, eEvent->motion.y))

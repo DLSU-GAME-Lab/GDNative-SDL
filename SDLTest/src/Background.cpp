@@ -9,11 +9,6 @@ Background::Background(const std::string& strName, const std::string& strImageNa
     this->bIsScreenObject = true;
 }
 
-Background::~Background()
-{
-
-}
-
 void Background::initialize()
 {
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(strImageName, 0, 0, gameWidth, gameHeight);

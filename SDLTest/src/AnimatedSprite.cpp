@@ -18,11 +18,6 @@ AnimatedSprite::AnimatedSprite(
     this->nFrameRate = nFrameRate;
 }
 
-AnimatedSprite::~AnimatedSprite()
-{
-
-}
-
 void AnimatedSprite::initialize()
 {
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strSpriteName, this->fVecTranslate.x, this->fVecTranslate.y);

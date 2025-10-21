@@ -14,7 +14,6 @@ public:
 		Vector2D fVecScale,
 		float fRot,
 		int nFrameRate);
-	~AnimatedSprite();
 
 	void initialize() override;
 };

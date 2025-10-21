@@ -9,7 +9,7 @@ private:
 	SDL_Color color;
 public:
 	Text(const std::string& strName, const std::string& strMessage, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX);
-	~Text();
+	~Text() override;
 
 	void setFont(std::string strFontName);
 	void setColor(SDL_Color color);

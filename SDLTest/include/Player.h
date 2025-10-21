@@ -6,11 +6,8 @@ class Player : public AGameObject, ACollisionListener
 {
 public:
 	Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot);
-	~Player();
 
 	void initialize() override;
-
-
 
 	 //Inherited via ACollisionListener
 	void onCollisionEnter(Collider* pCollider) override;

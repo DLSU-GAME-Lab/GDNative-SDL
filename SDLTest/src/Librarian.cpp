@@ -8,11 +8,6 @@ Librarian::Librarian(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGa
     this->fVecScale = fVecScale;
 }
 
-Librarian::~Librarian()
-{
-
-}
-
 void Librarian::initialize()
 {
     //1000, 350

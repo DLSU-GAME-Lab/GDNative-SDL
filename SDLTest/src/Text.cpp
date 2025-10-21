@@ -15,6 +15,7 @@ AGameObject(strName)
 Text::~Text()
 {
 	TextureManager::getInstance()->unload(this->strName + " Text");
+	AGameObject::~AGameObject();
 }
 
 

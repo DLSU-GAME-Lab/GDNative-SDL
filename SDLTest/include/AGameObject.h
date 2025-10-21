@@ -24,7 +24,7 @@ protected:
 
 public:
     AGameObject(std::string strName);
-    virtual ~AGameObject() = default;
+    virtual ~AGameObject();
 
 public:
     virtual void initialize() = 0;
@@ -44,7 +44,7 @@ public:
     std::vector<AComponent*> getComponents(ComponentType EType);
     std::vector<AComponent*> getComponentsRecursively(ComponentType EType, bool bInclusive = true);
     bool componentExists(std::string strName);
-    void deleteAllChildren();
+
 public:
     bool getEnabled() const;
     void setEnabled(bool bEnabled);

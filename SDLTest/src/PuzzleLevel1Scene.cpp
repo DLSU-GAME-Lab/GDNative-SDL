@@ -8,6 +8,7 @@
 #include "PuzzleToken.h"
 #include "GUIButton.h"
 #include "GUIToggle.h"
+#include "SequenceGameManager.h"
 
 PuzzleLevel1Scene::PuzzleLevel1Scene() : AScene(SceneTag::PUZZLE_LEVEL_1_SCENE)
 {
@@ -44,6 +45,7 @@ void PuzzleLevel1Scene::onLoadResources()
 void PuzzleLevel1Scene::onLoadObjects()
 {
 	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0.0f));
+	SequenceGameManager::initialize();
 
 	Background* pBG = new Background("Background", "BG", Vector2D(1.0f, 0.9f));
 	GameObjectManager::getInstance()->addObject(pBG);
@@ -77,6 +79,10 @@ void PuzzleLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pTokenHorns);
 	GameObjectManager::getInstance()->addObject(pTokenClaws);
 	GameObjectManager::getInstance()->addObject(pTokenEyes);
+
+	SequenceGameManager::getInstance()->addToken(pTokenHorns);
+	SequenceGameManager::getInstance()->addToken(pTokenClaws);
+	SequenceGameManager::getInstance()->addToken(pTokenEyes);
 
 	GUIButton* pPauseButton = new GUIButton("Pause_Button", "Pause_Button");
 	pPauseButton->setPos(Vector2D(800.0f, 400.0f));

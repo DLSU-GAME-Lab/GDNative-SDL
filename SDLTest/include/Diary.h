@@ -13,7 +13,6 @@ private:
 	int dCurrentPage;
 public:
 	Diary(const std::string& strBackroundIMG, Vector2D fVecTranslate, Vector2D fVecScale);
-	~Diary();
 public:
 	void initialize() override;
 public:

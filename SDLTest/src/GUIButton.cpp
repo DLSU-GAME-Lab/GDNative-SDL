@@ -8,11 +8,6 @@ GUIButton::GUIButton(std::string strName, std::string strSpriteName, bool bFlipX
 	this->bFlipX = bFlipX;
 }
 
-GUIButton::~GUIButton()
-{
-
-}
-
 void GUIButton::initialize()
 {
 	//this->bIsScreenObject = true;

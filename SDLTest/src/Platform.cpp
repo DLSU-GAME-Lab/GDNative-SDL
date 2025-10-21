@@ -15,6 +15,7 @@ Platform::~Platform()
 	Collider* pCollider = new Collider(this->strName + " Collider", true);
 	pCollider->setCleanUp(true);
 	PhysicsManager::getInstance()->cleanUp();
+	AGameObject::~AGameObject();
 }
 
 void Platform::initialize()

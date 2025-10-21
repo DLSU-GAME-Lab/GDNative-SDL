@@ -77,7 +77,6 @@ void GameObjectManager::deleteObject(AGameObject* pGameObject)
     if(nIndex != -1) {
         this->mapGameObject.erase(this->vecGameObject[nIndex]->getName());
         this->vecGameObject.erase(this->vecGameObject.begin() + nIndex);
-        pGameObject->deleteAllChildren();
         delete pGameObject;
     }
 }
@@ -97,11 +96,9 @@ void GameObjectManager::deleteObjectByName(std::string strName)
 // Scaling note: large G during teardown can produce long blocking spikes.
 void GameObjectManager::deleteAllObjects()
 {
-    std::vector<AGameObject*> vecGameObject = this->vecGameObject;
-
     // Iterate once: erase from map and delete each pointer.
-    for(AGameObject* pGameObject : vecGameObject)
-        this->deleteObject(pGameObject);
+    for (int i = 0; i < this->vecGameObject.size(); i++)
+        delete this->vecGameObject[i];
 
     // Clear containers, O(1) operations relative to content
     this->vecGameObject.clear();

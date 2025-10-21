@@ -181,6 +181,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PuzzleLevel1Scene.cpp" />
+    <ClCompile Include="src\PuzzleToken.cpp" />
     <ClCompile Include="src\RightRoomScene.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\TileMapRenderer.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
+    <ClCompile Include="src\TokenController.cpp" />
     <ClCompile Include="src\TweenAnimator.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
     <ClCompile Include="src\AUIScreen.cpp" />
@@ -258,6 +260,7 @@
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />
     <ClInclude Include="include\PuzzleLevel1Scene.h" />
+    <ClInclude Include="include\PuzzleToken.h" />
     <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
@@ -274,6 +277,7 @@
     <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\Title_Scene.h" />
     <ClInclude Include="include\Prop.h" />
+    <ClInclude Include="include\TokenController.h" />
     <ClInclude Include="include\TweenAnimator.h" />
     <ClInclude Include="include\UIManager.h" />
     <ClInclude Include="include\UINames.h" />

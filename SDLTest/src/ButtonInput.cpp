@@ -16,13 +16,14 @@ ButtonInput::~ButtonInput()
 
 void ButtonInput::perform()
 {
-	if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
-		this->onMouseHovered(Vector2D(eEvent->motion.x, eEvent->motion.y));
-
 	if (this->contains())
 	{
 		switch (eEvent->type)
 		{
+		case SDL_EVENT_MOUSE_MOTION:
+			this->onMouseHovered(Vector2D(eEvent->motion.x, eEvent->motion.y));
+			break;
+
 		case SDL_EVENT_MOUSE_BUTTON_DOWN:
 			this->onMouseButtonDown(eEvent->button.button);
 			break;
@@ -39,7 +40,7 @@ void ButtonInput::perform()
 
 Vector2D ButtonInput::getMousePos() const
 {
-	return Vector2D();
+	return this->mousePos;
 }
 
 Vector2D ButtonInput::getMouseWorldPos() const

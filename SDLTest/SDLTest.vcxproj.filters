@@ -237,9 +237,6 @@
     <ClCompile Include="src\TileMapRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\Level1Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\TileMap.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
@@ -263,6 +260,18 @@
     </ClCompile>
     <ClCompile Include="src\ColliderRenderer.cpp">
       <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlatformerLevel1Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PuzzleLevel1Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TokenController.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PuzzleToken.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -485,9 +494,6 @@
     <ClInclude Include="include\TileMapRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\Level1Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\TileMap.h">
       <Filter>GameObject</Filter>
     </ClInclude>
@@ -520,6 +526,18 @@
     </ClInclude>
     <ClInclude Include="include\ColliderRenderer.h">
       <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PuzzleLevel1Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlatformerLevel1Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TokenController.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PuzzleToken.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,4 +14,7 @@ public:
     void onLoadObjects() override;
     void onUnloadResources() override;
     void onUnloadObjects() override;
+public:
+    void loadEmptyObjects();
+    void loadGUI();
 };

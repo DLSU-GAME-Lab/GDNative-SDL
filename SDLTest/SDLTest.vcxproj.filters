@@ -180,7 +180,7 @@
     <ClCompile Include="src\SceneSwitcher.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
-    <ClCompile Include="include\GUIToggle.cpp">
+    <ClCompile Include="src\GUIToggle.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\GUIUtils.cpp">
@@ -251,6 +251,9 @@
     </ClCompile>
     <ClCompile Include="src\PhysicsManager.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EndScreen.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -496,6 +499,9 @@
       <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="include\TurnCounter.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EndScreen.h">
       <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>

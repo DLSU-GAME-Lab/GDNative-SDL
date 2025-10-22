@@ -1,5 +1,5 @@
 #include "EventBroadcaster.h"
-
+#include "iostream"
 void EventBroadcaster::initialize()
 {
     if (P_SHARED_INSTANCE == NULL)
@@ -30,7 +30,10 @@ void EventBroadcaster::unregisterListener(EventListener* pListener) {
 
 void EventBroadcaster::unregisterAllListeners() {
     for(EventListener* pListener : this->vecListener)
+    {
+ 
         this->unregisterListener(pListener);
+    }
 
     this->vecListener.clear();
     this->mapListener.clear();

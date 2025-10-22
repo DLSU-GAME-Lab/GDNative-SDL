@@ -1,3 +1,4 @@
+#pragma once
 #include "AGameObject.h"
 #include "RenderSystem.h"
 #include "PhysicsManager.h"
@@ -7,6 +8,7 @@ private:
 	std::string strImageName;
 	bool bFlipX;
 	int dCount = 0;
+
 public:
 	Prop(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX);
 	~Prop();

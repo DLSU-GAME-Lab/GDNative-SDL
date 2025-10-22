@@ -11,6 +11,7 @@ private:
 	int nTargetDestroy;
 	int nTargetLeft;
 	GemType EGem;
+	bool bIsZero;
 
 public:
 	Tracker(std::string strName, std::string strImageName, GemType EGem, int nTargetDestroy);
@@ -21,6 +22,7 @@ public:
 
 public:
 	std::string getName();
+	bool isZero();
 	GemType getGemType();
 	
 };

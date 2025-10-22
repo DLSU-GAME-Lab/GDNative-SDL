@@ -13,14 +13,18 @@ private:
     std::vector<Tracker*> vecTracker;
     std::unordered_map < std::string, Tracker*> mapTracker;
     EventKey EKey;
+    bool bVictory;
+    bool bTrackerEnabled;
 public:
     void perform();
     void registerTracker(Tracker* pTracker);
     void unRegisterTracker(Tracker* pTracker);
     void unRegisterAllTracker();
     int findTracker(Tracker* pTracker);
+    void disableTracker();
 
 public:
+    bool CheckVictory();
     // Inherited via EventListener
     void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;
     EventKey getKey() override;

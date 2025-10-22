@@ -19,6 +19,7 @@ public:
     void deleteObject(AGameObject* pGameObject);
     void deleteObjectByName(std::string strName);
     void deleteAllObjects();
+    void sortObjectToEnd(AGameObject* pGameObject);
 
     AGameObject* findObjectByName(std::string strName);
     std::vector<AGameObject*>& getAllObjects();

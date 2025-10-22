@@ -67,11 +67,31 @@ void GameObjectManager::deleteAllObjects()
     std::vector<AGameObject*> vecGameObject = this->vecGameObject;
 
     for(AGameObject* pGameObject : vecGameObject)
+    {
+        pGameObject->getName();
         this->deleteObject(pGameObject);
+    }
 
     this->vecGameObject.clear();
     this->mapGameObject.clear();
 }
+
+void GameObjectManager::sortObjectToEnd(AGameObject* pGameObject)
+{
+    int nIndex = -1, nIndex1 = this->vecGameObject.size()-1;
+    AGameObject* pHolder;
+    for (int i = 0; i < this->vecGameObject.size() && nIndex == -1; i++)
+    {
+        if (vecGameObject[i]->getName() == pGameObject->getName())
+        {
+            nIndex = i;
+        }
+    }
+    pHolder = this->vecGameObject[nIndex1];
+    this->vecGameObject[nIndex1] = this->vecGameObject[nIndex];
+    this->vecGameObject[nIndex] = pHolder;
+}
+
 
 AGameObject* GameObjectManager::findObjectByName(std::string strName)
 {

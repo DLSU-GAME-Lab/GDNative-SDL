@@ -1,3 +1,4 @@
+#pragma once
 #include "AScene.h"
 #include "EnumSceneTag.h"
 #include <SDL3/SDL.h>
@@ -13,4 +14,7 @@ public:
     void onLoadObjects() override;
     void onUnloadResources() override;
     void onUnloadObjects() override;
+public:
+    void loadEmptyObjects();
+    void loadGUI();
 };

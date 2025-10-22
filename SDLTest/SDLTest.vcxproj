@@ -138,7 +138,7 @@
     <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
     <ClCompile Include="imgui\src\imgui_tables.cpp" />
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
-    <ClCompile Include="include\GUIToggle.cpp" />
+    <ClCompile Include="src\GUIToggle.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\Animation.cpp" />
@@ -148,6 +148,7 @@
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\AGeneralInput.cpp" />
+    <ClCompile Include="src\EndScreen.cpp" />
     <ClCompile Include="src\EventBroadcaster.cpp" />
     <ClCompile Include="src\FontManager.cpp" />
     <ClCompile Include="src\Gem.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EmptyObject.h" />
+    <ClInclude Include="include\EndScreen.h" />
     <ClInclude Include="include\EnumAnimationType.h" />
     <ClInclude Include="include\EnumComponentType.h" />
     <ClInclude Include="include\AGameObject.h" />

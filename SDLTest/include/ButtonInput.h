@@ -9,6 +9,7 @@ private:
 	Vector2D mousePos;
 
 	bool bHolding;
+	bool bDragging;
 	bool bClicked;
 
 public:
@@ -20,6 +21,7 @@ public:
 	Vector2D getMousePos() const;
 	Vector2D getMouseWorldPos() const;
 	bool getHolding() const;
+	bool getDragging() const;
 	bool getClicked() const;
 	void setClicked(bool bClicked);
 

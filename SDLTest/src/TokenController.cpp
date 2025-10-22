@@ -15,7 +15,13 @@ void TokenController::onAttach()
 
 void TokenController::perform()
 {
-	if (this->pInput->getHolding())
+	if (this->pInput->getClicked())
+	{
+		this->pInput->setClicked(false);
+		std::cout << "Clicked " << this->pOwner->getName() << "\n";
+	}
+
+	if (this->pInput->getDragging())
 	{
 		this->bPickedup = true;
 		this->pOwner->setPos(this->pInput->getMouseWorldPos());

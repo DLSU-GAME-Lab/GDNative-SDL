@@ -11,7 +11,7 @@ Background::Background(const std::string& strName, const std::string& strImageNa
 
 void Background::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(strImageName, 0, 0, gameWidth, gameHeight);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(strImageName);
     this->attachComponent((AComponent*)pSpriteRenderer);
     pSpriteRenderer->setPivot(Vector2D(0.0f, 0.0f));
 }

@@ -5,13 +5,13 @@ ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 {
 	this->pSprite = pSprite;
 	this->bHolding = false;
+	this->bDragging = false;
 	this->bClicked = false;
 }
 
 ButtonInput::~ButtonInput()
 {
-	this->bHolding = false;
-	this->bClicked = false;
+
 }
 
 void ButtonInput::perform()
@@ -58,6 +58,11 @@ bool ButtonInput::getHolding() const
 	return this->bHolding;
 }
 
+bool ButtonInput::getDragging() const
+{
+	return this->bDragging;
+}
+
 bool ButtonInput::getClicked() const
 {
 	return this->bClicked;
@@ -71,6 +76,8 @@ void ButtonInput::setClicked(bool bClicked)
 void ButtonInput::onMouseHovered(Vector2D mousePos)
 {
 	this->mousePos = mousePos;
+	if (this->bHolding) this->bDragging = true;
+	else this->bDragging = false;
 }
 
 void ButtonInput::onMouseButtonDown(Uint8 mouseButton)
@@ -81,6 +88,7 @@ void ButtonInput::onMouseButtonDown(Uint8 mouseButton)
 void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 {
 	this->bHolding = false;
+	this->bDragging = false;
 	this->bClicked = true;
 }
 

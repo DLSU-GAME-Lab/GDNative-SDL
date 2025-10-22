@@ -10,7 +10,7 @@
 
 // Constructor: texture lookup may be O(T) where T is number of
 // textures stored under a name (small in typical cases). Overall O(1) prep.
-SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
+SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Color color)
     : ARenderer("SpriteRenderer"), pTexture(nullptr), m_textureKey(textureName)
 {
     // Constructor setup: mostly O(1) except for texture lookup.
@@ -19,6 +19,7 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     this->dAngle = 0.0;
     this->texSize = Vector2D(0.0f, 0.0f);
     this->pivot = Vector2D(0.5f, 0.5f);
+    this->mColor = color;
 
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
@@ -41,10 +42,10 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
     }
 
     //SDL_Point anchor = { texW / 2,texH / 2 };
-    mDestRect.x = x;
-    mDestRect.y = y;
-    mDestRect.w = (w > 0) ? w : this->texSize.x;
-    mDestRect.h = (h > 0) ? h : this->texSize.y;
+    mDestRect.x = 0;
+    mDestRect.y = 0;
+    mDestRect.w = this->texSize.x;
+    mDestRect.h = this->texSize.y;
 
     //mDestRect.x = anchor.x - (mDestRect.w / 2);
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
@@ -110,10 +111,9 @@ void SpriteRenderer::perform() {
 
     // GPU draw call: theoretical O(1), but expensive constant cost.
     if (pTexture) {
-        /*std::cout << "[Draw] Texture=" << m_textureKey
-            << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
-            << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
-        */
+        SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
+        SDL_SetTextureAlphaMod(pTexture, mColor.a);
+
         if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle + 180.0f, NULL, SDL_FLIP_NONE);
         else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
         else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
@@ -163,9 +163,24 @@ void SpriteRenderer::setPivot(Vector2D pivot)
     this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
 }
 
+void SpriteRenderer::setColor(SDL_Color color)
+{
+    this->mColor = color;
+}
+
 SDL_Texture* SpriteRenderer::getTexture()
 {
     return this->pTexture;
+}
+
+SDL_Color SpriteRenderer::getColor() const
+{
+    return this->mColor;
+}
+
+SDL_FRect SpriteRenderer::getRect() const
+{
+    return this->mDestRect;
 }
 
 bool SpriteRenderer::getflipX()

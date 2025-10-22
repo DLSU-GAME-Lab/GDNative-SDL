@@ -10,7 +10,7 @@ Diary::Diary(const std::string& strBackroundIMG, Vector2D fVecTranslate, Vector2
 
 void Diary::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strBackroundIMG, this->fVecTranslate.x, this->fVecTranslate.y);
+	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strBackroundIMG);
 	this->attachComponent(pSpriteRenderer);
 
 }

@@ -16,7 +16,7 @@ void Player::initialize()
 {
     //500, 630
     
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("player_idle", this->fVecTranslate.x, this->fVecTranslate.y);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("player_idle");
     this->attachComponent(pSpriteRenderer);
 
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer);

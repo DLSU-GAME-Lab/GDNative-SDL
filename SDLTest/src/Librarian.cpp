@@ -11,7 +11,7 @@ Librarian::Librarian(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGa
 void Librarian::initialize()
 {
     //1000, 350
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian", this->fVecTranslate.x, this->fVecTranslate.y);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian");
     auto vecSprite = TextureManager::getInstance()->getTexture("Librarian", 0, 6);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 8);
 

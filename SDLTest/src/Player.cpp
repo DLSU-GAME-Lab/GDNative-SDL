@@ -14,7 +14,6 @@ Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObje
 
 void Player::initialize()
 {
-    //500, 630
     
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("player_idle");
     this->attachComponent(pSpriteRenderer);
@@ -31,8 +30,8 @@ void Player::initialize()
     Gravity* pGrav = new Gravity(150.f);
     this->attachComponent(pGrav);
 
-    Collider* pCollider = new Collider(this->strName + " Collider", true);
-    SDL_FRect COffset = SDL_FRect{ 75 ,25,-150,-50 };
+    BoxCollider* pCollider = new BoxCollider(this->strName + " Collider", pSpriteRenderer->getRect(), true);
+    SDL_FRect COffset = SDL_FRect{ 0 ,0,-300,-250 };
     pCollider->setOffset(COffset);
     pCollider->setListener(this);
     PhysicsManager::getInstance()->trackCollider(pCollider);
@@ -60,14 +59,14 @@ void Player::initialize()
     pPlayerController->setJumpForce(250.f);
 }
 
-void Player::onCollisionEnter(Collider* pCollider)
+void Player::onCollisionEnter(ACollider* pCollider)
 {
 }
 
-void Player::onCollisionContinue(Collider* pCollider)
+void Player::onCollisionContinue(ACollider* pCollider)
 {
 }
 
-void Player::onCollisionExit(Collider* pCollider)
+void Player::onCollisionExit(ACollider* pCollider)
 {
 }

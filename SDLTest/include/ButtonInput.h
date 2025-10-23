@@ -11,6 +11,8 @@ private:
 	bool bHolding;
 	bool bDragging;
 	bool bClicked;
+	bool bRightClick;
+	bool bLefttClick;
 
 public:
 	ButtonInput(SpriteRenderer* pSprite);
@@ -24,6 +26,8 @@ public:
 	bool getDragging() const;
 	bool getClicked() const;
 	void setClicked(bool bClicked);
+	bool isRightClick();
+	bool isLeftClick();
 
 private:
 	virtual void onMouseHovered(Vector2D mousePos);

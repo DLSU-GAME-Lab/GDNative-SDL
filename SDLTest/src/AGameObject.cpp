@@ -1,14 +1,13 @@
 #include "AGameObject.h"
 #include "AGeneralInput.h"
 #include <iostream>
-#include "Collider.h"
 AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
     bEnabled = true;
     bFollowParent = true;
     pParent = NULL;
-
+    this->fWindowSize = CameraManager::getInstance()->getCurrentCamera()->getWindowSize();
     // defaults:
     this->fRot = 0.0f;
     this->fVecScale = Vector2D(1, 1);
@@ -79,6 +78,8 @@ SDL_FRect  AGameObject::getGlobalBounds()
 {
     SpriteRenderer* renderer = (SpriteRenderer*)this->findComponentByName("SpriteRenderer");
     SDL_FRect CTransform = renderer->getRect();
+
+
     return CTransform;
 }
 void AGameObject::attachChild(AGameObject * pChild)

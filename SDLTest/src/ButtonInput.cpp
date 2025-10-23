@@ -7,6 +7,8 @@ ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 	this->bHolding = false;
 	this->bDragging = false;
 	this->bClicked = false;
+	this->bRightClick = false;
+	this->bLefttClick = false;
 }
 
 ButtonInput::~ButtonInput()
@@ -73,6 +75,16 @@ void ButtonInput::setClicked(bool bClicked)
 	this->bClicked = bClicked;
 }
 
+bool ButtonInput::isRightClick()
+{
+	return this->bRightClick;
+}
+
+bool ButtonInput::isLeftClick()
+{
+	return this->bLefttClick;
+}
+
 void ButtonInput::onMouseHovered(Vector2D mousePos)
 {
 	this->mousePos = mousePos;
@@ -83,6 +95,14 @@ void ButtonInput::onMouseHovered(Vector2D mousePos)
 void ButtonInput::onMouseButtonDown(Uint8 mouseButton)
 {
 	this->bHolding = true;
+	if (mouseButton == SDL_BUTTON_RIGHT)
+	{
+		this->bRightClick = true;
+	}
+	else if (mouseButton == SDL_BUTTON_LEFT)
+	{
+		this->bLefttClick = true;
+	}
 }
 
 void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
@@ -90,6 +110,15 @@ void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 	this->bHolding = false;
 	this->bDragging = false;
 	this->bClicked = true;
+	if (mouseButton == SDL_BUTTON_RIGHT)
+	{
+		this->bRightClick = false;
+	}
+	else if (mouseButton == SDL_BUTTON_LEFT)
+	{
+		this->bLefttClick = false;
+	}
+
 }
 
 bool ButtonInput::contains() const

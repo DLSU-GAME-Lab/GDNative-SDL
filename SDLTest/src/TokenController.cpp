@@ -19,6 +19,11 @@ void TokenController::perform()
 	{
 		this->pInput->setClicked(false);
 		std::cout << "Clicked " << this->pOwner->getName() << "\n";
+		if (this->pInput->isRightClick())
+		{
+			std::cout << "Righy Mouse Clicked " << this->pOwner->getName() << "\n";
+
+		}
 	}
 
 	if (this->pInput->getDragging())

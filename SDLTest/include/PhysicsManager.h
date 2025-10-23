@@ -2,22 +2,22 @@
 #include "AGameObject.h"
 #include "AComponent.h"
 #include "EnumComponentType.h"
-#include "Collider.h"
+#include "ACollider.h"
 #include "Gravity.h"
 class PhysicsManager: AComponent
 {
 private:
-    std::vector<Collider*> vecTrackedCollider;
-    std::vector<Collider*> vecUntrackedCollider;
+    std::vector<ACollider*> vecTrackedCollider;
+    std::vector<ACollider*> vecUntrackedCollider;
 public:
     void perform();
     void checkCollision();
-    void trackCollider(Collider* pCollider);
-    void untrackCollider(Collider* pCollider);
+    void trackCollider(ACollider* pCollider);
+    void untrackCollider(ACollider* pCollider);
     void cleanUp();
 
 private:
-    int findTrackedCollider(Collider* pCollider);
+    int findTrackedCollider(ACollider* pCollider);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

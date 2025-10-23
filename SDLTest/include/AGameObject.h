@@ -10,7 +10,7 @@ class AGameObject
 protected:
     bool bEnabled;
     std::string strName;
-
+    
     AGameObject* pParent;
     std::vector<AGameObject*> vecChildren;
     std::vector<AComponent*> vecComponent;
@@ -21,7 +21,7 @@ protected:
     Vector2D fVecTranslate;
     Vector2D fVecScale;
     float fRot;
-
+    Vector2D fWindowSize;
 public:
     AGameObject(std::string strName);
     virtual ~AGameObject();

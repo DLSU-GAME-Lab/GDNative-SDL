@@ -8,8 +8,8 @@ void PhysicsManager::perform()
 
 void PhysicsManager::checkCollision()
 {
-    Collider* pColliderA = NULL;
-    Collider* pColliderB = NULL;
+    ACollider* pColliderA = NULL;
+    ACollider* pColliderB = NULL;
 
     for (int i = 0; i < this->vecTrackedCollider.size(); i++) {
         pColliderA = this->vecTrackedCollider[i];
@@ -51,20 +51,20 @@ void PhysicsManager::checkCollision()
     this->cleanUp();
 }
 
-void PhysicsManager::trackCollider(Collider* pCollider) {
+void PhysicsManager::trackCollider(ACollider* pCollider) {
     pCollider->cleanCollisions();
     this->vecTrackedCollider.push_back(pCollider);
 }
 
-void PhysicsManager::untrackCollider(Collider* pCollider) {
+void PhysicsManager::untrackCollider(ACollider* pCollider) {
     this->vecUntrackedCollider.push_back(pCollider);
 }
 
 void PhysicsManager::cleanUp() {
-    Collider* pCollider = NULL;
+    ACollider* pCollider = NULL;
     int nIndex;
 
-    for (Collider* pCollider : this->vecTrackedCollider) {
+    for (ACollider* pCollider : this->vecTrackedCollider) {
         if (pCollider->isCleanUp())
         {
             this->vecUntrackedCollider.push_back(pCollider);
@@ -84,7 +84,7 @@ void PhysicsManager::cleanUp() {
     this->vecUntrackedCollider.clear();
 }
 
-int PhysicsManager::findTrackedCollider(Collider* pCollider) {
+int PhysicsManager::findTrackedCollider(ACollider* pCollider) {
     int nIndex = -1;
     for (int i = 0; i < this->vecTrackedCollider.size() && nIndex == -1; i++) {
         if (pCollider == this->vecTrackedCollider[i])

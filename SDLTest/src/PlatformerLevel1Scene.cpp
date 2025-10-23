@@ -49,8 +49,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	PhysicsManager::initialize();
 
-	//Player* pPlayer = new Player(Vector2D(200, 200), Vector2D(), 0.0f);
-	//GameObjectManager::getInstance()->addObject(pPlayer);
+
 	
 	Background* pBG1 = new Background("Trees_BG1", "Trees_BG", 0.36f);
 	pBG1->setPos(Vector2D(0.0f, 0.0f));
@@ -297,8 +296,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	pTMR->addTile(87, 4, tile[13]);
 
-	Platform* pPlatform = new Platform("Temp Plat", Vector2D(0,0),Vector2D(200,300), 0.f);
-	pPlatform->setPos(Vector2D(0, 0));
+	Platform* pPlatform = new Platform("Temp Plat", Vector2D(250,375),Vector2D(500,300), 0.f);
 
 	GameObjectManager::getInstance()->addObject(pPlatform);
 }

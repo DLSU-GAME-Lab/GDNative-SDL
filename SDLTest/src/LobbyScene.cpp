@@ -134,7 +134,7 @@ void LobbyScene::createButtons()
 	GUIButton* pButtonLeft = new GUIButton("Button_Left", "Button");
 	pButtonLeft->setPos(Vector2D(-800, 0));
 	pButtonLeft->setScale(Vector2D(0.25f, 0.25f));
-	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::LEFT_ROOM_SCENE);
+	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::PUZZLE_LEVEL_1_SCENE);
 	pButtonLeft->attachComponent(pLeftRoomSwitch);
 	GameObjectManager::getInstance()->addObject(pButtonLeft);
 	SpriteRenderer* pRenderer = (SpriteRenderer*)pButtonLeft->findComponentByName("SpriteRenderer");
@@ -155,9 +155,6 @@ void LobbyScene::createScene()
 
 	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
-
-	//Player* pPlayer = new Player(Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.0f);
-	//GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
 
 	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
 	GameObjectManager::getInstance()->addObject(pPlayer);

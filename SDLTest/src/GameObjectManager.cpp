@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------------------
 
 #include "GameObjectManager.h"
-#include "Collider.h"
 #include <iostream>
 
 // processInput: forwards a single SDL_Event to every enabled object.

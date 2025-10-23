@@ -2,11 +2,10 @@
 #include "AGameObject.h"
 #include "PhysicsManager.h"
 #include "ACollisionListener.h"
-
+#include "BoxCollider.h"
 class Platform:public AGameObject, ACollisionListener
 {
 private:
-	std::string strImageName;
 	SDL_FRect bounds;
 	RectangleShape* Rect;
 public:
@@ -15,12 +14,11 @@ public:
 
 	void initialize() override;
 
-	SDL_FRect getGlobalBounds() override;
 
 	// Inherited via ACollisionListener
-	void onCollisionEnter(Collider* pCollider) override;
-	void onCollisionContinue(Collider* pCollider) override;
-	void onCollisionExit(Collider* pCollider) override;
+	void onCollisionEnter(ACollider* pCollider) override;
+	void onCollisionContinue(ACollider* pCollider) override;
+	void onCollisionExit(ACollider* pCollider) override;
 
 };
 

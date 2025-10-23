@@ -1,5 +1,4 @@
 #include "Prop.h"
-#include "Collider.h"
 
 
 Prop::Prop(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX):

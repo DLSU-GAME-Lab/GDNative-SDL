@@ -125,31 +125,31 @@ void PuzzleLevel1Scene::onLoadObjects()
 	pTransBGR->setColor({0, 0, 0, 127});
 
 	Prop* pTablet = new Prop("Tablet", "Tablet", Vector2D(0.0f), Vector2D(0.9f));
-	GameObjectManager::getInstance()->addObject(pTablet);
+	pTransBG->attachChild(pTablet);
 
 	Text* pTabletText1 = new Text("Tablet_Text_1", "Objctive:", Vector2D(-500.0f, 150.0f));
 	pTabletText1->setFont("Jaini90");
-	GameObjectManager::getInstance()->addObject(pTabletText1);
+	pTablet->attachChild(pTabletText1);
 	SpriteRenderer* pTabletTextR1 = (SpriteRenderer*)pTabletText1->findComponentByName("SpriteRenderer");
 	pTabletTextR1->setPivot(Vector2D(0.0f, 0.5f));
 
 	Text* pTabletText2 = new Text("Tablet_Text_2", "Form the Bakunawa!", Vector2D(-500.0f, 50.0f));
 	pTabletText2->setFont("Jaini90");
-	GameObjectManager::getInstance()->addObject(pTabletText2);
+	pTablet->attachChild(pTabletText2);
 	SpriteRenderer* pTabletTextR2 = (SpriteRenderer*)pTabletText2->findComponentByName("SpriteRenderer");
 	pTabletTextR2->setPivot(Vector2D(0.0f, 0.5f));
 
 	Text* pTabletText3 = new Text("Tablet_Text_3", "Relics to sequence: 3", Vector2D(-500.0f, -120.0f));
 	pTabletText3->setFont("Jaini90");
-	GameObjectManager::getInstance()->addObject(pTabletText3);
+	pTablet->attachChild(pTabletText3);
 	SpriteRenderer* pTabletTextR3 = (SpriteRenderer*)pTabletText3->findComponentByName("SpriteRenderer");
 	pTabletTextR3->setPivot(Vector2D(0.0f, 0.5f));
 
-
-	AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
-	GameObjectManager::getInstance()->addObject(pIntro);
-	SpriteAnimator* pAnimator = (SpriteAnimator*)pIntro->findComponentByName("SpriteAnimator");
-	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
+	pTransBG->setEnabled(false);
+	//AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
+	//GameObjectManager::getInstance()->addObject(pIntro);
+	//SpriteAnimator* pAnimator = (SpriteAnimator*)pIntro->findComponentByName("SpriteAnimator");
+	//pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
 
 }
 

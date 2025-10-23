@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ACollider.cpp" />
     <ClCompile Include="imgui\src\imgui.cpp" />
     <ClCompile Include="imgui\src\imgui_demo.cpp" />
     <ClCompile Include="imgui\src\imgui_draw.cpp" />
@@ -143,9 +144,9 @@
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\ARenderer.cpp" />
+    <ClCompile Include="src\BoxCollider.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraManager.cpp" />
-    <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\ColliderRenderer.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\Diary.cpp" />
@@ -204,6 +205,7 @@
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ACollider.h" />
     <ClInclude Include="imgui\include\imconfig.h" />
     <ClInclude Include="imgui\include\imgui.h" />
     <ClInclude Include="imgui\include\imgui_impl_sdl3.h" />
@@ -219,9 +221,9 @@
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="include\ARenderer.h" />
     <ClInclude Include="include\Background.h" />
+    <ClInclude Include="include\BoxCollider.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CameraManager.h" />
-    <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\ColliderRenderer.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\Diary.h" />

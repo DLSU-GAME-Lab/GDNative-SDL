@@ -104,7 +104,21 @@ void GameObjectManager::deleteAllObjects()
     this->vecGameObject.clear();
     this->mapGameObject.clear();
 }
-
+void GameObjectManager::sortObjectToEnd(AGameObject* pGameObject)
+{
+    int nIndex = -1, nIndex1 = this->vecGameObject.size() - 1;
+    AGameObject* pHolder;
+    for (int i = 0; i < this->vecGameObject.size() && nIndex == -1; i++)
+    {
+        if (vecGameObject[i]->getName() == pGameObject->getName())
+        {
+            nIndex = i;
+        }
+    }
+    pHolder = this->vecGameObject[nIndex1];
+    this->vecGameObject[nIndex1] = this->vecGameObject[nIndex];
+    this->vecGameObject[nIndex] = pHolder;
+}
 // findObjectByName: map lookup
 // Complexity: average-case O(1) (unordered_map) or O(log G) (ordered map).
 // Note: using operator[] for lookup has side-effects (insertion) which may

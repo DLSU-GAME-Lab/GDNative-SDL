@@ -1,5 +1,4 @@
 #include "MouseInput.h"
-#include "RenderSystem.h"
 #include "Camera.h"
 
 MouseInput::MouseInput() : AGeneralInput("MouseInput")

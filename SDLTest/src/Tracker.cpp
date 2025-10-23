@@ -16,7 +16,7 @@ Tracker::~Tracker()
 }
 void Tracker::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fVecTranslate.x, this->fVecTranslate.y);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName);
     this->attachComponent((AComponent*)pSpriteRenderer);
 
     Text* pCounterText = new Text(this->strName, std::to_string(this->nTargetLeft), Vector2D(-40, 0), Vector2D(.75, .75), 0, false);

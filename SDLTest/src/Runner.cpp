@@ -20,7 +20,6 @@
 #include "algorithm"
 
 #include "TextureManager.h"
-#include "RenderSystem.h"
 #include "GameObjectManager.h"
 #include "SceneManager.h"
 #include "AGameObject.h"
@@ -92,12 +91,12 @@ Runner::Runner()
 	//initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;
 	GameObjectManager::initialize();
+	CameraManager::initialize();
+	CameraManager::getInstance()->setWindowSize(this->pWindow);
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
-	RenderSystem::initialize();
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
-	RenderSystem::getInstance()->updateWindowSize(this->pWindow);
 	EventBroadcaster::initialize();
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
@@ -138,7 +137,7 @@ Runner::~Runner()
 #endif
 
 	TextureManager::destroy();
-	RenderSystem::destroy();
+	CameraManager::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SceneTransitionManager::destroy();
@@ -178,7 +177,7 @@ void Runner::run()
 				break;
 
 			case SDL_EVENT_WINDOW_RESIZED:
-				RenderSystem::getInstance()->updateWindowSize(this->pWindow);
+				CameraManager::getInstance()->setWindowSize(this->pWindow);
 				break;
 
 			default:

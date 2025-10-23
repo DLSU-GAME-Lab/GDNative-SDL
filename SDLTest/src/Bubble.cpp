@@ -12,6 +12,7 @@ Bubble::Bubble(std::string strName) : AGameObject(strName)
 void Bubble::initialize()
 {
 	SpriteRenderer* pRenderer = new SpriteRenderer("Bubble");
+	pRenderer->setColor({ 255, 255, 255, 200 });
 	this->attachComponent(pRenderer);
 
 	this->pAnimator = new TweenAnimator();

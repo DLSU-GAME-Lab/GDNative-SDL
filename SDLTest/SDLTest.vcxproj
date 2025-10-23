@@ -138,8 +138,10 @@
     <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
     <ClCompile Include="imgui\src\imgui_tables.cpp" />
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
+    <ClCompile Include="src\ARenderer.cpp" />
     <ClCompile Include="src\Bubble.cpp" />
     <ClCompile Include="src\BubbleManager.cpp" />
+    <ClCompile Include="src\CameraManager.cpp" />
     <ClCompile Include="src\GUIToggle.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
@@ -181,7 +183,6 @@
     <ClCompile Include="src\SceneTransitionManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
-    <ClCompile Include="src\RenderSystem.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
@@ -209,10 +210,12 @@
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="include\ARenderer.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\Bubble.h" />
     <ClInclude Include="include\BubbleManager.h" />
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\CameraManager.h" />
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\EditorModule.h" />
@@ -255,7 +258,6 @@
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
-    <ClInclude Include="include\RenderSystem.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />

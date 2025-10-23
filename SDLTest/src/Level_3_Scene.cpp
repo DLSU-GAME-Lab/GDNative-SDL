@@ -6,6 +6,7 @@
 #include "SceneSwitcher.h"
 #include "TurnCounter.h"
 #include "EndScreen.h"
+#include "BubbleManager.h"
 
 Level_3_Scene::Level_3_Scene():AScene(SceneTag::LEVEL_3_SCENE)
 {
@@ -23,6 +24,7 @@ void Level_3_Scene::onLoadResources()
 	TextureManager::getInstance()->load("levels/Level_3.png", "Level_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
+	TextureManager::getInstance()->load("Sprite_Bubble_Small.png", "Bubble");
 	FontManager::getInstance()->loadFont("CurseCasual.ttf", "Curse45", 45);
 	GemManager::loadResources();
 }
@@ -79,6 +81,7 @@ void Level_3_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Purple");
 	TextureManager::getInstance()->unload("Yellow");
 	TextureManager::getInstance()->unload("White");
+	TextureManager::getInstance()->unload("Bubble");
 	GemManager::unloadResources();
 }
 
@@ -98,6 +101,8 @@ void Level_3_Scene::loadGUI()
 {
 	Background* pBackground = new Background("Level_Background", "Level_Background", Vector2D(125.f, 1.17f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
+
+	BubbleManager::initialize(50);
 
 	Prop* pObjectBG = new Prop("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);

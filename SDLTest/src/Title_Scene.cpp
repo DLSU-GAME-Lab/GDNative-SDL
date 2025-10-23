@@ -3,6 +3,7 @@
 #include "GUIButton.h"
 #include "GameObjectManager.h"
 #include "TextureManager.h"
+#include "BubbleManager.h"
 #include "EnumSceneTag.h"
 #include "Prop.h"
 #include "AnimatedSprite.h"
@@ -26,12 +27,15 @@ void Title_Scene::onLoadResources()
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "Button_Container");
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_LevelEntry_Bg.png", "Level_Button");
     TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
+    TextureManager::getInstance()->load("Sprite_Bubble_Small.png", "Bubble");
 }
 
 void Title_Scene::onLoadObjects()
 {
     Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(70.f, 1.17f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
+
+    BubbleManager::initialize(50);
 
     Prop* pObjectBG = new Prop("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
@@ -97,6 +101,7 @@ void Title_Scene::onUnloadResources()
     TextureManager::getInstance()->unload("Button_Container");
     TextureManager::getInstance()->unload("Level_Button");
     TextureManager::getInstance()->unload("Design_BG");
+    TextureManager::getInstance()->unload("Bubble");
 }
 
 void Title_Scene::onUnloadObjects()

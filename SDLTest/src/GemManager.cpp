@@ -95,21 +95,22 @@ void GemManager::moveGems()
     this->pSelected[0]->gem = objB;
     this->pSelected[1]->gem = objA;
 
-    this->setTween(*this->pSelected[0]);
-    this->setTween(*this->pSelected[1]);
+    this->setTween(*this->pSelected[0], Vector2D(0.0f));
+    this->setTween(*this->pSelected[1], Vector2D(0.0f));
 }
 
-void GemManager::setTween(GemData gemData, Vector2D startOffset)
+void GemManager::setTween(GemData gemData, Vector2D startOffset, bool bounce)
 {
     Vector2D startPos = gemData.gem->getPos() + startOffset;
     Vector2D endPos = getGemDataPosition(gemData);
     TweenAnimator* pTween = gemData.gem->getTweenAnimator();
-    pTween->setTweenPos(
-        Tween2D::from(startPos.x, startPos.y)
-                .to(endPos.x, endPos.y)
-                .during(500)
-                .via(tweeny::easing::quadraticInOut)
-    );
+    Tween2D tweenPos = Tween2D::from(startPos.x, startPos.y)
+        .to(endPos.x, endPos.y)
+        .during(500);
+
+    if (bounce) tweenPos = tweenPos.via(tweeny::easing::bounceOut);
+    else tweenPos = tweenPos.via(tweeny::easing::quadraticInOut);
+    pTween->setTweenPos(tweenPos);
 
     pTween->play();
 }
@@ -275,7 +276,7 @@ void GemManager::cascadeDown()
                 {
                     // move object pointer down and update its world position
                     this->data[r][c].gem = this->data[indexAbove][c].gem;
-                    this->setTween(this->data[r][c]);
+                    this->setTween(this->data[r][c], Vector2D(0.0f), true);
                     this->data[indexAbove][c].gem = NULL;
                 }
             }
@@ -383,7 +384,7 @@ void GemManager::spawnGems(float fScale)
                 pGem->setScale(Vector2D(this->fGemScale));
                 GameObjectManager::getInstance()->addObject(pGem);
 
-                this->setTween(this->data[r][c], Vector2D(0.0f, this->fGemSize));
+                this->setTween(this->data[r][c], Vector2D(0.0f, this->fGemSize), true);
                 //pause after each row
             }
         }

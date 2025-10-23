@@ -138,6 +138,8 @@
     <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
     <ClCompile Include="imgui\src\imgui_tables.cpp" />
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
+    <ClCompile Include="src\Bubble.cpp" />
+    <ClCompile Include="src\BubbleManager.cpp" />
     <ClCompile Include="src\GUIToggle.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
@@ -208,6 +210,8 @@
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Animation.h" />
     <ClInclude Include="include\Background.h" />
+    <ClInclude Include="include\Bubble.h" />
+    <ClInclude Include="include\BubbleManager.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\CustomStyles.h" />

@@ -48,7 +48,7 @@ private:
     Vector2D getGemDataPosition(GemData gemData);
     GemData* getDataFromGem(Gem* pGem);
 
-    void setTween(GemData gemData, Vector2D startOffset = Vector2D());
+    void setTween(GemData gemData, Vector2D startOffset, bool bounce = false);
 
     bool checkMatches();
 

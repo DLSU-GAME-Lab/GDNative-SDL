@@ -6,6 +6,7 @@
 #include "SceneSwitcher.h"
 #include "TurnCounter.h"
 #include "EndScreen.h"
+#include "BubbleManager.h"
 
 Level_2_Scene::Level_2_Scene():AScene(SceneTag::LEVEL_2_SCENE)
 {
@@ -23,6 +24,7 @@ void Level_2_Scene::onLoadResources()
 	TextureManager::getInstance()->load("levels/Level_2.png", "Level_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
 	TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
+	TextureManager::getInstance()->load("Sprite_Bubble_Small.png", "Bubble");
 	FontManager::getInstance()->loadFont("CurseCasual.ttf", "Curse45", 45);
 	GemManager::loadResources();
 }
@@ -30,6 +32,8 @@ void Level_2_Scene::onLoadResources()
 void Level_2_Scene::onLoadObjects()
 {
 	this->loadEmptyObjects();
+
+	BubbleManager::initialize(50);
 
 	this->loadGUI();
 
@@ -69,6 +73,7 @@ void Level_2_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Purple");
 	TextureManager::getInstance()->unload("Yellow");
 	TextureManager::getInstance()->unload("White");
+	TextureManager::getInstance()->unload("Bubble");
 
 	GemManager::unloadResources();
 }

@@ -255,6 +255,12 @@
     <ClCompile Include="src\EndScreen.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="src\BubbleManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bubble.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -502,6 +508,12 @@
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\EndScreen.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BubbleManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bubble.h">
       <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>

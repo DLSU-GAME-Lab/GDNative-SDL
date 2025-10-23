@@ -3,10 +3,10 @@
 #include <vector>
 #include "Vector2D.h"
 #include "AUIScreen.h"
+#include "AGameObject.h"
 
 namespace Editor
 {
-
     class EditorModule
     {
     private:
@@ -18,6 +18,10 @@ namespace Editor
         double dTicks = 0.0;
         bool bIsDragging = false;
         bool bIsHolding = false;
+        bool bIsMovingCam = false;
+
+        float fDeltaScroll = 0.0f;
+        Vector2D lastMousePos;
         Vector2D mousePos;
         Vector2D offsetPos;
 
@@ -27,7 +31,7 @@ namespace Editor
         void drawEditor(SDL_Renderer* pRenderer);
 
     private:
-        bool contains(Vector2D objPos, Vector2D mousePos);
+        bool contains(AGameObject* pObject, Vector2D mousePos);
         Vector2D getMouseWorldPos() const;
 
         /* * * * * * * * * * * * * * * * * * * * *
@@ -42,7 +46,7 @@ namespace Editor
         EditorModule& operator = (const EditorModule&) {};
 
     public:
-        static void initialize(SDL_Window* window, SDL_Renderer* renderer);
+        static void initialize();
         static void destroy();
 
         static EditorModule* getInstance();

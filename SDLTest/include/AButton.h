@@ -14,7 +14,6 @@ protected:
 
 public:
 	AButton(std::string strName);
-	virtual ~AButton();
 
 	void processInput(SDL_Event* eEvent);
 

@@ -10,13 +10,9 @@ Prop::Prop(const std::string& strName, const std::string& strImageName, Vector2D
 	this->fRot = fRot;
 }
 
-Prop::~Prop()
-{
-}
-
 void Prop::initialize()
 {
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName, this->fVecTranslate.x, this->fVecTranslate.y);
+	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName);
 	this->attachComponent((AComponent*)pSpriteRenderer);
 
 	if (bFlipX)

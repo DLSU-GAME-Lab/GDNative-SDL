@@ -1,6 +1,5 @@
 #include "AGameObject.h"
 #include "AGeneralInput.h"
-#include "RenderSystem.h"
 #include <iostream>
 #include "Collider.h"
 AGameObject::AGameObject(std::string strName)
@@ -14,6 +13,28 @@ AGameObject::AGameObject(std::string strName)
     this->fRot = 0.0f;
     this->fVecScale = Vector2D(1, 1);
     this->bIsScreenObject = false;
+}
+
+AGameObject::~AGameObject()
+{
+    // Delete components
+    for (int i = 0; i < this->vecComponent.size(); i++)
+    {
+        if (this->vecComponent[i])
+        {
+            delete this->vecComponent[i];
+        }
+    }
+
+    // Delete children
+    for (int i = 0; i < this->vecChildren.size(); i++)
+    {
+        if (this->vecChildren[i])
+        {
+            delete this->vecChildren[i];
+        }
+    }
+    vecChildren.clear();
 }
 
 void AGameObject::processInput(SDL_Event* eEvent)
@@ -48,20 +69,18 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
         if (!pOwner || !pOwner->isGloballyEnabled())
             continue;
 
-        SpriteRenderer* renderer = (SpriteRenderer*)pComponent;
-        renderer->draw(pRenderer, RenderSystem::getInstance()->getCamera());
+        ARenderer* renderer = (ARenderer*)pComponent;
+        renderer->setSDLRenderer(pRenderer);
         pComponent->perform();
     }
-    if (this->componentExists(this->strName + " Collider"))
-    {
-        Collider* pCollider = (Collider*)this->findComponentByName(this->strName + " Collider");
-        SDL_FRect bounds = pCollider->getGlobalBounds();
-        SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
-        SDL_RenderRect(pRenderer, &bounds);
 
-    }
 }
-
+SDL_FRect  AGameObject::getGlobalBounds()
+{
+    SpriteRenderer* renderer = (SpriteRenderer*)this->findComponentByName("SpriteRenderer");
+    SDL_FRect CTransform = renderer->getRect();
+    return CTransform;
+}
 void AGameObject::attachChild(AGameObject * pChild)
 {
     this->vecChildren.push_back(pChild);
@@ -181,31 +200,6 @@ bool AGameObject::componentExists(std::string strName)
     return false;
 }
 
-void AGameObject::deleteAllChildren()
-{
-    for (AGameObject* pChild : vecChildren)
-    {
-        if (pChild)
-        {
-            // Recursively delete child’s children
-            pChild->deleteAllChildren();
-
-            // Delete components
-            for (AComponent* pComponent : pChild->vecComponent)
-            {
-                delete pComponent;
-            }
-            pChild->vecComponent.clear();
-
-            // Delete the child itself
-            delete pChild;
-        }
-    }
-
-    vecChildren.clear();
-
-}
-
 bool AGameObject::getEnabled() const
 {
     return this->bEnabled;
@@ -293,6 +287,11 @@ float AGameObject::getRot()
 bool AGameObject::getIsScreenObject() const
 {
     return this->bIsScreenObject;
+}
+
+void AGameObject::setIsScreenObject(bool bIsScreenObject)
+{
+    this->bIsScreenObject = bIsScreenObject;
 }
 
 bool AGameObject::getFollowParent()

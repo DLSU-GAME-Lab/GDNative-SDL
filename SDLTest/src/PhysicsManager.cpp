@@ -1,5 +1,6 @@
 #include "PhysicsManager.h"
-
+#include "EmptyObject.h"
+#include "GameObjectManager.h"
 void PhysicsManager::perform() 
 {
     this->checkCollision();
@@ -105,9 +106,11 @@ PhysicsManager* PhysicsManager::getInstance() {
     return P_SHARED_INSTANCE;
 }
 
-void PhysicsManager::initialize(std::string strName, AGameObject* pParent) {
-    P_SHARED_INSTANCE = new PhysicsManager(strName);
-    pParent->attachComponent(P_SHARED_INSTANCE);
+void PhysicsManager::initialize() {
+    EmptyObject* pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
+    P_SHARED_INSTANCE = new PhysicsManager("PhysicsManager");
+    pPhysManagerHolder->attachComponent(P_SHARED_INSTANCE);
+    GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 }
 
 void PhysicsManager::destroy() {

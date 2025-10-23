@@ -24,13 +24,14 @@ protected:
 
 public:
     AGameObject(std::string strName);
-    virtual ~AGameObject() = default;
+    virtual ~AGameObject();
 
 public:
     virtual void initialize() = 0;
     virtual void processInput(SDL_Event* eEvent);
     virtual void update(float fDeltaTime);
     virtual void draw(SDL_Renderer* pRenderer);
+    virtual SDL_FRect getGlobalBounds();
 
 public:
     void attachChild(AGameObject* pChild);
@@ -43,7 +44,7 @@ public:
     std::vector<AComponent*> getComponents(ComponentType EType);
     std::vector<AComponent*> getComponentsRecursively(ComponentType EType, bool bInclusive = true);
     bool componentExists(std::string strName);
-    void deleteAllChildren();
+
 public:
     bool getEnabled() const;
     void setEnabled(bool bEnabled);
@@ -56,7 +57,9 @@ public:
     Vector2D getScale();
     void setRot(float fRot);
     float getRot();
+
     bool getIsScreenObject() const;
+    void setIsScreenObject(bool bIsScreenObject);
     bool getFollowParent();
     void setFollowParent(bool bFollowParent);
     bool isGloballyEnabled() const;

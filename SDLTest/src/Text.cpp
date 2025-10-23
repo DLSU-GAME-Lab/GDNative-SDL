@@ -15,6 +15,7 @@ AGameObject(strName)
 Text::~Text()
 {
 	TextureManager::getInstance()->unload(this->strName + " Text");
+	AGameObject::~AGameObject();
 }
 
 
@@ -31,7 +32,7 @@ void Text::setColor(SDL_Color color)
 void Text::initialize()
 {
 	TextureManager::getInstance()->loadFromText(this->strName + " Text", this->strFontName, this->strMessage, this->color);
-	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strName + " Text", this->fVecTranslate.x, this->fVecTranslate.y);
+	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strName + " Text");
 	this->attachComponent((AComponent*)pSpriteRenderer);
 }
 

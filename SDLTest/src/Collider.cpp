@@ -40,6 +40,7 @@ bool Collider::isColliding(Collider* pCollider)
 
 	bool bCollisionX = (fLeftA < fRightB) && (fRightA > fLeftB);
 	bool bCollisionY = (fTopA < fBotB) && (fBotA > fTopB);
+
 	if(bCollisionX&& bCollisionY)
 	{
 		float centerAX = fLeftA + (CBoundsA.w / 2.0f);
@@ -49,6 +50,7 @@ bool Collider::isColliding(Collider* pCollider)
 
 		float deltaX = centerAX - centerBX;
 		float deltaY = centerAY - centerBY;
+		std::cout << "Is Colliding" << std::endl;
 		if (std::abs(deltaX) > std::abs(deltaY))
 		{
 			if (deltaX > 0)
@@ -195,8 +197,7 @@ void Collider::setCleanUp(bool bCleanUp)
 
 SDL_FRect Collider::getGlobalBounds()
 {
-	SpriteRenderer* renderer = (SpriteRenderer*)this->pOwner->findComponentByName("SpriteRenderer");
-	SDL_FRect CTransform = renderer->getRect();
+	SDL_FRect CTransform = this->pOwner->getGlobalBounds();
 
 	CTransform.x = CTransform.x + this->COffset.x;
 	CTransform.y = CTransform.y + this->COffset.y;

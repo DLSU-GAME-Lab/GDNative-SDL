@@ -27,7 +27,6 @@ Animation::Animation(
 void Animation::stop()
 {
 	this->bIsPlaying = false;
-	this->nFrameIndex = 0;
 	this->fTicks = 0;
 }
 
@@ -38,6 +37,8 @@ void Animation::play()
 
 void Animation::step(float fDeltaTime)
 {
+	if (!this->bIsPlaying) return;
+
 	this->fTicks += fDeltaTime;
 	float ticksPerFrame = this->getTicksPerFrame();
 
@@ -52,7 +53,7 @@ void Animation::step(float fDeltaTime)
 		switch (this->EType)
 		{
 		case AnimationType::ONCE:
-			if (this->nFrameIndex == this->vecFrames.size())
+			if (this->nFrameIndex == this->vecFrames.size() - 1)
 			{
 				this->stop();
 			}

@@ -2,29 +2,30 @@
 #include "AUIScreen.h"
 #include "AGameObject.h"
 
-namespace Editor
+class InspectorScreen : public AUIScreen
 {
-	class InspectorScreen : public AUIScreen
-	{
-	private:
-		AGameObject* selectedObject;
-		Vector2D mousePos;
+private:
+	AGameObject* selectedObject;
+	Vector2D mousePos;
+	float fCamMoveSpeed = 30.0f;
+	float fCamScaleSpeed = 10.0f;
 
-	public:
-		void setSelectedObject(AGameObject* selectedObject);
-		AGameObject* getSelectedObject();
-		void setMousePos(Vector2D mousePos);
+public:
+	void setSelectedObject(AGameObject* selectedObject);
+	AGameObject* getSelectedObject();
+	void setMousePos(Vector2D mousePos);
 
-	protected:
-		InspectorScreen();
-		~InspectorScreen();
-		void DrawUI() override;
+	float getCamMoveSpeed() const;
+	float getCamScaleSpeed() const;
 
-		friend class UIManager;
+protected:
+	InspectorScreen();
+	~InspectorScreen();
+	void DrawUI() override;
 
-	private:
-		void showCamera(ImGuiChildFlags childFlags);
-		void showTransform(ImGuiChildFlags childFlags);
-	};
+	friend class UIManager;
 
-}
+private:
+	void showCamera(ImGuiChildFlags childFlags);
+	void showTransform(ImGuiChildFlags childFlags);
+};

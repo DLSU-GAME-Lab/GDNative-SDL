@@ -1,5 +1,4 @@
 #include "SpriteAnimator.h"
-
 SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer)
 	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
 {
@@ -76,9 +75,7 @@ void SpriteAnimator::setAnimationState(std::string strState)
 
 Animation* SpriteAnimator::getCurrentAnimation()
 {
-	if (!strState.empty() &&
-		!mapAnims.empty() &&
-		mapAnims.contains(strState))
+	if (mapAnims.contains(strState))
 		return mapAnims[strState];
 
 	return NULL;

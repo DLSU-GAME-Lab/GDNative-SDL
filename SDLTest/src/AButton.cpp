@@ -1,15 +1,9 @@
 #include "AButton.h"
-#include "RenderSystem.h"
 #include <iostream>
 
 AButton::AButton(std::string strName) : AGameObject(strName)
 {
     this->pSprite = NULL;
-}
-
-AButton::~AButton()
-{
-
 }
 
 void AButton::processInput(SDL_Event* eEvent)

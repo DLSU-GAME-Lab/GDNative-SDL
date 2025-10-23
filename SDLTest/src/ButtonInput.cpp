@@ -1,18 +1,17 @@
 #include "ButtonInput.h"
-#include "RenderSystem.h"
-#include "Camera.h"
+#include "CameraManager.h"
 
 ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 {
 	this->pSprite = pSprite;
 	this->bHolding = false;
+	this->bDragging = false;
 	this->bClicked = false;
 }
 
 ButtonInput::~ButtonInput()
 {
-	this->bHolding = false;
-	this->bClicked = false;
+
 }
 
 void ButtonInput::onAttach()
@@ -45,12 +44,12 @@ void ButtonInput::perform()
 
 Vector2D ButtonInput::getMousePos() const
 {
-	return Vector2D();
+	return this->mousePos;
 }
 
 Vector2D ButtonInput::getMouseWorldPos() const
 {
-	Camera* cam = RenderSystem::getInstance()->getCamera();
+	Camera* cam = CameraManager::getInstance()->getCurrentCamera();
 	Vector2D mouseWorldPos;
 
 	mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
@@ -62,6 +61,11 @@ Vector2D ButtonInput::getMouseWorldPos() const
 bool ButtonInput::getHolding() const
 {
 	return this->bHolding;
+}
+
+bool ButtonInput::getDragging() const
+{
+	return this->bDragging;
 }
 
 bool ButtonInput::getClicked() const
@@ -77,6 +81,8 @@ void ButtonInput::setClicked(bool bClicked)
 void ButtonInput::onMouseHovered(Vector2D mousePos)
 {
 	this->mousePos = mousePos;
+	if (this->bHolding) this->bDragging = true;
+	else this->bDragging = false;
 }
 
 void ButtonInput::onMouseButtonDown(Uint8 mouseButton)
@@ -87,6 +93,7 @@ void ButtonInput::onMouseButtonDown(Uint8 mouseButton)
 void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 {
 	this->bHolding = false;
+	this->bDragging = false;
 	this->bClicked = true;
 }
 

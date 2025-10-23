@@ -5,21 +5,19 @@
 
 #include "InspectorScreen.h"
 
-using namespace Editor;
+UIManager* UIManager::sharedInstance = nullptr;
 
-Editor::UIManager* Editor::UIManager::sharedInstance = nullptr;
-
-Editor::UIManager* Editor::UIManager::getInstance()
+UIManager* UIManager::getInstance()
 {
 	return sharedInstance;
 }
 
-void Editor::UIManager::initialize(SDL_Window* window, SDL_Renderer* renderer)
+void UIManager::initialize(SDL_Window* window, SDL_Renderer* renderer)
 {
-	sharedInstance = new Editor::UIManager(window, renderer);
+	sharedInstance = new UIManager(window, renderer);
 }
 
-void Editor::UIManager::destroy()
+void UIManager::destroy()
 {
 	if (!sharedInstance->uiList.empty())
 	{
@@ -37,19 +35,19 @@ void Editor::UIManager::destroy()
 	delete sharedInstance;
 }
 
-void Editor::UIManager::newFrame()
+void UIManager::newFrame()
 {
 	ImGui_ImplSDLRenderer3_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 }
 
-void Editor::UIManager::processEvent(const SDL_Event* event)
+void UIManager::processEvent(const SDL_Event* event)
 {
 	ImGui_ImplSDL3_ProcessEvent(event);
 }
 
-void Editor::UIManager::drawAllUI(SDL_Renderer* renderer)
+void UIManager::drawAllUI(SDL_Renderer* renderer)
 {
 	//ImGui::ShowDemoWindow();
 	for (int i = 0; i < this->uiList.size(); i++)
@@ -60,26 +58,29 @@ void Editor::UIManager::drawAllUI(SDL_Renderer* renderer)
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+
+	//ImGuiIO io = ImGui::GetIO();
+	//SDL_SetRenderScale(renderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
 }
 
-AUIScreen* Editor::UIManager::getUIScreen(std::string name)
+AUIScreen* UIManager::getUIScreen(std::string name)
 {
 	return this->uiTable[name];
 }
 
-bool Editor::UIManager::getEnabled(std::string name)
+bool UIManager::getEnabled(std::string name)
 {
 	AUIScreen* ui = this->uiTable[name];
 	return ui ? ui->enabled : false;
 }
 
-void Editor::UIManager::setEnabled(std::string name, bool enabled)
+void UIManager::setEnabled(std::string name, bool enabled)
 {
 	AUIScreen* ui = this->uiTable[name];
 	if (ui) ui->enabled = enabled;
 }
 
-Editor::UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
+UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -102,7 +103,7 @@ Editor::UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
 
 }
 
-Editor::UIManager::~UIManager()
+UIManager::~UIManager()
 {
 
 }

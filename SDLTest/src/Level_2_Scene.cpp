@@ -88,7 +88,6 @@ void Level_2_Scene::loadEmptyObjects()
 	EmptyObject* pTrackerManagerHolder = new EmptyObject("TrackerManagerHolder");
 	TrackerManager::initialize("TrackerManager", pTrackerManagerHolder);
 	GameObjectManager::getInstance()->addObject(pTrackerManagerHolder);
-	EventBroadcaster::getInstance()->registerListener((EventListener*)TrackerManager::getInstance());
 }
 void Level_2_Scene::loadGUI()
 {

@@ -13,16 +13,30 @@ void EventBroadcaster::registerListener(EventListener* pListener) {
     EventKey EKey = pListener->getKey();
     this->mapListener[EKey].push_back(pListener);
     this->vecListener.push_back(pListener);
+    std::cout << this->vecListener.size() << std::endl;;
 }
 
 void EventBroadcaster::unregisterListener(EventListener* pListener) {
     EventKey EKey = pListener->getKey();
+    switch (EKey)
+    {
+    case EventKey::COLOR_MATCH:
+        std::cout << "Color Match" << std::endl;
+        break;
+    case EventKey::COUNTER_SUBTRACT:
+        std::cout << "Counter Sub" << std::endl;
+        break;
+    case EventKey::GAME_END:
+        std::cout << "Game End" << std::endl;
+        break;
+    }
     std::vector<EventListener*> vecListener = this->mapListener[EKey];
     int nIndex = this->findListener(pListener, vecListener);
 
     this->mapListener[EKey].erase(this->mapListener[EKey].begin() + nIndex);
 
     nIndex = this->findListener(pListener);
+    std::cout << nIndex << std::endl;
     if(nIndex != -1) {
         this->vecListener.erase(this->vecListener.begin() + nIndex);
     }

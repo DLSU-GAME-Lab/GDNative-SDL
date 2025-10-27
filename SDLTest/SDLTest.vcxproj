@@ -139,7 +139,7 @@
     <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
     <ClCompile Include="imgui\src\imgui_tables.cpp" />
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
-    <ClCompile Include="include\GUIToggle.cpp" />
+    <ClCompile Include="src\GUIToggle.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
     <ClCompile Include="src\Animation.cpp" />
@@ -182,6 +182,7 @@
     <ClCompile Include="src\LobbyScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PuzzleHint.cpp" />
     <ClCompile Include="src\PuzzleLevel1Scene.cpp" />
     <ClCompile Include="src\PuzzleToken.cpp" />
     <ClCompile Include="src\RendererContext.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />
+    <ClInclude Include="include\PuzzleHint.h" />
     <ClInclude Include="include\PuzzleLevel1Scene.h" />
     <ClInclude Include="include\PuzzleToken.h" />
     <ClInclude Include="include\RendererContext.h" />

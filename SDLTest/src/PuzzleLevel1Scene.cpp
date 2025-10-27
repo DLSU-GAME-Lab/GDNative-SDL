@@ -43,11 +43,7 @@ void PuzzleLevel1Scene::onLoadResources()
 
 	TextureManager::getInstance()->loadFromFolder("animations/level_intro", "Intro");
 
-	FontManager::getInstance()->loadFont("Maragsa.otf", "Maragsa", 200);
-	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
 	FontManager::getInstance()->loadFont("JainiPurva-Regular.ttf", "Jaini90", 90);
-	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont45", 45);
-	FontManager::getInstance()->loadFont("JainiPurva-Regular.ttf", "Jaini45", 45);
 }
 
 void PuzzleLevel1Scene::onLoadObjects()
@@ -128,23 +124,11 @@ void PuzzleLevel1Scene::onLoadObjects()
 	Prop* pTablet = new Prop("Tablet", "Tablet", Vector2D(0.0f), Vector2D(0.9f));
 	pTransBG->attachChild(pTablet);
 
-	/*Text* pTabletText1 = new Text("Tablet_Text_1", "Objctive:", Vector2D(-500.0f, 150.0f));
-	pTabletText1->setFont("Jaini90");
+	Text* pTabletText1 = new Text("Tablet_Text", "Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3","JainiPurva-Regular.ttf",90,0, false);
+	pTabletText1->setPos(Vector2D(-500.0f, 75));
 	pTablet->attachChild(pTabletText1);
-	SpriteRenderer* pTabletTextR1 = (SpriteRenderer*)pTabletText1->findComponentByName("SpriteRenderer");
+	DialogueRenderer* pTabletTextR1 = (DialogueRenderer*)pTabletText1->findComponentByName("DialogueRenderer");
 	pTabletTextR1->setPivot(Vector2D(0.0f, 0.5f));
-
-	Text* pTabletText2 = new Text("Tablet_Text_2", "Form the Bakunawa!", Vector2D(-500.0f, 50.0f));
-	pTabletText2->setFont("Jaini90");
-	pTablet->attachChild(pTabletText2);
-	SpriteRenderer* pTabletTextR2 = (SpriteRenderer*)pTabletText2->findComponentByName("SpriteRenderer");
-	pTabletTextR2->setPivot(Vector2D(0.0f, 0.5f));
-
-	Text* pTabletText3 = new Text("Tablet_Text_3", "Relics to sequence: 3", Vector2D(-500.0f, -120.0f));
-	pTabletText3->setFont("Jaini90");
-	pTablet->attachChild(pTabletText3);
-	SpriteRenderer* pTabletTextR3 = (SpriteRenderer*)pTabletText3->findComponentByName("SpriteRenderer");
-	pTabletTextR3->setPivot(Vector2D(0.0f, 0.5f));*/
 
 	pTransBG->setEnabled(false);
 	//AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);

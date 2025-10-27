@@ -189,7 +189,7 @@
     <ClCompile Include="src\SceneSwitcher.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
-    <ClCompile Include="include\GUIToggle.cpp">
+    <ClCompile Include="src\GUIToggle.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\GUIUtils.cpp">
@@ -282,7 +282,12 @@
     <ClCompile Include="src\DialogueRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\RendererContext.cpp" />
+    <ClCompile Include="src\PuzzleHint.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RendererContext.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -558,7 +563,12 @@
     <ClInclude Include="include\DialogueRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererContext.h" />
+    <ClInclude Include="include\PuzzleHint.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererContext.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

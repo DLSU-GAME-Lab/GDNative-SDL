@@ -27,7 +27,10 @@ public:
 	bool getClicked() const;
 	void setClicked(bool bClicked);
 	bool isRightClick();
+	void setRightClick(bool bRightClick);
 	bool isLeftClick();
+	void setLeftClick(bool bLeftClick);
+
 
 private:
 	virtual void onMouseHovered(Vector2D mousePos);

@@ -21,8 +21,13 @@ void TokenController::perform()
 		std::cout << "Clicked " << this->pOwner->getName() << "\n";
 		if (this->pInput->isRightClick())
 		{
-			std::cout << "Righy Mouse Clicked " << this->pOwner->getName() << "\n";
-
+			std::cout << "Right Mouse Clicked " << this->pOwner->getName() << "\n";
+			this->pInput->setRightClick(false);
+		}
+		if (this->pInput->isLeftClick())
+		{
+			std::cout << "Left Mouse Clicked " << this->pOwner->getName() << "\n";
+			this->pInput->setLeftClick(false);
 		}
 	}
 

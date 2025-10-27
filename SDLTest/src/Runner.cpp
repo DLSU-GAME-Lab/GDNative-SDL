@@ -36,6 +36,7 @@
 #include "LeftRoomScene.h"
 #include "PlatformerLevel1Scene.h"
 #include "PuzzleLevel1Scene.h"
+#include "RendererContext.h"
 
 // Constructor / Destructor: startup and teardown costs are not per-frame.
 // - Startup work: O(1) for SDL init and renderer creation, plus O(S) for
@@ -94,6 +95,7 @@ Runner::Runner()
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	CameraManager::initialize();
+	RendererContext::initialize(this->pRenderer);
 	// setWindowSize likely O(1) or O(#render targets)
 	CameraManager::getInstance()->setWindowSize(this->pWindow);
 	SceneTransitionManager::initialize();
@@ -126,6 +128,7 @@ Runner::~Runner()
 	GameObjectManager::destroy();
 	SceneTransitionManager::destroy();
 	MetricsManager::destroy();
+	RendererContext::destroy();
 
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);

@@ -15,7 +15,7 @@ private:
 public:
     void load(std::string strFilePath, std::string strName);
     void loadFromFolder(std::string strPath, std::string strName);
-    void loadFromText(std::string strName, std::string fontType, std::string textureText, SDL_Color textColor);
+    void loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor);
     //void loadFromFolder(std::string strFolderPath, std::string strName);
     void unload(std::string strName);
     std::vector<SDL_Texture*> getTexture(std::string strName, int nStart = -1, int nEnd = -1);

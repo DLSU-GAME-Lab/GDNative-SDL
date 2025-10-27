@@ -23,7 +23,6 @@ void ColliderRenderer::perform()
         if(!pOwner->getIsScreenObject() && !pOwner->componentExists("SpriteRenderer"))
         {
             SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
-
         }
 
         else if(!pOwner->getIsScreenObject() && pOwner->componentExists("SpriteRenderer"))

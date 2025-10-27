@@ -149,6 +149,7 @@
     <ClCompile Include="src\CameraManager.cpp" />
     <ClCompile Include="src\ColliderRenderer.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
+    <ClCompile Include="src\DialogueRenderer.cpp" />
     <ClCompile Include="src\Diary.cpp" />
     <ClCompile Include="src\DiaryToggle.cpp" />
     <ClCompile Include="src\EditorModule.cpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\PuzzleLevel1Scene.cpp" />
     <ClCompile Include="src\PuzzleToken.cpp" />
+    <ClCompile Include="src\RendererContext.cpp" />
     <ClCompile Include="src\RightRoomScene.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
@@ -226,6 +228,7 @@
     <ClInclude Include="include\CameraManager.h" />
     <ClInclude Include="include\ColliderRenderer.h" />
     <ClInclude Include="include\CustomStyles.h" />
+    <ClInclude Include="include\DialogueRenderer.h" />
     <ClInclude Include="include\Diary.h" />
     <ClInclude Include="include\DiaryToggle.h" />
     <ClInclude Include="include\EditorMode.h" />
@@ -264,6 +267,7 @@
     <ClInclude Include="include\PlayerInput.h" />
     <ClInclude Include="include\PuzzleLevel1Scene.h" />
     <ClInclude Include="include\PuzzleToken.h" />
+    <ClInclude Include="include\RendererContext.h" />
     <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />

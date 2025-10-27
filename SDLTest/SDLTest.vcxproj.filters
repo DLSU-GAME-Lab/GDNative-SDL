@@ -279,6 +279,10 @@
     <ClCompile Include="src\BoxCollider.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="src\DialogueRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RendererContext.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -551,6 +555,10 @@
     <ClInclude Include="include\BoxCollider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="include\DialogueRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererContext.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

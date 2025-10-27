@@ -67,7 +67,7 @@ void PuzzleLevel1Scene::onLoadObjects()
 	Prop* pDragonTile1 = new Prop("Dragon_Tile_1", "Dragon_Tile", Vector2D(-410.0f, 50.0f), Vector2D(0.95f));
 	Prop* pDragonTile2 = new Prop("Dragon_Tile_2", "Dragon_Tile", Vector2D(-30.0f, 50.0f), Vector2D(0.95f));
 	Prop* pDragonTile3 = new Prop("Dragon_Tile_3", "Dragon_Tile", Vector2D(350.0f, 50.0f), Vector2D(0.95f));
-	Text* pTileText1 = new Text("Tile_Text_1", "1", Vector2D(-380.0f, 30.0f));
+	/*Text* pTileText1 = new Text("Tile_Text_1", "1", Vector2D(-380.0f, 30.0f));
 	Text* pTileText2 = new Text("Tile_Text_2", "2", Vector2D(0.0f, 30.0f));
 	Text* pTileText3 = new Text("Tile_Text_3", "3", Vector2D(380.0f, 30.0f));
 	pTileText1->setFont("Maragsa");
@@ -75,14 +75,14 @@ void PuzzleLevel1Scene::onLoadObjects()
 	pTileText3->setFont("Maragsa");
 	pTileText1->setColor({ 100, 31, 31, 255 });
 	pTileText2->setColor({ 100, 31, 31, 255 });
-	pTileText3->setColor({ 100, 31, 31, 255 });
+	pTileText3->setColor({ 100, 31, 31, 255 });*/
 
-	GameObjectManager::getInstance()->addObject(pDragonTile1);
-	GameObjectManager::getInstance()->addObject(pDragonTile2);
-	GameObjectManager::getInstance()->addObject(pDragonTile3);
-	GameObjectManager::getInstance()->addObject(pTileText1);
-	GameObjectManager::getInstance()->addObject(pTileText2);
-	GameObjectManager::getInstance()->addObject(pTileText3);
+	//GameObjectManager::getInstance()->addObject(pDragonTile1);
+	//GameObjectManager::getInstance()->addObject(pDragonTile2);
+	//GameObjectManager::getInstance()->addObject(pDragonTile3);
+	//GameObjectManager::getInstance()->addObject(pTileText1);
+	//GameObjectManager::getInstance()->addObject(pTileText2);
+	//GameObjectManager::getInstance()->addObject(pTileText3);
 
 	Prop* pBlank1 = new Prop("Token_Blank_1", "Token_Blank", Vector2D(-280.0f, -375.0f), Vector2D(0.45f));
 	Prop* pBlank2 = new Prop("Token_Blank_2", "Token_Blank", Vector2D(0.0f, -375.0f), Vector2D(0.45f));
@@ -127,7 +127,7 @@ void PuzzleLevel1Scene::onLoadObjects()
 	Prop* pTablet = new Prop("Tablet", "Tablet", Vector2D(0.0f), Vector2D(0.9f));
 	pTransBG->attachChild(pTablet);
 
-	Text* pTabletText1 = new Text("Tablet_Text_1", "Objctive:", Vector2D(-500.0f, 150.0f));
+	/*Text* pTabletText1 = new Text("Tablet_Text_1", "Objctive:", Vector2D(-500.0f, 150.0f));
 	pTabletText1->setFont("Jaini90");
 	pTablet->attachChild(pTabletText1);
 	SpriteRenderer* pTabletTextR1 = (SpriteRenderer*)pTabletText1->findComponentByName("SpriteRenderer");
@@ -143,7 +143,7 @@ void PuzzleLevel1Scene::onLoadObjects()
 	pTabletText3->setFont("Jaini90");
 	pTablet->attachChild(pTabletText3);
 	SpriteRenderer* pTabletTextR3 = (SpriteRenderer*)pTabletText3->findComponentByName("SpriteRenderer");
-	pTabletTextR3->setPivot(Vector2D(0.0f, 0.5f));
+	pTabletTextR3->setPivot(Vector2D(0.0f, 0.5f));*/
 
 	pTransBG->setEnabled(false);
 	//AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
@@ -167,10 +167,5 @@ void PuzzleLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Story_Button");
 	TextureManager::getInstance()->unload("Tablet");
 	TextureManager::getInstance()->unload("Intro");
-
-	FontManager::getInstance()->unloadFont("Maragsa");
-	FontManager::getInstance()->unloadFont("LazyFont90");
-	FontManager::getInstance()->unloadFont("Jaini90");
-	FontManager::getInstance()->unloadFont("LazyFont45");
-	FontManager::getInstance()->unloadFont("Jaini45");
+	FontManager::getInstance()->unloadAllFonts();
 }

@@ -67,22 +67,23 @@ void PuzzleLevel1Scene::onLoadObjects()
 	Prop* pDragonTile1 = new Prop("Dragon_Tile_1", "Dragon_Tile", Vector2D(-410.0f, 50.0f), Vector2D(0.95f));
 	Prop* pDragonTile2 = new Prop("Dragon_Tile_2", "Dragon_Tile", Vector2D(-30.0f, 50.0f), Vector2D(0.95f));
 	Prop* pDragonTile3 = new Prop("Dragon_Tile_3", "Dragon_Tile", Vector2D(350.0f, 50.0f), Vector2D(0.95f));
-	/*Text* pTileText1 = new Text("Tile_Text_1", "1", Vector2D(-380.0f, 30.0f));
-	Text* pTileText2 = new Text("Tile_Text_2", "2", Vector2D(0.0f, 30.0f));
-	Text* pTileText3 = new Text("Tile_Text_3", "3", Vector2D(380.0f, 30.0f));
-	pTileText1->setFont("Maragsa");
-	pTileText2->setFont("Maragsa");
-	pTileText3->setFont("Maragsa");
+	Text* pTileText1 = new Text("Tile_Text_1", "1", "Maragsa.otf", 200,0,false);
+	pTileText1->setPos(Vector2D(-380.0f, 30.0f));
+	Text* pTileText2 = new Text("Tile_Text_2", "2", "Maragsa.otf", 200, 0, false);
+	pTileText2->setPos(Vector2D(0.0f, 30.0f));
+	Text* pTileText3 = new Text("Tile_Text_3", "3", "Maragsa.otf", 200, 0, false);
+	pTileText3->setPos(Vector2D(380.0f, 30.0f));
+
 	pTileText1->setColor({ 100, 31, 31, 255 });
 	pTileText2->setColor({ 100, 31, 31, 255 });
-	pTileText3->setColor({ 100, 31, 31, 255 });*/
+	pTileText3->setColor({ 100, 31, 31, 255 });
 
-	//GameObjectManager::getInstance()->addObject(pDragonTile1);
-	//GameObjectManager::getInstance()->addObject(pDragonTile2);
-	//GameObjectManager::getInstance()->addObject(pDragonTile3);
-	//GameObjectManager::getInstance()->addObject(pTileText1);
-	//GameObjectManager::getInstance()->addObject(pTileText2);
-	//GameObjectManager::getInstance()->addObject(pTileText3);
+	GameObjectManager::getInstance()->addObject(pDragonTile1);
+	GameObjectManager::getInstance()->addObject(pDragonTile2);
+	GameObjectManager::getInstance()->addObject(pDragonTile3);
+	GameObjectManager::getInstance()->addObject(pTileText1);
+	GameObjectManager::getInstance()->addObject(pTileText2);
+	GameObjectManager::getInstance()->addObject(pTileText3);
 
 	Prop* pBlank1 = new Prop("Token_Blank_1", "Token_Blank", Vector2D(-280.0f, -375.0f), Vector2D(0.45f));
 	Prop* pBlank2 = new Prop("Token_Blank_2", "Token_Blank", Vector2D(0.0f, -375.0f), Vector2D(0.45f));

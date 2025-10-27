@@ -185,7 +185,7 @@ void LobbyScene::createExitMenu()
 
 	GameObjectManager::getInstance()->addObject(pExitBG);
 
-	Text* pExitText = new Text("Exit_Text", "Go Back to Title \n Screen ?","JainiPurva-Regular.ttf", 90, 0.f, false);
+	Text* pExitText = new Text("Exit_Text", "Go Back to Title \n Screen ?", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pExitText->setPos(Vector2D(0, 50));
 	pExitText->setScale(Vector2D(1, 1));
 	pExitBG->attachChild(pExitText);
@@ -209,13 +209,12 @@ void LobbyScene::createExitMenu()
 	Text* pAcceptText = new Text("Accept_Text", "Yes", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pAcceptText->setPos(Vector2D(250, -300));
 	pAcceptText->setScale(Vector2D(.75, .75));
-	
+
 	pExitBG->attachChild(pDecline);
 	pDecline->attachChild(pDeclineText);
 
 	pExitBG->attachChild(pAccept);
 	pAccept->attachChild(pAcceptText);
-
 
 	pExitBG->setEnabled(false);
 }

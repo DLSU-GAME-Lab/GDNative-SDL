@@ -35,7 +35,7 @@ void LeftRoomScene::onLoadObjects()
 	//GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 	this->createScene();
 	this->createButtons();
-	//this->createExitMenu();
+	this->createExitMenu();
 
 
 }
@@ -120,43 +120,43 @@ void LeftRoomScene::createScene()
 	pSpriteAnim->play("idle");
 }
 
-//void LeftRoomScene::createExitMenu()
-//{
-//	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
-//	GameObjectManager::getInstance()->addObject(pExitBG);
-//
-//	Text* pExitText = new Text("Exit_Text", "Go Back to Title", Vector2D(0, 50), Vector2D(.75, .75), 0.f, false);
-//	pExitText->setFont("LazyFont90");
-//	Text* pExitText2 = new Text("Exit_Text2", " Screen ?", Vector2D(0, -50), Vector2D(.75, .75), 0.f, false);
-//	pExitText2->setFont("LazyFont90");
-//	pExitBG->attachChild(pExitText);
-//	pExitBG->attachChild(pExitText2);
-//
-//
-//	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
-//	pDecline->setPos(Vector2D(-200, -300));
-//	pDecline->setScale(Vector2D(.15, .15));
-//	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
-//	pDecline->attachComponent(pToggle);
-//
-//	Text* pDeclineText = new Text("Decline_Text", "No", Vector2D(-200, -300), Vector2D(.75, .75), 0.f, false);
-//	pDeclineText->setFont("LazyFont90");
-//
-//	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
-//	pAccept->setPos(Vector2D(250, -300));
-//	pAccept->setScale(Vector2D(.15, .15));
-//	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
-//	pAccept->attachComponent(pTitleSwitch);
-//	Text* pAcceptText = new Text("Accept_Text", "Yes", Vector2D(250, -300), Vector2D(.75, .75), 0.f, false);
-//	pAcceptText->setFont("LazyFont90");
-//
-//	pExitBG->attachChild(pDecline);
-//	pDecline->attachChild(pDeclineText);
-//
-//	pExitBG->attachChild(pAccept);
-//	pAccept->attachChild(pAcceptText);
-//
-//
-//	pExitBG->setEnabled(false);
-//	pExitBG->setPos(Vector2D(0, 100));
-//}
+void LeftRoomScene::createExitMenu()
+{
+	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
+	pExitBG->setPos(Vector2D(575, 300));
+
+	GameObjectManager::getInstance()->addObject(pExitBG);
+
+	Text* pExitText = new Text("Exit_Text", "Go Back to Title \n Screen ?", "JainiPurva-Regular.ttf", 90, 0.f, false);
+	pExitText->setPos(Vector2D(0, 50));
+	pExitText->setScale(Vector2D(1, 1));
+	pExitBG->attachChild(pExitText);
+
+
+	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
+	pDecline->setPos(Vector2D(-200, -300));
+	pDecline->setScale(Vector2D(.15, .15));
+	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
+	pDecline->attachComponent(pToggle);
+
+	Text* pDeclineText = new Text("Decline_Text", "No", "JainiPurva-Regular.ttf", 90, 0.f, false);
+	pDeclineText->setPos(Vector2D(-200, -300));
+	pDeclineText->setScale(Vector2D(.75, .75));
+
+	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
+	pAccept->setPos(Vector2D(250, -300));
+	pAccept->setScale(Vector2D(.15, .15));
+	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
+	pAccept->attachComponent(pTitleSwitch);
+	Text* pAcceptText = new Text("Accept_Text", "Yes", "JainiPurva-Regular.ttf", 90, 0.f, false);
+	pAcceptText->setPos(Vector2D(250, -300));
+	pAcceptText->setScale(Vector2D(.75, .75));
+
+	pExitBG->attachChild(pDecline);
+	pDecline->attachChild(pDeclineText);
+
+	pExitBG->attachChild(pAccept);
+	pAccept->attachChild(pAcceptText);
+
+	pExitBG->setEnabled(false);
+}

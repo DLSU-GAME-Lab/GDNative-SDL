@@ -3,7 +3,7 @@
 #include "ACollider.h"
 #include "AGameObject.h"
 #include "EnumComponentType.h"
-#include "ACollisionListener.h"
+#include "ICollisionListener.h"
 #include "vector"
 #include "math.h"
 struct RectangleShape {
@@ -56,7 +56,7 @@ private:
     SDL_FRect COffset;
     RectangleShape rectShape;
 public:
-    BoxCollider(std::string strName, SDL_FRect initialBounds,bool bFollowParent = true);
+    BoxCollider(std::string strName, SDL_FRect initialBounds);
 
 public:
     virtual void onAttach() override;

@@ -4,7 +4,7 @@
 #include "AComponent.h"
 #include "AGameObject.h"
 #include "EnumComponentType.h"
-#include "ACollisionListener.h"
+#include "ICollisionListener.h"
 //enum  class ColliderShape
 //{
 //    RECTANGLE = 0,
@@ -20,16 +20,15 @@
 class ACollider: public AComponent
 {
 protected:
-    ACollisionListener* pListener;
+    ICollisionListener* pListener;
     std::vector<ACollider*> vecCollided;
     bool bCleanUp;
-    bool bFollowParent;
     bool bCollideLeft;
     bool bCollideRight;
     bool bCollideTop;
     bool bCollideBottom;
 public:
-    ACollider(std::string strName, bool bFollowParent = true);
+    ACollider(std::string strName);
 public:
     virtual void perform() = 0;
     virtual bool isColliding(ACollider* pCollider) = 0;
@@ -37,12 +36,12 @@ public:
     int findCollider(ACollider* pCollider);
     void cleanCollisions();
 
-    void onCollisionEnter(ACollider* pCollider);
-    void onCollisionContinue(ACollider* pCollider);
-    void onCollisionExit(ACollider* pCollider);
+    virtual void onCollisionEnter(ACollider* pCollider);
+    virtual void onCollisionContinue(ACollider* pCollider);
+    virtual void onCollisionExit(ACollider* pCollider);
 
 public:
-    void setListener(ACollisionListener* pListener);
+    void setListener(ICollisionListener* pListener);
     SDL_FRect getOffset();
     void setOffset(SDL_FRect COffset);
     bool hasCollided(ACollider* pCollider);

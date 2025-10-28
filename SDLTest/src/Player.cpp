@@ -30,7 +30,7 @@ void Player::initialize()
     Gravity* pGrav = new Gravity(150.f);
     this->attachComponent(pGrav);
 
-    BoxCollider* pCollider = new BoxCollider(this->strName + " Collider", pSpriteRenderer->getRect(), true);
+    BoxCollider* pCollider = new BoxCollider(this->strName + " Collider", pSpriteRenderer->getRect());
     SDL_FRect COffset = SDL_FRect{ 0 ,0,-300,-250 };
     pCollider->setOffset(COffset);
     pCollider->setListener(this);

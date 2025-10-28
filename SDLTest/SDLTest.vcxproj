@@ -218,7 +218,7 @@
     <ClInclude Include="imgui\include\imstb_textedit.h" />
     <ClInclude Include="imgui\include\imstb_truetype.h" />
     <ClInclude Include="include\AButton.h" />
-    <ClInclude Include="include\ACollisionListener.h" />
+    <ClInclude Include="include\ICollisionListener.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
     <ClInclude Include="include\Animation.h" />

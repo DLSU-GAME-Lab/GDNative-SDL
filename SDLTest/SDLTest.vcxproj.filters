@@ -554,7 +554,7 @@
     <ClInclude Include="include\ACollider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="include\ACollisionListener.h">
+    <ClInclude Include="include\ICollisionListener.h">
       <Filter>Component\Physics\Interface</Filter>
     </ClInclude>
     <ClInclude Include="include\BoxCollider.h">

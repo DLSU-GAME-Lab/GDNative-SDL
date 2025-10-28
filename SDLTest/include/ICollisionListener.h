@@ -1,9 +1,9 @@
 #pragma once
 
 class ACollider;
-class ACollisionListener {
+class ICollisionListener {
 public:
-    ~ACollisionListener() {}
+    ~ICollisionListener() {}
 
 public:
     virtual void onCollisionEnter(ACollider* pCollider) = 0;

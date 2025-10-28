@@ -1,7 +1,13 @@
 #include "ACollider.h"
 
-ACollider::ACollider(std::string strName, bool bFollowParent):AComponent(strName,ComponentType::SCRIPT)
+ACollider::ACollider(std::string strName) : AComponent(strName,ComponentType::SCRIPT)
 {
+	this->bCleanUp = false;
+	this->bCollideBottom = false;
+	this->bCollideLeft = false;
+	this->bCollideRight = false;
+	this->bCollideTop = false;
+	this->pListener - NULL;
 }
 
 int ACollider::findCollider(ACollider* pCollider)
@@ -48,7 +54,7 @@ void ACollider::onCollisionExit(ACollider* pCollider)
 	}
 }
 
-void ACollider::setListener(ACollisionListener* pListener)
+void ACollider::setListener(ICollisionListener* pListener)
 {
 	this->pListener = pListener;
 }

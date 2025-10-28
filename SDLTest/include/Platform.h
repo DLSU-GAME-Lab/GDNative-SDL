@@ -1,9 +1,9 @@
 #pragma once
 #include "AGameObject.h"
 #include "PhysicsManager.h"
-#include "ACollisionListener.h"
+#include "ICollisionListener.h"
 #include "BoxCollider.h"
-class Platform:public AGameObject, ACollisionListener
+class Platform:public AGameObject, ICollisionListener
 {
 private:
 	SDL_FRect bounds;

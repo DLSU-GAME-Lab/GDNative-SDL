@@ -18,7 +18,7 @@ void Platform::initialize()
 {
 	this->bounds.x = fVecTranslate.x;
 	this->bounds.y = fVecTranslate.y;
-	BoxCollider* pCollider = new BoxCollider(this->strName + " Collider",this->bounds, true);
+	BoxCollider* pCollider = new BoxCollider(this->strName + " Collider",this->bounds);
 	pCollider->setListener(this);
 	this->attachComponent((AComponent*)pCollider);
 	PhysicsManager::getInstance()->trackCollider(pCollider);

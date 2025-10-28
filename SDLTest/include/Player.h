@@ -1,8 +1,8 @@
 #pragma once
 #include "AGameObject.h"
 #include "BoxCollider.h"
-#include "ACollisionListener.h"
-class Player : public AGameObject, ACollisionListener
+#include "ICollisionListener.h"
+class Player : public AGameObject, ICollisionListener
 {
 public:
 	Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot);

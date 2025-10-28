@@ -1,7 +1,7 @@
 #include "BoxCollider.h"
 
 
-BoxCollider::BoxCollider(std::string strName, SDL_FRect initialBounds, bool bFollowParent):ACollider(strName,bFollowParent)
+BoxCollider::BoxCollider(std::string strName, SDL_FRect initialBounds):ACollider(strName)
 {
 	this->COffset = SDL_FRect(0.f, 0.f, 0.f, 0.f);
 	this->rectShape = RectangleShape{initialBounds.w,initialBounds.h};
@@ -9,14 +9,12 @@ BoxCollider::BoxCollider(std::string strName, SDL_FRect initialBounds, bool bFol
 }
 void BoxCollider::onAttach()
 {
-	Vector2D fVecPos = CameraManager::getInstance()->getCurrentCamera()->worldToScreenPoint(this->pOwner->getPos());
-
+	Vector2D fVecPos = this->pOwner->getPos();
 	this->rectShape.setPosition(fVecPos.x, fVecPos.y);
 }
 void BoxCollider::perform()
 {
-	Vector2D fVecPos = CameraManager::getInstance()->getCurrentCamera()->worldToScreenPoint(this->pOwner->getPos());
-
+	Vector2D fVecPos = this->pOwner->getPos();
 	this->rectShape.setPosition(fVecPos.x, fVecPos.y);
 }
 

@@ -1,12 +1,12 @@
-#include "PhysicsManager.h"
+#include "PhysicsSystem.h"
 #include "EmptyObject.h"
 #include "GameObjectManager.h"
-void PhysicsManager::perform() 
+void PhysicsSystem::perform() 
 {
     this->checkCollision();
 }
 
-void PhysicsManager::checkCollision()
+void PhysicsSystem::checkCollision()
 {
     ACollider* pColliderA = NULL;
     ACollider* pColliderB = NULL;
@@ -51,16 +51,16 @@ void PhysicsManager::checkCollision()
     this->cleanUp();
 }
 
-void PhysicsManager::trackCollider(ACollider* pCollider) {
+void PhysicsSystem::trackCollider(ACollider* pCollider) {
     pCollider->cleanCollisions();
     this->vecTrackedCollider.push_back(pCollider);
 }
 
-void PhysicsManager::untrackCollider(ACollider* pCollider) {
+void PhysicsSystem::untrackCollider(ACollider* pCollider) {
     this->vecUntrackedCollider.push_back(pCollider);
 }
 
-void PhysicsManager::cleanUp() {
+void PhysicsSystem::cleanUp() {
     ACollider* pCollider = NULL;
     int nIndex;
 
@@ -84,7 +84,7 @@ void PhysicsManager::cleanUp() {
     this->vecUntrackedCollider.clear();
 }
 
-int PhysicsManager::findTrackedCollider(ACollider* pCollider) {
+int PhysicsSystem::findTrackedCollider(ACollider* pCollider) {
     int nIndex = -1;
     for (int i = 0; i < this->vecTrackedCollider.size() && nIndex == -1; i++) {
         if (pCollider == this->vecTrackedCollider[i])
@@ -97,23 +97,23 @@ int PhysicsManager::findTrackedCollider(ACollider* pCollider) {
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */
-PhysicsManager* PhysicsManager::P_SHARED_INSTANCE = NULL;
+PhysicsSystem* PhysicsSystem::P_SHARED_INSTANCE = NULL;
 
-PhysicsManager::PhysicsManager(std::string strName) : AComponent(strName, ComponentType::SCRIPT) {}
-PhysicsManager::PhysicsManager(const PhysicsManager& CObject) : AComponent(CObject.strName, ComponentType::SCRIPT) {}
+PhysicsSystem::PhysicsSystem(std::string strName) : AComponent(strName, ComponentType::SCRIPT) {}
+PhysicsSystem::PhysicsSystem(const PhysicsSystem& CObject) : AComponent(CObject.strName, ComponentType::SCRIPT) {}
 
-PhysicsManager* PhysicsManager::getInstance() {
+PhysicsSystem* PhysicsSystem::getInstance() {
     return P_SHARED_INSTANCE;
 }
 
-void PhysicsManager::initialize() {
+void PhysicsSystem::initialize() {
     EmptyObject* pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
-    P_SHARED_INSTANCE = new PhysicsManager("PhysicsManager");
+    P_SHARED_INSTANCE = new PhysicsSystem("PhysicsSystem");
     pPhysManagerHolder->attachComponent(P_SHARED_INSTANCE);
     GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 }
 
-void PhysicsManager::destroy() {
+void PhysicsSystem::destroy() {
     delete P_SHARED_INSTANCE;
 }
 /* * * * * * * * * * * * * * * * * * * * */

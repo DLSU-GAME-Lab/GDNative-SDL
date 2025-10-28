@@ -1,6 +1,6 @@
 #pragma once
 #include "AGameObject.h"
-#include "PhysicsManager.h"
+#include "PhysicsSystem.h"
 #include "ICollisionListener.h"
 #include "BoxCollider.h"
 class Platform:public AGameObject, ICollisionListener

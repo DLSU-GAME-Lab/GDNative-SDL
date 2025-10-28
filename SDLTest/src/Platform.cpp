@@ -21,7 +21,7 @@ void Platform::initialize()
 	BoxCollider* pCollider = new BoxCollider(this->strName + " Collider",this->bounds);
 	pCollider->setListener(this);
 	this->attachComponent((AComponent*)pCollider);
-	PhysicsManager::getInstance()->trackCollider(pCollider);
+	PhysicsSystem::getInstance()->trackCollider(pCollider);
 
 	ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider);
 	this->attachComponent(pColRenderer);

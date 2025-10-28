@@ -2,7 +2,7 @@
 #include "TextureManager.h"
 #include "SpriteAnimator.h"
 #include "PlayerController.h"
-#include "PhysicsManager.h"
+#include "PhysicsSystem.h"
 #include "Gravity.h"
 #include "ColliderRenderer.h"
 Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Player")
@@ -34,7 +34,7 @@ void Player::initialize()
     SDL_FRect COffset = SDL_FRect{ 0 ,0,-300,-250 };
     pCollider->setOffset(COffset);
     pCollider->setListener(this);
-    PhysicsManager::getInstance()->trackCollider(pCollider);
+    PhysicsSystem::getInstance()->trackCollider(pCollider);
     this->attachComponent(pCollider);
 
 

@@ -2,7 +2,7 @@
 #include "TextureManager.h"
 #include "GameObjectManager.h"
 #include "CameraManager.h"
-#include "PhysicsManager.h"
+#include "PhysicsSystem.h"
 #include "Player.h"
 #include "TileMap.h"
 #include "TileMapRenderer.h"
@@ -47,7 +47,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 {
 	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(1350, 700));
 
-	PhysicsManager::initialize();
+	PhysicsSystem::initialize();
 
 
 	

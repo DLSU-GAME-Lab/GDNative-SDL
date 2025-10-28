@@ -4,7 +4,7 @@
 #include "EnumComponentType.h"
 #include "ACollider.h"
 #include "Gravity.h"
-class PhysicsManager: AComponent
+class PhysicsSystem: AComponent
 {
 private:
     std::vector<ACollider*> vecTrackedCollider;
@@ -23,15 +23,15 @@ private:
      *       SINGLETON-RELATED CONTENT       *
      * * * * * * * * * * * * * * * * * * * * */
 private:
-    static PhysicsManager* P_SHARED_INSTANCE;
+    static PhysicsSystem* P_SHARED_INSTANCE;
 
 private:
-    PhysicsManager(std::string strName);
-    PhysicsManager(const PhysicsManager&);
-    PhysicsManager& operator = (const PhysicsManager&);
+    PhysicsSystem(std::string strName);
+    PhysicsSystem(const PhysicsSystem&);
+    PhysicsSystem& operator = (const PhysicsSystem&);
 
 public:
-    static PhysicsManager* getInstance();
+    static PhysicsSystem* getInstance();
     static void initialize();
     static void destroy();
     /* * * * * * * * * * * * * * * * * * * * */

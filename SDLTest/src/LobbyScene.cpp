@@ -42,7 +42,7 @@ void LobbyScene::onLoadObjects()
 {
 	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0));
 	//code for when a scene needs physics
-	PhysicsManager::initialize();
+	PhysicsSystem::initialize();
 
 	this->createScene();
 	this->createButtons();

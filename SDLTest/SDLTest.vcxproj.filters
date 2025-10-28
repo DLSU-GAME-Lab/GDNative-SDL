@@ -291,6 +291,9 @@
     <ClCompile Include="src\RigidBody.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="src\CameraController.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -574,6 +577,9 @@
     </ClInclude>
     <ClInclude Include="include\RigidBody.h">
       <Filter>Component\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CameraController.h">
+      <Filter>Component\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

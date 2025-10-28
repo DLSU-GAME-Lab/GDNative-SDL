@@ -41,7 +41,7 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 	bool bCollisionX = (fLeftA < fRightB) && (fRightA > fLeftB);
 	bool bCollisionY = (fTopA < fBotB) && (fBotA > fTopB);
 
-	if(bCollisionX&& bCollisionY)
+	if(bCollisionX && bCollisionY)
 	{
 		float centerAX = fLeftA + (CBoundsA.w / 2.0f);
 		float centerAY = fTopA + (CBoundsA.h / 2.0f);
@@ -55,28 +55,28 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 			if (deltaX > 0)
 			{
 				this->bCollideLeft = true;
+				this->intersection.y = fRightB - fLeftA;
 			}
 			else
 			{
 				this->bCollideRight = true;
-
+				this->intersection.y = fRightA - fLeftB;
 			}
 		}
 		else
 		{
 			if (deltaY > 0)
 			{
-				this->bCollideTop = true;
-
+				this->bCollideBottom = true;
+				this->intersection.y = fTopA - fBotB;
 			}
 			else
 			{
-				this->bCollideBottom = true;
-
+				this->bCollideTop = true;
+				this->intersection.y = fTopB - fBotA;
 			}
 		}
 	}
-
 
 	return bCollisionX && bCollisionY;
 }

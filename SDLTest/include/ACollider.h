@@ -22,6 +22,7 @@ class ACollider: public AComponent
 protected:
     ICollisionListener* pListener;
     std::vector<ACollider*> vecCollided;
+    Vector2D intersection;
     bool bCleanUp;
     bool bCollideLeft;
     bool bCollideRight;

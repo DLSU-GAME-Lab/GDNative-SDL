@@ -7,7 +7,7 @@ ACollider::ACollider(std::string strName) : AComponent(strName,ComponentType::SC
 	this->bCollideLeft = false;
 	this->bCollideRight = false;
 	this->bCollideTop = false;
-	this->pListener - NULL;
+	this->pListener = NULL;
 }
 
 int ACollider::findCollider(ACollider* pCollider)
@@ -47,6 +47,7 @@ void ACollider::onCollisionExit(ACollider* pCollider)
 {
 	if (this->pListener != NULL) {
 		this->pListener->onCollisionExit(pCollider);
+		this->intersection = Vector2D::Zero();
 		this->bCollideLeft = false;
 		this->bCollideTop = false;
 		this->bCollideBottom = false;

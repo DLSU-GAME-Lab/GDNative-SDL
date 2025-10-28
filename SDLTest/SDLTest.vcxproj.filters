@@ -288,6 +288,9 @@
     <ClCompile Include="src\RendererContext.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
+    <ClCompile Include="src\RigidBody.cpp">
+      <Filter>Component\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -568,6 +571,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererContext.h">
       <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RigidBody.h">
+      <Filter>Component\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

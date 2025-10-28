@@ -14,8 +14,7 @@ void BoxCollider::onAttach()
 }
 void BoxCollider::perform()
 {
-	Vector2D fVecPos = this->pOwner->getPos();
-	this->rectShape.setPosition(fVecPos.x, fVecPos.y);
+	
 }
 
 bool BoxCollider::isColliding(ACollider* pCollider)

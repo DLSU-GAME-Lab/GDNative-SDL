@@ -187,6 +187,7 @@
     <ClCompile Include="src\PuzzleToken.cpp" />
     <ClCompile Include="src\RendererContext.cpp" />
     <ClCompile Include="src\RightRoomScene.cpp" />
+    <ClCompile Include="src\RigidBody.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="include\PuzzleToken.h" />
     <ClInclude Include="include\RendererContext.h" />
     <ClInclude Include="include\RightRoomScene.h" />
+    <ClInclude Include="include\RigidBody.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />

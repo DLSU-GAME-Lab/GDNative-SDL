@@ -52,7 +52,7 @@ struct RectangleShape {
 
 class BoxCollider : public ACollider
 {
-private:
+protected:
     SDL_FRect COffset;
     RectangleShape rectShape;
 public:
@@ -60,7 +60,7 @@ public:
 
 public:
     virtual void onAttach() override;
-    void perform();
+    void perform() override;
     bool isColliding(ACollider* pCollider) override;
 
 public:

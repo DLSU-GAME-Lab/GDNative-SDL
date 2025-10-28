@@ -1,6 +1,8 @@
 #include "PhysicsSystem.h"
 #include "EmptyObject.h"
 #include "GameObjectManager.h"
+#include "RigidBody.h"
+
 void PhysicsSystem::perform() 
 {
     this->checkCollision();
@@ -45,6 +47,11 @@ void PhysicsSystem::checkCollision()
                     pColliderB->onCollisionContinue(pColliderA);
                 }
             }
+        }
+
+        if (RigidBody* pRigidBody = dynamic_cast<RigidBody*>(pColliderA))
+        {
+            pRigidBody->onUpdate();
         }
     }
 

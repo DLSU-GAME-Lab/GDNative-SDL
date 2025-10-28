@@ -21,6 +21,7 @@ public:
 	void initialize(); // (when all resources are guaranteed to be loaded).
 	void perform() override;
     void loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor);
+    void resetText();
     void onAttach() override;
 public:
     void setPivot(Vector2D pivot);

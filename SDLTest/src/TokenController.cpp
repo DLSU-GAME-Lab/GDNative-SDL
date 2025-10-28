@@ -18,15 +18,16 @@ void TokenController::perform()
 	if (this->pInput->getClicked())
 	{
 		this->pInput->setClicked(false);
-		std::cout << "Clicked " << this->pOwner->getName() << "\n";
 		if (this->pInput->isRightClick())
 		{
-			std::cout << "Right Mouse Clicked " << this->pOwner->getName() << "\n";
+			std::unordered_map <std::string, void*> mapParam;
+			std::string strName = pOwner->getName();
+			mapParam["TokenName"] = static_cast<void*>(&strName);
+			EventBroadcaster::getInstance()->broadcast(EventKey::RIGHT_CLICK, mapParam);
 			this->pInput->setRightClick(false);
 		}
 		if (this->pInput->isLeftClick())
 		{
-			std::cout << "Left Mouse Clicked " << this->pOwner->getName() << "\n";
 			this->pInput->setLeftClick(false);
 		}
 	}

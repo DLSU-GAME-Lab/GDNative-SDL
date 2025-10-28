@@ -98,7 +98,21 @@ void DialogueRenderer::loadFromText(std::string strName, std::string fontType, i
         return;
     }
     this->pTexture = pTexture;
+    float fw, fh;
+    if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
+        this->texSize = Vector2D(fw, fh);
+    }
+
+    if (mDestRect.w <= 0) mDestRect.w = this->texSize.x;
+    if (mDestRect.h <= 0) mDestRect.h = this->texSize.y;
 }
+
+void DialogueRenderer::resetText()
+{
+    SDL_DestroyTexture(this->pTexture);
+    this->pTexture = nullptr;
+}
+
 void DialogueRenderer::onAttach()
 {
     this->initialize();

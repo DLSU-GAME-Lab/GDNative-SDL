@@ -1,3 +1,4 @@
+#pragma once
 #include "AGameObject.h"
 
 class Prop : public AGameObject

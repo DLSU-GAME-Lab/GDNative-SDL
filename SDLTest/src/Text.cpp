@@ -45,3 +45,23 @@ void Text::initialize()
 	pDialogueRenderer->loadFromText(this->strName, key, this->nFontSize, this->strMessage, this->color);
 	this->attachComponent((AComponent*)pDialogueRenderer);
 }
+
+void Text::modifyText(std::string strNewText)
+{
+		std::string key = this->strFontName;
+
+		size_t ttfPos = key.rfind(".ttf");
+		size_t otfPos = key.rfind(".otf");
+
+		if (ttfPos != std::string::npos && ttfPos == key.length() - 4)
+		{
+			key = key.substr(0, ttfPos);
+		}
+		else if (otfPos != std::string::npos && otfPos == key.length() - 4)
+		{
+			key = key.substr(0, otfPos);
+		}
+	DialogueRenderer* pRenderer = (DialogueRenderer*)this->findComponentByName("DialogueRenderer");
+	pRenderer->resetText();
+	pRenderer->loadFromText(this->strName, key, this->nFontSize, strNewText, this->color);
+}

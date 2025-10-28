@@ -12,6 +12,7 @@
 #include "AnimatedSprite.h"
 #include "SpriteAnimator.h"
 #include "SequenceGameManager.h"
+#include "PuzzleHint.h"
 
 PuzzleLevel1Scene::PuzzleLevel1Scene() : AScene(SceneTag::PUZZLE_LEVEL_1_SCENE)
 {
@@ -26,6 +27,7 @@ PuzzleLevel1Scene::~PuzzleLevel1Scene()
 void PuzzleLevel1Scene::onLoadResources()
 {
 	TextureManager::getInstance()->load("Square.png", "Square");
+	TextureManager::getInstance()->load("button6.png", "Close_Button");
 	TextureManager::getInstance()->load("sequence_game/low_order_bg.png", "BG");
 
 	TextureManager::getInstance()->load("sequence_game/Dragon_RedHead.png", "Dragon_Head");
@@ -131,6 +133,9 @@ void PuzzleLevel1Scene::onLoadObjects()
 	pTabletTextR1->setPivot(Vector2D(0.0f, 0.5f));
 
 	pTransBG->setEnabled(false);
+	PuzzleHint* pHint = new PuzzleHint("PuzzleHintWindow");
+	pHint->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pHint);
 	//AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
 	//GameObjectManager::getInstance()->addObject(pIntro);
 	//SpriteAnimator* pAnimator = (SpriteAnimator*)pIntro->findComponentByName("SpriteAnimator");
@@ -150,6 +155,7 @@ void PuzzleLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Token_Eyes");
 	TextureManager::getInstance()->unload("Pause_Button");
 	TextureManager::getInstance()->unload("Story_Button");
+	TextureManager::getInstance()->unload("Close_Button");
 	TextureManager::getInstance()->unload("Tablet");
 	TextureManager::getInstance()->unload("Intro");
 	FontManager::getInstance()->unloadAllFonts();

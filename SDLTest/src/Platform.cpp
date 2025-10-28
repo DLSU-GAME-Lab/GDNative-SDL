@@ -23,7 +23,7 @@ void Platform::initialize()
 	this->attachComponent((AComponent*)pCollider);
 	PhysicsManager::getInstance()->trackCollider(pCollider);
 
-	ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider->getGlobalBounds());
+	ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider);
 	this->attachComponent(pColRenderer);
 }
 

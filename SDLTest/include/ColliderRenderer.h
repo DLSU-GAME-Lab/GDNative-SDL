@@ -1,16 +1,16 @@
 #pragma once
 #include "ARenderer.h"
+#include "ACollider.h"
 #include "AGameObject.h"
-#include "BoxCollider.h"
+
 class ColliderRenderer: public ARenderer
 {
 private:
-	SDL_FRect Rect;
+	ACollider* pCollider;
+
 public:
-	ColliderRenderer(SDL_FRect rect);
+	ColliderRenderer(ACollider* pCollider);
 	// Inherited via ARenderer
 	void perform() override;
-
-	SDL_FRect getRect();
 };
 

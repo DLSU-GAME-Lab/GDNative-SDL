@@ -38,7 +38,7 @@ void Player::initialize()
     this->attachComponent(pCollider);
 
 
-    ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider->getGlobalBounds());
+    ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider);
     this->attachComponent(pColRenderer);
 
 

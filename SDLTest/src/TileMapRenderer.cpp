@@ -36,18 +36,11 @@ void TileMapRenderer::perform()
                 SDL_FRect destRect = {};
                 SDL_Texture* tile = this->vecTile[c][r];
                 Vector2D scale = this->pOwner->getScale();
-                Vector2D pos = this->pOwner->getPos();
+                Vector2D pos = this->getTilePosition(c, r);
                 Vector2D tileSize;
-                Vector2D cellSize;
 
                 tileSize.x = tile->w * scale.x;
                 tileSize.y = tile->h * scale.y;
-
-                cellSize.x = this->fTileWidth * scale.x;
-                cellSize.y = this->fTileHeight * scale.y;
-                
-                pos.x += cellSize.x * (c - this->offset.x);
-                pos.y += cellSize.y * (r - this->offset.y);
 
                 destRect.x = pos.x;
                 destRect.y = pos.y;
@@ -78,4 +71,18 @@ void TileMapRenderer::setTileSize(float fTileWidth, float fTileHeight)
 void TileMapRenderer::setOffset(Vector2D offset)
 {
     this->offset = offset;
+}
+
+Vector2D TileMapRenderer::getTilePosition(Uint64 c, Uint64 r)
+{
+    Vector2D pos = this->pOwner->getPos();
+    Vector2D cellSize;
+
+    cellSize.x = this->fTileWidth * this->pOwner->getScale().x;
+    cellSize.y = this->fTileHeight * this->pOwner->getScale().y;
+
+    pos.x += cellSize.x * (c - this->offset.x);
+    pos.y += cellSize.y * (r - this->offset.y);
+
+    return pos;
 }

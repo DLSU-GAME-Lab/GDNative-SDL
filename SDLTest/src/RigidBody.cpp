@@ -1,7 +1,7 @@
 #include "RigidBody.h"
 #include "AGameObject.h"
 
-RigidBody::RigidBody() : BoxCollider("RigidBody", {0, 0, 0, 0})
+RigidBody::RigidBody() : BoxCollider("RigidBody")
 {
 	this->fWeight = 1.0f;
 	this->fDrag = 0.05f;
@@ -17,6 +17,7 @@ void RigidBody::addForce(Vector2D force)
 void RigidBody::onCollisionEnter(ACollider* pCollider)
 {
 	BoxCollider::onCollisionEnter(pCollider);
+	if (this->bCollideBottom) this->bGrounded = true;
 }
 
 void RigidBody::onCollisionContinue(ACollider* pCollider)
@@ -34,19 +35,20 @@ void RigidBody::onUpdate()
 	Vector2D pos = this->pOwner->getPos();
 
 	if (this->bGravityEnabled && !this->bGrounded)
-		this->velocity.y -= F_GRAVITY * this->fDeltaTime;
+		this->velocity.y -= F_GRAVITY * this->fWeight * this->fDeltaTime;
 
-	if ((this->bCollideLeft && this->velocity.x < 0.0f) ||
-		this->bCollideRight && this->velocity.x > 0.0f)
+	Vector2D intersected = this->intersection;
+	if (this->velocity.x > 0.0f) intersected.x *= -1.0f;
+	if (this->velocity.y < 0.0f) intersected.y *= -1.0f;
+
+	if (this->intersection.x != 0.0f && this->velocity.x != 0.0f)
 		this->velocity.x = 0.0f;
 
-	if ((this->bCollideBottom && this->velocity.y < 0.0f) ||
-		this->bCollideTop && this->velocity.y > 0.0f)
+	if (this->intersection.y != 0.0f && this->velocity.y != 0.0f)
 		this->velocity.y = 0.0f;
 
-	this->pOwner->setPos(pos - this->intersection + this->velocity);
-	pos = this->pOwner->getPos();
-	this->rectShape.setPosition(pos.x, pos.y);
+	this->pOwner->setPos(pos + intersected + this->velocity);
+	this->intersection = Vector2D(0.0f);
 
 	if (this->velocity != Vector2D::Zero())
 	{
@@ -73,6 +75,11 @@ void RigidBody::setVelocity(Vector2D velocity)
 	this->velocity = velocity;
 }
 
+void RigidBody::setGravityEnabled(bool bGravityEnabled)
+{
+	this->bGravityEnabled = bGravityEnabled;
+}
+
 float RigidBody::getWeight() const
 {
 	return this->fWeight;
@@ -86,4 +93,9 @@ float RigidBody::getDrag() const
 Vector2D RigidBody::getVelocity() const
 {
 	return this->velocity;
+}
+
+bool RigidBody::getGravityEnabled() const
+{
+	return this->bGravityEnabled;
 }

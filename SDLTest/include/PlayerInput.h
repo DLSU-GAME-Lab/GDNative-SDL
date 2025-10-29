@@ -5,8 +5,11 @@ class PlayerInput : public AGeneralInput
 private:
 	bool bHoldingLeft;
 	bool bHoldingRight;
+	bool bHoldingDown;
+	bool bHoldingUp;
+
 	bool bJumped;
-	float fMoveX;
+	Vector2D movement;
 
 public:
 	PlayerInput();
@@ -14,7 +17,7 @@ public:
 
 	void perform() override;
 
-	float getMoveX() const;
+	Vector2D getMovement() const;
 	bool getJumped() const;
 
 private:

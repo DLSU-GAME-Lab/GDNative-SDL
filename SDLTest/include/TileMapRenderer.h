@@ -24,5 +24,7 @@ public:
 
 	void setTileSize(float fTileWidth, float fTileHeight);
 	void setOffset(Vector2D offset);
+
+	Vector2D getTilePosition(Uint64 c, Uint64 r);
 };
 

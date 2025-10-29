@@ -296,9 +296,18 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	pTMR->addTile(87, 4, tile[13]);
 
-	Platform* pPlatform = new Platform("Temp Plat", Vector2D(250,375),Vector2D(500,300), 0.f);
+	Platform* pFloor = new Platform("Floor", Vector2D(5560,100),Vector2D(10000, 310), 0.f);
+	GameObjectManager::getInstance()->addObject(pFloor);
 
-	GameObjectManager::getInstance()->addObject(pPlatform);
+	Platform* pLeftWall = new Platform("Left_Wall", Vector2D(255,1000),Vector2D(610, 2000), 0.f);
+	GameObjectManager::getInstance()->addObject(pLeftWall);
+
+	Platform* pRightWall = new Platform("Right_Wall", Vector2D(10905,1610),Vector2D(610, 2000), 0.f);
+	GameObjectManager::getInstance()->addObject(pRightWall);
+
+	Platform* pPlat1 = new Platform("Plat_1", pTMR->getTilePosition(28, 7), Vector2D(300, 100), 0.f);
+	GameObjectManager::getInstance()->addObject(pPlat1);
+
 }
 
 void PlatformerLevel1Scene::onUnloadResources()

@@ -56,7 +56,7 @@ protected:
     SDL_FRect size;
     RectangleShape rectShape;
 public:
-    BoxCollider(std::string strName, SDL_FRect initialBounds);
+    BoxCollider(std::string strName);
 
 public:
     virtual void onAttach() override;

@@ -2,7 +2,10 @@
 
 PlayerInput::PlayerInput() : AGeneralInput("PlayerInput")
 {
-	this->fMoveX = 0.0f;
+	this->bHoldingLeft = false;
+	this->bHoldingRight = false;
+	this->bHoldingDown = false;
+	this->bHoldingUp = false;
 	this->bJumped = false;
 }
 
@@ -28,9 +31,9 @@ void PlayerInput::perform()
 	}
 }
 
-float PlayerInput::getMoveX() const
+Vector2D PlayerInput::getMovement() const
 {
-	return this->fMoveX;
+	return this->movement;
 }
 
 bool PlayerInput::getJumped() const
@@ -48,6 +51,13 @@ void PlayerInput::onKeyDown(SDL_Keycode key)
 
 	case SDLK_D:
 		this->bHoldingRight = true;
+		break;
+	case SDLK_S:
+		this->bHoldingDown = true;
+		break;
+
+	case SDLK_W:
+		this->bHoldingUp = true;
 		break;
 
 	case SDLK_SPACE:
@@ -69,8 +79,13 @@ void PlayerInput::onKeyUp(SDL_Keycode key)
 		this->bHoldingLeft = false;
 		break;
 	case SDLK_D:
-
 		this->bHoldingRight = false;
+		break;
+	case SDLK_S:
+		this->bHoldingDown = false;
+		break;
+	case SDLK_W:
+		this->bHoldingUp = false;
 		break;
 
 	case SDLK_SPACE:
@@ -86,8 +101,13 @@ void PlayerInput::onKeyUp(SDL_Keycode key)
 
 void PlayerInput::updateValues()
 {
-	if (this->bHoldingLeft && this->bHoldingRight) this->fMoveX = 0.0f;
-	else if (this->bHoldingLeft) this->fMoveX = -1.0f;
-	else if (this->bHoldingRight) this->fMoveX = 1.0f;
-	else this->fMoveX = 0.0f;
+	if (this->bHoldingLeft && this->bHoldingRight) this->movement.x = 0.0f;
+	else if (this->bHoldingLeft) this->movement.x = -1.0f;
+	else if (this->bHoldingRight) this->movement.x = 1.0f;
+	else this->movement.x = 0.0f;
+
+	if (this->bHoldingDown && this->bHoldingUp) this->movement.y = 0.0f;
+	else if (this->bHoldingDown) this->movement.y = -1.0f;
+	else if (this->bHoldingUp) this->movement.y = 1.0f;
+	else this->movement.y = 0.0f;
 }

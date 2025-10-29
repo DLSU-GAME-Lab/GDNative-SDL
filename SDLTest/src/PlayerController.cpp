@@ -23,21 +23,22 @@ void PlayerController::perform()
 {
 	if (this->pInput == NULL || this->pSprite == NULL) return;
 
-	if (this->pInput->getMoveX() != 0.0f)
+	if (this->pInput->getMovement() != Vector2D::Zero())
 	{
 		this->pAnimator->setAnimationState("run");
-		this->pRigidBody->addForce(Vector2D(this->pInput->getMoveX() * this->fMoveSpeed, 0.0f));
-		this->pSprite->setFlipX(this->pInput->getMoveX() < 0.0f);
+		this->pRigidBody->addForce(this->pInput->getMovement() * this->fMoveSpeed);
+		this->pSprite->setFlipX(this->pInput->getMovement().x < 0.0f);
 	}
 	else this->pAnimator->setAnimationState("idle");
 
-	if (this->pInput->getJumped()&& !this->bJumping)
-	{
-		this->pAnimator->setAnimationState("jump");
-		this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce));
-		this->bJumping = true;
-		this->bFalling = false;
-	}
+	//if (this->pInput->getJumped()&& !this->bJumping)
+	//{
+	//	this->pAnimator->setAnimationState("jump");
+	//	this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce));
+	//	this->bJumping = true;
+	//	this->bFalling = false;
+	//}
+
 }
 
 void PlayerController::jump()

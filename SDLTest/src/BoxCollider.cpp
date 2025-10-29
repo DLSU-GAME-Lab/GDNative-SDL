@@ -2,10 +2,9 @@
 #include "AGameObject.h"
 
 
-BoxCollider::BoxCollider(std::string strName, SDL_FRect initialBounds):ACollider(strName)
+BoxCollider::BoxCollider(std::string strName) : ACollider(strName)
 {
 	this->size = SDL_FRect(0.f, 0.f, 0.f, 0.f);
-	this->rectShape = RectangleShape{initialBounds.w,initialBounds.h};
 
 }
 void BoxCollider::onAttach()
@@ -56,12 +55,12 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 			if (deltaX > 0)
 			{
 				this->bCollideLeft = true;
-				this->intersection.y = fRightB - fLeftA;
+				this->intersection.x = fRightB - fLeftA;
 			}
 			else
 			{
 				this->bCollideRight = true;
-				this->intersection.y = fRightA - fLeftB;
+				this->intersection.x = fRightA - fLeftB;
 			}
 		}
 		else

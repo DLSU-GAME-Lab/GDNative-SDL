@@ -16,11 +16,12 @@ void PhysicsSystem::checkCollision()
     for (int i = 0; i < this->vecTrackedCollider.size(); i++) {
         pColliderA = this->vecTrackedCollider[i];
 
-        for (int j = 0; j < this->vecTrackedCollider.size(); j++) {
+        for (int j = i + 1; j < this->vecTrackedCollider.size(); j++) {
             pColliderB = this->vecTrackedCollider[j];
             if (pColliderA != pColliderB) {
 
-                if (pColliderA->isColliding(pColliderB) &&
+                bool isColliding = pColliderA->isColliding(pColliderB);
+                if (isColliding &&
                     !pColliderA->hasCollided(pColliderB) &&
                     !pColliderB->hasCollided(pColliderA)) {
 
@@ -30,7 +31,7 @@ void PhysicsSystem::checkCollision()
                     pColliderB->onCollisionEnter(pColliderA);
                 }
 
-                else if (!pColliderA->isColliding(pColliderB) &&
+                else if (!isColliding &&
                     pColliderA->hasCollided(pColliderB) &&
                     pColliderB->hasCollided(pColliderA)) {
 
@@ -40,7 +41,7 @@ void PhysicsSystem::checkCollision()
                     pColliderB->onCollisionExit(pColliderA);
                 }
 
-                if (pColliderA->isColliding(pColliderB) &&
+                if (isColliding &&
                     pColliderA->hasCollided(pColliderB) &&
                     pColliderB->hasCollided(pColliderA)) {
                     pColliderA->onCollisionContinue(pColliderB);

@@ -25,9 +25,11 @@ public:
     void setWeight(float fWeight);
     void setDrag(float fDrag);
     void setVelocity(Vector2D velocity);
+    void setGravityEnabled(bool bGravityEnabled);
 
     float getWeight() const;
     float getDrag() const;
     Vector2D getVelocity() const;
+    bool getGravityEnabled() const;
 };
 

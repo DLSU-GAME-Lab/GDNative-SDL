@@ -1,9 +1,10 @@
 #include "BoxCollider.h"
+#include "AGameObject.h"
 
 
 BoxCollider::BoxCollider(std::string strName, SDL_FRect initialBounds):ACollider(strName)
 {
-	this->COffset = SDL_FRect(0.f, 0.f, 0.f, 0.f);
+	this->size = SDL_FRect(0.f, 0.f, 0.f, 0.f);
 	this->rectShape = RectangleShape{initialBounds.w,initialBounds.h};
 
 }
@@ -82,34 +83,25 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 }
 
 
-SDL_FRect BoxCollider::getOffset()
+SDL_FRect BoxCollider::getSize() const
 {
-	return this->COffset;
+	return this->size;
 }
 
-void BoxCollider::setOffset(SDL_FRect COffset)
+void BoxCollider::setSize(SDL_FRect size)
 {
-	this->COffset = COffset;
+	this->size = size;
 }
 SDL_FRect BoxCollider::getGlobalBounds()
 {
-	SDL_FRect bounds = this->rectShape.getGlobalBounds();
+	Vector2D pos = this->pOwner->getPos();
+	Vector2D scale = this->pOwner->getScale();
 
-	// Compute center
-	float centerX = bounds.x + bounds.w / 2.0f;
-	float centerY = bounds.y + bounds.h / 2.0f;
+	SDL_FRect bounds = {};
+	bounds.w = this->size.w * scale.x;
+	bounds.h = this->size.h * scale.y;
+	bounds.x = pos.x - (bounds.w / 2.0f);
+	bounds.y = pos.y - (bounds.h / 2.0f);
 
-	// Apply offset to center
-	centerX += this->COffset.x;
-	centerY += this->COffset.y;
-
-	// Reconstruct bounds from new center
-	SDL_FRect CTransform;
-	CTransform.w = bounds.w + this->COffset.w;
-	CTransform.h = bounds.h + this->COffset.h;
-	CTransform.x = centerX - CTransform.w / 2.0f;
-	CTransform.y = centerY - CTransform.h / 2.0f;
-
-
-	return CTransform;
+	return bounds;
 }

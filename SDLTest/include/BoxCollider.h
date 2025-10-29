@@ -53,7 +53,7 @@ struct RectangleShape {
 class BoxCollider : public ACollider
 {
 protected:
-    SDL_FRect COffset;
+    SDL_FRect size;
     RectangleShape rectShape;
 public:
     BoxCollider(std::string strName, SDL_FRect initialBounds);
@@ -64,8 +64,8 @@ public:
     bool isColliding(ACollider* pCollider) override;
 
 public:
-    SDL_FRect getOffset();
-    void setOffset(SDL_FRect COffset);
+    SDL_FRect getSize() const;
+    void setSize(SDL_FRect size);
    
     SDL_FRect getGlobalBounds();
 };

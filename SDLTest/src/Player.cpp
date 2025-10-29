@@ -22,29 +22,6 @@ void Player::initialize()
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer);
     this->attachComponent(pSpriteAnimator);
 
-    PlayerInput* pPlayerInput = new PlayerInput();
-    this->attachComponent(pPlayerInput);
-
-    RigidBody* pRB = new RigidBody();
-    SDL_FRect COffset = SDL_FRect{ 0 ,0,-300,-250 };
-    pRB->setOffset(COffset);
-    pRB->setListener(this);
-    pRB->setWeight(10.0f);
-    pRB->setDrag(1.0f);
-    PhysicsSystem::getInstance()->trackCollider(pRB);
-    this->attachComponent(pRB);
-
-
-    ColliderRenderer* pColRenderer = new ColliderRenderer(pRB);
-    this->attachComponent(pColRenderer);
-
-    PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator, pRB);
-    this->attachComponent(pPlayerController);
-
-    CameraController* pCamComtroller = new CameraController();
-    pCamComtroller->setOffset(Vector2D(0.0f, 200.0f));
-    this->attachComponent(pCamComtroller);
-
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");
     auto vecJump = TextureManager::getInstance()->getTexture("player_jump");
@@ -56,10 +33,31 @@ void Player::initialize()
     pSpriteAnimator->addAnimation(pIdle);
     pSpriteAnimator->addAnimation(pRun);
     pSpriteAnimator->addAnimation(pJump);
-
     pSpriteAnimator->play("idle");
-    pPlayerController->setMoveSpeed(1000.0f);
+
+    PlayerInput* pPlayerInput = new PlayerInput();
+    this->attachComponent(pPlayerInput);
+
+    RigidBody* pRB = new RigidBody();
+    SDL_FRect size = SDL_FRect{ 0 ,0, 200, 460 };
+    pRB->setSize(size);
+    pRB->setListener(this);
+    pRB->setWeight(10.0f);
+    pRB->setDrag(1.0f);
+    PhysicsSystem::getInstance()->trackCollider(pRB);
+    this->attachComponent(pRB);
+
+    ColliderRenderer* pColRenderer = new ColliderRenderer(pRB);
+    this->attachComponent(pColRenderer);
+
+    PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator, pRB);
+    pPlayerController->setMoveSpeed(2000.0f);
     pPlayerController->setJumpForce(5000.f);
+    this->attachComponent(pPlayerController);
+
+    CameraController* pCamComtroller = new CameraController();
+    pCamComtroller->setOffset(Vector2D(0.0f, 200.0f));
+    this->attachComponent(pCamComtroller);
 }
 
 void Player::onCollisionEnter(ACollider* pCollider)

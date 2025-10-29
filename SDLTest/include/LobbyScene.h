@@ -1,6 +1,7 @@
 #pragma once
 #include "AScene.h"
 #include "EnumSceneTag.h"
+#include "ExitMenu.h"
 
 class LobbyScene : public AScene
 {

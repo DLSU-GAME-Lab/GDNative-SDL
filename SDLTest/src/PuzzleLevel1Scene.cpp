@@ -106,13 +106,13 @@ void PuzzleLevel1Scene::onLoadObjects()
 	GUIButton* pPauseButton = new GUIButton("Pause_Button", "Pause_Button");
 	pPauseButton->setPos(Vector2D(800.0f, 400.0f));
 	pPauseButton->setScale(Vector2D(0.08f));
-	//GUIToggle* pPauseToggle = new GUIToggle("Pause_Screen");
-	//pPauseButton->attachComponent(pPauseToggle);
+	GUIToggle* pPauseToggle = new GUIToggle(EventKey::PAUSE_SCREEN);
+	pPauseButton->attachComponent(pPauseToggle);
 
 	GUIButton* pStoryButton = new GUIButton("Story_Button", "Story_Button");
 	pStoryButton->setPos(Vector2D(600.0f, 400.0f));
 	pStoryButton->setScale(Vector2D(0.08f));
-	//GUIToggle* pStoryToggle = new GUIToggle("Story_Screen");
+	//GUIToggle* pStoryToggle = new GUIToggle();
 	//pStoryButton->attachComponent(pStoryToggle);
 
 	GameObjectManager::getInstance()->addObject(pPauseButton);
@@ -136,6 +136,10 @@ void PuzzleLevel1Scene::onLoadObjects()
 	PuzzleHint* pHint = new PuzzleHint("PuzzleHintWindow");
 	pHint->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pHint);
+
+	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
+	GameObjectManager::getInstance()->addObject(pPauseScreen);
+	pPauseScreen->setEnabled(false);
 	//AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
 	//GameObjectManager::getInstance()->addObject(pIntro);
 	//SpriteAnimator* pAnimator = (SpriteAnimator*)pIntro->findComponentByName("SpriteAnimator");
@@ -159,4 +163,5 @@ void PuzzleLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Tablet");
 	TextureManager::getInstance()->unload("Intro");
 	FontManager::getInstance()->unloadAllFonts();
+	EventBroadcaster::getInstance()->unregisterAllListeners();
 }

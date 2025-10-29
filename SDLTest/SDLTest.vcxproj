@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ExitMenu.cpp" />
     <ClCompile Include="src\ACollider.cpp" />
     <ClCompile Include="imgui\src\imgui.cpp" />
     <ClCompile Include="imgui\src\imgui_demo.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
+    <ClCompile Include="src\PauseScreen.cpp" />
     <ClCompile Include="src\PlatformerLevel1Scene.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
@@ -210,6 +212,7 @@
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ExitMenu.h" />
     <ClInclude Include="include\ACollider.h" />
     <ClInclude Include="imgui\include\imconfig.h" />
     <ClInclude Include="imgui\include\imgui.h" />
@@ -258,6 +261,7 @@
     <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
+    <ClInclude Include="include\PauseScreen.h" />
     <ClInclude Include="include\PlatformerLevel1Scene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />

@@ -294,6 +294,12 @@
     <ClCompile Include="src\CameraController.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ExitMenu.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PauseScreen.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -580,6 +586,12 @@
     </ClInclude>
     <ClInclude Include="include\CameraController.h">
       <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PauseScreen.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ExitMenu.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

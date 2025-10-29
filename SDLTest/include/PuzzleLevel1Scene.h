@@ -1,5 +1,6 @@
 #pragma once
 #include "AScene.h"
+#include "PauseScreen.h"
 class PuzzleLevel1Scene : public AScene
 {
 public:

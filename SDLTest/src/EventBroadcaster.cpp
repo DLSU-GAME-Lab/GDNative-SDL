@@ -12,12 +12,10 @@ void EventBroadcaster::unregisterListener(EventListener* pListener) {
     std::vector<EventListener*> vecListener = this->mapListener[EKey];
     int nIndex = this->findListener(pListener, vecListener);
 
-    delete this->mapListener[EKey][nIndex];
     this->mapListener[EKey].erase(this->mapListener[EKey].begin() + nIndex);
 
     nIndex = this->findListener(pListener);
     if(nIndex != -1) {
-        delete this->vecListener[nIndex];
         this->vecListener.erase(this->vecListener.begin() + nIndex);
     }
 }
@@ -33,6 +31,25 @@ void EventBroadcaster::unregisterAllListeners() {
 void EventBroadcaster::broadcast(EventKey EKey, std::unordered_map<std::string, void*> mapParameter) {
     for(int i = 0; i < this->mapListener[EKey].size(); i++) {
         this->mapListener[EKey][i]->onEventTrigger(mapParameter);
+    }
+}
+
+void EventBroadcaster::disableOtherListenerExcept(EventListener* pListenerExcluded)
+{
+    for (EventListener* pListener : this->vecListener)
+    {
+        if (pListenerExcluded->getKey() != pListener->getKey())
+        {
+            pListener->setListenerEnabled(false);
+        }
+    }
+}
+
+void EventBroadcaster::enableAllListeners()
+{
+    for (EventListener* pListener : this->vecListener)
+    {
+        pListener->setListenerEnabled(true);
     }
 }
 

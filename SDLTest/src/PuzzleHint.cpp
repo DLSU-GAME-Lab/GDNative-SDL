@@ -23,7 +23,7 @@ void PuzzleHint::initialize()
 	this->attachChild(this->pText);
 
 	GUIButton* pButton = new GUIButton("CloseButton", "Close_Button");
-	GUIToggle* pToggle = new GUIToggle(this->getName());
+	GUIToggle* pToggle = new GUIToggle(EventKey::RIGHT_CLICK);
 	pButton->setPos(Vector2D(0, -300));
 	pButton->setScale(Vector2D(.15, .15));
 	pButton->attachComponent(pToggle);
@@ -39,8 +39,17 @@ void PuzzleHint::initialize()
 }
 void PuzzleHint::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {
+	bool bFromToggle = false;
+	if (mapParameter.find("Sender") != mapParameter.end())
+	{
+		std::string senderType = *static_cast<std::string*>(mapParameter["Sender"]);
+		bFromToggle = (senderType == "CloseButton");
+		std::cout << senderType << std::endl;
+	}
+
 	if(!this->bEnabled)
 	{
+		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
 		std::string strName = *static_cast<std::string*>(mapParameter["TokenName"]);
 		if (strName == "Token_Horns")
 		{
@@ -58,9 +67,11 @@ void PuzzleHint::onEventTrigger(std::unordered_map<std::string, void*> mapParame
 		{
 			this->pText->modifyText(" \"The ancient Filipinos ran to the ocean while\n banging their pots and pans and shouted\n together, \"Return our moon\". Bakunawa was\n so startled by the loud sudden noise that it \n spat out the seventh moon.\"");
 			this->setEnabled(true);
-
-
 		}
+	}
+	else if(this->bEnabled && bFromToggle)
+	{
+		this->setEnabled(false);
 	}
 }
 

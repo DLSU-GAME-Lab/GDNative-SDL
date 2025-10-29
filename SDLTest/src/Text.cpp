@@ -11,6 +11,7 @@ AGameObject(strName)
 	this->color = colorBlack;
 	this->nFontSize = nFontSize;
 	this->strFontName = strFontName;
+	this->fRot = fRot;
 }
 
 Text::~Text()

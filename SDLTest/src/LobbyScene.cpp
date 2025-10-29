@@ -79,6 +79,7 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Then");
 	TextureManager::getInstance()->unload("Page_Change");
 	FontManager::getInstance()->unloadAllFonts();
+	EventBroadcaster::getInstance()->unregisterAllListeners();
 
 }
 
@@ -138,7 +139,7 @@ void LobbyScene::createButtons()
 	GUIButton* pReturn = new GUIButton("Return_Button", "Back");
 	pReturn->setPos(Vector2D(-850, 450));
 	pReturn->setScale(Vector2D(.075f, .075f));
-	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
+	GUIToggle* pToggle = new GUIToggle(EventKey::RETURN_SCREEN);
 	pReturn->attachComponent(pToggle);
 	GameObjectManager::getInstance()->addObject(pReturn);
 }
@@ -180,43 +181,9 @@ void LobbyScene::createScene()
 
 void LobbyScene::createExitMenu()
 {
-	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
-	pExitBG->setPos(Vector2D(575, 300));
-
-	GameObjectManager::getInstance()->addObject(pExitBG);
-
-	Text* pExitText = new Text("Exit_Text", "Go Back to Title \n Screen ?", "JainiPurva-Regular.ttf", 90, 0.f, false);
-	pExitText->setPos(Vector2D(0, 50));
-	pExitText->setScale(Vector2D(1, 1));
-	pExitBG->attachChild(pExitText);
-
-
-	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
-	pDecline->setPos(Vector2D(-200, -300));
-	pDecline->setScale(Vector2D(.15, .15));
-	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
-	pDecline->attachComponent(pToggle);
-
-	Text* pDeclineText = new Text("Decline_Text", "No", "JainiPurva-Regular.ttf", 90, 0.f, false);
-	pDeclineText->setPos(Vector2D(-200, -300));
-	pDeclineText->setScale(Vector2D(.75, .75));
-
-	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
-	pAccept->setPos(Vector2D(250, -300));
-	pAccept->setScale(Vector2D(.15, .15));
-	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
-	pAccept->attachComponent(pTitleSwitch);
-	Text* pAcceptText = new Text("Accept_Text", "Yes", "JainiPurva-Regular.ttf", 90, 0.f, false);
-	pAcceptText->setPos(Vector2D(250, -300));
-	pAcceptText->setScale(Vector2D(.75, .75));
-
-	pExitBG->attachChild(pDecline);
-	pDecline->attachChild(pDeclineText);
-
-	pExitBG->attachChild(pAccept);
-	pAccept->attachChild(pAcceptText);
-
-	pExitBG->setEnabled(false);
+	ExitMenu* pExitMenu = new ExitMenu("LobbyExitMenu");
+	GameObjectManager::getInstance()->addObject(pExitMenu);
+	pExitMenu->setEnabled(false);
 }
 
 //void LobbyScene::createDiary()

@@ -3,6 +3,10 @@
 
 enum class EventKey : int {
     RIGHT_CLICK = 0,
+    PAUSE_SCREEN,
+    RETURN_SCREEN,
+    DIARY_SCREEN,
+    SWITCH_SCENE
 };
 
 #endif

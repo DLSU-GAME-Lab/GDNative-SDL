@@ -20,3 +20,8 @@ void ColliderRenderer::perform()
     SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
     SDL_RenderRect(pRenderer, &tempRect);
 }
+
+void ColliderRenderer::drawWidget()
+{
+
+}

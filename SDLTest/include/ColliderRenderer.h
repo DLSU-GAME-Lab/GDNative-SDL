@@ -12,5 +12,6 @@ public:
 	ColliderRenderer(ACollider* pCollider);
 	// Inherited via ARenderer
 	void perform() override;
+	void drawWidget() override;
 };
 

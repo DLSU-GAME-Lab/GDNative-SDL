@@ -25,6 +25,7 @@ public:
     ~SpriteRenderer();
 
     void perform() override;
+    void drawWidget() override;
 
     // setters
     void setTexture(SDL_Texture* pTexture);

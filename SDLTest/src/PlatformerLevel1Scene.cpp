@@ -63,7 +63,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(tileMap);
 	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
-	Player* pPlayer = new Player(Vector2D(1000, 380), Vector2D(0.6f, 0.6f), 0.f);
+	Player* pPlayer = new Player(Vector2D(1050, 450), Vector2D(0.6f, 0.6f), 0.f);
 	GameObjectManager::getInstance()->addObject(pPlayer);
 	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
 	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
@@ -87,7 +87,6 @@ void PlatformerLevel1Scene::onLoadObjects()
 	tile.push_back(TextureManager::getInstance()->get("Grass_Platform"));	//13
 
 	pTMR->setTileSize(512, 512);
-	pTMR->setOffset(Vector2D(0.5f));
 	tileMap->setScale(Vector2D(0.2f));
 
 	//left wall
@@ -278,35 +277,68 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pTMR->addTile(98, 25, tile[2]);
 
 	//platforms
-	pTMR->addTile(11, 9, tile[13]);
-	pTMR->addTile(16, 9, tile[13]);
-	pTMR->addTile(21, 9, tile[13]);
+	unsigned int indices[] = {
+		12, 9,
+		17, 9,
+		22, 9,
 
-	pTMR->addTile(36, 9, tile[13]);
-	pTMR->addTile(41, 9, tile[13]);
-	pTMR->addTile(46, 9, tile[13]);
+		37, 9,
+		42, 9,
+		47, 9,
 
-	pTMR->addTile(19, 3, tile[13]);
-	pTMR->addTile(22, 4, tile[13]);
-	pTMR->addTile(25, 5, tile[13]);
-	pTMR->addTile(28, 7, tile[13]);
-	pTMR->addTile(32, 5, tile[13]);
-	pTMR->addTile(35, 4, tile[13]);
-	pTMR->addTile(38, 3, tile[13]);
+		20, 3,
+		23, 4,
+		26, 5,
+		29, 7,
+		33, 5,
+		36, 4,
+		39, 3,
 
-	pTMR->addTile(87, 4, tile[13]);
+		88, 4,
+	};
 
-	Platform* pFloor = new Platform("Floor", Vector2D(5560,100),Vector2D(10000, 310), 0.f);
+	for (int i = 0; i < 14; i++)
+	{
+		int index = i * 2;
+		Uint64 c = indices[index];
+		Uint64 r = indices[index + 1];
+		pTMR->addTile(c, r, tile[13]);
+		std::string name = "Platform_";
+		Platform* pPlatform = new Platform(name + std::to_string(i), pTMR->getTilePosition(c, r), Vector2D(300, 100), 0.f);
+		GameObjectManager::getInstance()->addObject(pPlatform);
+	}
+
+	Platform* pFloor = new Platform("Floor", Vector2D(5610, 150), Vector2D(10000, 310), 0.f);
 	GameObjectManager::getInstance()->addObject(pFloor);
 
-	Platform* pLeftWall = new Platform("Left_Wall", Vector2D(255,1000),Vector2D(610, 2000), 0.f);
+	Platform* pFloor1 = new Platform("Floor_1", Vector2D(9318, 460), Vector2D(205, 310), 0.f);
+	GameObjectManager::getInstance()->addObject(pFloor1);
+
+	Platform* pFloor2 = new Platform("Floor_2", Vector2D(9525, 716), Vector2D(205, 205), 0.f);
+	GameObjectManager::getInstance()->addObject(pFloor2);
+
+	Platform* pFloor3 = new Platform("Floor_3", Vector2D(10140, 870), Vector2D(1020, 100), 0.f);
+	GameObjectManager::getInstance()->addObject(pFloor3);
+
+	Platform* pLeftWall = new Platform("Left_Wall", Vector2D(305,1050), Vector2D(610, 2000), 0.f);
 	GameObjectManager::getInstance()->addObject(pLeftWall);
 
-	Platform* pRightWall = new Platform("Right_Wall", Vector2D(10905,1610),Vector2D(610, 2000), 0.f);
+	Platform* pLeftWallLedge = new Platform("Left_Wall_Ledge", pTMR->getTilePosition(8, 12), Vector2D(520, 520), 0.f);
+	GameObjectManager::getInstance()->addObject(pLeftWallLedge);
+
+	Platform* pRightWall = new Platform("Right_Wall", Vector2D(10955,1660), Vector2D(610, 2000), 0.f);
 	GameObjectManager::getInstance()->addObject(pRightWall);
 
-	Platform* pPlat1 = new Platform("Plat_1", pTMR->getTilePosition(28, 7), Vector2D(300, 100), 0.f);
-	GameObjectManager::getInstance()->addObject(pPlat1);
+	Platform* pSkyPlat1 = new Platform("Sky_Platform_1", pTMR->getTilePosition(50, 12), Vector2D(305, 510), 0.f);
+	GameObjectManager::getInstance()->addObject(pSkyPlat1);
+
+	Vector2D skyPlat2Pos = pTMR->getTilePosition(71, 9);
+	skyPlat2Pos.y += 50.0f;
+	Platform* pSkyPlat2 = new Platform("Sky_Platform_2", skyPlat2Pos, Vector2D(2353, 820), 0.f);
+	GameObjectManager::getInstance()->addObject(pSkyPlat2);
+
+	Platform* pSkyPlat3 = new Platform("Sky_Platform_3", pTMR->getTilePosition(97, 19), Vector2D(305, 1330), 0.f);
+	GameObjectManager::getInstance()->addObject(pSkyPlat3);
 
 }
 

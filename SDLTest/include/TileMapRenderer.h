@@ -19,6 +19,7 @@ public:
 
 	void onAttach() override;
 	void perform() override;
+	void drawWidget() override;
 
 	void addTile(Uint64 c, Uint64 r, SDL_Texture* pTile);
 

@@ -127,6 +127,11 @@ void SpriteRenderer::perform() {
     }
 }
 
+void SpriteRenderer::drawWidget()
+{
+
+}
+
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)
 {
     this->pTexture = pTexture;

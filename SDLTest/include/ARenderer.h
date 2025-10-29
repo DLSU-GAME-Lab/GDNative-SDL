@@ -11,7 +11,8 @@ protected:
 public:
     ARenderer(const std::string& strName);
 
-    void perform() = 0;
+    virtual void perform() = 0;
+    virtual void drawWidget() = 0;
 
     void setSDLRenderer(SDL_Renderer* pRenderer);
 };

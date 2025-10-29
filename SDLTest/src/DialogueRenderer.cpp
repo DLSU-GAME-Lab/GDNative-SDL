@@ -81,6 +81,11 @@ void DialogueRenderer::perform()
         SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
     }
 }
+void DialogueRenderer::drawWidget()
+{
+
+}
+
 void DialogueRenderer::loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor)
 {
     // O(1): creates texture from text; I/O and render cost from SDL_ttf.

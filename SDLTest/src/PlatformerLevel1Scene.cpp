@@ -10,6 +10,7 @@
 #include "SpriteAnimator.h"
 #include "Background.h"
 #include "Platform.h"
+#include "Prop.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -51,12 +52,10 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 
 	
-	Background* pBG1 = new Background("Trees_BG1", "Trees_BG", 0.36f);
-	pBG1->setPos(Vector2D(0.0f, 0.0f));
+	Prop* pBG1 = new Prop("Trees_BG1", "Trees_BG", Vector2D(0.0f, 0.0f), 0.36f);
 	GameObjectManager::getInstance()->addObject(pBG1);
 	
-	Background* pBG2 = new Background("Trees_BG2", "Trees_BG", 0.36f);
-	pBG2->setPos(Vector2D(1440.0f, 0.0f));
+	Prop* pBG2 = new Prop("Trees_BG2", "Trees_BG", Vector2D(1440.0f, 0.0f), 0.36f);
 	GameObjectManager::getInstance()->addObject(pBG2);
 
 	TileMap* tileMap = new TileMap("Platforms");

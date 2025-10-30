@@ -17,26 +17,17 @@ Vector2D Camera::screenToWorldPoint(const Vector2D& screenPoint) const
 {
 
 	Vector2D worldPoint;
-	worldPoint.x = ((screenPoint.x + this->position.x) * this->scale.x) - this->getHalfWidth();
-	worldPoint.y = (-(screenPoint.y + this->position.y) * this->scale.y) - this->getHalfHeight();
-
-	//Vector2D worldPoint;
-	//worldPoint.x = (screenPoint.x + this->position.x - this->getHalfWidth()) * this->scale.x;
-	//worldPoint.y = -(screenPoint.y - this->position.y - this->getHalfHeight()) * this->scale.y;
+	worldPoint.x = ((screenPoint.x - this->getHalfWidth()) * this->scale.x) + this->position.x;
+	worldPoint.y = (-(screenPoint.y - this->getHalfHeight()) * this->scale.y) + this->position.y;
 
 	return worldPoint;
 }
 
 Vector2D Camera::worldToScreenPoint(const Vector2D& worldPoint) const
 {
-
 	Vector2D screenPoint;
 	screenPoint.x = ((worldPoint.x - this->position.x) / this->scale.x) + this->getHalfWidth();
 	screenPoint.y = (-(worldPoint.y - this->position.y) / this->scale.y) + this->getHalfHeight();
-
-	//Vector2D screenPoint;
-	//screenPoint.x = (worldPoint.x - this->position.x + this->getHalfWidth()) / this->scale.x;
-	//screenPoint.y = -(worldPoint.y + this->position.y + this->getHalfHeight()) / this->scale.y;
 
 	return screenPoint;
 }

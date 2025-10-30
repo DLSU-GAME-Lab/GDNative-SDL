@@ -49,14 +49,13 @@ void PlatformerLevel1Scene::onLoadObjects()
 	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(1350, 700));
 
 	PhysicsSystem::initialize();
-
-
 	
-	Prop* pBG1 = new Prop("Trees_BG1", "Trees_BG", Vector2D(0.0f, 0.0f), 0.36f);
-	GameObjectManager::getInstance()->addObject(pBG1);
-	
-	Prop* pBG2 = new Prop("Trees_BG2", "Trees_BG", Vector2D(1440.0f, 0.0f), 0.36f);
-	GameObjectManager::getInstance()->addObject(pBG2);
+	for (int i = 0; i < 3; i++)
+	{
+		std::string name = "Trees_BG_" + std::to_string(i);
+		Prop* pBG = new Prop(name, "Trees_BG", Vector2D((i * 4000.0f) + 2450.0f, 1520.0f), 1.0f);
+		GameObjectManager::getInstance()->addObject(pBG);
+	}
 
 	TileMap* tileMap = new TileMap("Platforms");
 	GameObjectManager::getInstance()->addObject(tileMap);

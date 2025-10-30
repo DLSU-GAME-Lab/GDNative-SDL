@@ -83,6 +83,11 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
         pComponent->perform();
     }
 
+    for (AComponent* pComponent : vecRenderer)
+    {
+        ARenderer* renderer = (ARenderer*)pComponent;
+        renderer->drawWidget();
+    }
 }
 SDL_FRect  AGameObject::getGlobalBounds()
 {

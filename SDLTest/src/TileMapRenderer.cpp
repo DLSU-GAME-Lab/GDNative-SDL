@@ -38,14 +38,11 @@ void TileMapRenderer::perform()
                 SDL_Texture* tile = this->vecTile[c][r];
                 Vector2D scale = this->pOwner->getScale();
                 Vector2D tilePos = this->pOwner->getPos();
+                Vector2D cellSize = this->getCellSize();
                 Vector2D tileSize;
-                Vector2D cellSize;
 
                 tileSize.x = tile->w * scale.x;
                 tileSize.y = tile->h * scale.y;
-
-                cellSize.x = this->fTileWidth * this->pOwner->getScale().x;
-                cellSize.y = this->fTileHeight * this->pOwner->getScale().y;
 
                 tilePos.x += (cellSize.x * (c + 0.5f)) - (tileSize.x * this->offset.x);
                 tilePos.y += (cellSize.y * (r + 0.5f)) - (tileSize.y * this->offset.y);
@@ -56,22 +53,9 @@ void TileMapRenderer::perform()
                 destRect.h = tileSize.y;
 
                 destRect = pCam->worldToScreenRect(destRect);
-                SDL_RenderTexture(this->pRenderer, tile, nullptr, &destRect);
 
-                SDL_FRect destRect2 = {};
-                Vector2D cellPos = this->pOwner->getPos();
-                
-                cellPos.x += cellSize.x * c;
-                cellPos.y += cellSize.y * r;
-
-                destRect2.x = cellPos.x;
-                destRect2.y = cellPos.y;
-                destRect2.w = cellSize.x;
-                destRect2.h = cellSize.y;
-
-                destRect2 = pCam->worldToScreenRect(destRect2);
-                SDL_SetRenderDrawColor(this->pRenderer, 255, 255, 255, 100);
-                SDL_RenderRect(this->pRenderer, &destRect2);
+                if (this->inCameraView(destRect))
+                    SDL_RenderTexture(this->pRenderer, tile, nullptr, &destRect);
             }
         }
     }
@@ -79,7 +63,32 @@ void TileMapRenderer::perform()
 
 void TileMapRenderer::drawWidget()
 {
+    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
 
+    for (Uint64 c = 0; c < this->vecTile.size(); c++)
+    {
+        for (Uint64 r = 0; r < this->vecTile[c].size(); r++)
+        {
+            SDL_FRect destRect = {};
+            Vector2D cellPos = this->pOwner->getPos();
+            Vector2D cellSize = this->getCellSize();
+
+            cellPos.x += cellSize.x * c;
+            cellPos.y += cellSize.y * r;
+
+            destRect.x = cellPos.x;
+            destRect.y = cellPos.y;
+            destRect.w = cellSize.x;
+            destRect.h = cellSize.y;
+
+            destRect = pCam->worldToScreenRect(destRect);
+            if (this->inCameraView(destRect))
+            {
+                SDL_SetRenderDrawColor(this->pRenderer, 255, 255, 255, 100);
+                SDL_RenderRect(this->pRenderer, &destRect);
+            }
+        }
+    }
 }
 
 void TileMapRenderer::addTile(Uint64 c, Uint64 r, SDL_Texture* pTile)
@@ -100,14 +109,19 @@ void TileMapRenderer::setOffset(Vector2D offset)
     this->offset = offset;
 }
 
-Vector2D TileMapRenderer::getTilePosition(Uint64 c, Uint64 r)
+Vector2D TileMapRenderer::getCellSize()
 {
-    Vector2D pos = this->pOwner->getPos();
     Vector2D cellSize;
-
     cellSize.x = this->fTileWidth * this->pOwner->getScale().x;
     cellSize.y = this->fTileHeight * this->pOwner->getScale().y;
 
+    return cellSize;
+}
+
+Vector2D TileMapRenderer::getTilePosition(Uint64 c, Uint64 r)
+{
+    Vector2D pos = this->pOwner->getPos();
+    Vector2D cellSize = this->getCellSize();
     pos.x += cellSize.x * (c + 0.5f);
     pos.y += cellSize.y * (r + 0.5f);
 

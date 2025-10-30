@@ -17,8 +17,11 @@ void ColliderRenderer::perform()
     tempRect.h = pCollider->getGlobalBounds().h;
 
     if (!pOwner->getIsScreenObject()) tempRect = pCam->worldToScreenRect(tempRect);
-    SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
-    SDL_RenderRect(pRenderer, &tempRect);
+    if (this->inCameraView(tempRect))
+    {
+        SDL_SetRenderDrawColor(pRenderer, 255, 0, 0, 50);  // RGBA
+        SDL_RenderRect(pRenderer, &tempRect);
+    }
 }
 
 void ColliderRenderer::drawWidget()

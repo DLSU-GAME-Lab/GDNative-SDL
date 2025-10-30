@@ -63,22 +63,28 @@ void DialogueRenderer::perform()
         mDestRect.h = size.y;
 
         if (!owner->getIsScreenObject()) mDestRect = pCam->worldToScreenRect(mDestRect);
-    }
-    // GPU draw call: theoretical O(1), but expensive constant cost.
-    if (pTexture) {
-        SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
-        SDL_SetTextureAlphaMod(pTexture, mColor.a);
-
-        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle + 180.0f, NULL, SDL_FLIP_NONE);
-        else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
-        else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
-        else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
+        
     }
 
-    // additional log
-    else if (SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect) < 0)
+    if (this->inCameraView(mDestRect))
     {
-        SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
+        // GPU draw call: theoretical O(1), but expensive constant cost.
+        if (pTexture)
+        {
+            SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
+            SDL_SetTextureAlphaMod(pTexture, mColor.a);
+
+            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle + 180.0f, NULL, SDL_FLIP_NONE);
+            else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
+            else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
+            else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
+        }
+
+        // additional log
+        else if (SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect) < 0)
+        {
+            SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
+        }
     }
 }
 void DialogueRenderer::drawWidget()

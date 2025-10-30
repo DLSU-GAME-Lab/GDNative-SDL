@@ -10,6 +10,7 @@ private:
 public:
     Camera* getCurrentCamera() const;
     void setWindowSize(SDL_Window* pWindow);
+    Vector2D getWindowSize() const;
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

@@ -13,6 +13,11 @@ void CameraManager::setWindowSize(SDL_Window* pWindow)
     this->pCamera->setWindowSize(Vector2D(w, h));
 }
 
+Vector2D CameraManager::getWindowSize() const
+{
+    return this->windowSize;
+}
+
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */

@@ -14,25 +14,25 @@ Animation::Animation(
     this->EType = EType;
     this->strNextState = strNextState;
 
-	this->bIsPlaying = false;
-	this->bIsReverse = false;
-	this->fTicks = 0.0f;
-	this->nFrameIndex = 0;
-
-	if (this->vecFrames.empty()) this->pCurrentFrame = NULL;
-	else this->pCurrentFrame = this->vecFrames[0];
-
+	this->reset();
 }
 
 void Animation::stop()
 {
 	this->bIsPlaying = false;
-	this->fTicks = 0;
 }
 
 void Animation::play()
 {
 	this->bIsPlaying = true;
+}
+
+void Animation::reset()
+{
+	this->bIsPlaying = false;
+	this->bIsReverse = false;
+	this->fTicks = 0.0f;
+	this->nFrameIndex = 0;
 }
 
 void Animation::step(float fDeltaTime)
@@ -55,7 +55,7 @@ void Animation::step(float fDeltaTime)
 		case AnimationType::ONCE:
 			if (this->nFrameIndex == this->vecFrames.size() - 1)
 			{
-				this->stop();
+				this->reset();
 			}
 			break;
 
@@ -78,12 +78,10 @@ void Animation::step(float fDeltaTime)
 			}
 			else if (this->nFrameIndex == 0)
 			{
-				this->bIsReverse = false;
-				this->stop();
+				this->reset();
 			}
 			break;
 		}
-		this->pCurrentFrame = this->vecFrames[this->nFrameIndex];
 	}
 }
 
@@ -119,7 +117,7 @@ std::string Animation::getName() const
 
 SDL_Texture* Animation::getCurrentFrame() const
 {
-	return this->pCurrentFrame;
+	return this->vecFrames.empty() ? NULL : this->vecFrames[this->nFrameIndex];
 }
 
 unsigned int Animation::getFrameCount()

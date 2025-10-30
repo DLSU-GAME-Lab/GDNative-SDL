@@ -21,7 +21,8 @@ public:
 	virtual void perform() override;
 
 	void stop();
-	void play(std::string strState);
+	void reset();
+	void play(std::string strState = "");
 
 	void addAnimation(Animation* pAnimation);
 	void setAnimationState(std::string strState);

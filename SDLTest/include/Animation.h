@@ -10,7 +10,6 @@ class Animation
 private:
 	std::string strName;
 	std::vector<SDL_Texture*> vecFrames;
-	SDL_Texture* pCurrentFrame;
 
 	AnimationType EType;
 	Uint8 nFrameRate;
@@ -32,6 +31,7 @@ public:
 
 	void stop();
 	void play();
+	void reset();
 	void step(float fDeltaTime);
 	bool playNext();
 

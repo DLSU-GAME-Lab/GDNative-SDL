@@ -39,21 +39,31 @@ void SpriteAnimator::perform()
 
 void SpriteAnimator::stop()
 {
-	if (this->strState == strState ||
-		this->strState.empty() ||
+	if (this->strState.empty() ||
 		this->mapAnims.empty()) return;
 
-	mapAnims[strState]->stop();
+	this->mapAnims[this->strState]->stop();
+}
+
+void SpriteAnimator::reset()
+{
+	if (this->strState.empty() ||
+		this->mapAnims.empty()) return;
+
+	this->mapAnims[this->strState]->reset();
 }
 
 void SpriteAnimator::play(std::string strState)
 {
-	if (strState.empty() ||
-		strState == this->strState ||
+	if (this->strState == strState ||
 		this->mapAnims.empty()) return;
 
-	this->strState = strState;
-	mapAnims[strState]->play();
+	if (strState.empty()) this->mapAnims[this->strState]->play();
+	else
+	{
+		this->strState = strState;
+		this->mapAnims[this->strState]->play();
+	}
 }
 
 void SpriteAnimator::addAnimation(Animation* pAnimation)

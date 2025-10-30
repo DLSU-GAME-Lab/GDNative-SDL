@@ -4,6 +4,7 @@ PuzzleHint::PuzzleHint(std::string strName):AGameObject(strName)
 {
 	this->EKey = EventKey::RIGHT_CLICK;
 	this->pText = NULL;
+	this->bListenerEnabled = true;
 }
 
 PuzzleHint::~PuzzleHint()
@@ -17,7 +18,8 @@ void PuzzleHint::initialize()
 	Prop* pProp = new Prop("HintPage", "HintPage", Vector2D(0), Vector2D(1), 0);
 	this->attachChild(pProp);
 
-	this->pText = new Text("TextHint", "Place Holder", "Maragsa.otf", 90);
+	this->pText = new Text("TextHint", "Maragsa.otf", 90);
+	this->pText->setMessage("Place Holder");
 	pText->setPos(Vector2D(0, 50));
 	pText->setScale(Vector2D(.75, .75));
 	this->attachChild(this->pText);
@@ -30,7 +32,8 @@ void PuzzleHint::initialize()
 	this->attachChild(pButton);
 
 
-	Text* pDeclineText = new Text("Decline_Text", "Close", "JainiPurva-Regular.ttf", 90, 0.f, false);
+	Text* pDeclineText = new Text("Decline_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
+	pDeclineText->setMessage("Close");
 	pDeclineText->setPos(Vector2D(0, -300));
 	pDeclineText->setScale(Vector2D(.75, .75));
 	this->attachChild(pDeclineText);
@@ -78,4 +81,19 @@ void PuzzleHint::onEventTrigger(std::unordered_map<std::string, void*> mapParame
 EventKey PuzzleHint::getKey()
 {
 	return this->EKey;
+}
+
+bool PuzzleHint::isListenerEnabled()
+{
+	return this->bListenerEnabled;
+}
+
+void PuzzleHint::setListenerEnabled(bool bListenerEnabled)
+{
+	this->bListenerEnabled = bListenerEnabled;
+}
+
+std::string PuzzleHint::getListenerOwnerName()
+{
+	return this->strName;
 }

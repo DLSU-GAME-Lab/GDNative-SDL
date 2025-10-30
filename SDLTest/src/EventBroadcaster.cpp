@@ -30,7 +30,8 @@ void EventBroadcaster::unregisterAllListeners() {
 
 void EventBroadcaster::broadcast(EventKey EKey, std::unordered_map<std::string, void*> mapParameter) {
     for(int i = 0; i < this->mapListener[EKey].size(); i++) {
-        this->mapListener[EKey][i]->onEventTrigger(mapParameter);
+        if(this->mapListener[EKey][i]->isListenerEnabled())
+            this->mapListener[EKey][i]->onEventTrigger(mapParameter);
     }
 }
 
@@ -41,6 +42,17 @@ void EventBroadcaster::disableOtherListenerExcept(EventListener* pListenerExclud
         if (pListenerExcluded->getKey() != pListener->getKey())
         {
             pListener->setListenerEnabled(false);
+        }
+    }
+}
+
+void EventBroadcaster::enableListener(std::string strName)
+{
+    for (EventListener* pListener : this->vecListener)
+    {
+        if (pListener->getListenerOwnerName() == strName)
+        {
+            pListener->setListenerEnabled(true);
         }
     }
 }

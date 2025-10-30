@@ -65,11 +65,14 @@ void PuzzleLevel1Scene::onLoadObjects()
 	Prop* pDragonTile1 = new Prop("Dragon_Tile_1", "Dragon_Tile", Vector2D(-410.0f, 50.0f), Vector2D(0.95f));
 	Prop* pDragonTile2 = new Prop("Dragon_Tile_2", "Dragon_Tile", Vector2D(-30.0f, 50.0f), Vector2D(0.95f));
 	Prop* pDragonTile3 = new Prop("Dragon_Tile_3", "Dragon_Tile", Vector2D(350.0f, 50.0f), Vector2D(0.95f));
-	Text* pTileText1 = new Text("Tile_Text_1", "1", "Maragsa.otf", 200,0,false);
+	Text* pTileText1 = new Text("Tile_Text_1",  "Maragsa.otf", 200,0,false);
+	pTileText1->setMessage("1");
 	pTileText1->setPos(Vector2D(-380.0f, 30.0f));
-	Text* pTileText2 = new Text("Tile_Text_2", "2", "Maragsa.otf", 200, 0, false);
+	Text* pTileText2 = new Text("Tile_Text_2", "Maragsa.otf", 200, 0, false);
+	pTileText2->setMessage("2");
 	pTileText2->setPos(Vector2D(0.0f, 30.0f));
-	Text* pTileText3 = new Text("Tile_Text_3", "3", "Maragsa.otf", 200, 0, false);
+	Text* pTileText3 = new Text("Tile_Text_3", "Maragsa.otf", 200, 0, false);
+	pTileText3->setMessage("3");
 	pTileText3->setPos(Vector2D(380.0f, 30.0f));
 
 	pTileText1->setColor({ 100, 31, 31, 255 });
@@ -126,7 +129,8 @@ void PuzzleLevel1Scene::onLoadObjects()
 	Prop* pTablet = new Prop("Tablet", "Tablet", Vector2D(0.0f), Vector2D(0.9f));
 	pTransBG->attachChild(pTablet);
 
-	Text* pTabletText1 = new Text("Tablet_Text", "Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3","JainiPurva-Regular.ttf",90,0, false);
+	Text* pTabletText1 = new Text("Tablet_Text", "JainiPurva-Regular.ttf", 90, 0, false);
+	pTabletText1->setMessage("Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3");
 	pTabletText1->setPos(Vector2D(-500.0f, 75));
 	pTablet->attachChild(pTabletText1);
 	DialogueRenderer* pTabletTextR1 = (DialogueRenderer*)pTabletText1->findComponentByName("DialogueRenderer");

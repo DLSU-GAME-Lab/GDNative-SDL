@@ -3,6 +3,7 @@
 PauseScreen::PauseScreen(std::string strName): AGameObject(strName)
 {
 	this->EKey = EventKey::PAUSE_SCREEN;
+	this->bListenerEnabled = true;
 }
 PauseScreen::~PauseScreen()
 {
@@ -22,7 +23,8 @@ void PauseScreen::initialize()
 	//pLeftShape->setPos(Vector2D( -1000, -600));
 	//pLeftShapeR->setColor({ 92, 64, 51, 255 });
 
-	Text* pPauseText = new Text("PauseText", "Paused", "JainiPurva-Regular.ttf", 120, -15);
+	Text* pPauseText = new Text("PauseText", "JainiPurva-Regular.ttf", 120, -15);
+	pPauseText->setMessage("Paused");
 	pPauseText->setPos(Vector2D(-600, 350));
 	pPauseText->setColor(SDL_Color(165, 42, 42, 255));
 	this->attachChild(pPauseText);
@@ -36,7 +38,8 @@ void PauseScreen::initialize()
 	pResume->attachComponent(pToggle);
 	this->attachChild(pResume);
 
-	Text* pResumeText = new Text("ResumeText", "Resume", "JainiPurva-Regular.ttf", 45, -15);
+	Text* pResumeText = new Text("ResumeText", "JainiPurva-Regular.ttf", 45, -15);
+	pResumeText->setMessage("Resume");
 	pResumeText->setRot(-17);
 	pResumeText->setPos(Vector2D(-540, 150));
 	pResumeText->setColor(SDL_Color(255, 255, 255, 255));
@@ -50,7 +53,8 @@ void PauseScreen::initialize()
 	pQuit->attachComponent(pSceneSwitcher);
 	this->attachChild(pQuit);
 
-	Text* pQuitText = new Text("QuitText", "Quit Stage", "JainiPurva-Regular.ttf", 45, -15);
+	Text* pQuitText = new Text("QuitText", "JainiPurva-Regular.ttf", 45, -15);
+	pQuitText->setMessage("Quit Stage");
 	pQuitText->setRot(-17);
 	pQuitText->setPos(Vector2D(-500, 0));
 	pQuitText->setColor(SDL_Color(255, 255, 255, 255));
@@ -88,4 +92,19 @@ void PauseScreen::onEventTrigger(std::unordered_map<std::string, void*> mapParam
 EventKey PauseScreen::getKey()
 {
 	return this->EKey;
+}
+
+bool PauseScreen::isListenerEnabled()
+{
+	return this->bListenerEnabled;
+}
+
+void PauseScreen::setListenerEnabled(bool bListenerEnabled)
+{
+	this->bListenerEnabled = bListenerEnabled;
+}
+
+std::string PauseScreen::getListenerOwnerName()
+{
+	return this->strName;
 }

@@ -1,11 +1,12 @@
 #pragma once
 #include "AComponent.h"
+#include "EventBroadcaster.h"
 class DiaryToggle : public AComponent
 {
 private:
-	std::string strDiaryName;
+	EventKey EKey;
 public:
-	DiaryToggle(std::string strDiaryName);
+	DiaryToggle(EventKey EKey);
 	~DiaryToggle();
 public:
 	void perform() override;

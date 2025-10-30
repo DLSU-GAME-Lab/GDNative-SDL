@@ -13,6 +13,7 @@ class PuzzleHint:public AGameObject, EventListener
 private:
 	Text* pText;
 	EventKey EKey;
+	bool bListenerEnabled;
 public:
 	PuzzleHint(std::string strName);
 	~PuzzleHint();
@@ -21,5 +22,10 @@ public:
 	// Inherited via EventListener
 	void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;
 	EventKey getKey() override;
+
+	// Inherited via EventListener
+	bool isListenerEnabled() override;
+	void setListenerEnabled(bool bListenerEnabled) override;
+	std::string getListenerOwnerName() override;
 };
 

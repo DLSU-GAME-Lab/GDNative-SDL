@@ -108,7 +108,8 @@ void Title_Scene::createButtons()
     pStartButton->attachComponent(pSceneSwitcher);
     GameObjectManager::getInstance()->addObject(pStartButton);
 
-    Text* pStartText = new Text("Start_Text", "Start Game", "Maragsa.otf", 90, 0.f, false);
+    Text* pStartText = new Text("Start_Text", "Maragsa.otf", 90, 0.f, false);
+    pStartText->setMessage("Start Game");
     pStartButton->attachChild(pStartText);
     pStartButton->setPos(Vector2D(-580, -150));
 

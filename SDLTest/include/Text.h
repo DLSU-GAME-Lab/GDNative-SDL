@@ -9,9 +9,10 @@ private:
 	int nFontSize;
 	SDL_Color color;
 public:
-	Text(const std::string& strName, const std::string& strMessage, std::string strFontName, int nFontSize, float fRot = 0.0f, bool bFlipX = false);
+	Text(const std::string& strName, std::string strFontName, int nFontSize, float fRot = 0.0f, bool bFlipX = false);
 	~Text() override;
 
+	void setMessage(const std::string& strMessage);
 	void setColor(SDL_Color color);
 	void initialize() override;
 	void modifyText(std::string strNewText);

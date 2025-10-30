@@ -300,6 +300,9 @@
     <ClCompile Include="src\PauseScreen.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="src\PerformanceMetricsScreen.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -592,6 +595,9 @@
     </ClInclude>
     <ClInclude Include="include\ExitMenu.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PerformanceMetricsScreen.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -167,6 +167,7 @@
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
     <ClCompile Include="src\PauseScreen.cpp" />
+    <ClCompile Include="src\PerformanceMetricsScreen.cpp" />
     <ClCompile Include="src\PlatformerLevel1Scene.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\PauseScreen.h" />
+    <ClInclude Include="include\PerformanceMetricsScreen.h" />
     <ClInclude Include="include\PlatformerLevel1Scene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />

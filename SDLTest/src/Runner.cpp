@@ -100,10 +100,10 @@ Runner::Runner()
 	CameraManager::getInstance()->setWindowSize(this->pWindow);
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
+	UIManager::initialize(this->pWindow, this->pRenderer);
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
-	UIManager::initialize(this->pWindow, this->pRenderer);
 #if EDITOR_MODE
 	Editor::EditorModule::initialize();
 #endif
@@ -288,6 +288,7 @@ void Runner::render()
 	// draw fade/transition overlay last
 	SceneTransitionManager::getInstance()->draw(this->pRenderer); // O(1)
 
+	MetricsManager::getInstance()->drawGUI();
 	UIManager::getInstance()->drawAllUI(this->pRenderer);
 
 	// present the frame. This call may block until GPU / vsync flush depending

@@ -1,24 +1,17 @@
 #pragma once
-#include "AComponent.h"
+#include "AAnimator.h"
 #include "tweeny.h"
 #include "EnumAnimationType.h"
-#include "IAnimatorListener.h"
 
 typedef tweeny::tween<float> Tween;
 typedef tweeny::tween<float, float> Tween2D;
 
-class TweenAnimator : public AComponent
+class TweenAnimator : public AAnimator
 {
 private:
 	Tween2D tweenPos;
 	Tween2D tweenScale;
 	Tween tweenRot;
-
-	AnimationType EType;
-	bool bIsPlaying;
-	bool bIsReverse;
-
-	std::vector<IAnimatorListener*> vecListener;
 
 public:
 	TweenAnimator();
@@ -28,9 +21,6 @@ public:
 	void play();
 	void pause();
 	void stop();
-
-	void addListener(IAnimatorListener* pListener);
-	void removeListener(IAnimatorListener* pListener);
 
 	void setAnimationType(AnimationType EType);
 

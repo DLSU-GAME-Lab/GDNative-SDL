@@ -1,12 +1,11 @@
 #include "SpriteAnimator.h"
-SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer)
-	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
+SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer) : AAnimator("SpriteAnimator")
 {
 	this->pSpriteRenderer = pSpriteRenderer;
 }
 
 SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, Uint8 nFrameRate)
-	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
+	: AAnimator("SpriteAnimator")
 {
 	this->pSpriteRenderer = pSpriteRenderer;
 	this->strState = "default";

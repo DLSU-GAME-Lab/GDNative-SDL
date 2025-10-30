@@ -1,5 +1,7 @@
 #include "AGameObject.h"
 #include "AGeneralInput.h"
+#include "ARenderer.h"
+#include "AAnimator.h"
 #include <iostream>
 AGameObject::AGameObject(std::string strName)
 {
@@ -56,6 +58,14 @@ void AGameObject::update(float fDeltaTime)
         pComponent->setDeltaTime(fDeltaTime);
         pComponent->perform();
     }
+
+    auto vecAnimator = this->getComponentsRecursively(ComponentType::ANIMATOR);
+    for (AComponent* pComponent : vecAnimator)
+    {
+        AAnimator* animator = (AAnimator*)pComponent;
+        pComponent->setDeltaTime(fDeltaTime);
+        pComponent->perform();
+    }
 }
 
 void AGameObject::draw(SDL_Renderer* pRenderer)
@@ -76,12 +86,10 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
 }
 SDL_FRect  AGameObject::getGlobalBounds()
 {
-    SpriteRenderer* renderer = (SpriteRenderer*)this->findComponentByName("SpriteRenderer");
-    SDL_FRect CTransform = renderer->getRect();
-
-
+    SDL_FRect CTransform = {};
     return CTransform;
 }
+
 void AGameObject::attachChild(AGameObject * pChild)
 {
     this->vecChildren.push_back(pChild);

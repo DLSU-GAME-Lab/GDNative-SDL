@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AComponent.h"
-#include "SpriteRenderer.h"
 #include "Vector2D.h"
 #include <vector>
 

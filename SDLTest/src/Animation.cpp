@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include <cmath>
 
 Animation::Animation(
     std::string strName,
@@ -44,8 +45,7 @@ void Animation::step(float fDeltaTime)
 
 	if (this->fTicks >= ticksPerFrame)
 	{
-		while (this->fTicks >= ticksPerFrame)
-			this->fTicks -= ticksPerFrame;
+		this->fTicks = std::fmod(this->fTicks, ticksPerFrame);
 
 		if (!this->bIsReverse) this->nFrameIndex++;
 		else this->nFrameIndex--;

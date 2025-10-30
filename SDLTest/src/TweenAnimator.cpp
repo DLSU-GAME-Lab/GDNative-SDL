@@ -1,7 +1,7 @@
 #include "TweenAnimator.h"
 #include "AGameObject.h"
 
-TweenAnimator::TweenAnimator() : AComponent("TweenAnimator", ComponentType::SCRIPT)
+TweenAnimator::TweenAnimator() : AAnimator("TweenAnimator")
 {
 	this->EType = AnimationType::ONCE;
 	this->bIsPlaying = false;
@@ -147,22 +147,6 @@ void TweenAnimator::stop()
 
 	//this->tweenScale.seek(0);
 	//this->tweenRot.seek(0);
-}
-
-void TweenAnimator::addListener(IAnimatorListener* pListener)
-{
-	this->vecListener.push_back(pListener);
-}
-
-void TweenAnimator::removeListener(IAnimatorListener* pListener)
-{
-	int nIndex = -1;
-	for (int i = 0; i < this->vecListener.size() && nIndex == -1; i++)
-	{
-		if (this->vecListener[i] == pListener) nIndex = i;
-	}
-
-	if (nIndex != -1) this->vecListener.erase(this->vecListener.begin() + nIndex);
 }
 
 void TweenAnimator::setAnimationType(AnimationType EType)

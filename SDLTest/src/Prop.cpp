@@ -1,5 +1,5 @@
 #include "Prop.h"
-
+#include "SpriteRenderer.h"
 
 Prop::Prop(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX):
 	AGameObject(strName), strImageName(strImageName),bFlipX(bFlipX)

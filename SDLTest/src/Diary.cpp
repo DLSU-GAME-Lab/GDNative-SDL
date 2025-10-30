@@ -1,6 +1,7 @@
 #include "Diary.h"
 #include "Background.h"
 #include "GameObjectManager.h"
+#include "SpriteRenderer.h"
 
 Diary::Diary(const std::string& strBackroundIMG, Vector2D fVecTranslate, Vector2D fVecScale):AGameObject("Diary")
 {

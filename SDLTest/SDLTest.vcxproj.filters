@@ -303,6 +303,9 @@
     <ClCompile Include="src\PerformanceMetricsScreen.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\AAnimator.cpp">
+      <Filter>Component\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -598,6 +601,9 @@
     </ClInclude>
     <ClInclude Include="include\PerformanceMetricsScreen.h">
       <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AAnimator.h">
+      <Filter>Component\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

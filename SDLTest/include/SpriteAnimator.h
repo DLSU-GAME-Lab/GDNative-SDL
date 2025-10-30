@@ -1,11 +1,11 @@
 #pragma once
 
-#include "AComponent.h"
+#include "AAnimator.h"
 #include "SpriteRenderer.h"
 #include "Animation.h"
 #include <unordered_map>
 
-class SpriteAnimator : public AComponent
+class SpriteAnimator : public AAnimator
 {
 private:
 	SpriteRenderer* pSpriteRenderer;

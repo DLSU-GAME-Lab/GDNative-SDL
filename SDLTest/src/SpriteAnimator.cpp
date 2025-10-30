@@ -48,8 +48,8 @@ void SpriteAnimator::stop()
 
 void SpriteAnimator::play(std::string strState)
 {
-	if (this->strState == strState ||
-		this->strState.empty() ||
+	if (strState.empty() ||
+		strState == this->strState ||
 		this->mapAnims.empty()) return;
 
 	this->strState = strState;
@@ -58,6 +58,8 @@ void SpriteAnimator::play(std::string strState)
 
 void SpriteAnimator::addAnimation(Animation* pAnimation)
 {
+	if (this->mapAnims.contains(pAnimation->getName())) return;
+
 	this->vecAnims.push_back(pAnimation);
 	this->mapAnims[pAnimation->getName()] = pAnimation;
 }

@@ -26,59 +26,64 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 	float fRightA, fRightB;
 	float fTopA, fTopB;
 	float fBotA, fBotB;
+
 	//RectA 
 	fLeftA = CBoundsA.x;
 	fRightA = CBoundsA.x + CBoundsA.w;
-	fTopA = CBoundsA.y;
-	fBotA = CBoundsA.y + CBoundsA.h;
+	fBotA = CBoundsA.y;
+	fTopA = CBoundsA.y + CBoundsA.h;
 
 	//RectB
 	fLeftB = CBoundsB.x;
 	fRightB = CBoundsB.x + CBoundsB.w;
-	fTopB = CBoundsB.y;
-	fBotB = CBoundsB.y + CBoundsB.h;
+	fBotB = CBoundsB.y;
+	fTopB = CBoundsB.y + CBoundsB.h;
 
-	bool bCollisionX = (fLeftA < fRightB) && (fRightA > fLeftB);
-	bool bCollisionY = (fTopA < fBotB) && (fBotA > fTopB);
+	bool bIntersectX = fLeftA < fRightB && fRightA > fLeftB;
+	bool bIntersectY = fBotA < fTopB && fTopA > fBotB;
 
-	if(bCollisionX && bCollisionY)
+	if (bIntersectX && bIntersectY)
 	{
-		float centerAX = fLeftA + (CBoundsA.w / 2.0f);
-		float centerAY = fTopA + (CBoundsA.h / 2.0f);
-		float centerBX = fLeftB + (CBoundsB.w / 2.0f);
-		float centerBY = fTopB + (CBoundsB.h / 2.0f);
+		Vector2D posA = this->pOwner->getPos();
+		Vector2D posB = pCollider->getOwner()->getPos();
+		Vector2D subtractPos = posA - posB;
 
-		float deltaX = centerAX - centerBX;
-		float deltaY = centerAY - centerBY;
-		if (std::abs(deltaX) > std::abs(deltaY))
+		if (std::fabs(subtractPos.x) < std::fabs(subtractPos.y))
 		{
-			if (deltaX > 0)
+			if (subtractPos.x > 0.0f)
 			{
 				this->bCollideLeft = true;
 				this->intersection.x = fRightB - fLeftA;
 			}
-			else
+			else if (subtractPos.x < 0.0f)
 			{
 				this->bCollideRight = true;
-				this->intersection.x = fRightA - fLeftB;
+				this->intersection.x = fLeftB - fRightA;
 			}
 		}
 		else
 		{
-			if (deltaY > 0)
+			if (subtractPos.y > 0.0f)
 			{
 				this->bCollideBottom = true;
-				this->intersection.y = fTopA - fBotB;
-			}
-			else
-			{
-				this->bCollideTop = true;
 				this->intersection.y = fTopB - fBotA;
 			}
+			else if (subtractPos.y < 0.0f)
+			{
+				this->bCollideTop = true;
+				this->intersection.y = fBotB - fTopA;
+			}
+		}
+
+		if (this->pOwner->getName() == "Player")
+		{
+			std::cout << "Self: " << fLeftA << " " << fRightA << " " << fBotA << " " << fTopA << std::endl;
+			std::cout << "Other: " << fLeftB << " " << fRightB << " " << fBotB << " " << fTopB << std::endl;
+			std::cout << "intersection: " << this->intersection << std::endl;
 		}
 	}
 
-	return bCollisionX && bCollisionY;
+	return bIntersectX && bIntersectY;
 }
 
 
@@ -99,8 +104,8 @@ SDL_FRect BoxCollider::getGlobalBounds()
 	SDL_FRect bounds = {};
 	bounds.w = this->size.w * scale.x;
 	bounds.h = this->size.h * scale.y;
-	bounds.x = pos.x - (bounds.w / 2.0f);
-	bounds.y = pos.y - (bounds.h / 2.0f);
+	bounds.x = pos.x - (bounds.w * 0.5f);
+	bounds.y = pos.y - (bounds.h * 0.5f);
 
 	return bounds;
 }

@@ -28,6 +28,7 @@ void RigidBody::onCollisionContinue(ACollider* pCollider)
 void RigidBody::onCollisionExit(ACollider* pCollider)
 {
 	BoxCollider::onCollisionExit(pCollider);
+	if (!this->bCollideBottom) this->bGrounded = true;
 }
 
 void RigidBody::onUpdate()
@@ -37,26 +38,21 @@ void RigidBody::onUpdate()
 	if (this->bGravityEnabled && !this->bGrounded)
 		this->velocity.y -= F_GRAVITY * this->fWeight * this->fDeltaTime;
 
-	Vector2D intersected = this->intersection;
-	if (this->velocity.x > 0.0f) intersected.x *= -1.0f;
-	if (this->velocity.y < 0.0f) intersected.y *= -1.0f;
-
 	if (this->intersection.x != 0.0f && this->velocity.x != 0.0f)
 		this->velocity.x = 0.0f;
 
 	if (this->intersection.y != 0.0f && this->velocity.y != 0.0f)
 		this->velocity.y = 0.0f;
 
-	this->pOwner->setPos(pos + intersected + this->velocity);
-	this->intersection = Vector2D(0.0f);
+	this->pOwner->setPos(pos + this->intersection + this->velocity);
 
 	if (this->velocity != Vector2D::Zero())
 	{
-		Vector2D dragForce = (fDrag / 2) * velocity * velocity;
+		Vector2D dragForce = (fDrag * 0.5f) * velocity * velocity;
 		if (velocity.x > 0.0f) velocity.x = std::max(0.0f, velocity.x - dragForce.x);
 		else if (velocity.x < 0.0f) velocity.x = std::min(0.0f, velocity.x + dragForce.x);
 		if (velocity.y > 0.0f) velocity.y = std::max(0.0f, velocity.y - dragForce.y);
-		else if (velocity.y < 0.0f) velocity.y = std::max(0.0f, velocity.y + dragForce.y);
+		else if (velocity.y < 0.0f) velocity.y = std::min(0.0f, velocity.y + dragForce.y);
 	}
 }
 

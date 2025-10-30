@@ -68,10 +68,8 @@ void PhysicsSystem::untrackCollider(ACollider* pCollider) {
     this->vecUntrackedCollider.push_back(pCollider);
 }
 
-void PhysicsSystem::cleanUp() {
-    ACollider* pCollider = NULL;
-    int nIndex;
-
+void PhysicsSystem::cleanUp()
+{
     for (ACollider* pCollider : this->vecTrackedCollider) {
         if (pCollider->isCleanUp())
         {
@@ -80,6 +78,9 @@ void PhysicsSystem::cleanUp() {
         }
     
     }
+
+    ACollider* pCollider = NULL;
+    int nIndex;
 
     for (int i = 0; i < this->vecUntrackedCollider.size(); i++) {
         pCollider = this->vecUntrackedCollider[i];

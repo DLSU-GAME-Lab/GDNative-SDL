@@ -44,6 +44,7 @@ void Player::initialize()
     pRB->setListener(this);
     pRB->setWeight(10.0f);
     pRB->setDrag(1.0f);
+    pRB->setGravityEnabled(true);
     PhysicsSystem::getInstance()->trackCollider(pRB);
     this->attachComponent(pRB);
 

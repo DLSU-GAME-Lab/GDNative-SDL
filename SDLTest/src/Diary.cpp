@@ -77,16 +77,16 @@ void Diary::progressPage()
 {
 	if (this->dCurrentPage < this->vecPages.size() - 1)
 	{
-		//this->vecPages[dCurrentPage]->setEnabled(false);
+		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->dCurrentPage++;
 		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
 		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
-		//this->vecPages[dCurrentPage]->setEnabled(true);
+		this->vecPages[dCurrentPage]->setEnabled(true);
 	}
 	else
 	{
-		//this->vecPages[dCurrentPage]->setEnabled(false);
-		//this->vecPages[0]->setEnabled(true);
+		this->vecPages[dCurrentPage]->setEnabled(false);
+		this->vecPages[0]->setEnabled(true);
 		this->dCurrentPage = 0;
 		this->pTitleText->modifyText(this->vecPageTitles[0]);
 		this->pStartingText->modifyText(this->vecStartTexts[0]);
@@ -97,17 +97,17 @@ void Diary::regressPage()
 {
 	if (this->dCurrentPage  > 0)
 	{
-		//this->vecPages[dCurrentPage]->setEnabled(false);
+		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->dCurrentPage--;
 		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
 		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
-		//this->vecPages[dCurrentPage]->setEnabled(true);
+		this->vecPages[dCurrentPage]->setEnabled(true);
 
 	}
 	else 
 	{
-		//this->vecPages[dCurrentPage]->setEnabled(false);
-		//this->vecPages[this->vecPages.size() - 1]->setEnabled(true);
+		this->vecPages[dCurrentPage]->setEnabled(false);
+		this->vecPages[this->vecPages.size() - 1]->setEnabled(true);
 		this->dCurrentPage = this->vecPages.size()-1;
 		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
 		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
@@ -133,7 +133,9 @@ void Diary::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 	}
 	else if (this->bEnabled && bFromToggle)
 	{
+		this->otherPagesFollow();
 		this->setEnabled(false);
+		this->otherPagesStopFollow();
 		this->dCurrentPage = 0;
 		EventBroadcaster::getInstance()->enableAllListeners();
 

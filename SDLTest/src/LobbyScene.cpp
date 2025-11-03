@@ -205,15 +205,13 @@ void LobbyScene::createDiary()
 
 	Diary* pDiaryProper = new Diary("SWBST_BG", Vector2D(0, 0), Vector2D(1, 1));
 	pDiaryProper->addPageText("Ano ang SWBST?", "Ang SWBST ay isang paraan upang madaling matukoy ang mahahalagang bahagi ng \n kuwento at matulungan kang buod ng kuwento.\nAng mga titik ng SWBST ay kumakatawan sa mga sumusunod : ");
-	pDiaryProper->addPageText("Somebody", "A");
-	pDiaryProper->addPageText("Wanted", "B");
-	pDiaryProper->addPageText("But", "C");
-	pDiaryProper->addPageText("So", "D");
-	pDiaryProper->addPageText("Then", "E");
-	pDiaryProper->addPageText("Summary", "F");
+	pDiaryProper->addPageText("Somebody", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang \n gusto ng karakter?");
+	pDiaryProper->addPageText("Wanted", "Inilalarawan nito kung ano ang gusto ng karakter.Tanunging sa iyong sarili, ano ang gusto ng \n karakter?");
+	pDiaryProper->addPageText("But", "Kapag may karakter, may problemang kinakaharap ang karakter. Tanungin ang iyong sarili, ano \n ang problema sa kuwento na kinakaharap ng pangunahing tauhan?");
+	pDiaryProper->addPageText("So", "Sinusubukan ng pangunahing tauhan lutasin ang problema. Tanungin ang iyong sarili kung \n Paano malulutas ng karakte ang problema.");
+	pDiaryProper->addPageText("Then", "Ano ang mangyayari pagkatapos subukan ng pangunahing tauhan na lutasin ang problema? \n ");
+	pDiaryProper->addPageText("Summary", "Upang Ibuod ang mga tanong na dapat mong itanong sa iyong sarili pagkatapos \n basahin ang isang kuwento:");
 	GameObjectManager::getInstance()->addObject(pDiaryProper);
-
-
 
 	GUIButton* pClose = new GUIButton("Close_Button", "Back");
 	pClose->setPos(Vector2D(-750, 400));
@@ -237,12 +235,12 @@ void LobbyScene::createDiary()
 	pDiaryProper->attachChild(pRegress);
 
 
-	//EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
-	//this->createPageOne(pFirstPageHolder);
-	//pFirstPageHolder->setEnabled(false);
-	//pFirstPageHolder->setFollowParent(true);
+	EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
+	this->createPageOne(pFirstPageHolder);
+	pFirstPageHolder->setEnabled(false);
+	pFirstPageHolder->setFollowParent(true);
 
-	/*EmptyObject* pSecondPageHolder = new EmptyObject("Second_Page");
+	EmptyObject* pSecondPageHolder = new EmptyObject("Second_Page");
 	this->createPageTwo(pSecondPageHolder);
 	pSecondPageHolder->setEnabled(false);
 	pSecondPageHolder->setFollowParent(false);
@@ -270,351 +268,342 @@ void LobbyScene::createDiary()
 	EmptyObject* pSeventhPageHolder = new EmptyObject("Seventh_Page");
 	this->createPageSeven(pSeventhPageHolder);
 	pSeventhPageHolder->setEnabled(false);
-	pSeventhPageHolder->setFollowParent(false);*/
+	pSeventhPageHolder->setFollowParent(false);
 
-	//pDiaryProper->addPage(pFirstPageHolder);
-	/*pDiaryProper->addPage(pSecondPageHolder);
+	pDiaryProper->addPage(pFirstPageHolder);
+	pDiaryProper->addPage(pSecondPageHolder);
 	pDiaryProper->addPage(pThirdPageHolder);
 	pDiaryProper->addPage(pFourthPageHolder);
 	pDiaryProper->addPage(pFifthPageHolder);
 	pDiaryProper->addPage(pSixthPageHolder);
-	pDiaryProper->addPage(pSeventhPageHolder);*/
+	pDiaryProper->addPage(pSeventhPageHolder);
 
 	pDiaryProper->setEnabled(false);
 
 }
 
-//void LobbyScene::createPageOne(AGameObject* pParent)
-//{
-//	
-//	Prop* pIntro = new Prop("FairyIntro", "Intro", Vector2D(0, -0), Vector2D(1, 1), 0, false);
-//	pParent->attachChild(pIntro);
-//
-//	Text* pS = new Text("S_Letter", "S", Vector2D(-580, 40), Vector2D(1.5, 1.5), 0, false);
-//	pS->setColor(colorRed);
-//	pParent->attachChild(pS);
-//
-//	Text* pOmebody = new Text("omebody", "omebody", Vector2D(-440, 25), Vector2D(1.5, 1.5), 0, false);
-//	pOmebody->setColor(colorRed);
-//	pParent->attachChild(pOmebody);
-//
-//	Text* pW = new Text("W_Letter", "W", Vector2D(-580, -140), Vector2D(1.5, 1.5), 0, false);
-//	pW->setColor(colorYellow);
-//	pParent->attachChild(pW);
-//
-//	Text* pAnted = new Text("anted", "anted", Vector2D(-470, -160), Vector2D(1.5, 1.5), 0, false);
-//	pAnted->setColor(colorYellow);
-//	pParent->attachChild(pAnted);
-//
-//	Text* pB = new Text("B_Letter", "B", Vector2D(-580, -300), Vector2D(1.5, 1.5), 0, false);
-//	pB->setColor(colorCyan);
-//	pParent->attachChild(pB);
-//
-//	Text* pUt = new Text("ut", "ut", Vector2D(-520, -320), Vector2D(1.5, 1.5), 0, false);
-//	pUt->setColor(colorCyan);
-//	pParent->attachChild(pUt);
-//
-//	Text* pS2 = new Text("S2_Letter", "S", Vector2D(-110, 40), Vector2D(1.5, 1.5), 0, false);
-//	pS2->setColor(colorBlue);
-//	pParent->attachChild(pS2);
-//
-//	Text* pO = new Text("O_Letter", "o", Vector2D(-55, 25), Vector2D(1.5, 1.5), 0, false);
-//	pO->setColor(colorBlue);
-//	pParent->attachChild(pO);
-//
-//	Text* pT= new Text("T_Letter", "T", Vector2D(-110, -140), Vector2D(1.5, 1.5), 0, false);
-//	pT->setColor(colorPurple);
-//	pParent->attachChild(pT);
-//
-//	Text* pHen = new Text("hen", "hen", Vector2D(-55, -160), Vector2D(1.5, 1.5), 0, false);
-//	pHen->setColor(colorPurple);
-//	pParent->attachChild(pHen);
-//}
-//
-//void LobbyScene::createPageTwo(AGameObject* pParent)
-//{
-//	Text* pTitle = new Text("Page2_Title", "Somebody", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
-//	pParent->attachChild(pTitle);
-//
-//	Text* pLine1 = new Text("Page2_Line1", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine1);
-//
-//	Text* pLine2 = new Text("Page2_Line2", "gusto ng karakter?", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine2);
-//
-//	Prop* pSomebody = new Prop("Somebody", "Somebody", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
-//	pParent->attachChild(pSomebody);
-//
-//	Text* pTao = new Text("Tao", "Tao", Vector2D(-330, 0), Vector2D(1.5, 1.5), 0, false);
-//	pTao->setColor(colorRed);
-//	pParent->attachChild(pTao);
-//
-//	Text* pHayop = new Text("Hayop", "Hayop", Vector2D(300, 10), Vector2D(1.5, 1.5), 0, false);
-//	pHayop->setColor(colorYellow);
-//	pParent->attachChild(pHayop);
-//
-//	Text* pAtbp = new Text("Atbp", "at kahit isang nagsasalitang piraso ng papel", Vector2D(410, -350), Vector2D(1.f, 1.f), 0, false);
-//	pAtbp->setColor(colorBlue);
-//	pParent->attachChild(pAtbp);
-//}
-//
-//void LobbyScene::createPageThree(AGameObject* pParent)
-//{
-//	Text* pTitle = new Text("Page3_Title", "Wanted", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
-//	pParent->attachChild(pTitle);
-//
-//	Text* pLine1 = new Text("Page3_Line1", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang gusto ng", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine1);
-//
-//	Text* pLine2 = new Text("Page3_Line2", "karakter?", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine2);
-//
-//	Prop* pWanted = new Prop("Wanted", "Wanted", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
-//	pParent->attachChild(pWanted);
-//
-//	Text* pStudent = new Text("Student", "The student wanted", Vector2D(-400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pStudent->setColor(colorRed);
-//	pParent->attachChild(pStudent);
-//
-//	Text* pStudent1 = new Text("Student1", "to play video games", Vector2D(-400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pStudent1->setColor(colorRed);
-//	
-//	pParent->attachChild(pStudent1);
-//
-//	Text* pCat = new Text("Cat", "The cat wanted to", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
-//	pCat->setColor(colorYellow);
-//	pParent->attachChild(pCat);
-//
-//	Text* pCat1 = new Text("Cat1", "eat a fish", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
-//	pCat1->setColor(colorYellow);
-//	pParent->attachChild(pCat1);
-//
-//	Text* pFairy = new Text("Fairy", "The fairy wanted to", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pFairy->setColor(colorBlue);
-//	pParent->attachChild(pFairy);
-//
-//	Text* pFairy1 = new Text("Fairy1", "become a human", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pFairy1->setColor(colorBlue);
-//	pParent->attachChild(pFairy1);
-//
-//}
-//
-//void LobbyScene::createPageFour(AGameObject* pParent)
-//{
-//	Text* pTitle = new Text("Page4_Title", "But", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
-//	pParent->attachChild(pTitle);
-//
-//	Text* pLine1 = new Text("Page4_Line1", "Kapag may karakter, may problemang kinakaharap ang karakter. Tanungin ang iyong sarili, ano", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine1);
-//
-//	Text* pLine2 = new Text("Page4_Line2", "ang problema sa kuwento na kinakaharap ng pangunahing tauhan?", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine2);
-//
-//	Prop* pBut = new Prop("But", "But", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
-//	pParent->attachChild(pBut);
-//	
-//	Text* pStudent = new Text("Page4_Student", "The student had a", Vector2D(-400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pStudent->setColor(colorRed);
-//	pParent->attachChild(pStudent);
-//
-//	Text* pStudent1 = new Text("Page4_Student1", "failing grade in ", Vector2D(-400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pStudent1->setColor(colorRed);
-//	
-//	pParent->attachChild(pStudent1);
-//
-//	Text* pStudent2 = new Text("Page4_Student2", "English ", Vector2D(-400, -365), Vector2D(1.f, 1.f), 0, false);
-//	pStudent2->setColor(colorRed);
-//	pParent->attachChild(pStudent2);
-//
-//	Text* pCat = new Text("Page4_Cat", "The cat did not have", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
-//	pCat->setColor(colorYellow);
-//	pParent->attachChild(pCat);
-//
-//	Text* pCat1 = new Text("Page4_Cat1", "enough money to buy", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
-//	pCat1->setColor(colorYellow);
-//	pParent->attachChild(pCat1);
-//
-//	Text* pCat2 = new Text("Page4_Cat2", "the fish", Vector2D(0, -365), Vector2D(1.f, 1.f), 0, false);
-//	pCat2->setColor(colorYellow);
-//	pParent->attachChild(pCat2);
-//
-//	Text* pFairy = new Text("Page4_Fairy", "The fairy couldn't", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pFairy->setColor(colorBlue);
-//	pParent->attachChild(pFairy);
-//
-//	Text* pFairy1 = new Text("Page4_Fairy1", "leave her duty", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pFairy1->setColor(colorBlue);
-//	pParent->attachChild(pFairy1);
-//
-//	Text* pFairy2 = new Text("Page4_Fairy2", "behind", Vector2D(400, -365), Vector2D(1.f, 1.f), 0, false);
-//	pFairy2->setColor(colorBlue);
-//	pParent->attachChild(pFairy2);
-//}
-//
-//void LobbyScene::createPageFive(AGameObject* pParent)
-//{
-//	Text* pTitle = new Text("Page5_Title", "So", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
-//	pParent->attachChild(pTitle);
-//
-//	Text* pLine1 = new Text("Page5_Line1", "Sinusubukan ng pangunahing tauhan lutasin ang problema. Tanungin ang iyong sarili kung", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine1);
-//
-//	Text* pLine2 = new Text("Page5_Line2", "Paano malulutas ng karakte ang problema.", Vector2D(-0, 250), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine2);
-//
-//	Prop* pSo = new Prop("So", "So", Vector2D(0, -40), Vector2D(.75, .75), 0, false);
-//	pParent->attachChild(pSo);
-//
-//	Text* pStudent = new Text("Page5_Student", "The student studied", Vector2D(-400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pStudent->setColor(colorRed);
-//	pParent->attachChild(pStudent);
-//
-//	Text* pStudent1 = new Text("Page5_Student1", "hard.", Vector2D(-400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pStudent1->setColor(colorRed);
-//	
-//	pParent->attachChild(pStudent1);
-//
-//	Text* pCat = new Text("Page5_Cat", "The cat worked as a", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
-//	pCat->setColor(colorYellow);
-//	pParent->attachChild(pCat);
-//
-//	Text* pCat1 = new Text("Page5_Cat1", "deliveryman to earn", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
-//	pCat1->setColor(colorYellow);
-//	pParent->attachChild(pCat1);
-//
-//	Text* pCat2 = new Text("Page5_Cat2", "enough money.", Vector2D(0, -365), Vector2D(1.f, 1.f), 0, false);
-//	pCat2->setColor(colorYellow);
-//	pParent->attachChild(pCat2);
-//
-//	Text* pFairy = new Text("Page5_Fairy", "The fairy accompanied", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pFairy->setColor(colorBlue);
-//	pParent->attachChild(pFairy);
-//
-//	Text* pFairy1 = new Text("Page5_Fairy1", "the student in his", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pFairy1->setColor(colorBlue);
-//	pParent->attachChild(pFairy1);
-//
-//	Text* pFairy2 = new Text("Page5_Fairy2", "studies.", Vector2D(400, -365), Vector2D(1.f, 1.f), 0, false);
-//	pFairy2->setColor(colorBlue);
-//	pParent->attachChild(pFairy2);
-//}
-//
-//void LobbyScene::createPageSix(AGameObject* pParent)
-//{
-//	Text* pTitle = new Text("Page6_Title", "Then", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
-//	pParent->attachChild(pTitle);
-//
-//	Text* pLine1 = new Text("Page6_Line1", "Ano ang mangyayari pagkatapos subukan ng pangunahing tauhan na lutasin ang problema?", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine1);
-//
-//	Prop* pThen = new Prop("Then", "Then", Vector2D(0, -0), Vector2D(.75, .75), 0, false);
-//	pParent->attachChild(pThen);
-//
-//	Text* pStudent = new Text("Page6_Student", "The student got a", Vector2D(-400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pStudent->setColor(colorRed);
-//	pParent->attachChild(pStudent);
-//
-//	Text* pStudent1 = new Text("Page6_Student1", "perfect score on his", Vector2D(-400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pStudent1->setColor(colorRed);
-//	
-//	pParent->attachChild(pStudent1);
-//
-//	Text* pStudent2 = new Text("Page6_Student2", "next quiz.", Vector2D(-400, -365), Vector2D(1.f, 1.f), 0, false);
-//	pStudent2->setColor(colorRed);
-//	pParent->attachChild(pStudent2);
-//
-//	Text* pCat = new Text("Page6_Cat", "The cat was able to earn", Vector2D(0, -275), Vector2D(1.f, 1.f), 0, false);
-//	pCat->setColor(colorYellow);
-//	pParent->attachChild(pCat);
-//
-//	Text* pCat1 = new Text("Page6_Cat1", "enough money to buy the", Vector2D(0, -320), Vector2D(1.f, 1.f), 0, false);
-//	pCat1->setColor(colorYellow);
-//	pParent->attachChild(pCat1);
-//
-//	Text* pCat2 = new Text("Page6_Cat2", "fish.", Vector2D(0, -365), Vector2D(1.f, 1.f), 0, false);
-//	pCat2->setColor(colorYellow);
-//	pParent->attachChild(pCat2);
-//
-//	Text* pFairy = new Text("Page6_Fairy", "The fairy became", Vector2D(400, -275), Vector2D(1.f, 1.f), 0, false);
-//	pFairy->setColor(colorBlue);
-//	pParent->attachChild(pFairy);
-//
-//	Text* pFairy1 = new Text("Page6_Fairy1", "human.", Vector2D(400, -320), Vector2D(1.f, 1.f), 0, false);
-//	pFairy1->setColor(colorBlue);
-//	pParent->attachChild(pFairy1);
-//
-//
-//}
-//
-//void LobbyScene::createPageSeven(AGameObject* pParent)
-//{
-//	Text* pTitle = new Text("Page7_Title", "Summary", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
-//	pParent->attachChild(pTitle);
-//
-//	Text* pLine1 = new Text("Page7_Line1", "Upang Ibuod ang mga tanong na dapat mong itanong sa iyong sarili pagkatapos", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine1);
-//
-//	Text* pLine2 = new Text("Page7_Line2", "basahin ang isang kuwento:", Vector2D(-295, 250), Vector2D(.75, .75), 0.f, false);
-//	pParent->attachChild(pLine2);
-//
-//	Text* pS = new Text("S_Letter1", "S", Vector2D(-560, 110), Vector2D(1, 1), 0, false);
-//	pS->setColor(colorRed);
-//	pParent->attachChild(pS);
-//
-//	Text* pOmebody = new Text("omebody1", "omebody", Vector2D(-470, 100), Vector2D(1, 1), 0, false);
-//	pOmebody->setColor(colorRed);
-//	pParent->attachChild(pOmebody);
-//
-//	Text* pS1Line = new Text("S1_Line", "Sino ang Pangunahiing tauhan?", Vector2D(-195, 100), Vector2D(.75, .75), 0.f, false);
-//	pS1Line->setColor(colorRed);
-//	pParent->attachChild(pS1Line);
-//
-//	Text* pW = new Text("W_Letter1", "W", Vector2D(-560, 15), Vector2D(1, 1), 0, false);
-//	pW->setColor(colorYellow);
-//	pParent->attachChild(pW);
-//
-//	Text* pAnted = new Text("anted1", "anted", Vector2D(-485, 0), Vector2D(1, 1), 0, false);
-//	pAnted->setColor(colorYellow);
-//	pParent->attachChild(pAnted);
-//
-//	Text* pWLine = new Text("W_Line", "Ano ang gusto ng karakter?", Vector2D(-220, 0), Vector2D(.75, .75), 0.f, false);
-//	pWLine->setColor(colorYellow);
-//	pParent->attachChild(pWLine);
-//
-//	Text* pB = new Text("B_Letter1", "B", Vector2D(-560, -80), Vector2D(1, 1), 0, false);
-//	pB->setColor(colorCyan);
-//	pParent->attachChild(pB);
-//
-//	Text* pUt = new Text("ut1", "ut", Vector2D(-510, -90), Vector2D(1, 1), 0, false);
-//	pUt->setColor(colorCyan);
-//	pParent->attachChild(pUt);
-//
-//	Text* pBLine = new Text("B_Line", "Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?", Vector2D(-40, -90), Vector2D(.75, .75), 0.f, false);
-//	pBLine->setColor(colorCyan);
-//	pParent->attachChild(pBLine);
-//
-//	Text* pS2 = new Text("S2_Letter1", "S", Vector2D(-560, -160), Vector2D(1, 1), 0, false);
-//	pS2->setColor(colorBlue);
-//	pParent->attachChild(pS2);
-//
-//	Text* pO = new Text("O_Letter1", "o", Vector2D(-530, -175), Vector2D(1, 1), 0, false);
-//	pO->setColor(colorBlue);
-//	pParent->attachChild(pO);
-//
-//	Text* pS2Line = new Text("S2_Line", "Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?", Vector2D(-40, -175), Vector2D(.75, .75), 0.f, false);
-//	pS2Line->setColor(colorBlue);
-//	pParent->attachChild(pS2Line);
-//
-//	Text* pT = new Text("T_Letter1", "T", Vector2D(-560, -280), Vector2D(1, 1), 0, false);
-//	pT->setColor(colorPurple);
-//	pParent->attachChild(pT);
-//
-//	Text* pHen = new Text("hen1", "hen", Vector2D(-520, -295), Vector2D(1, 1), 0, false);
-//	pHen->setColor(colorPurple);
-//	pParent->attachChild(pHen);
-//
-//	Text* pTLine = new Text("T_Line", "Ano ang Nagyari pagkatapos sinubukan ng karakter lutasin ang problema?", Vector2D(35, -295), Vector2D(.75, .75), 0.f, false);
-//	pTLine->setColor(colorPurple);
-//	pParent->attachChild(pTLine);
-//}
+void LobbyScene::createPageOne(AGameObject* pParent)
+{
+	
+	Prop* pIntro = new Prop("FairyIntro", "Intro", Vector2D(0, -0), Vector2D(1, 1), 0, false);
+	pParent->attachChild(pIntro);
+
+	Text* pS = new Text("S_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS->setMessage("S");
+	pS->setPos(Vector2D(-580, 40)); 
+	pS->setScale(Vector2D(1.5, 1.5));
+	pS->setColor(colorRed);
+	pParent->attachChild(pS);
+
+	Text* pOmebody = new Text("omebody", "JainiPurva-Regular.ttf", 45, 0, false);
+	pOmebody->setMessage("omebody");
+	pOmebody->setPos(Vector2D(-440, 25));
+	pOmebody->setScale(Vector2D(1.5, 1.5));
+	pOmebody->setColor(colorRed);
+	pParent->attachChild(pOmebody);
+
+	Text* pW = new Text("W_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pW->setMessage("W");
+	pW->setPos(Vector2D(-580, -140));
+	pW->setScale(Vector2D(1.5, 1.5));
+	pW->setColor(colorYellow);
+	pParent->attachChild(pW);
+
+	Text* pAnted = new Text("anted", "JainiPurva-Regular.ttf", 45, 0, false);
+	pAnted->setMessage("anted");
+	pAnted->setPos(Vector2D(-470, -160));
+	pAnted->setScale(Vector2D(1.5, 1.5));
+	pAnted->setColor(colorYellow);
+	pParent->attachChild(pAnted);
+
+	Text* pB = new Text("B_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pB->setMessage("B");
+	pB->setPos(Vector2D(-580, -300));
+	pB->setScale(Vector2D(1.5, 1.5));
+	pB->setColor(colorCyan);
+	pParent->attachChild(pB);
+
+	Text* pUt = new Text("ut", "JainiPurva-Regular.ttf", 45, 0, false);
+	pUt->setMessage("ut");
+	pUt->setPos(Vector2D(-520, -320));
+	pUt->setScale(Vector2D(1.5, 1.5));
+	pUt->setColor(colorCyan);
+	pParent->attachChild(pUt);
+
+	Text* pS2 = new Text("S2_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS2->setMessage("S");
+	pS2->setPos(Vector2D(-110, 40));
+	pS2->setScale(Vector2D(1.5, 1.5));
+	pS2->setColor(colorBlue);
+	pParent->attachChild(pS2);
+
+	Text* pO = new Text("O_Letter", "JainiPurva-Regular.ttf", 45, 0, false);
+	pO->setMessage("o");
+	pO->setPos(Vector2D(-55, 25));
+	pO->setScale(Vector2D(1.5, 1.5));
+	pO->setColor(colorBlue);
+	pParent->attachChild(pO);
+
+	Text* pT = new Text("T_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pT->setMessage("T");
+	pT->setPos(Vector2D(-110, -140));
+	pT->setScale(Vector2D(1.5, 1.5));
+	pT->setColor(colorPurple);
+	pParent->attachChild(pT);
+
+	Text* pHen = new Text("hen", "JainiPurva-Regular.ttf", 45, 0, false);
+	pHen->setMessage("hen");
+	pHen->setPos(Vector2D(-55, -160));
+	pHen->setScale(Vector2D(1.5, 1.5));
+	pHen->setColor(colorPurple);
+	pParent->attachChild(pHen);
+}
+
+void LobbyScene::createPageTwo(AGameObject* pParent)
+{
+	Prop* pSomebody = new Prop("Somebody", "Somebody", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pSomebody);
+
+	Text* pTao = new Text("Tao", "JainiPurva-Regular.ttf", 45, 0, false);
+	pTao->setMessage("Tao");
+	pTao->setPos(Vector2D(-330, 0));
+	pTao->setScale(Vector2D(1.5, 1.5));
+	pTao->setColor(colorRed);
+	pParent->attachChild(pTao);
+
+	Text* pHayop = new Text("Hayop", "JainiPurva-Regular.ttf", 45, 0, false);
+	pHayop->setMessage("Hayop");
+	pHayop->setPos(Vector2D(300, 10));
+	pHayop->setScale(Vector2D(1.5, 1.5));
+	pHayop->setColor(colorYellow);
+	pParent->attachChild(pHayop);
+
+	Text* pAtbp = new Text("Atbp", "JainiPurva-Regular.ttf", 45, 0, false);
+	pAtbp->setMessage("at kahit isang nagsasalitang piraso ng papel");
+	pAtbp->setPos(Vector2D(360, -400));
+	pAtbp->setScale(Vector2D(1, 1));
+	pAtbp->setColor(colorBlue);
+	pParent->attachChild(pAtbp);
+}
+
+void LobbyScene::createPageThree(AGameObject* pParent)
+{
+	Prop* pWanted = new Prop("Wanted", "Wanted", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pWanted);
+
+	Text* pStudent = new Text("Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student wanted \n to play video games");
+	pStudent->setPos(Vector2D(-400, -295));
+	pStudent->setScale(Vector2D(1, 1));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Cat", "JainiPurva-Regular.ttf", 45, 0, false);
+	pCat->setMessage("The cat wanted to \n eat a fish");
+	pCat->setPos(Vector2D(0, -295));
+	pCat->setScale(Vector2D(1, 1));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Fairy", "JainiPurva-Regular.ttf", 45, 0, false);
+	pFairy->setMessage("The fairy wanted to \n become a human");
+	pFairy->setPos(Vector2D(400, -295));
+	pFairy->setScale(Vector2D(1, 1));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
+
+}
+
+void LobbyScene::createPageFour(AGameObject* pParent)
+{
+	Prop* pBut = new Prop("But", "But", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pBut);
+	
+	Text* pStudent = new Text("Page4_Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student had a \n failing grade in \n English");
+	pStudent->setPos(Vector2D(-400, -350));
+	pStudent->setScale(Vector2D(1.f, 1.f));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Page4_Cat", "JainiPurva-Regular.ttf",45, 0, false);
+	pCat->setMessage("The cat did not have \n enough money to buy \n the fish");
+	pCat->setPos(Vector2D(0, -275));
+	pCat->setScale(Vector2D(1.f, 1.f));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Page4_Fairy", "JainiPurva-Regular.ttf", 45, 0, false);
+	pFairy->setMessage("The fairy couldn't \n leave her duty \n behind");
+	pFairy->setPos(Vector2D(400, -275));
+	pFairy->setScale(Vector2D(1.f, 1.f));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
+
+}
+
+void LobbyScene::createPageFive(AGameObject* pParent)
+{
+	Prop* pSo = new Prop("So", "So", Vector2D(0, -40), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pSo);
+
+	Text* pStudent = new Text("Page5_Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student studied \n hard.");
+	pStudent->setPos(Vector2D(-400, -340));
+	pStudent->setScale(Vector2D(1.f, 1.f));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Page5_Cat", "JainiPurva-Regular.ttf", 45, 0, false);
+	pCat->setMessage("The cat worked as a \n deliveryman to earn \n enough money.");
+	pCat->setPos(Vector2D(0, -340));
+	pCat->setScale(Vector2D(1.f, 1.f));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Page5_Fairy", "JainiPurva-Regular.ttf", 45, 0, false);
+	pFairy->setMessage("The fairy accompanied \n the student in his \n studies.");
+	pFairy->setPos(Vector2D(400, -340));
+	pFairy->setScale(Vector2D(1.f, 1.f));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
+}
+
+void LobbyScene::createPageSix(AGameObject* pParent)
+{
+	Prop* pThen = new Prop("Then", "Then", Vector2D(0, -0), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pThen);
+
+	Text* pStudent = new Text("Page6_Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student got a \n perfect score on his \n next quiz.");
+	pStudent->setPos(Vector2D(-400, -325));
+	pStudent->setScale(Vector2D(1.f, 1.f));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Page6_Cat", "JainiPurva-Regular.ttf", 45, 0, false);
+	pCat->setMessage("The cat was able to earn \n enough money to buy the \n fish.");
+	pCat->setPos(Vector2D(0, -325));
+	pCat->setScale(Vector2D(1.f, 1.f));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Page6_Fairy", "JainiPurva-Regular.ttf",45, 0, false);
+	pFairy->setMessage("The fairy became \n human.");
+	pFairy->setPos(Vector2D(400, -275));
+	pFairy->setScale(Vector2D(1.f, 1.f));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
+
+
+
+}
+
+void LobbyScene::createPageSeven(AGameObject* pParent)
+{
+	Text* pS = new Text("S_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS->setMessage("S");
+	pS->setPos(Vector2D(-560, 110));
+	pS->setScale(Vector2D(1.f, 1.f));
+	pS->setColor(colorRed);
+	pParent->attachChild(pS);
+
+	Text* pOmebody = new Text("omebody1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pOmebody->setMessage("omebody");
+	pOmebody->setPos(Vector2D(-470, 100));
+	pOmebody->setScale(Vector2D(1.f, 1.f));
+	pOmebody->setColor(colorRed);
+	pParent->attachChild(pOmebody);
+
+	Text* pS1Line = new Text("S1_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pS1Line->setMessage("Sino ang Pangunahiing tauhan?");
+	pS1Line->setPos(Vector2D(-195, 100));
+	pS1Line->setScale(Vector2D(.75, .75));
+	pS1Line->setColor(colorRed);
+	pParent->attachChild(pS1Line);
+
+	Text* pW = new Text("W_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pW->setMessage("W");
+	pW->setPos(Vector2D(-560, 15));
+	pW->setScale(Vector2D(1, 1));
+	pW->setColor(colorYellow);
+	pParent->attachChild(pW);
+
+	Text* pAnted = new Text("anted1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pAnted->setMessage("anted");
+	pAnted->setPos(Vector2D(-485, 0));
+	pAnted->setScale(Vector2D(1, 1));
+	pAnted->setColor(colorYellow);
+	pParent->attachChild(pAnted);
+
+	Text* pWLine = new Text("W_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pWLine->setMessage("Ano ang gusto ng karakter?");
+	pWLine->setPos(Vector2D(-220, 0));
+	pWLine->setScale(Vector2D(.75, .75));
+	pWLine->setColor(colorYellow);
+	pParent->attachChild(pWLine);
+
+	Text* pB = new Text("B_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pB->setMessage("B");
+	pB->setPos(Vector2D(-560, -80));
+	pB->setScale(Vector2D(1, 1));
+	pB->setColor(colorCyan);
+	pParent->attachChild(pB);
+
+	Text* pUt = new Text("ut1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pUt->setMessage("ut");
+	pUt->setPos(Vector2D(-510, -90));
+	pUt->setScale(Vector2D(1, 1));
+	pUt->setColor(colorCyan);
+	pParent->attachChild(pUt);
+
+	Text* pBLine = new Text("B_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pBLine->setMessage("Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?");
+	pBLine->setPos(Vector2D(-40, -90));
+	pBLine->setScale(Vector2D(.75, .75));
+	pBLine->setColor(colorCyan);
+	pParent->attachChild(pBLine);
+
+	Text* pS2 = new Text("S2_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS2->setMessage("S");
+	pS2->setPos(Vector2D(-560, -160));
+	pS2->setScale(Vector2D(1, 1));
+	pS2->setColor(colorBlue);
+	pParent->attachChild(pS2);
+
+	Text* pO = new Text("O_Letter1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pO->setMessage("O");
+	pO->setPos(Vector2D(-530, -175));
+	pO->setScale(Vector2D(1, 1));
+	pO->setColor(colorBlue);
+	pParent->attachChild(pO);
+
+	Text* pS2Line = new Text("S2_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pS2Line->setMessage("Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?");
+	pS2Line->setPos(Vector2D(-40, -175));
+	pS2Line->setScale(Vector2D(.75, .75));
+	pS2Line->setColor(colorBlue);
+	pParent->attachChild(pS2Line);
+
+	Text* pT = new Text("T_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pT->setMessage("T");
+	pT->setPos(Vector2D(-560, -280));
+	pT->setScale(Vector2D(1, 1));
+	pT->setColor(colorPurple);
+	pParent->attachChild(pT);
+
+	Text* pHen = new Text("hen1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pHen->setMessage("hen");
+	pHen->setPos(Vector2D(-520, -295));
+	pHen->setScale(Vector2D(1, 1));
+	pHen->setColor(colorPurple);
+	pParent->attachChild(pHen);
+
+	Text* pTLine = new Text("T_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pTLine->setMessage("Ano ang Nagyari pagkatapos sinubukan ng karakter lutasin ang problema?");
+	pTLine->setPos(Vector2D(35, -295));
+	pTLine->setScale(Vector2D(.75, .75));
+	pTLine->setColor(colorPurple);
+	pParent->attachChild(pTLine);
+}
 

@@ -16,43 +16,44 @@ void PhysicsSystem::checkCollision()
     for (int i = 0; i < this->vecTrackedCollider.size(); i++) {
         pColliderA = this->vecTrackedCollider[i];
 
+        if (RigidBody* pRigidBody = dynamic_cast<RigidBody*>(pColliderA))
+        {
+            pRigidBody->physicsUpdate();
+        }
+
         for (int j = i + 1; j < this->vecTrackedCollider.size(); j++) {
             pColliderB = this->vecTrackedCollider[j];
             if (pColliderA != pColliderB) {
 
                 bool isColliding = pColliderA->isColliding(pColliderB);
-                if (isColliding &&
-                    !pColliderA->hasCollided(pColliderB) &&
-                    !pColliderB->hasCollided(pColliderA)) {
+                bool collidedAwithB = pColliderA->hasCollided(pColliderB);
+                bool collidedBwithA = pColliderB->hasCollided(pColliderA);
 
+                if (isColliding && !collidedAwithB && !collidedBwithA)
+                {
                     pColliderA->setCollided(pColliderB, true);
                     pColliderB->setCollided(pColliderA, true);
                     pColliderA->onCollisionEnter(pColliderB);
                     pColliderB->onCollisionEnter(pColliderA);
                 }
-
-                else if (!isColliding &&
-                    pColliderA->hasCollided(pColliderB) &&
-                    pColliderB->hasCollided(pColliderA)) {
-
+                else if (isColliding && collidedAwithB && collidedBwithA)
+                {
+                    pColliderA->onCollisionContinue(pColliderB);
+                    pColliderB->onCollisionContinue(pColliderA);
+                }
+                else if (!isColliding && collidedAwithB && collidedBwithA)
+                {
                     pColliderA->setCollided(pColliderB, false);
                     pColliderB->setCollided(pColliderA, false);
                     pColliderA->onCollisionExit(pColliderB);
                     pColliderB->onCollisionExit(pColliderA);
-                }
-
-                if (isColliding &&
-                    pColliderA->hasCollided(pColliderB) &&
-                    pColliderB->hasCollided(pColliderA)) {
-                    pColliderA->onCollisionContinue(pColliderB);
-                    pColliderB->onCollisionContinue(pColliderA);
                 }
             }
         }
 
         if (RigidBody* pRigidBody = dynamic_cast<RigidBody*>(pColliderA))
         {
-            pRigidBody->onUpdate();
+            pRigidBody->physicsLateUpdate();
         }
     }
 

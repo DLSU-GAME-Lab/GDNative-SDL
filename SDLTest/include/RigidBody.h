@@ -19,7 +19,8 @@ public:
     virtual void onCollisionEnter(ACollider* pCollider) override;
     virtual void onCollisionContinue(ACollider* pCollider) override;
     virtual void onCollisionExit(ACollider* pCollider) override;
-    void onUpdate();
+    void physicsUpdate();
+    void physicsLateUpdate();
 
 public:
     void setWeight(float fWeight);

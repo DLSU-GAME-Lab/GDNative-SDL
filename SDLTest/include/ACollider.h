@@ -1,21 +1,10 @@
 #pragma once
-#include "vector"
-#include "math.h"
 #include "AComponent.h"
 #include "AGameObject.h"
 #include "EnumComponentType.h"
 #include "ICollisionListener.h"
-//enum  class ColliderShape
-//{
-//    RECTANGLE = 0,
-//    CIRCLE
-//};
-//struct ColliderBounds {
-//    ColliderShape type;
-//    SDL_FRect rect;     // Used if type == Rectangle
-//    SDL_FPoint center;  // Used if type == Circle
-//    float radius;       // Used if type == Circle
-//};
+#include <vector>
+#include <cmath>
 
 class ACollider: public AComponent
 {

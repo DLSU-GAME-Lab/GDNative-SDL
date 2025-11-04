@@ -17,35 +17,32 @@ void RigidBody::addForce(Vector2D force)
 void RigidBody::onCollisionEnter(ACollider* pCollider)
 {
 	BoxCollider::onCollisionEnter(pCollider);
-	if (this->bCollideBottom) this->bGrounded = true;
+	this->bGrounded = this->bCollideBottom;
 }
 
 void RigidBody::onCollisionContinue(ACollider* pCollider)
 {
 	BoxCollider::onCollisionContinue(pCollider);
+	this->bGrounded = this->bCollideBottom;
 }
 
 void RigidBody::onCollisionExit(ACollider* pCollider)
 {
 	BoxCollider::onCollisionExit(pCollider);
-	if (!this->bCollideBottom) this->bGrounded = true;
+	this->bGrounded = this->bCollideBottom;
 }
 
-void RigidBody::onUpdate()
+void RigidBody::physicsUpdate()
 {
-	Vector2D pos = this->pOwner->getPos();
-
 	if (this->bGravityEnabled && !this->bGrounded)
 		this->velocity.y -= F_GRAVITY * this->fWeight * this->fDeltaTime;
 
-	if (this->intersection.x != 0.0f && this->velocity.x != 0.0f)
-		this->velocity.x = 0.0f;
+	Vector2D pos = this->pOwner->getPos();
+	this->pOwner->setPos(pos + this->velocity);
+}
 
-	if (this->intersection.y != 0.0f && this->velocity.y != 0.0f)
-		this->velocity.y = 0.0f;
-
-	this->pOwner->setPos(pos + this->intersection + this->velocity);
-
+void RigidBody::physicsLateUpdate()
+{
 	if (this->velocity != Vector2D::Zero())
 	{
 		Vector2D dragForce = (fDrag * 0.5f) * velocity * velocity;
@@ -54,6 +51,9 @@ void RigidBody::onUpdate()
 		if (velocity.y > 0.0f) velocity.y = std::max(0.0f, velocity.y - dragForce.y);
 		else if (velocity.y < 0.0f) velocity.y = std::min(0.0f, velocity.y + dragForce.y);
 	}
+
+	Vector2D pos = this->pOwner->getPos();
+	this->pOwner->setPos(pos + this->intersection);
 }
 
 void RigidBody::setWeight(float fWeight)

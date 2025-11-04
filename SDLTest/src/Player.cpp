@@ -63,7 +63,6 @@ void Player::initialize()
 
 void Player::onCollisionEnter(ACollider* pCollider)
 {
-    std::cout << "player collision" << std::endl;
 }
 
 void Player::onCollisionContinue(ACollider* pCollider)

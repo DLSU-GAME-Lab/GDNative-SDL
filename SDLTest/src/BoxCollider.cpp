@@ -44,42 +44,36 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 
 	if (bIntersectX && bIntersectY)
 	{
-		Vector2D posA = this->pOwner->getPos();
-		Vector2D posB = pCollider->getOwner()->getPos();
-		Vector2D subtractPos = posA - posB;
+		float fBot = fTopB - fBotA;
+		float fTop = fTopA - fBotB;
+		float fLeft = fRightB - fLeftA;
+		float fRight = fRightA - fLeftB;
 
-		if (std::fabs(subtractPos.x) < std::fabs(subtractPos.y))
+		if (std::min(fBot, fTop) < std::min(fLeft, fRight))
 		{
-			if (subtractPos.x > 0.0f)
-			{
-				this->bCollideLeft = true;
-				this->intersection.x = fRightB - fLeftA;
-			}
-			else if (subtractPos.x < 0.0f)
-			{
-				this->bCollideRight = true;
-				this->intersection.x = fLeftB - fRightA;
-			}
-		}
-		else
-		{
-			if (subtractPos.y > 0.0f)
+			if (fBot < fTop)
 			{
 				this->bCollideBottom = true;
 				this->intersection.y = fTopB - fBotA;
 			}
-			else if (subtractPos.y < 0.0f)
+			else if (fTop < fBot)
 			{
 				this->bCollideTop = true;
 				this->intersection.y = fBotB - fTopA;
 			}
 		}
-
-		if (this->pOwner->getName() == "Player")
+		else
 		{
-			std::cout << "Self: " << fLeftA << " " << fRightA << " " << fBotA << " " << fTopA << std::endl;
-			std::cout << "Other: " << fLeftB << " " << fRightB << " " << fBotB << " " << fTopB << std::endl;
-			std::cout << "intersection: " << this->intersection << std::endl;
+			if (fLeft < fRight)
+			{
+				this->bCollideLeft = true;
+				this->intersection.x = fRightB - fLeftA;
+			}
+			else if (fRight < fLeft)
+			{
+				this->bCollideRight = true;
+				this->intersection.x = fLeftB - fRightA;
+			}
 		}
 	}
 

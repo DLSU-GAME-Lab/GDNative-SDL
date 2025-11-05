@@ -309,6 +309,10 @@
     <ClCompile Include="src\MathUtils.cpp">
       <Filter>Component\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\DialogueBox.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DialogueToggle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -611,6 +615,10 @@
     <ClInclude Include="include\MathUtils.h">
       <Filter>Component\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="include\DialogueBox.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DialogueToggle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

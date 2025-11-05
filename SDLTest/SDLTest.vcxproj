@@ -131,7 +131,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\DialogueToggle.cpp" />
     <ClCompile Include="src\AAnimator.cpp" />
+    <ClCompile Include="src\DialogueBox.cpp" />
     <ClCompile Include="src\ExitMenu.cpp" />
     <ClCompile Include="src\ACollider.cpp" />
     <ClCompile Include="imgui\src\imgui.cpp" />
@@ -215,7 +217,9 @@
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\DialogueToggle.h" />
     <ClInclude Include="include\AAnimator.h" />
+    <ClInclude Include="include\DialogueBox.h" />
     <ClInclude Include="include\ExitMenu.h" />
     <ClInclude Include="include\ACollider.h" />
     <ClInclude Include="imgui\include\imconfig.h" />

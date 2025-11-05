@@ -136,7 +136,7 @@ void PuzzleLevel1Scene::onLoadObjects()
 	DialogueRenderer* pTabletTextR1 = (DialogueRenderer*)pTabletText1->findComponentByName("DialogueRenderer");
 	pTabletTextR1->setPivot(Vector2D(0.0f, 0.5f));
 
-	pTransBG->setEnabled(false);
+
 	PuzzleHint* pHint = new PuzzleHint("PuzzleHintWindow");
 	pHint->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pHint);
@@ -144,10 +144,14 @@ void PuzzleLevel1Scene::onLoadObjects()
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
 	pPauseScreen->setEnabled(false);
-	//AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
-	//GameObjectManager::getInstance()->addObject(pIntro);
-	//SpriteAnimator* pAnimator = (SpriteAnimator*)pIntro->findComponentByName("SpriteAnimator");
-	//pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
+
+	
+
+	AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
+	pTransBG->attachChild(pIntro);
+	SpriteAnimator* pAnimator = (SpriteAnimator*)pIntro->findComponentByName("SpriteAnimator");
+	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
+	pTransBG->setEnabled(true);
 
 }
 

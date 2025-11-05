@@ -6,7 +6,8 @@ enum class EventKey : int {
     PAUSE_SCREEN,
     RETURN_SCREEN,
     DIARY_SCREEN,
-    SWITCH_SCENE
+    SWITCH_SCENE,
+    DIALOGUE_SCREEN,
 };
 
 #endif

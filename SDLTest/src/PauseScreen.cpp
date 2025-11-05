@@ -16,13 +16,6 @@ void PauseScreen::initialize()
 	SpriteRenderer* pTransBGR = (SpriteRenderer*)pTransBack->findComponentByName("SpriteRenderer");
 	pTransBGR->setColor({ 250, 227, 150, 127 });
 
-	//Background* pLeftShape = new Background("Brown", "Square", Vector2D(3.f));
-	//this->attachChild(pLeftShape);
-	//SpriteRenderer* pLeftShapeR = (SpriteRenderer*)pLeftShape->findComponentByName("SpriteRenderer");
-	//pLeftShape->setRot(75.f);
-	//pLeftShape->setPos(Vector2D( -1000, -600));
-	//pLeftShapeR->setColor({ 92, 64, 51, 255 });
-
 	Text* pPauseText = new Text("PauseText", "JainiPurva-Regular.ttf", 120, -15);
 	pPauseText->setMessage("Paused");
 	pPauseText->setPos(Vector2D(-600, 350));

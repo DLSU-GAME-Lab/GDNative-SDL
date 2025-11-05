@@ -18,6 +18,7 @@
 #include "Animation.h"
 #include "SpriteAnimator.h"
 #include "TweenAnimator.h"
+#include "DialogueBox.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -49,7 +50,9 @@ void LobbyScene::onLoadObjects()
 	this->createDiary();
 	this->createExitMenu();
 
-
+	DialogueBox* pDialogueBox = new DialogueBox("DialogueBox");
+	GameObjectManager::getInstance()->addObject(pDialogueBox);
+	pDialogueBox->setEnabled(false);
 
 }
 
@@ -61,6 +64,7 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Fairy");
 	TextureManager::getInstance()->unload("Button");
 	TextureManager::getInstance()->unload("Lamps");
+	TextureManager::getInstance()->unload("Square");
 	TextureManager::getInstance()->unload("Step_Ladder");
 	TextureManager::getInstance()->unload("Chair");
 	TextureManager::getInstance()->unload("Librarian_Desk");
@@ -105,6 +109,7 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
 	TextureManager::getInstance()->load("diary.png", "Diary");
 	TextureManager::getInstance()->load("back.png", "Back");
+	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
 	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
@@ -123,14 +128,14 @@ void LobbyScene::createButtons()
 	GUIButton* pButtonRight = new GUIButton("Button_Right", "Button");
 	pButtonRight->setPos(Vector2D(800, 0));
 	pButtonRight->setScale(Vector2D(0.25f, 0.25f));
-	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::PLATFORMER_LEVEL_1_SCENE);
+	SceneSwitcher* pRightRoomSwitch = new SceneSwitcher(SceneTag::RIGHT_ROOM_SCENE);
 	pButtonRight->attachComponent(pRightRoomSwitch);
 	GameObjectManager::getInstance()->addObject(pButtonRight);
 
 	GUIButton* pButtonLeft = new GUIButton("Button_Left", "Button");
 	pButtonLeft->setPos(Vector2D(-800, 0));
 	pButtonLeft->setScale(Vector2D(0.25f, 0.25f));
-	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::PUZZLE_LEVEL_1_SCENE);
+	SceneSwitcher* pLeftRoomSwitch = new SceneSwitcher(SceneTag::LEFT_ROOM_SCENE);
 	pButtonLeft->attachComponent(pLeftRoomSwitch);
 	GameObjectManager::getInstance()->addObject(pButtonLeft);
 	SpriteRenderer* pRenderer = (SpriteRenderer*)pButtonLeft->findComponentByName("SpriteRenderer");

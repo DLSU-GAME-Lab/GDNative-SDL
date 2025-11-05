@@ -49,8 +49,7 @@ void DialogueRenderer::perform()
     Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
     if (owner)
     {
-        //TODO: fix the rotations. better if we used a transform matrix.
-        this->dAngle = owner->getRot();
+        this->dAngle = -owner->getRot();
 
         Vector2D scale = owner->getScale();
         Vector2D size = this->texSize * scale;
@@ -74,7 +73,7 @@ void DialogueRenderer::perform()
             SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
             SDL_SetTextureAlphaMod(pTexture, mColor.a);
 
-            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle + 180.0f, NULL, SDL_FLIP_NONE);
+            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
             else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
             else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
             else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);

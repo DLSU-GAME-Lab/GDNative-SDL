@@ -167,6 +167,7 @@
     <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
+    <ClCompile Include="src\MathUtils.cpp" />
     <ClCompile Include="src\PauseScreen.cpp" />
     <ClCompile Include="src\PerformanceMetricsScreen.cpp" />
     <ClCompile Include="src\PlatformerLevel1Scene.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
+    <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\PauseScreen.h" />
     <ClInclude Include="include\PerformanceMetricsScreen.h" />
     <ClInclude Include="include\PlatformerLevel1Scene.h" />

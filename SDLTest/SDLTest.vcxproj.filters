@@ -306,6 +306,9 @@
     <ClCompile Include="src\AAnimator.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="src\MathUtils.cpp">
+      <Filter>Component\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -604,6 +607,9 @@
     </ClInclude>
     <ClInclude Include="include\AAnimator.h">
       <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathUtils.h">
+      <Filter>Component\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

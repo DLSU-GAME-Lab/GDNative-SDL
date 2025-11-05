@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "AGameObject.h"
+#include "MathUtils.h"
 
 Camera::Camera()
 {
@@ -15,19 +16,25 @@ Camera::~Camera()
 
 Vector2D Camera::screenToWorldPoint(const Vector2D& screenPoint) const
 {
-
 	Vector2D worldPoint;
+
 	worldPoint.x = ((screenPoint.x - this->getHalfWidth()) * this->scale.x) + this->position.x;
 	worldPoint.y = (-(screenPoint.y - this->getHalfHeight()) * this->scale.y) + this->position.y;
+	// TODO: fix rotations
 
 	return worldPoint;
 }
 
 Vector2D Camera::worldToScreenPoint(const Vector2D& worldPoint) const
 {
-	Vector2D screenPoint;
-	screenPoint.x = ((worldPoint.x - this->position.x) / this->scale.x) + this->getHalfWidth();
-	screenPoint.y = (-(worldPoint.y - this->position.y) / this->scale.y) + this->getHalfHeight();
+	Vector2D screenPoint = (worldPoint - this->position) / this->scale;
+	float radians = MathUtils::toRadians(this->rotation);
+
+	screenPoint.x = screenPoint.x + this->getHalfWidth();
+	screenPoint.y = -screenPoint.y + this->getHalfHeight();
+	// TODO: fix rotations
+	//screenPoint.x = (screenPoint.x * std::cosf(radians)) - (screenPoint.y * std::sinf(radians));
+	//screenPoint.y = (screenPoint.y * std::sinf(radians)) + (screenPoint.x * std::cosf(radians));
 
 	return screenPoint;
 }

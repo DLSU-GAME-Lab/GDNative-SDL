@@ -4,10 +4,9 @@
 #include "ColliderRenderer.h"
 Platform::Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D fVecSize, float fRot) :AGameObject(strName)
 {
-
-	this->bounds = SDL_FRect{ fVecTranslate.x, fVecTranslate.y, fVecSize.x, fVecSize.y };
 	this->fVecTranslate = fVecTranslate;
 	this->fVecScale = Vector2D(1, 1);
+	this->fVecSize = fVecSize;
 }
 Platform::~Platform()
 {
@@ -16,13 +15,10 @@ Platform::~Platform()
 
 void Platform::initialize()
 {
-	this->bounds.x = fVecTranslate.x;
-	this->bounds.y = fVecTranslate.y;
 	BoxCollider* pCollider = new BoxCollider(this->strName + " Collider");
-	pCollider->setSize(this->bounds);
+	pCollider->setSize(this->fVecSize);
 	pCollider->setListener(this);
 	this->attachComponent((AComponent*)pCollider);
-	PhysicsSystem::getInstance()->trackCollider(pCollider);
 
 	ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider);
 	this->attachComponent(pColRenderer);

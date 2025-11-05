@@ -7,14 +7,9 @@ ColliderRenderer::ColliderRenderer(ACollider* pCollider) :ARenderer("ColliderRen
 
 void ColliderRenderer::perform()
 {
-    SDL_FRect tempRect = {};
-    AGameObject* owner = this->getOwner();
-
     Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
-    tempRect.x = pCollider->getGlobalBounds().x;
-    tempRect.y = pCollider->getGlobalBounds().y;
-    tempRect.w = pCollider->getGlobalBounds().w;
-    tempRect.h = pCollider->getGlobalBounds().h;
+    SDL_FRect tempRect = pCollider->getGlobalBounds();
+    AGameObject* owner = this->getOwner();
 
     if (!pOwner->getIsScreenObject()) tempRect = pCam->worldToScreenRect(tempRect);
     if (this->inCameraView(tempRect))

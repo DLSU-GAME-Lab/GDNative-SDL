@@ -8,6 +8,7 @@ private:
 	bool bHoldingDown;
 	bool bHoldingUp;
 
+	bool bInteracted;
 	bool bJumped;
 	Vector2D movement;
 
@@ -19,6 +20,7 @@ public:
 
 	Vector2D getMovement() const;
 	bool getJumped() const;
+	bool getInteracted() const;
 
 private:
 	void onKeyDown(SDL_Keycode key);

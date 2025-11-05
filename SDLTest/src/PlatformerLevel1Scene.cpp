@@ -11,6 +11,8 @@
 #include "Background.h"
 #include "Platform.h"
 #include "Prop.h"
+#include "Gem.h"
+
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -26,6 +28,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
 	TextureManager::getInstance()->loadFromFolder("animations/player_run", "player_run");
 	TextureManager::getInstance()->loadFromFolder("animations/player_jump", "player_jump");
+	TextureManager::getInstance()->loadFromFolder("animations/player_falling", "player_fall");
 
 	TextureManager::getInstance()->load("platformer/trees.png", "Trees_BG");
 	TextureManager::getInstance()->load("tilemaps/bottom.png", "Grass_Tile_BC");
@@ -42,6 +45,13 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("tilemaps/cornergrass3.png", "Grass_Tile_C3");
 	TextureManager::getInstance()->load("tilemaps/cornergrass4.png", "Grass_Tile_C4");
 	TextureManager::getInstance()->load("tilemaps/grass_platform.png", "Grass_Platform");
+	TextureManager::getInstance()->load("tilemaps/grass_platform.png", "Grass_Platform");
+
+	TextureManager::getInstance()->load("gems/gem_cyan.png", "Gem_Cyan");
+	TextureManager::getInstance()->load("gems/gem_green.png", "Gem_Green");
+	TextureManager::getInstance()->load("gems/gem_orange.png", "Gem_Orange");
+	TextureManager::getInstance()->load("gems/gem_purple.png", "Gem_Purple");
+	TextureManager::getInstance()->load("gems/gem_red.png", "Gem_Red");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -61,12 +71,12 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(tileMap);
 	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
+	Gem* pGem1 = new Gem("Gem_Cyan");
+	pGem1->setPos(Vector2D(1280, 1170));
+	GameObjectManager::getInstance()->addObject(pGem1);
+
 	Player* pPlayer = new Player(Vector2D(1050, 450), Vector2D(0.6f, 0.6f), 0.f);
 	GameObjectManager::getInstance()->addObject(pPlayer);
-	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
-	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
-	pSpriteAnim->addAnimation(pAnim);
-	pSpriteAnim->play("idle");
 
 	std::vector<SDL_Texture*> tile;
 	tile.push_back(TextureManager::getInstance()->get("Grass_Tile_TL"));	//0
@@ -348,6 +358,7 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("player_idle");
 	TextureManager::getInstance()->unload("player_run");
 	TextureManager::getInstance()->unload("player_jump");
+	TextureManager::getInstance()->unload("player_fall");
 
 	TextureManager::getInstance()->unload("Trees_BG");
 	TextureManager::getInstance()->unload("Grass_Tile_BC");
@@ -364,4 +375,10 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Grass_Tile_C3");
 	TextureManager::getInstance()->unload("Grass_Tile_C4");
 	TextureManager::getInstance()->unload("Grass_Platform");
+
+	TextureManager::getInstance()->unload("Gem_Cyan");
+	TextureManager::getInstance()->unload("Gem_Green");
+	TextureManager::getInstance()->unload("Gem_Orange");
+	TextureManager::getInstance()->unload("Gem_Purple");
+	TextureManager::getInstance()->unload("Gem_Red");
 }

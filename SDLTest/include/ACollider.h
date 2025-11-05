@@ -13,6 +13,7 @@ protected:
     std::vector<ACollider*> vecCollided;
     Vector2D intersection;
     bool bCleanUp;
+    bool bIsTrigger;
     bool bCollideLeft;
     bool bCollideRight;
     bool bCollideTop;
@@ -32,8 +33,8 @@ public:
 
 public:
     void setListener(ICollisionListener* pListener);
-    SDL_FRect getOffset();
-    void setOffset(SDL_FRect COffset);
+    bool getIsTrigger() const;
+    void setIsTrigger(bool bIsTrigger);
     bool hasCollided(ACollider* pCollider);
     void setCollided(ACollider* pCollider, bool bCollided);
     bool isCollidedLeft();

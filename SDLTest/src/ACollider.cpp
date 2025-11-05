@@ -1,13 +1,17 @@
 #include "ACollider.h"
+#include "PhysicsSystem.h"
 
 ACollider::ACollider(std::string strName) : AComponent(strName,ComponentType::SCRIPT)
 {
 	this->bCleanUp = false;
+	this->bIsTrigger = false;
 	this->bCollideBottom = false;
 	this->bCollideLeft = false;
 	this->bCollideRight = false;
 	this->bCollideTop = false;
 	this->pListener = NULL;
+
+	PhysicsSystem::getInstance()->trackCollider(this);
 }
 
 int ACollider::findCollider(ACollider* pCollider)
@@ -58,6 +62,16 @@ void ACollider::onCollisionExit(ACollider* pCollider)
 void ACollider::setListener(ICollisionListener* pListener)
 {
 	this->pListener = pListener;
+}
+
+bool ACollider::getIsTrigger() const
+{
+	return this->bIsTrigger;
+}
+
+void ACollider::setIsTrigger(bool bIsTrigger)
+{
+	this->bIsTrigger = bIsTrigger;
 }
 
 bool ACollider::hasCollided(ACollider* pCollider)

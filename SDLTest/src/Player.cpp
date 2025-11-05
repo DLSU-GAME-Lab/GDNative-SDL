@@ -25,27 +25,27 @@ void Player::initialize()
     auto vecIdle = TextureManager::getInstance()->getTexture("player_idle");
     auto vecRun = TextureManager::getInstance()->getTexture("player_run");
     auto vecJump = TextureManager::getInstance()->getTexture("player_jump");
+    auto vecFall = TextureManager::getInstance()->getTexture("player_fall");
 
     Animation* pIdle = new Animation("idle", vecIdle, 12, AnimationType::LOOP);
     Animation* pRun = new Animation("run", vecRun, 16, AnimationType::LOOP);
-    Animation* pJump = new Animation("jump", vecJump, 8, AnimationType::ONCE, "idle");
+    Animation* pJump = new Animation("jump", vecJump, 8, AnimationType::ONCE, "fall");
+    Animation* pFall = new Animation("fall", vecFall, 8, AnimationType::LOOP);
 
     pSpriteAnimator->addAnimation(pIdle);
     pSpriteAnimator->addAnimation(pRun);
     pSpriteAnimator->addAnimation(pJump);
+    pSpriteAnimator->addAnimation(pFall);
     pSpriteAnimator->play("idle");
 
     PlayerInput* pPlayerInput = new PlayerInput();
     this->attachComponent(pPlayerInput);
 
     RigidBody* pRB = new RigidBody();
-    SDL_FRect size = SDL_FRect{ 0 ,0, 200, 460 };
-    pRB->setSize(size);
-    pRB->setListener(this);
+    pRB->setSize(Vector2D(200, 460));
     pRB->setWeight(20.0f);
     pRB->setDrag(0.1f);
     pRB->setGravityEnabled(true);
-    PhysicsSystem::getInstance()->trackCollider(pRB);
     this->attachComponent(pRB);
 
     ColliderRenderer* pColRenderer = new ColliderRenderer(pRB);

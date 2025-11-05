@@ -4,13 +4,11 @@
 
 BoxCollider::BoxCollider(std::string strName) : ACollider(strName)
 {
-	this->size = SDL_FRect(0.f, 0.f, 0.f, 0.f);
 
 }
 void BoxCollider::onAttach()
 {
-	Vector2D fVecPos = this->pOwner->getPos();
-	this->rectShape.setPosition(fVecPos.x, fVecPos.y);
+	
 }
 void BoxCollider::perform()
 {
@@ -42,7 +40,7 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 	bool bIntersectX = fLeftA < fRightB && fRightA > fLeftB;
 	bool bIntersectY = fBotA < fTopB && fTopA > fBotB;
 
-	if (bIntersectX && bIntersectY)
+	if (bIntersectX && bIntersectY && !pCollider->getIsTrigger())
 	{
 		float fBot = fTopB - fBotA;
 		float fTop = fTopA - fBotB;
@@ -81,25 +79,35 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 }
 
 
-SDL_FRect BoxCollider::getSize() const
+Vector2D BoxCollider::getSize() const
 {
 	return this->size;
 }
 
-void BoxCollider::setSize(SDL_FRect size)
+void BoxCollider::setSize(Vector2D size)
 {
 	this->size = size;
 }
+Vector2D BoxCollider::getOffset() const
+{
+	return this->offset;
+}
+
+void BoxCollider::setOffset(Vector2D offset)
+{
+	this->offset = offset;
+}
+
 SDL_FRect BoxCollider::getGlobalBounds()
 {
 	Vector2D pos = this->pOwner->getPos();
 	Vector2D scale = this->pOwner->getScale();
 
 	SDL_FRect bounds = {};
-	bounds.w = this->size.w * scale.x;
-	bounds.h = this->size.h * scale.y;
-	bounds.x = pos.x - (bounds.w * 0.5f);
-	bounds.y = pos.y - (bounds.h * 0.5f);
+	bounds.w = this->size.x * scale.x;
+	bounds.h = this->size.y * scale.y;
+	bounds.x = this->offset.x + pos.x - (bounds.w * 0.5f);
+	bounds.y = this->offset.x + pos.y - (bounds.h * 0.5f);
 
 	return bounds;
 }

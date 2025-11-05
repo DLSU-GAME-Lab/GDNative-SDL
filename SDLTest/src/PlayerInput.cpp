@@ -7,6 +7,7 @@ PlayerInput::PlayerInput() : AGeneralInput("PlayerInput")
 	this->bHoldingDown = false;
 	this->bHoldingUp = false;
 	this->bJumped = false;
+	this->bInteracted = false;
 }
 
 PlayerInput::~PlayerInput()
@@ -41,6 +42,11 @@ bool PlayerInput::getJumped() const
 	return this->bJumped;
 }
 
+bool PlayerInput::getInteracted() const
+{
+	return this->bInteracted;
+}
+
 void PlayerInput::onKeyDown(SDL_Keycode key)
 {
 	switch (key)
@@ -62,6 +68,10 @@ void PlayerInput::onKeyDown(SDL_Keycode key)
 
 	case SDLK_SPACE:
 		this->bJumped = true;
+		break;
+
+	case SDLK_E:
+		this->bInteracted = true;
 		break;
 
 	default:
@@ -90,6 +100,10 @@ void PlayerInput::onKeyUp(SDL_Keycode key)
 
 	case SDLK_SPACE:
 		this->bJumped = false;
+		break;
+
+	case SDLK_E:
+		this->bInteracted = false;
 		break;
 
 	default:

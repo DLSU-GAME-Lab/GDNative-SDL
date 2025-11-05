@@ -6,8 +6,7 @@
 class Platform:public AGameObject, ICollisionListener
 {
 private:
-	SDL_FRect bounds;
-	RectangleShape* Rect;
+	Vector2D fVecSize;
 public:
 	Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D fVecSize, float fRot);
 	~Platform() override;

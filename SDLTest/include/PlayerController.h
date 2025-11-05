@@ -4,7 +4,7 @@
 #include "SpriteAnimator.h"
 #include "RigidBody.h"
 
-class PlayerController : public AComponent
+class PlayerController : public AComponent, public ICollisionListener
 {
 private:
 	PlayerInput* pInput;
@@ -19,6 +19,10 @@ public:
 	~PlayerController();
 
 	void perform() override;
+
+	void onCollisionEnter(ACollider* pCollider) override;
+	void onCollisionContinue(ACollider* pCollider) override;
+	void onCollisionExit(ACollider* pCollider) override;
 
 	void setMoveSpeed(float fMoveSpeed);
 	void setJumpForce(float fJumpForce);

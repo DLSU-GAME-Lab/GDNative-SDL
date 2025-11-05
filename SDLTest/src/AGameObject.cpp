@@ -2,7 +2,9 @@
 #include "AGeneralInput.h"
 #include "ARenderer.h"
 #include "AAnimator.h"
+#include "Settings.h"
 #include <iostream>
+
 AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
@@ -83,10 +85,13 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
         pComponent->perform();
     }
 
-    for (AComponent* pComponent : vecRenderer)
+    if (showWidgets)
     {
-        ARenderer* renderer = (ARenderer*)pComponent;
-        renderer->drawWidget();
+        for (AComponent* pComponent : vecRenderer)
+        {
+            ARenderer* renderer = (ARenderer*)pComponent;
+            renderer->drawWidget();
+        }
     }
 }
 SDL_FRect  AGameObject::getGlobalBounds()

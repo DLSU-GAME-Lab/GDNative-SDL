@@ -106,8 +106,9 @@ void PlayerInput::updateValues()
 	else if (this->bHoldingRight) this->movement.x = 1.0f;
 	else this->movement.x = 0.0f;
 
-	if (this->bHoldingDown && this->bHoldingUp) this->movement.y = 0.0f;
-	else if (this->bHoldingDown) this->movement.y = -1.0f;
-	else if (this->bHoldingUp) this->movement.y = 1.0f;
-	else this->movement.y = 0.0f;
+	//if (this->bHoldingDown && this->bHoldingUp) this->movement.y = 0.0f;
+	//else if (this->bHoldingDown) this->movement.y = -1.0f;
+	//else if (this->bHoldingUp) this->movement.y = 1.0f;
+	//else this->movement.y = 0.0f;
+
 }

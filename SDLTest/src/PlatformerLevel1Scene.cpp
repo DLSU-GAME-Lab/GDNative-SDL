@@ -279,7 +279,9 @@ void PlatformerLevel1Scene::onLoadObjects()
 		12, 9,
 		17, 9,
 		22, 9,
+		23, 9,
 
+		36, 9,
 		37, 9,
 		42, 9,
 		47, 9,
@@ -288,6 +290,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 		23, 4,
 		26, 5,
 		29, 7,
+		30, 7,
 		33, 5,
 		36, 4,
 		39, 3,
@@ -295,7 +298,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 		88, 4,
 	};
 
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < 17; i++)
 	{
 		int index = i * 2;
 		Uint64 c = indices[index];

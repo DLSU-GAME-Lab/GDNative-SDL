@@ -14,7 +14,7 @@ private:
 public:
 	RigidBody();
 
-    void addForce(Vector2D force);
+    void addForce(Vector2D force, bool instant = false);
 
     virtual void onCollisionEnter(ACollider* pCollider) override;
     virtual void onCollisionContinue(ACollider* pCollider) override;
@@ -32,5 +32,6 @@ public:
     float getDrag() const;
     Vector2D getVelocity() const;
     bool getGravityEnabled() const;
+    bool getGrounded() const;
 };
 

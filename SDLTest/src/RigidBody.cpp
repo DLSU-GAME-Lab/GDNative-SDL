@@ -9,9 +9,10 @@ RigidBody::RigidBody() : BoxCollider("RigidBody")
 	this->bGrounded = false;
 }
 
-void RigidBody::addForce(Vector2D force)
+void RigidBody::addForce(Vector2D force, bool instant)
 {
-	this->velocity += (force / this->fWeight) * this->fDeltaTime;
+	if (instant) this->velocity += force;
+	else this->velocity += force * this->fDeltaTime;
 }
 
 void RigidBody::onCollisionEnter(ACollider* pCollider)
@@ -35,7 +36,7 @@ void RigidBody::onCollisionExit(ACollider* pCollider)
 void RigidBody::physicsUpdate()
 {
 	if (this->bGravityEnabled && !this->bGrounded)
-		this->velocity.y -= F_GRAVITY * this->fWeight * this->fDeltaTime;
+		this->velocity.y -= F_GRAVITY * this->fWeight * 2.0f * this->fDeltaTime;
 
 	Vector2D pos = this->pOwner->getPos();
 	this->pOwner->setPos(pos + this->velocity);
@@ -94,4 +95,9 @@ Vector2D RigidBody::getVelocity() const
 bool RigidBody::getGravityEnabled() const
 {
 	return this->bGravityEnabled;
+}
+
+bool RigidBody::getGrounded() const
+{
+	return this->bGrounded;
 }

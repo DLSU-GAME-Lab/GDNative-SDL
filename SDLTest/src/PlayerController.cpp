@@ -10,8 +10,6 @@ PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite,
 	this->pRigidBody = pRigidBody;
 	this->fMoveSpeed = 100.0f;
 	this->fJumpForce = 100.0f;
-	this->bFalling = false;
-	this->bJumping = false;
 }
 
 PlayerController::~PlayerController()
@@ -34,36 +32,12 @@ void PlayerController::perform()
 	else if(this->pAnimator->getCurrentAnimation()->getName() != "jump")
 		this->pAnimator->setAnimationState("idle");
 
-	if (this->pInput->getJumped())
+	if (this->pInput->getJumped() && this->pRigidBody->getGrounded())
 	{
 		this->pAnimator->play("jump");
-		this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce));
-		this->bJumping = true;
-		this->bFalling = false;
+		this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
 	}
 
-}
-
-void PlayerController::jump()
-{
-
-	//Gravity* pGrav = (Gravity*)this->pOwner->findComponentByName("Gravity");
-	//if (pGrav != NULL && this->bJumping)
-	//{
-	//	this->fVelY -= pGrav->getGravValue() * this->fDeltaTime; // Gravity pulls down
-	//	Vector2D pos = this->pOwner->getPos();
-	//	pos.y += this->fVelY * this->fDeltaTime;
-	//	this->pOwner->setPos(pos);
-
-	//	// Detect apex
-	//	if (this->fVelY <= 0.0f && !this->bFalling)
-	//	{
-	//		this->bFalling = true;
-	//		this->bJumping = false;
-	//		this->fVelY = 0;
-	//		pGrav->setGrounded(false);
-	//	}
-	//}
 }
 
 void PlayerController::setMoveSpeed(float fMoveSpeed)
@@ -75,10 +49,3 @@ void PlayerController::setJumpForce(float fJumpForce)
 {
 	this->fJumpForce = fJumpForce;
 }
-
-void PlayerController::setVelY(float fVelY)
-{
-	this->fVelY = fVelY;
-}
-
-

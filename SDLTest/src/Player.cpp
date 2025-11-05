@@ -42,8 +42,8 @@ void Player::initialize()
     SDL_FRect size = SDL_FRect{ 0 ,0, 200, 460 };
     pRB->setSize(size);
     pRB->setListener(this);
-    pRB->setWeight(10.0f);
-    pRB->setDrag(1.0f);
+    pRB->setWeight(20.0f);
+    pRB->setDrag(0.1f);
     pRB->setGravityEnabled(true);
     PhysicsSystem::getInstance()->trackCollider(pRB);
     this->attachComponent(pRB);
@@ -52,12 +52,14 @@ void Player::initialize()
     this->attachComponent(pColRenderer);
 
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator, pRB);
-    pPlayerController->setMoveSpeed(2000.0f);
-    pPlayerController->setJumpForce(5000.f);
+    pPlayerController->setMoveSpeed(300.0f);
+    pPlayerController->setJumpForce(300.f);
     this->attachComponent(pPlayerController);
 
     CameraController* pCamComtroller = new CameraController();
+    pCamComtroller->setFollowDelay(500.0f);
     pCamComtroller->setOffset(Vector2D(0.0f, 200.0f));
+    pCamComtroller->setLookAhead(Vector2D(500.0f, 100.0f));
     this->attachComponent(pCamComtroller);
 }
 

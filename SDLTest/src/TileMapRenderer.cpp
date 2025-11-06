@@ -118,12 +118,18 @@ Vector2D TileMapRenderer::getCellSize()
     return cellSize;
 }
 
-Vector2D TileMapRenderer::getTilePosition(Uint64 c, Uint64 r)
+Vector2D TileMapRenderer::getTilePosition(Uint64 c, Uint64 r, bool clamp)
 {
     Vector2D pos = this->pOwner->getPos();
     Vector2D cellSize = this->getCellSize();
     pos.x += cellSize.x * (c + 0.5f);
     pos.y += cellSize.y * (r + 0.5f);
+
+    if (clamp)
+    {
+        pos.x = (int)pos.x;
+        pos.y = (int)pos.y;
+    }
 
     return pos;
 }

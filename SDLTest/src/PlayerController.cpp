@@ -24,9 +24,10 @@ void PlayerController::perform()
 {
 	if (this->pInput == NULL || this->pSprite == NULL) return;
 
+	this->pRigidBody->setVelocity(this->pInput->getMovement() * this->fMoveSpeed * this->fDeltaTime);
+
 	if (this->pInput->getMovement() != Vector2D::Zero())
 	{
-		this->pRigidBody->addForce(this->pInput->getMovement() * this->fMoveSpeed);
 		this->pSprite->setFlipX(this->pInput->getMovement().x < 0.0f);
 	}
 	

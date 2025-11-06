@@ -9,7 +9,9 @@ private:
     float fDrag;
     bool bGravityEnabled;
     bool bGrounded;
+    Vector2D force;
     Vector2D velocity;
+    float fTicks = 0.0f;
 
 public:
 	RigidBody();

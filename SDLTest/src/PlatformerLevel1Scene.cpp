@@ -320,7 +320,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 		Uint64 r = indices[index + 1];
 		pTMR->addTile(c, r, tile[13]);
 		std::string name = "Platform_";
-		Platform* pPlatform = new Platform(name + std::to_string(i), pTMR->getTilePosition(c, r), Vector2D(300, 100), 0.f);
+		Platform* pPlatform = new Platform(name + std::to_string(i), pTMR->getTilePosition(c, r, true), Vector2D(300, 100), 0.f);
 		GameObjectManager::getInstance()->addObject(pPlatform);
 	}
 

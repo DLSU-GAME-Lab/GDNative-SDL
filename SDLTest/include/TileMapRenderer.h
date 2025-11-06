@@ -27,6 +27,6 @@ public:
 	void setOffset(Vector2D offset);
 
 	Vector2D getCellSize();
-	Vector2D getTilePosition(Uint64 c, Uint64 r);
+	Vector2D getTilePosition(Uint64 c, Uint64 r, bool clamp = false);
 };
 

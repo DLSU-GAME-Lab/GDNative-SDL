@@ -5,10 +5,6 @@ ACollider::ACollider(std::string strName) : AComponent(strName,ComponentType::SC
 {
 	this->bCleanUp = false;
 	this->bIsTrigger = false;
-	this->bCollideBottom = false;
-	this->bCollideLeft = false;
-	this->bCollideRight = false;
-	this->bCollideTop = false;
 	this->pListener = NULL;
 
 	PhysicsSystem::getInstance()->trackCollider(this);
@@ -52,10 +48,6 @@ void ACollider::onCollisionExit(ACollider* pCollider)
 	if (this->pListener != NULL) {
 		this->pListener->onCollisionExit(pCollider);
 		this->intersection = Vector2D::Zero();
-		this->bCollideLeft = false;
-		this->bCollideTop = false;
-		this->bCollideBottom = false;
-		this->bCollideRight = false;
 	}
 }
 
@@ -93,26 +85,6 @@ void ACollider::setCollided(ACollider* pCollider, bool bCollided)
 		if (nIndex != -1)
 			this->vecCollided.erase(this->vecCollided.begin() + nIndex);
 	}
-}
-
-bool ACollider::isCollidedLeft()
-{
-	return this->bCollideLeft;
-}
-
-bool ACollider::isCollidedRight()
-{
-	return this->bCollideRight;
-}
-
-bool ACollider::isCollidedTop()
-{
-	return this->bCollideTop;
-}
-
-bool ACollider::isCollidedBottom()
-{
-	return this->bCollideBottom;
 }
 
 bool ACollider::isCleanUp()

@@ -4,7 +4,10 @@
 
 BoxCollider::BoxCollider(std::string strName) : ACollider(strName)
 {
-
+	this->bCollideLeft = false;
+	this->bCollideRight = false;
+	this->bCollideBottom = false;
+	this->bCollideTop = false;
 }
 void BoxCollider::onAttach()
 {
@@ -37,8 +40,8 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 	fBotB = CBoundsB.y;
 	fTopB = CBoundsB.y + CBoundsB.h;
 
-	bool bIntersectX = fLeftA < fRightB && fRightA > fLeftB;
-	bool bIntersectY = fBotA < fTopB && fTopA > fBotB;
+	bool bIntersectX = fLeftA <= fRightB && fRightA >= fLeftB;
+	bool bIntersectY = fBotA <= fTopB && fTopA >= fBotB;
 
 	if (bIntersectX && bIntersectY && !pCollider->getIsTrigger())
 	{
@@ -78,6 +81,25 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 	return bIntersectX && bIntersectY;
 }
 
+void BoxCollider::onCollisionEnter(ACollider* pCollider)
+{
+	ACollider::onCollisionEnter(pCollider);
+}
+
+void BoxCollider::onCollisionContinue(ACollider * pCollider)
+{
+	ACollider::onCollisionContinue(pCollider);
+}
+
+void BoxCollider::onCollisionExit(ACollider * pCollider)
+{
+	ACollider::onCollisionExit(pCollider);
+	this->bCollideLeft = false;
+	this->bCollideRight = false;
+	this->bCollideBottom = false;
+	this->bCollideTop = false;
+}
+
 
 Vector2D BoxCollider::getSize() const
 {
@@ -110,4 +132,24 @@ SDL_FRect BoxCollider::getGlobalBounds()
 	bounds.y = this->offset.x + pos.y - (bounds.h * 0.5f);
 
 	return bounds;
+}
+
+bool BoxCollider::isCollidedLeft() const
+{
+	return this->bCollideLeft;
+}
+
+bool BoxCollider::isCollidedRight() const
+{
+	return this->bCollideRight;
+}
+
+bool BoxCollider::isCollidedBottom() const
+{
+	return this->bCollideBottom;
+}
+
+bool BoxCollider::isCollidedTop() const
+{
+	return this->bCollideTop;
 }

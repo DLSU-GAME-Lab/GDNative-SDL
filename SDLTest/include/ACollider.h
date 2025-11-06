@@ -14,10 +14,7 @@ protected:
     Vector2D intersection;
     bool bCleanUp;
     bool bIsTrigger;
-    bool bCollideLeft;
-    bool bCollideRight;
-    bool bCollideTop;
-    bool bCollideBottom;
+
 public:
     ACollider(std::string strName);
 public:
@@ -37,10 +34,6 @@ public:
     void setIsTrigger(bool bIsTrigger);
     bool hasCollided(ACollider* pCollider);
     void setCollided(ACollider* pCollider, bool bCollided);
-    bool isCollidedLeft();
-    bool isCollidedRight();
-    bool isCollidedTop();
-    bool isCollidedBottom();
 
     bool isCleanUp();
     void setCleanUp(bool bCleanUp);

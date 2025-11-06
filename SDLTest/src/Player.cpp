@@ -43,8 +43,8 @@ void Player::initialize()
 
     RigidBody* pRB = new RigidBody();
     pRB->setSize(Vector2D(200, 460));
-    pRB->setWeight(10.0f);
-    pRB->setDrag(0.1f);
+    pRB->setWeight(80.0f);
+    pRB->setDrag(0.0f);
     pRB->setGravityEnabled(true);
     this->attachComponent(pRB);
 
@@ -53,7 +53,7 @@ void Player::initialize()
 
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator, pRB);
     pPlayerController->setMoveSpeed(300.0f);
-    pPlayerController->setJumpForce(300.f);
+    pPlayerController->setJumpForce(600.f);
     this->attachComponent(pPlayerController);
 
     CameraController* pCamComtroller = new CameraController();

@@ -102,16 +102,16 @@ void LobbyScene::loadAnimatedTextures()
 
 void LobbyScene::loadSceneTextures()
 {
-	TextureManager::getInstance()->load("button.png", "Button");
+	TextureManager::getInstance()->load("GUI/button.png", "Button");
+	TextureManager::getInstance()->load("GUI/back.png", "Back");
+	TextureManager::getInstance()->load("GUI/tablet.png", "Return_Dialogue_Holder");
+	TextureManager::getInstance()->load("GUI/title_button.png", "Button_Choices");
 	TextureManager::getInstance()->load("lobby_transition_lamps.png", "Lamps");
 	TextureManager::getInstance()->load("stepladder_revised.png", "Step_Ladder");
 	TextureManager::getInstance()->load("monoblock_revised.png", "Chair");
 	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
 	TextureManager::getInstance()->load("diary.png", "Diary");
-	TextureManager::getInstance()->load("back.png", "Back");
 	TextureManager::getInstance()->load("Square.png", "Square");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Play_Icon.png", "ChangeDisplay");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Intro.png", "Intro");

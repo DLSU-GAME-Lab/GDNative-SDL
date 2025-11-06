@@ -43,7 +43,7 @@ void Player::initialize()
 
     RigidBody* pRB = new RigidBody();
     pRB->setSize(Vector2D(200, 460));
-    pRB->setWeight(20.0f);
+    pRB->setWeight(10.0f);
     pRB->setDrag(0.1f);
     pRB->setGravityEnabled(true);
     this->attachComponent(pRB);

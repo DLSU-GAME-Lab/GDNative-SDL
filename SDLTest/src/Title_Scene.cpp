@@ -92,7 +92,7 @@ void Title_Scene::loadAnimatedTextures()
 void Title_Scene::loadSceneTextures()
 {
     TextureManager::getInstance()->load("title_screen_pngs/title_screen_bg.png", "Title_Background");
-    TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Start_Button");
+    TextureManager::getInstance()->load("GUI/title_button.png", "Start_Button");
     TextureManager::getInstance()->load("title_screen_pngs/game_logo.png", "Title_Banner");
     TextureManager::getInstance()->load("title_screen_pngs/DLSU_logos.png", "DLSU_Logos");
 }

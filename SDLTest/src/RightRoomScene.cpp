@@ -71,10 +71,10 @@ void RightRoomScene::loadSceneTextures()
 	TextureManager::getInstance()->load(strPath, "Book_Yellow");
 	strPath = "right_room/red_dragon.png";
 	TextureManager::getInstance()->load(strPath, "Red_Dragon");
-	TextureManager::getInstance()->load("button.png", "Button");
-	TextureManager::getInstance()->load("back.png", "Back");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
+	TextureManager::getInstance()->load("GUI/button.png", "Button");
+	TextureManager::getInstance()->load("GUI/back.png", "Back");
+	TextureManager::getInstance()->load("GUI/tablet.png", "Return_Dialogue_Holder");
+	TextureManager::getInstance()->load("GUI/title_button.png", "Button_Choices");
 }
 
 void RightRoomScene::createButtons()

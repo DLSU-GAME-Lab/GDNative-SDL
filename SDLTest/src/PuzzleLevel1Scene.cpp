@@ -27,7 +27,7 @@ PuzzleLevel1Scene::~PuzzleLevel1Scene()
 void PuzzleLevel1Scene::onLoadResources()
 {
 	TextureManager::getInstance()->load("Square.png", "Square");
-	TextureManager::getInstance()->load("button6.png", "Close_Button");
+	TextureManager::getInstance()->load("GUI/button6.png", "Close_Button");
 	TextureManager::getInstance()->load("sequence_game/low_order_bg.png", "BG");
 
 	TextureManager::getInstance()->load("sequence_game/Dragon_RedHead.png", "Dragon_Head");
@@ -39,9 +39,9 @@ void PuzzleLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("sequence_game/Token_Claws.png", "Token_Claws");
 	TextureManager::getInstance()->load("sequence_game/Token_Eyes.png", "Token_Eyes");
 
-	TextureManager::getInstance()->load("sequence_game/pause.png", "Pause_Button");
-	TextureManager::getInstance()->load("sequence_game/story.png", "Story_Button");
-	TextureManager::getInstance()->load("sequence_game/tablet.png", "Tablet");
+	TextureManager::getInstance()->load("GUI/pause.png", "Pause_Button");
+	TextureManager::getInstance()->load("GUI/story.png", "Story_Button");
+	TextureManager::getInstance()->load("GUI/tablet.png", "Tablet");
 
 	TextureManager::getInstance()->loadFromFolder("animations/level_intro", "Intro");
 

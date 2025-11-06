@@ -69,10 +69,10 @@ void LeftRoomScene::loadSceneTextures()
 	TextureManager::getInstance()->load(strPath, "Ruins");
 	strPath = "left_room/pedestal.png";
 	TextureManager::getInstance()->load(strPath, "Pedestal");
-	TextureManager::getInstance()->load("button.png", "Button");
-	TextureManager::getInstance()->load("back.png", "Back");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
+	TextureManager::getInstance()->load("GUI/button.png", "Button");
+	TextureManager::getInstance()->load("GUI/back.png", "Back");
+	TextureManager::getInstance()->load("GUI/tablet.png", "Return_Dialogue_Holder");
+	TextureManager::getInstance()->load("GUI/title_button.png", "Button_Choices");
 }
 
 void LeftRoomScene::createButtons()

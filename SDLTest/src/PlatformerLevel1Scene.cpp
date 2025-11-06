@@ -12,6 +12,7 @@
 #include "Platform.h"
 #include "Prop.h"
 #include "Gem.h"
+#include "GUIButton.h"
 
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
@@ -52,6 +53,10 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("gems/gem_orange.png", "Gem_Orange");
 	TextureManager::getInstance()->load("gems/gem_purple.png", "Gem_Purple");
 	TextureManager::getInstance()->load("gems/gem_red.png", "Gem_Red");
+
+	TextureManager::getInstance()->load("GUI/pause.png", "Pause_Button");
+	TextureManager::getInstance()->load("GUI/story.png", "Story_Button");
+	TextureManager::getInstance()->load("GUI/back.png", "Back_Button");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -351,6 +356,30 @@ void PlatformerLevel1Scene::onLoadObjects()
 	Platform* pSkyPlat3 = new Platform("Sky_Platform_3", pTMR->getTilePosition(97, 19), Vector2D(305, 1330), 0.f);
 	GameObjectManager::getInstance()->addObject(pSkyPlat3);
 
+	GUIButton* pPauseButton = new GUIButton("Pause_Button", "Pause_Button");
+	pPauseButton->setIsScreenObject(true);
+	pPauseButton->setPos(Vector2D(100.0f, 100.0f));
+	pPauseButton->setScale(Vector2D(0.08f));
+	//GUIToggle* pPauseToggle = new GUIToggle(EventKey::PAUSE_SCREEN);
+	//pPauseButton->attachComponent(pPauseToggle);
+
+	GUIButton* pStoryButton = new GUIButton("Story_Button", "Story_Button");
+	pStoryButton->setIsScreenObject(true);
+	pStoryButton->setPos(Vector2D(1640.0f, 100.0f));
+	pStoryButton->setScale(Vector2D(0.08f));
+	//GUIToggle* pStoryToggle = new GUIToggle();
+	//pStoryButton->attachComponent(pStoryToggle);
+
+	GUIButton* pItemsButton = new GUIButton("Items_Button", "Back_Button");
+	pItemsButton->setIsScreenObject(true);
+	pItemsButton->setPos(Vector2D(1820.0f, 100.0f));
+	pItemsButton->setScale(Vector2D(0.08f));
+	//GUIToggle* pItemsToggle = new GUIToggle();
+	//pItemsButton->attachComponent(pItemsToggle);
+
+	GameObjectManager::getInstance()->addObject(pPauseButton);
+	GameObjectManager::getInstance()->addObject(pStoryButton);
+
 }
 
 void PlatformerLevel1Scene::onUnloadResources()
@@ -381,4 +410,7 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Gem_Orange");
 	TextureManager::getInstance()->unload("Gem_Purple");
 	TextureManager::getInstance()->unload("Gem_Red");
+
+	TextureManager::getInstance()->unload("Pause_Button");
+	TextureManager::getInstance()->unload("Story_Button");
 }

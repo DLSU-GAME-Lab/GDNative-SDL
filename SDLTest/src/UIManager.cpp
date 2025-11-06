@@ -2,7 +2,7 @@
 #include "CustomStyles.h"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
-
+#include "EditorMode.h"
 #include "InspectorScreen.h"
 
 UIManager* UIManager::sharedInstance = nullptr;
@@ -95,11 +95,14 @@ UIManager::UIManager(SDL_Window* window, SDL_Renderer* renderer)
 
 	ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
 	ImGui_ImplSDLRenderer3_Init(renderer);
-	
+
 	UINames uiNames;
+
+#if EDITOR_MODE
 	InspectorScreen* inspectorScreen = new InspectorScreen();
 	this->uiTable[uiNames.INSPECTOR_SCREEN] = inspectorScreen;
 	this->uiList.push_back(inspectorScreen);
+#endif // EDITOR_MODE
 
 }
 

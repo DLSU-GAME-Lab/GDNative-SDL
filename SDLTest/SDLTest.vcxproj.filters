@@ -312,10 +312,18 @@
     <ClCompile Include="src\DialogueBox.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\DialogueToggle.cpp" />
-    <ClCompile Include="src\ACollectable.cpp" />
-    <ClCompile Include="src\CollectableGem.cpp" />
-    <ClCompile Include="src\Gem.cpp" />
+    <ClCompile Include="src\ACollectable.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollectableGem.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DialogueToggle.cpp">
+      <Filter>Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gem.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -621,12 +629,20 @@
     <ClInclude Include="include\DialogueBox.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="include\DialogueToggle.h" />
-    <ClInclude Include="include\ACollectable.h" />
-    <ClInclude Include="include\CollectableGem.h" />
-    <ClInclude Include="include\Gem.h" />
     <ClInclude Include="include\EnumOnAnimFinished.h">
       <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ACollectable.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollectableGem.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DialogueToggle.h">
+      <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Gem.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

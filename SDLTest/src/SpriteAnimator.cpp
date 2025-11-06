@@ -1,4 +1,6 @@
 #include "SpriteAnimator.h"
+#include "GameObjectManager.h"
+
 SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer) : AAnimator("SpriteAnimator")
 {
 	this->pSpriteRenderer = pSpriteRenderer;
@@ -29,27 +31,52 @@ void SpriteAnimator::perform()
 	{
 		mapAnims[strState]->step(fDeltaTime);
 
-		if (mapAnims[strState]->playNext())
-			this->strState = mapAnims[strState]->getNextState();
+		if (mapAnims[strState]->finished())
+		{
+			switch (mapAnims[strState]->getOnAnimFinished())
+			{
+			case OnAnimFinished::NONE:
+				mapAnims[strState]->pause();
+				break;
+
+			case OnAnimFinished::STOP:
+				mapAnims[strState]->stop();
+				break;
+
+			case OnAnimFinished::NEXT:
+				this->setNextState();
+				break;
+
+			case OnAnimFinished::FUNC:
+				this->onAnimationFinished();
+				break;
+
+			case OnAnimFinished::DELETE:
+				GameObjectManager::getInstance()->deleteObject(this->pOwner);
+				break;
+
+			default:
+				break;
+			}
+		}
 
 		this->pSpriteRenderer->setTexture(mapAnims[strState]->getCurrentFrame());
 	}
 }
 
-void SpriteAnimator::stop()
+void SpriteAnimator::setNextState()
 {
-	if (this->strState.empty() ||
-		this->mapAnims.empty()) return;
-
-	this->mapAnims[this->strState]->stop();
+	mapAnims[strState]->stop();
+	std::string nextState = mapAnims[strState]->getNextState();
+	if (mapAnims.contains(nextState)) this->strState = mapAnims[strState]->getNextState();
 }
 
-void SpriteAnimator::reset()
+void SpriteAnimator::onAnimationFinished()
 {
-	if (this->strState.empty() ||
-		this->mapAnims.empty()) return;
-
-	this->mapAnims[this->strState]->reset();
+	for (auto pListener : this->vecListener)
+	{
+		pListener->onAnimationFinished();
+	}
 }
 
 void SpriteAnimator::play(std::string strState)
@@ -65,6 +92,22 @@ void SpriteAnimator::play(std::string strState)
 	}
 }
 
+void SpriteAnimator::pause()
+{
+	if (this->strState.empty() ||
+		this->mapAnims.empty()) return;
+
+	this->mapAnims[this->strState]->stop();
+}
+
+void SpriteAnimator::stop()
+{
+	if (this->strState.empty() ||
+		this->mapAnims.empty()) return;
+
+	this->mapAnims[this->strState]->stop();
+}
+
 void SpriteAnimator::addAnimation(Animation* pAnimation)
 {
 	if (this->mapAnims.contains(pAnimation->getName())) return;
@@ -77,6 +120,23 @@ void SpriteAnimator::setAnimationState(std::string strState)
 {
 	if (this->strState == strState || this->strState.empty()) return;
 	this->strState = strState;
+}
+
+void SpriteAnimator::addListener(IAnimatorListener* pListener)
+{
+	this->vecListener.push_back(pListener);
+}
+
+void SpriteAnimator::removeListener(IAnimatorListener* pListener)
+{
+	int nIndex = -1;
+	for (int i = 0; i < this->vecListener.size() && nIndex == -1; i++)
+	{
+		if (this->vecListener[i] == pListener)
+			nIndex = i;
+	}
+
+	if (nIndex != -1) this->vecListener.erase(this->vecListener.begin() + nIndex);
 }
 
 Animation* SpriteAnimator::getCurrentAnimation()

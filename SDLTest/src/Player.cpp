@@ -29,7 +29,7 @@ void Player::initialize()
 
     Animation* pIdle = new Animation("idle", vecIdle, 12, AnimationType::LOOP);
     Animation* pRun = new Animation("run", vecRun, 16, AnimationType::LOOP);
-    Animation* pJump = new Animation("jump", vecJump, 8, AnimationType::ONCE, "fall");
+    Animation* pJump = new Animation("jump", vecJump, 8, AnimationType::ONCE, OnAnimFinished::NEXT, "fall");
     Animation* pFall = new Animation("fall", vecFall, 8, AnimationType::LOOP);
 
     pSpriteAnimator->addAnimation(pIdle);

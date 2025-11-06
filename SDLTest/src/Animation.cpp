@@ -6,6 +6,7 @@ Animation::Animation(
     std::vector<SDL_Texture*> vecFrames,
     Uint8 nFrameRate,
     AnimationType EType,
+	OnAnimFinished EOnFinished,
     std::string strNextState
 )
 {
@@ -13,24 +14,27 @@ Animation::Animation(
     this->vecFrames = vecFrames;
     this->nFrameRate = nFrameRate;
     this->EType = EType;
+	this->EOnFinished = EOnFinished;
     this->strNextState = strNextState;
 
-	this->reset();
-}
-
-void Animation::stop()
-{
-	this->bIsPlaying = false;
+	this->stop();
 }
 
 void Animation::play()
 {
 	this->bIsPlaying = true;
+	this->bFinished = false;
 }
 
-void Animation::reset()
+void Animation::pause()
 {
 	this->bIsPlaying = false;
+}
+
+void Animation::stop()
+{
+	this->bIsPlaying = false;
+	this->bFinished = false;
 	this->bIsReverse = false;
 	this->fTicks = 0.0f;
 	this->nFrameIndex = 0;
@@ -53,10 +57,7 @@ void Animation::step(float fDeltaTime)
 		switch (this->EType)
 		{
 		case AnimationType::ONCE:
-			if (this->nFrameIndex == this->vecFrames.size() - 1)
-			{
-				this->reset();
-			}
+			if (this->nFrameIndex == this->vecFrames.size() - 1) this->bFinished = true;
 			break;
 
 		case AnimationType::LOOP:
@@ -78,16 +79,16 @@ void Animation::step(float fDeltaTime)
 			}
 			else if (this->nFrameIndex == 0)
 			{
-				this->reset();
+				this->bFinished = true;
 			}
 			break;
 		}
 	}
 }
 
-bool Animation::playNext()
+bool Animation::finished() const
 {
-	return this->EType == AnimationType::ONCE && !this->bIsPlaying && !this->strNextState.empty();
+	return this->bFinished;
 }
 
 void Animation::setFrameRate(Uint8 nFrameRate)
@@ -103,6 +104,11 @@ void Animation::setType(AnimationType EType)
 void Animation::setNextState(std::string strNextState)
 {
     this->strNextState = strNextState;
+}
+
+void Animation::setOnAnimFinished(OnAnimFinished EOnFinished)
+{
+	this->EOnFinished = EOnFinished;
 }
 
 bool Animation::isPlaying() const
@@ -138,6 +144,11 @@ float Animation::getFrameRate() const
 AnimationType Animation::getType() const
 {
     return this->EType;
+}
+
+OnAnimFinished Animation::getOnAnimFinished() const
+{
+	return this->EOnFinished;
 }
 
 std::string Animation::getNextState() const

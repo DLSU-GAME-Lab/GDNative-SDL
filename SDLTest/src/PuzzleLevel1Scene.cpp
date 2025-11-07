@@ -13,6 +13,7 @@
 #include "SpriteAnimator.h"
 #include "SequenceGameManager.h"
 #include "PuzzleHint.h"
+#include "ObjectiveIntro.h"
 
 PuzzleLevel1Scene::PuzzleLevel1Scene() : AScene(SceneTag::PUZZLE_LEVEL_1_SCENE)
 {
@@ -115,26 +116,11 @@ void PuzzleLevel1Scene::onLoadObjects()
 	GUIButton* pStoryButton = new GUIButton("Story_Button", "Story_Button");
 	pStoryButton->setPos(Vector2D(600.0f, 400.0f));
 	pStoryButton->setScale(Vector2D(0.08f));
-	//GUIToggle* pStoryToggle = new GUIToggle();
-	//pStoryButton->attachComponent(pStoryToggle);
+	GUIToggle* pStoryToggle = new GUIToggle(EventKey::STORY_SCREEN);
+	pPauseButton->attachComponent(pStoryToggle);
 
 	GameObjectManager::getInstance()->addObject(pPauseButton);
 	GameObjectManager::getInstance()->addObject(pStoryButton);
-
-	Background* pTransBG = new Background("Transparent_BG", "Square", Vector2D(5.0f));
-	GameObjectManager::getInstance()->addObject(pTransBG);
-	SpriteRenderer* pTransBGR = (SpriteRenderer*)pTransBG->findComponentByName("SpriteRenderer");
-	pTransBGR->setColor({0, 0, 0, 127});
-
-	Prop* pTablet = new Prop("Tablet", "Tablet", Vector2D(0.0f), Vector2D(0.9f));
-	pTransBG->attachChild(pTablet);
-
-	Text* pTabletText1 = new Text("Tablet_Text", "JainiPurva-Regular.ttf", 90, 0, false);
-	pTabletText1->setMessage("Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3");
-	pTabletText1->setPos(Vector2D(-500.0f, 75));
-	pTablet->attachChild(pTabletText1);
-	DialogueRenderer* pTabletTextR1 = (DialogueRenderer*)pTabletText1->findComponentByName("DialogueRenderer");
-	pTabletTextR1->setPivot(Vector2D(0.0f, 0.5f));
 
 
 	PuzzleHint* pHint = new PuzzleHint("PuzzleHintWindow");
@@ -144,14 +130,10 @@ void PuzzleLevel1Scene::onLoadObjects()
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
 	pPauseScreen->setEnabled(false);
-
-	
-
-	AnimatedSprite* pIntro = new AnimatedSprite("Intro", "Intro", Vector2D(100.0f, 0.0f), Vector2D(0.9f), 0.0f, 12);
-	pTransBG->attachChild(pIntro);
-	SpriteAnimator* pAnimator = (SpriteAnimator*)pIntro->findComponentByName("SpriteAnimator");
-	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
-	pTransBG->setEnabled(true);
+	 
+	ObjectiveIntro* pObjectiveIntro = new ObjectiveIntro("L1_Obj", "Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3");
+	pObjectiveIntro->setPos(Vector2D(0,0));
+	GameObjectManager::getInstance()->addObject(pObjectiveIntro);
 
 }
 

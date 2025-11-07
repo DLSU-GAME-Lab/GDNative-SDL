@@ -22,7 +22,7 @@ void PauseScreen::initialize()
 	pPauseText->setColor(SDL_Color(165, 42, 42, 255));
 	this->attachChild(pPauseText);
 
-	TextureManager::getInstance()->load("button5.png", "BrownButton");
+	TextureManager::getInstance()->load("GUI/button5.png", "BrownButton");
 	GUIButton* pResume = new GUIButton("ResumeButton", "BrownButton", false);
 	GUIToggle* pToggle = new GUIToggle(EventKey::PAUSE_SCREEN);
 	pResume->setRot(-17);

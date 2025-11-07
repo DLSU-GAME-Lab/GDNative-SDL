@@ -8,6 +8,8 @@ enum class EventKey : int {
     DIARY_SCREEN,
     SWITCH_SCENE,
     DIALOGUE_SCREEN,
+    STORY_SCREEN,
+    OBJECTIVE_SCREEN,
 };
 
 #endif

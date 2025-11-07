@@ -132,6 +132,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AInteractable.cpp" />
+    <ClCompile Include="src\ObjectiveIntro.cpp" />
+    <ClCompile Include="src\ScrollView.cpp" />
+    <ClCompile Include="src\AInteractable.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
     <ClCompile Include="src\DialogueToggle.cpp" />
     <ClCompile Include="src\AAnimator.cpp" />
@@ -204,9 +207,11 @@
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SceneSwitcher.cpp" />
     <ClCompile Include="src\SceneTransitionManager.cpp" />
+    <ClCompile Include="src\ScrollInput.cpp" />
     <ClCompile Include="src\SequenceGameManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
+    <ClCompile Include="src\StoryWindow.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
@@ -277,6 +282,7 @@
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\MathUtils.h" />
+    <ClInclude Include="include\ObjectiveIntro.h" />
     <ClInclude Include="include\PauseScreen.h" />
     <ClInclude Include="include\PerformanceMetricsScreen.h" />
     <ClInclude Include="include\PlatformerLevel1Scene.h" />
@@ -301,10 +307,12 @@
     <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\SceneSwitcher.h" />
     <ClInclude Include="include\SceneTransitionManager.h" />
+    <ClInclude Include="include\ScrollInput.h" />
     <ClInclude Include="include\SequenceGameManager.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
+    <ClInclude Include="include\StoryWindow.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />
@@ -318,6 +326,7 @@
     <ClInclude Include="include\UINames.h" />
     <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
+    <ClInclude Include="include\ScrollView.h" />
     <ClInclude Include="tweeny\include\dispatcher.h" />
     <ClInclude Include="tweeny\include\easing.h" />
     <ClInclude Include="tweeny\include\easingresolve.h" />

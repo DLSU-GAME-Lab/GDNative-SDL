@@ -24,6 +24,7 @@ public:
     void loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor);
     void resetText();
     void onAttach() override;
+    float getTextHeight();
 public:
     void setPivot(Vector2D pivot);
 

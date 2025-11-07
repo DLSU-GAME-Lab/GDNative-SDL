@@ -69,6 +69,7 @@ void LeftRoomScene::loadSceneTextures()
 	TextureManager::getInstance()->load(strPath, "Ruins");
 	strPath = "left_room/pedestal.png";
 	TextureManager::getInstance()->load(strPath, "Pedestal");
+	TextureManager::getInstance()->load("left_room/statue_carabao.png", "Level_1_Platformer");
 	TextureManager::getInstance()->load("GUI/button.png", "Button");
 	TextureManager::getInstance()->load("GUI/back.png", "Back");
 	TextureManager::getInstance()->load("GUI/tablet.png", "Return_Dialogue_Holder");
@@ -112,12 +113,20 @@ void LeftRoomScene::createScene()
 	pPedestal[3]->setPos(Vector2D(300, -300));
 	pPedestal[4]->setPos(Vector2D(600, -300));
 
+
 	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
 	GameObjectManager::getInstance()->addObject(pPlayer);
 	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
 	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
 	pSpriteAnim->addAnimation(pAnim);
 	pSpriteAnim->play("idle");
+
+	GUIButton* pLevel1Button = new GUIButton("Level1Button", "Level_1_Platformer", false);
+	pLevel1Button->setPos(Vector2D(575, -100));
+	pLevel1Button->setScale(Vector2D(.5, .5));
+	SceneSwitcher* pLevel1Switcher = new SceneSwitcher(SceneTag::PLATFORMER_LEVEL_1_SCENE);
+	pLevel1Button->attachComponent(pLevel1Switcher);
+	GameObjectManager::getInstance()->addObject(pLevel1Button);
 }
 
 void LeftRoomScene::createExitMenu()

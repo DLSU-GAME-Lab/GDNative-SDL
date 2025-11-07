@@ -102,7 +102,11 @@ void RightRoomScene::createScene()
 	Background* pBackground = new Background("Forest_Area", "Forest_Area", Vector2D(.65f, .9f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
-	Prop* pBook = new Prop("Book_Yellow", "Book_Yellow", Vector2D(-470, 0), Vector2D(.5f, .5f), 0, false);
+	GUIButton* pBook = new GUIButton("Book_Yellow", "Book_Yellow", false);
+	pBook->setPos(Vector2D(-470, 0));
+	pBook->setScale(Vector2D(.5f, .5f));
+	SceneSwitcher* pPuzzleRoom = new SceneSwitcher(SceneTag::PUZZLE_LEVEL_1_SCENE);
+	pBook->attachComponent(pPuzzleRoom);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBook);
 
 	Prop* pRedDragon = new Prop("Red_Dragon", "Red_Dragon", Vector2D(-640.f, -395.f), Vector2D(.5f, .5f), 0, false);

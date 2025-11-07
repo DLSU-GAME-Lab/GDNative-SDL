@@ -127,6 +127,10 @@ void DialogueRenderer::onAttach()
 {
     this->initialize();
 }
+float DialogueRenderer::getTextHeight()
+{
+    return this->mDestRect.h;
+}
 void DialogueRenderer::setPivot(Vector2D pivot)
 {
     this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));

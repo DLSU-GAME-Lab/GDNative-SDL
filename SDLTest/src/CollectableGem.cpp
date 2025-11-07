@@ -11,7 +11,7 @@ void CollectableGem::perform()
 
 }
 
-void CollectableGem::onCollect()
+void CollectableGem::onInteract()
 {
 	std::cout << "Collected." << std::endl;
 	//GameObjectManager::getInstance()->deleteObject(this->pOwner);

@@ -61,7 +61,7 @@ void PlayerController::onCollisionContinue(ACollider * pCollider)
 {
 	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
-		if (this->pInput->getInteracted()) pCollectable->onCollect();
+		if (this->pInput->getInteracted()) pCollectable->onInteract();
 	}
 }
 

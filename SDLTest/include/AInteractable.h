@@ -5,6 +5,6 @@ class AInteractable : public AComponent
 public:
 	AInteractable(std::string strName);
 
-	virtual void onCollect() = 0;
+	virtual void onInteract() = 0;
 };
 

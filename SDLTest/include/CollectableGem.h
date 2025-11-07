@@ -6,6 +6,6 @@ public:
 	CollectableGem();
 
 	void perform() override;
-	void onCollect() override;
+	void onInteract() override;
 };
 

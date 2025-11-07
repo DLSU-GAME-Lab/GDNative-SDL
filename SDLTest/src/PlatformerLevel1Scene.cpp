@@ -32,6 +32,9 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->loadFromFolder("animations/player_falling", "player_fall");
 
 	TextureManager::getInstance()->load("platformer/trees.png", "Trees_BG");
+	TextureManager::getInstance()->load("platformer/gate.png", "Gate");
+	TextureManager::getInstance()->load("left_room/statue_carabao.png", "Statue_Carabao");
+
 	TextureManager::getInstance()->load("tilemaps/bottom.png", "Grass_Tile_BC");
 	TextureManager::getInstance()->load("tilemaps/bottomleft.png", "Grass_Tile_BL");
 	TextureManager::getInstance()->load("tilemaps/bottomright.png", "Grass_Tile_BR");
@@ -76,9 +79,31 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(tileMap);
 	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
+	Prop* pGate = new Prop("Gate", "Gate", Vector2D(10000.0f, 1130.0f), Vector2D(1.0f));
+	GameObjectManager::getInstance()->addObject(pGate);
+
+	Prop* pStatue = new Prop("Statue_Carabao", "Statue_Carabao", Vector2D(10380.0f, 1100.0f), Vector2D(0.3f));
+	GameObjectManager::getInstance()->addObject(pStatue);
+
 	Gem* pGem1 = new Gem("Gem_Cyan");
 	pGem1->setPos(Vector2D(1280, 1170));
 	GameObjectManager::getInstance()->addObject(pGem1);
+
+	Gem* pGem2 = new Gem("Gem_Green");
+	pGem2->setPos(Vector2D(4860, 1170));
+	GameObjectManager::getInstance()->addObject(pGem2);
+
+	Gem* pGem3 = new Gem("Gem_Orange");
+	pGem3->setPos(Vector2D(4860, 410));
+	GameObjectManager::getInstance()->addObject(pGem3);
+
+	Gem* pGem4 = new Gem("Gem_Purple");
+	pGem4->setPos(Vector2D(6200, 410));
+	GameObjectManager::getInstance()->addObject(pGem4);
+
+	Gem* pGem5 = new Gem("Gem_Red");
+	pGem5->setPos(Vector2D(9060, 600));
+	GameObjectManager::getInstance()->addObject(pGem5);
 
 	Player* pPlayer = new Player(Vector2D(1050, 450), Vector2D(0.6f, 0.6f), 0.f);
 	GameObjectManager::getInstance()->addObject(pPlayer);
@@ -391,6 +416,8 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("player_fall");
 
 	TextureManager::getInstance()->unload("Trees_BG");
+	TextureManager::getInstance()->unload("Gate");
+
 	TextureManager::getInstance()->unload("Grass_Tile_BC");
 	TextureManager::getInstance()->unload("Grass_Tile_BL");
 	TextureManager::getInstance()->unload("Grass_Tile_BR");

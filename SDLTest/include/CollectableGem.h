@@ -1,6 +1,6 @@
 #pragma once
-#include "ACollectable.h"
-class CollectableGem : public ACollectable
+#include "AInteractable.h"
+class CollectableGem : public AInteractable
 {
 public:
 	CollectableGem();

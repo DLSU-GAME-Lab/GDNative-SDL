@@ -1,7 +1,7 @@
 #include "CollectableGem.h"
 #include "GameObjectManager.h"
 
-CollectableGem::CollectableGem() : ACollectable("CollectableGem")
+CollectableGem::CollectableGem() : AInteractable("CollectableGem")
 {
 
 }

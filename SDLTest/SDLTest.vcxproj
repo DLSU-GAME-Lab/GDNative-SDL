@@ -131,7 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ACollectable.cpp" />
+    <ClCompile Include="src\AInteractable.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
     <ClCompile Include="src\DialogueToggle.cpp" />
     <ClCompile Include="src\AAnimator.cpp" />
@@ -220,7 +220,7 @@
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\ACollectable.h" />
+    <ClInclude Include="include\AInteractable.h" />
     <ClInclude Include="include\CollectableGem.h" />
     <ClInclude Include="include\DialogueToggle.h" />
     <ClInclude Include="include\AAnimator.h" />

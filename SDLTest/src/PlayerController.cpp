@@ -1,6 +1,6 @@
 #include "PlayerController.h"
 #include "AGameObject.h"
-#include "ACollectable.h"
+#include "AInteractable.h"
 
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
 	: AComponent("PlayerController", ComponentType::SCRIPT)
@@ -51,7 +51,7 @@ void PlayerController::perform()
 
 void PlayerController::onCollisionEnter(ACollider* pCollider)
 {
-	if (ACollectable* pCollectable = dynamic_cast<ACollectable*>(pCollider))
+	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
 		std::cout << "collectable detected." << std::endl;
 	}
@@ -59,7 +59,7 @@ void PlayerController::onCollisionEnter(ACollider* pCollider)
 
 void PlayerController::onCollisionContinue(ACollider * pCollider)
 {
-	if (ACollectable* pCollectable = dynamic_cast<ACollectable*>(pCollider))
+	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
 		if (this->pInput->getInteracted()) pCollectable->onCollect();
 	}

@@ -85,8 +85,8 @@ void Editor::EditorModule::updateGameObjects(float fDeltaTime)
 
         if (camScale.x < 0.0f)
         {
-            camScale.x = 0.0f;
-            camScale.y = 0.0f;
+            camScale.x = 0.001f;
+            camScale.y = 0.001f;
         }
 
         cam->setScale(camScale);

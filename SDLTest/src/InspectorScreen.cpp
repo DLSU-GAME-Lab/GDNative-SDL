@@ -99,7 +99,7 @@ void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
         cam->setPos(Vector2D(scenePos[0], scenePos[1]));
     }
 
-    if (ImGui::DragFloat2("Scale", sceneScale, 1.0f, 0.001f, 0.0f))
+    if (ImGui::DragFloat2("Scale", sceneScale, 0.01f, 0.001f, 0.0f))
     {
         cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
     }
@@ -141,7 +141,7 @@ void InspectorScreen::showTransform(ImGuiChildFlags childFlags)
             this->selectedObject->setPos(Vector2D(scenePos[0], scenePos[1]));
         }
 
-        if (ImGui::DragFloat2("Scale", sceneScale))
+        if (ImGui::DragFloat2("Scale", sceneScale, 0.01f, 0.0f, 0.0f))
         {
             this->selectedObject->setScale(Vector2D(sceneScale[0], sceneScale[1]));
         }

@@ -1,9 +1,9 @@
 #pragma once
 #include "AComponent.h"
-class ACollectable : public AComponent
+class AInteractable : public AComponent
 {
 public:
-	ACollectable(std::string strName);
+	AInteractable(std::string strName);
 
 	virtual void onCollect() = 0;
 };

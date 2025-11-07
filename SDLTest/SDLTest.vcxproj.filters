@@ -312,7 +312,7 @@
     <ClCompile Include="src\DialogueBox.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\ACollectable.cpp">
+    <ClCompile Include="src\AInteractable.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\CollectableGem.cpp">
@@ -632,7 +632,7 @@
     <ClInclude Include="include\EnumOnAnimFinished.h">
       <Filter>Enum</Filter>
     </ClInclude>
-    <ClInclude Include="include\ACollectable.h">
+    <ClInclude Include="include\AInteractable.h">
       <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="include\CollectableGem.h">

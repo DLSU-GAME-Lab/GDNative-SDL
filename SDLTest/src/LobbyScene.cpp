@@ -113,14 +113,14 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("diary.png", "Diary");
 	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
-	TextureManager::getInstance()->load("SWBSTWindowHolder/Play_Icon.png", "ChangeDisplay");
+	TextureManager::getInstance()->load("GUI/play.png", "ChangeDisplay");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Intro.png", "Intro");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Somebody.png", "Somebody");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Wanted.png", "Wanted");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/But.png", "But");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/So.png", "So");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Then.png", "Then");
-	TextureManager::getInstance()->load("SWBSTWindowHolder/Play_Icon.png", "Page_Change");
+	TextureManager::getInstance()->load("GUI/play.png", "Page_Change");
 }
 
 void LobbyScene::createButtons()

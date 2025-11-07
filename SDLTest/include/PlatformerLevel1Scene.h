@@ -1,5 +1,7 @@
 #pragma once
 #include "AScene.h"
+#include "GUIToggle.h"
+#include "PauseScreen.h"
 class PlatformerLevel1Scene : public AScene
 {
 public:

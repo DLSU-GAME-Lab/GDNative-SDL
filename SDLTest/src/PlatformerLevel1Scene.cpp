@@ -60,6 +60,8 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/pause.png", "Pause_Button");
 	TextureManager::getInstance()->load("GUI/story.png", "Story_Button");
 	TextureManager::getInstance()->load("GUI/inventory.png", "Items_Button");
+	TextureManager::getInstance()->load("Square.png", "Square");
+
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -385,8 +387,8 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pPauseButton->setIsScreenObject(true);
 	pPauseButton->setPos(Vector2D(100.0f, 100.0f));
 	pPauseButton->setScale(Vector2D(0.08f));
-	//GUIToggle* pPauseToggle = new GUIToggle(EventKey::PAUSE_SCREEN);
-	//pPauseButton->attachComponent(pPauseToggle);
+	GUIToggle* pPauseToggle = new GUIToggle(EventKey::PAUSE_SCREEN);
+	pPauseButton->attachComponent(pPauseToggle);
 
 	GUIButton* pStoryButton = new GUIButton("Story_Button", "Story_Button");
 	pStoryButton->setIsScreenObject(true);
@@ -405,6 +407,10 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pPauseButton);
 	GameObjectManager::getInstance()->addObject(pStoryButton);
 	GameObjectManager::getInstance()->addObject(pItemsButton);
+
+	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
+	GameObjectManager::getInstance()->addObject(pPauseScreen);
+	pPauseScreen->setEnabled(false);
 
 }
 
@@ -442,4 +448,5 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Pause_Button");
 	TextureManager::getInstance()->unload("Story_Button");
 	TextureManager::getInstance()->unload("Items_Button");
+	TextureManager::getInstance()->unload("Square");
 }

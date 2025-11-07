@@ -117,7 +117,7 @@ void PuzzleLevel1Scene::onLoadObjects()
 	pStoryButton->setPos(Vector2D(600.0f, 400.0f));
 	pStoryButton->setScale(Vector2D(0.08f));
 	GUIToggle* pStoryToggle = new GUIToggle(EventKey::STORY_SCREEN);
-	pPauseButton->attachComponent(pStoryToggle);
+	pStoryButton->attachComponent(pStoryToggle);
 
 	GameObjectManager::getInstance()->addObject(pPauseButton);
 	GameObjectManager::getInstance()->addObject(pStoryButton);
@@ -128,6 +128,7 @@ void PuzzleLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pHint);
 
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
+	pPauseScreen->setIsScreenObject(true);
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
 	pPauseScreen->setEnabled(false);
 	 

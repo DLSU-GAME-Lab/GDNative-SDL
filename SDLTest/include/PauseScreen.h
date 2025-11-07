@@ -9,6 +9,7 @@
 #include "GUIToggle.h"
 #include "SceneSwitcher.h"
 #include "TextureManager.h"
+#include "CameraManager.h"
 class PauseScreen:public AGameObject, EventListener
 {
 private:

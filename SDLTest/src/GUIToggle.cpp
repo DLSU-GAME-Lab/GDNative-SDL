@@ -15,10 +15,11 @@ GUIToggle::~GUIToggle()
 
 void GUIToggle::perform()
 {
-	
 	ButtonInput* pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
 	if (pInput && pInput->getClicked())
 	{
+		std::cout << "Click" << std::endl;
+
 		pInput->setClicked(false);
 		std::unordered_map <std::string, void*> mapParam;
 		std::string strName = pOwner->getName();

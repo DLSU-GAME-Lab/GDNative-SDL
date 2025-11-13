@@ -55,6 +55,10 @@ void PlayerController::onCollisionEnter(ACollider* pCollider)
 	{
 		std::cout << "collectable detected." << std::endl;
 	}
+	else if (pCollider)
+	{
+		std::cout << pCollider->getOwner()->getName() << std::endl;
+	}
 }
 
 void PlayerController::onCollisionContinue(ACollider * pCollider)

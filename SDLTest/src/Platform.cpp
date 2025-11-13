@@ -18,7 +18,7 @@ void Platform::initialize()
 	BoxCollider* pCollider = new BoxCollider(this->strName + " Collider");
 	pCollider->setSize(this->fVecSize);
 	pCollider->setListener(this);
-	this->attachComponent((AComponent*)pCollider);
+	this->attachComponent(pCollider);
 
 }
 

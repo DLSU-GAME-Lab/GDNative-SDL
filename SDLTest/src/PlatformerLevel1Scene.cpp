@@ -13,6 +13,7 @@
 #include "Prop.h"
 #include "Gem.h"
 #include "GUIButton.h"
+#include "Gate.h"
 
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
@@ -81,7 +82,8 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(tileMap);
 	TileMapRenderer* pTMR = (TileMapRenderer*)tileMap->findComponentByName("TileMapRenderer");
 
-	Prop* pGate = new Prop("Gate", "Gate", Vector2D(10000.0f, 1130.0f), Vector2D(1.0f));
+	Gate* pGate = new Gate("Exit_Gate");
+	pGate->setPos(Vector2D(10000.0f, 1130.0f));
 	GameObjectManager::getInstance()->addObject(pGate);
 
 	Prop* pStatue = new Prop("Statue_Carabao", "Statue_Carabao", Vector2D(10380.0f, 1100.0f), Vector2D(0.3f));

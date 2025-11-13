@@ -4,6 +4,7 @@ StoryWindow::StoryWindow(std::string strName):AGameObject(strName)
 {
 	this->EKey = EventKey::STORY_SCREEN;
 	this->bListenerEnabled = true;
+	this->bIsScreenObject = true;
 }
 
 StoryWindow::~StoryWindow()

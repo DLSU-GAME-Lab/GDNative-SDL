@@ -87,12 +87,13 @@ void DialogueRenderer::perform()
             {
                 float offsetX = croppedSrcRect.x - mDestRect.x;
                 float offsetY = croppedSrcRect.y - mDestRect.y;
+                float offsetW = mDestRect.w - croppedSrcRect.w;
+                float offsetH = mDestRect.h - croppedSrcRect.h;
 
-                Vector2D texScale = texSize / Vector2D(mDestRect.w, mDestRect.h);
-                srcRect.x = offsetX * texScale.x;
-                srcRect.y = offsetY * texScale.y;
-                srcRect.w = croppedSrcRect.w * texScale.x;
-                srcRect.h = croppedSrcRect.h * texScale.y;
+                srcRect.x = offsetX;
+                srcRect.y = offsetY;
+                srcRect.w = croppedSrcRect.w;
+                srcRect.h = croppedSrcRect.h;
 
                 mDestRect = croppedSrcRect;
                 mDestRect.w -= offsetX;

@@ -117,9 +117,14 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
 void AGameObject::attachChild(AGameObject * pChild)
 {
     this->vecChildren.push_back(pChild);
-    pChild->setIsScreenObject(this->bIsScreenObject);
+    if (this->bIsScreenObject != pChild->getIsScreenObject())
+    {
+        pChild->setIsScreenObject(this->bIsScreenObject);
+        std::cout << "[" << this->strName << "] WARNING: Child has inherited screen object bool of parent!" << std::endl;
+    }
     pChild->setParent(this);
     pChild->initialize();
+    
 }
 
 void AGameObject::detachChild(AGameObject * pChild)

@@ -4,6 +4,7 @@
 #include "FontManager.h"
 #include "RendererContext.h"
 #include "AGameObject.h"
+#include "SpriteRenderer.h"
 class DialogueRenderer:public ARenderer
 {
 private:
@@ -14,6 +15,9 @@ private:
     double dAngle;
     Vector2D texSize;
     Vector2D pivot;
+    bool bCropEnabled;
+    float fScrollOffset;
+    float fViewHeight;
 public:
 	DialogueRenderer();
 	~DialogueRenderer();
@@ -25,8 +29,14 @@ public:
     void resetText();
     void onAttach() override;
     float getTextHeight();
+    void setCropEnabled (bool bbCropEnabled);
 public:
     void setPivot(Vector2D pivot);
+    float getScrollOffset();
+    void setScrollOffset(float fOffset);
+    void setViewHeight(float fViewHeight);
+    float getViewHeight();
+
 
 };
 

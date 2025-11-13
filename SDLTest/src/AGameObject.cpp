@@ -11,7 +11,6 @@ AGameObject::AGameObject(std::string strName)
     bEnabled = true;
     bFollowParent = true;
     pParent = NULL;
-    this->fWindowSize = CameraManager::getInstance()->getCurrentCamera()->getWindowSize();
     // defaults:
     this->fRot = 0.0f;
     this->fVecScale = Vector2D(1, 1);
@@ -96,7 +95,14 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
             pComponent->perform();
         }
     }
+    for (AGameObject* child : vecChildren)
+    {
+        if (child && child->getEnabled())
+        {
+            child->draw(pRenderer);
 
+        }
+    }
     if (showWidgets)
     {
         for (AComponent* pComponent : vecComponent)
@@ -104,11 +110,8 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
             pComponent->drawWidget();
         }
     }
-}
-SDL_FRect  AGameObject::getGlobalBounds()
-{
-    SDL_FRect CTransform = {};
-    return CTransform;
+
+
 }
 
 void AGameObject::attachChild(AGameObject * pChild)
@@ -187,7 +190,6 @@ AComponent* AGameObject::findComponentByName(std::string strName)
             return pComponent;
     }
 
-    std::cout << "[ERROR] : Component [" << strName << "] NOT found." << std::endl;
     return NULL;
 }
 
@@ -274,19 +276,25 @@ void AGameObject::setPos(Vector2D fVecTranslate)
     {
         for(AGameObject* child: vecChildren)
         {
-            if (child->pParent->getParent() != nullptr)
-            {
-                child->setPos(child->getParent()->getPos());
-            }
-            else
-            {
-                Vector2D fVecNewPos(child->getPos().x + child->getParent()->getPos().x, child->getPos().y + child->getParent()->getPos().y);
-                child->setPos(fVecNewPos);
-            }
+            
+            Vector2D fVecNewPos(child->getPos().x + this->getPos().x, child->getPos().y + this->getPos().y);
+            child->setPos(fVecNewPos);
   
         }
     }
 
+}
+
+void AGameObject::setLocalPos(Vector2D fVecTranslate)
+{
+    if (this->pParent)
+    {
+        this->fVecTranslate = this->pParent->getPos() + fVecTranslate;
+    }
+    else
+    {
+        this->fVecTranslate = fVecTranslate;
+    }
 }
 
 void AGameObject::setScale(Vector2D fVecScale)
@@ -294,14 +302,38 @@ void AGameObject::setScale(Vector2D fVecScale)
     this->fVecScale = fVecScale;
 }
 
+void AGameObject::setLocalScale(Vector2D fVecScale)
+{
+    if (this->pParent)
+    {
+        this->fVecScale = this->pParent->getScale() + fVecScale;
+    }
+    else
+    {
+        this->fVecScale = fVecScale;
+    }
+}
+
 Vector2D AGameObject::getPos()
 {
     return this->fVecTranslate;
 }
 
+Vector2D AGameObject::getLocalPos()
+{
+    if(this->pParent)
+        return this->pParent->getPos() - this->fVecTranslate;
+}
+
 Vector2D AGameObject::getScale()
 {
     return this->fVecScale;
+}
+
+Vector2D AGameObject::getLocalScale()
+{
+    if (this->pParent)
+        return this->pParent->getScale() - this->fVecScale;
 }
 
 
@@ -310,9 +342,27 @@ void AGameObject::setRot(float fRot)
     this->fRot = fRot;
 }
 
+void AGameObject::seLocaltRot(float fRot)
+{
+    if (this->pParent)
+    {
+        this->fRot = this->pParent->getRot() + fRot;
+    }
+    else
+    {
+        this->fRot = fRot;
+    }
+}
+
 float AGameObject::getRot()
 {
     return this->fRot;
+}
+
+float AGameObject::getLocalRot()
+{
+    if (this->pParent)
+        return this->pParent->getRot() - this->fRot;
 }
 
 bool AGameObject::getIsScreenObject() const

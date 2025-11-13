@@ -185,6 +185,7 @@ void SpriteRenderer::setColor(SDL_Color color)
     this->mColor = color;
 }
 
+
 SDL_Texture* SpriteRenderer::getTexture()
 {
     return this->pTexture;

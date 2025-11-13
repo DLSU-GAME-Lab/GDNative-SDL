@@ -28,6 +28,7 @@ PuzzleLevel1Scene::~PuzzleLevel1Scene()
 void PuzzleLevel1Scene::onLoadResources()
 {
 	TextureManager::getInstance()->load("Square.png", "Square");
+	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("GUI/button6.png", "Close_Button");
 	TextureManager::getInstance()->load("sequence_game/low_order_bg.png", "BG");
 
@@ -46,7 +47,6 @@ void PuzzleLevel1Scene::onLoadResources()
 
 	TextureManager::getInstance()->loadFromFolder("animations/level_intro", "Intro");
 
-	FontManager::getInstance()->loadFont("JainiPurva-Regular.ttf", "Jaini90", 90);
 }
 
 void PuzzleLevel1Scene::onLoadObjects()
@@ -135,6 +135,11 @@ void PuzzleLevel1Scene::onLoadObjects()
 	ObjectiveIntro* pObjectiveIntro = new ObjectiveIntro("L1_Obj", "Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3");
 	pObjectiveIntro->setPos(Vector2D(0,0));
 	GameObjectManager::getInstance()->addObject(pObjectiveIntro);
+
+	StoryWindow* pStoryWindow = new StoryWindow("Puzzle1StoryWindow");
+	pStoryWindow->setPos(Vector2D(0, 0));
+	GameObjectManager::getInstance()->addObject(pStoryWindow);
+	pStoryWindow->setEnabled(true);
 
 }
 

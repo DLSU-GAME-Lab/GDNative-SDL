@@ -11,9 +11,6 @@ PauseScreen::~PauseScreen()
 }
 void PauseScreen::initialize()
 {
-	float fHalfWidth = CameraManager::getInstance()->getWindowSize().x / 2;
-	float fHalfHeight = CameraManager::getInstance()->getWindowSize().y / 2;
-
 	Background* pTransBack = new Background("TransparentBG", "Square", Vector2D(5.f));
 
 	this->attachChild(pTransBack);

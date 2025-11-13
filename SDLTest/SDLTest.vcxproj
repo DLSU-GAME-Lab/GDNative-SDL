@@ -206,6 +206,7 @@
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SceneSwitcher.cpp" />
     <ClCompile Include="src\SceneTransitionManager.cpp" />
+    <ClCompile Include="src\Scroller.cpp" />
     <ClCompile Include="src\SequenceGameManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
@@ -306,6 +307,7 @@
     <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\SceneSwitcher.h" />
     <ClInclude Include="include\SceneTransitionManager.h" />
+    <ClInclude Include="include\Scroller.h" />
     <ClInclude Include="include\SequenceGameManager.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />

@@ -2,6 +2,9 @@
 #include "AGameObject.h"
 #include "Prop.h"
 #include "EventListener.h"
+#include "Background.h"
+#include "Scroller.h"
+#include "Text.h"
 class StoryWindow: public AGameObject, EventListener
 {
 private:

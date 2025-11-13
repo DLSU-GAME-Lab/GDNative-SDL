@@ -9,6 +9,9 @@ DialogueRenderer::DialogueRenderer():ARenderer("DialogueRenderer")
     this->texSize = Vector2D(0.0f, 0.0f);
     this->pivot = Vector2D(0.5f, 0.5f);
     this->mColor = SDL_Color(255, 255, 255, 255);
+    this->bCropEnabled = false;
+    this->fScrollOffset = 0.f;
+    this->fViewHeight = 0.f;
 
     //SDL_Point anchor = { texW / 2,texH / 2 };
     mDestRect.x = 0;
@@ -27,6 +30,7 @@ DialogueRenderer::~DialogueRenderer()
 }
 void DialogueRenderer::initialize()
 {
+
     if (pTexture != NULL) {
 
         float fw, fh;
@@ -47,6 +51,14 @@ void DialogueRenderer::perform()
 {
     AGameObject* owner = this->getOwner();
     Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
+    SDL_FRect srcRect = {};
+    AGameObject* pParent = this->getOwner()->getParent();
+    SpriteRenderer* pSpriteRenderer = NULL;
+    if (pParent)
+    {
+        pSpriteRenderer = (SpriteRenderer*)pParent->findComponentByName("SpriteRenderer");
+    }
+
     if (owner)
     {
         this->dAngle = -owner->getRot();
@@ -60,9 +72,39 @@ void DialogueRenderer::perform()
         mDestRect.y = pos.y;
         mDestRect.w = size.x;
         mDestRect.h = size.y;
-
-        if (!owner->getIsScreenObject()) mDestRect = pCam->worldToScreenRect(mDestRect);
+  
         
+        if (!owner->getIsScreenObject())
+        {
+            mDestRect = pCam->worldToScreenRect(mDestRect);
+        }
+        if (pParent && pSpriteRenderer && this->bCropEnabled)
+        {
+            SDL_FRect parentRect = pSpriteRenderer->getRect();
+            SDL_FRect croppedSrcRect;
+
+            if (SDL_GetRectIntersectionFloat(&parentRect, &mDestRect, &croppedSrcRect))
+            {
+                float offsetX = croppedSrcRect.x - mDestRect.x;
+                float offsetY = croppedSrcRect.y - mDestRect.y;
+
+                Vector2D texScale = texSize / Vector2D(mDestRect.w, mDestRect.h);
+                srcRect.x = offsetX * texScale.x;
+                srcRect.y = offsetY * texScale.y;
+                srcRect.w = croppedSrcRect.w * texScale.x;
+                srcRect.h = croppedSrcRect.h * texScale.y;
+
+                mDestRect = croppedSrcRect;
+                mDestRect.w -= offsetX;
+                mDestRect.h -= offsetY;
+
+                std::cout << "Self: " << mDestRect.x << ", " << mDestRect.y << ", " << mDestRect.w << ", " << mDestRect.h << std::endl;
+                std::cout << "Parent: " << parentRect.x << ", " << parentRect.y << ", " << parentRect.w << ", " << parentRect.h << std::endl;
+                std::cout << "Source: " << srcRect.x << ", " << srcRect.y << ", " << srcRect.w << ", " << srcRect.h << std::endl;
+                std::cout << "Cropped Source: " << croppedSrcRect.x << ", " << croppedSrcRect.y << ", " << croppedSrcRect.w << ", " << croppedSrcRect.h << std::endl;
+
+            }
+        }
     }
 
     if (this->inCameraView(mDestRect))
@@ -72,11 +114,15 @@ void DialogueRenderer::perform()
         {
             SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
             SDL_SetTextureAlphaMod(pTexture, mColor.a);
-
-            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
-            else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
-            else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
-            else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
+            SDL_FRect* pSrcRect = NULL;
+            if (srcRect.w != 0 && srcRect.h != 0)
+            {
+                pSrcRect = &srcRect;
+            }
+            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
+            else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
+            else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
+            else SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
         }
 
         // additional log
@@ -131,7 +177,34 @@ float DialogueRenderer::getTextHeight()
 {
     return this->mDestRect.h;
 }
+void DialogueRenderer::setCropEnabled(bool bCropEnabled)
+{
+    this->bCropEnabled = bCropEnabled;
+}
+
 void DialogueRenderer::setPivot(Vector2D pivot)
 {
     this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
+}
+
+float DialogueRenderer::getScrollOffset()
+{
+    return this->fScrollOffset;
+}
+
+void DialogueRenderer::setScrollOffset(float fOffset)
+{
+    float maxOffset = std::max(0.0f, texSize.y - fViewHeight);
+    fScrollOffset = SDL_clamp(fOffset, 0.0f, maxOffset);
+
+}
+
+void DialogueRenderer::setViewHeight(float fViewHeight)
+{
+    this->fViewHeight = fViewHeight;
+}
+
+float DialogueRenderer::getViewHeight()
+{
+    return 0.0f;
 }

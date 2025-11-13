@@ -336,11 +336,10 @@
     <ClCompile Include="src\AInteractable.cpp">
       <Filter>Component\Script\Interactable</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gate.cpp">
-      <Filter>GameObject\Platformer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InteractabeGate.cpp">
-      <Filter>Component\Script\Interactable</Filter>
+    <ClCompile Include="src\ObjectiveIntro.cpp" />
+    <ClCompile Include="src\StoryWindow.cpp" />
+    <ClCompile Include="src\ObjectiveManager.cpp">
+      <Filter>Singleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -657,12 +656,6 @@
     </ClInclude>
     <ClInclude Include="include\PauseScreen.h">
       <Filter>GameObject\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Gate.h">
-      <Filter>GameObject\Platformer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\InteractabeGate.h">
-      <Filter>Component\Script\Interactable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

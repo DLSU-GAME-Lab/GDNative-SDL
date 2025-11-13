@@ -10,6 +10,7 @@ enum class EventKey : int {
     DIALOGUE_SCREEN,
     STORY_SCREEN,
     OBJECTIVE_SCREEN,
+    OBJECTIVE_BUTTON,
 };
 
 #endif

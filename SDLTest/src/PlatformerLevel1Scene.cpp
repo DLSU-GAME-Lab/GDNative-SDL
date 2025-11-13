@@ -13,6 +13,7 @@
 #include "Prop.h"
 #include "Gem.h"
 #include "GUIButton.h"
+#include "ObjectiveManager.h"
 #include "Gate.h"
 
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
@@ -62,7 +63,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/story.png", "Story_Button");
 	TextureManager::getInstance()->load("GUI/inventory.png", "Items_Button");
 	TextureManager::getInstance()->load("Square.png", "Square");
-
+	TextureManager::getInstance()->load("GUI/arrow.png", "Arrow");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -414,6 +415,71 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
 	pPauseScreen->setEnabled(false);
 
+	// ------ OBJECTIVE MANAGER ------
+	// --- OBJECTIVE BUTTON creation ---
+	GUIButton* pObjectiveButton = new GUIButton("Objective_Button", "Square");
+	pObjectiveButton->setIsScreenObject(true);
+	pObjectiveButton->setPos(Vector2D(54.0f, 365.0f));
+	pObjectiveButton->setScale(Vector2D(0.08f));
+
+	// create a Background child that actually provides a SpriteRenderer for hit tests
+	Background* pObjBack = new Background("Objective_Button_Back", "Square", Vector2D(1.f));
+	pObjBack->setIsScreenObject(true);
+	pObjBack->setPos(Vector2D(0.0f, 0.0f)); // RELATIVE to GUIButton
+	pObjBack->setScale(Vector2D(0.08f));
+	pObjectiveButton->attachChild(pObjBack);
+
+	// button settings
+	SpriteRenderer* pObjSR = (SpriteRenderer*)pObjBack->findComponentByName("SpriteRenderer");
+	if (pObjSR) {
+		pObjSR->setColor({ 238, 202, 161, 255 });
+		std::cout << "[Scene] Objective_Button SpriteRenderer found on Background; color set\n";
+		std::cout << "[Scene] DEBUG: pObjSR OK, texture ptr=" << pObjSR->getTexture() << "\n";
+	}
+	else {
+		std::cout << "[Scene] WARNING: Objective_Button SpriteRenderer NOT found on Background\n";
+	}
+
+	// Button input + toggle attached to the background (the hit target)
+	ButtonInput* pBtnInput = new ButtonInput(pObjSR);
+	pObjBack->attachComponent(pBtnInput);
+	GUIToggle* pObjectiveToggle = new GUIToggle(EventKey::OBJECTIVE_BUTTON);
+	pObjBack->attachComponent(pObjectiveToggle);
+
+	// register it so it draws and receives input
+	GameObjectManager::getInstance()->addObject(pObjectiveButton);
+
+	// create small hidden panels so ObjectiveManager finds don't spam errors
+	Prop* pObjectivePanel = new Prop("ObjectivePanel", "Square", Vector2D(0.0f, 0.0f), 1.0f);
+	pObjectivePanel->setIsScreenObject(true);
+	pObjectivePanel->setScale(Vector2D(0.5f));
+	pObjectivePanel->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pObjectivePanel);
+
+	Prop* pOptionalPanel = new Prop("OptionalPanel", "Square", Vector2D(0.0f, 0.0f), 1.0f);
+	pOptionalPanel->setIsScreenObject(true);
+	pOptionalPanel->setScale(Vector2D(0.4f));
+	pOptionalPanel->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pOptionalPanel);
+
+
+
+
+
+	
+	// --- ARROW creation ---
+	Prop* pArrow = new Prop("Arrow", "Arrow", Vector2D(1077.777f, 463.686f), 1.0f);
+	pArrow->setScale(Vector2D(.8f));
+	pArrow->setIsScreenObject(false);                  // optional: treat as UI so it doesn't move with camera
+	pArrow->setEnabled(false);                          // start hidden
+	GameObjectManager::getInstance()->addObject(pArrow);
+
+	// create objectivemanager object
+	Prop* pObjectiveManagerObj = new Prop("ObjectiveManager_Object", "Arrow", Vector2D(0, 0), 1.0f);
+	pObjectiveManagerObj->setEnabled(true); // hide it if you don't want it drawn
+	ObjectiveManager* pObjectiveManager = new ObjectiveManager();
+	pObjectiveManagerObj->attachComponent(pObjectiveManager);
+	GameObjectManager::getInstance()->addObject(pObjectiveManagerObj);
 }
 
 void PlatformerLevel1Scene::onUnloadResources()
@@ -451,4 +517,5 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Story_Button");
 	TextureManager::getInstance()->unload("Items_Button");
 	TextureManager::getInstance()->unload("Square");
+	TextureManager::getInstance()->unload("Arrow");
 }

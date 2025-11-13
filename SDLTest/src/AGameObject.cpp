@@ -114,6 +114,7 @@ SDL_FRect  AGameObject::getGlobalBounds()
 void AGameObject::attachChild(AGameObject * pChild)
 {
     this->vecChildren.push_back(pChild);
+    pChild->setIsScreenObject(this->bIsScreenObject);
     pChild->setParent(this);
     pChild->initialize();
 }
@@ -321,6 +322,7 @@ bool AGameObject::getIsScreenObject() const
 
 void AGameObject::setIsScreenObject(bool bIsScreenObject)
 {
+    if (this->pParent) return;
     this->bIsScreenObject = bIsScreenObject;
 }
 

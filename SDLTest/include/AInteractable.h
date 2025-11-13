@@ -1,6 +1,6 @@
 #pragma once
-#include "AComponent.h"
-class AInteractable : public AComponent
+#include "BoxCollider.h"
+class AInteractable : public BoxCollider
 {
 public:
 	AInteractable(std::string strName);

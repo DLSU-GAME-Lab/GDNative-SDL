@@ -15,14 +15,12 @@ void Gem::initialize()
 	SpriteRenderer* pRenderer = new SpriteRenderer(this->strName);
 	this->attachComponent(pRenderer);
 
-	BoxCollider* pCollider = new BoxCollider("BoxCollider");
-	pCollider->setSize(Vector2D(220, 300));
-	pCollider->setOffset(Vector2D(0.0f, 40.0f));
-	this->attachComponent(pCollider);
+	CollectableGem* pCollectable = new CollectableGem();
+	pCollectable->setSize(Vector2D(220, 300));
+	pCollectable->setOffset(Vector2D(0.0f, 40.0f));
+	this->attachComponent(pCollectable);
 
-	ColliderRenderer* pColliderRenderer = new ColliderRenderer(pCollider);
+	ColliderRenderer* pColliderRenderer = new ColliderRenderer(pCollectable);
 	this->attachComponent(pColliderRenderer);
 
-	CollectableGem* pCollectable = new CollectableGem();
-	this->attachComponent(pCollectable);
 }

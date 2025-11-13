@@ -61,6 +61,21 @@
     <Filter Include="GUI">
       <UniqueIdentifier>{07981001-7933-49b9-9172-4b13320e3787}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Script\Interactable">
+      <UniqueIdentifier>{84db9ed3-bfd4-4ffa-8ab9-66fb966318da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Script\Controller">
+      <UniqueIdentifier>{8407a450-a7bb-46d6-a414-c83a661f84b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Script\GUI">
+      <UniqueIdentifier>{c799307f-12e0-4891-b481-2dc06b1846f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\GUI">
+      <UniqueIdentifier>{193cc777-56c0-488e-9902-6cb3538c7f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Platformer">
+      <UniqueIdentifier>{48c65fc3-753c-4ba4-af97-885c08950dae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -90,9 +105,6 @@
     <ClCompile Include="src\Librarian.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\Player.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\SceneManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
@@ -104,9 +116,6 @@
     </ClCompile>
     <ClCompile Include="src\Title_Scene.cpp">
       <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AButton.cpp">
-      <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="src\AnimatedSprite.cpp">
       <Filter>GameObject</Filter>
@@ -162,9 +171,6 @@
     <ClCompile Include="src\Grid.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="src\Text.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\ButtonInput.cpp">
       <Filter>Component\Input</Filter>
     </ClCompile>
@@ -174,26 +180,11 @@
     <ClCompile Include="src\AGeneralInput.cpp">
       <Filter>Component\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\PlayerController.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUIButton.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\FontManager.cpp">
       <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SceneSwitcher.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUIToggle.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUIUtils.cpp">
-      <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\EventBroadcaster.cpp">
       <Filter>System</Filter>
@@ -207,20 +198,8 @@
     <ClCompile Include="src\SpriteAnimator.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\MetricsManager.cpp">
       <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DiaryToggle.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PageChangeToggle.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Gravity.cpp">
-      <Filter>Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="src\Animation.cpp">
       <Filter>Component\Animation</Filter>
@@ -233,9 +212,6 @@
     </ClCompile>
     <ClCompile Include="src\TileMapRenderer.cpp">
       <Filter>Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TileMap.cpp">
-      <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="src\CameraManager.cpp">
       <Filter>Singleton</Filter>
@@ -264,12 +240,6 @@
     <ClCompile Include="src\PuzzleLevel1Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\TokenController.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PuzzleToken.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\SequenceGameManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -282,23 +252,11 @@
     <ClCompile Include="src\DialogueRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\PuzzleHint.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\RendererContext.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\RigidBody.cpp">
       <Filter>Component\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CameraController.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ExitMenu.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PauseScreen.cpp">
-      <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="src\PerformanceMetricsScreen.cpp">
       <Filter>GUI</Filter>
@@ -309,24 +267,78 @@
     <ClCompile Include="src\MathUtils.cpp">
       <Filter>Component\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\DialogueBox.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AInteractable.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CollectableGem.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DialogueToggle.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Gem.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\AInteractable.cpp" />
     <ClCompile Include="src\StoryWindow.cpp" />
+    <ClCompile Include="src\CollectableGem.cpp">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerController.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TokenController.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraController.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DialogueToggle.cpp">
+      <Filter>Component\Script\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DiaryToggle.cpp">
+      <Filter>Component\Script\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUIToggle.cpp">
+      <Filter>Component\Script\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PageChangeToggle.cpp">
+      <Filter>Component\Script\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneSwitcher.cpp">
+      <Filter>Component\Script\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUIUtils.cpp">
+      <Filter>Component\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AButton.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ExitMenu.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUIButton.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PuzzleHint.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PuzzleToken.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Text.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DialogueBox.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gem.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TileMap.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PauseScreen.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AInteractable.cpp">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -353,9 +365,6 @@
     <ClInclude Include="include\Librarian.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="include\Player.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\SceneManager.h">
       <Filter>Singleton</Filter>
     </ClInclude>
@@ -376,9 +385,6 @@
     </ClInclude>
     <ClInclude Include="include\Title_Scene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="include\AButton.h">
-      <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumAnimationType.h">
       <Filter>Enum</Filter>
@@ -440,9 +446,6 @@
     <ClInclude Include="include\Grid.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="include\Text.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\ButtonInput.h">
       <Filter>Component\Input</Filter>
     </ClInclude>
@@ -452,26 +455,11 @@
     <ClInclude Include="include\AGeneralInput.h">
       <Filter>Component\Input</Filter>
     </ClInclude>
-    <ClInclude Include="include\PlayerController.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\GUIButton.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\FontManager.h">
       <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SceneSwitcher.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUIUtils.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GUIToggle.h">
-      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="include\EventBroadcaster.h">
       <Filter>System</Filter>
@@ -491,20 +479,8 @@
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Component\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="include\Platform.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\MetricsManager.h">
       <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DiaryToggle.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\PageChangeToggle.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Gravity.h">
-      <Filter>Component\Physics</Filter>
     </ClInclude>
     <ClInclude Include="include\Animation.h">
       <Filter>Component\Animation</Filter>
@@ -542,9 +518,6 @@
     <ClInclude Include="include\TileMapRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\TileMap.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\CameraManager.h">
       <Filter>Singleton</Filter>
     </ClInclude>
@@ -581,12 +554,6 @@
     <ClInclude Include="include\PlatformerLevel1Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="include\TokenController.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\PuzzleToken.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\SequenceGameManager.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -602,23 +569,11 @@
     <ClInclude Include="include\DialogueRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\PuzzleHint.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererContext.h">
       <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\RigidBody.h">
       <Filter>Component\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CameraController.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\PauseScreen.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ExitMenu.h">
-      <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\PerformanceMetricsScreen.h">
       <Filter>GUI</Filter>
@@ -629,26 +584,80 @@
     <ClInclude Include="include\MathUtils.h">
       <Filter>Component\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\DialogueBox.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\EnumOnAnimFinished.h">
       <Filter>Enum</Filter>
     </ClInclude>
-    <ClInclude Include="include\AInteractable.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CollectableGem.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DialogueToggle.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Gem.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="include\ObjectiveIntro.h" />
     <ClInclude Include="include\StoryWindow.h" />
+    <ClInclude Include="include\AInteractable.h">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollectableGem.h">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerController.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TokenController.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CameraController.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DialogueToggle.h">
+      <Filter>Component\Script\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DiaryToggle.h">
+      <Filter>Component\Script\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIToggle.h">
+      <Filter>Component\Script\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PageChangeToggle.h">
+      <Filter>Component\Script\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneSwitcher.h">
+      <Filter>Component\Script\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIUtils.h">
+      <Filter>Component\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AButton.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ExitMenu.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GUIButton.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PuzzleHint.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PuzzleToken.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Text.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DialogueBox.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Gem.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Platform.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TileMap.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PauseScreen.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

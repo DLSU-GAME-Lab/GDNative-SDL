@@ -3,7 +3,7 @@
 #include "AComponent.h"
 #include "EnumComponentType.h"
 #include "ACollider.h"
-#include "Gravity.h"
+
 class PhysicsSystem: AComponent
 {
 private:

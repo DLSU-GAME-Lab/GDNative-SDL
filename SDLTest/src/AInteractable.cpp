@@ -1,6 +1,6 @@
 #include "AInteractable.h"
 
-AInteractable::AInteractable(std::string strName) : AComponent(strName, ComponentType::SCRIPT)
+AInteractable::AInteractable(std::string strName) : BoxCollider(strName)
 {
 
 }

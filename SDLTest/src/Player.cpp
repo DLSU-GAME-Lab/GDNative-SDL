@@ -3,9 +3,9 @@
 #include "SpriteAnimator.h"
 #include "PlayerController.h"
 #include "PhysicsSystem.h"
-#include "Gravity.h"
 #include "ColliderRenderer.h"
 #include "CameraController.h"
+
 Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Player")
 {
     this->fVecTranslate = fVecTranslate;

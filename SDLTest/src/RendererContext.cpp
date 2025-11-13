@@ -1,10 +1,14 @@
 #include "RendererContext.h"
 RendererContext* RendererContext::P_SHARED_INSTANCE = NULL;
 
+RendererContext::RendererContext(SDL_Renderer* pRenderer)
+{
+    this->pRenderer = pRenderer;
+}
+
 void RendererContext::initialize(SDL_Renderer* pRenderer)
 {
-    P_SHARED_INSTANCE = new RendererContext();
-    P_SHARED_INSTANCE->pRenderer = pRenderer;
+    P_SHARED_INSTANCE = new RendererContext(pRenderer);
 }
 RendererContext* RendererContext::getInstance()
 {

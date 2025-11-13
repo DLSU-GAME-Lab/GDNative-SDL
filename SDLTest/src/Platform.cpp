@@ -1,7 +1,7 @@
 #include "Platform.h"
 #include "Settings.h"
 #include "PlayerController.h"
-#include "ColliderRenderer.h"
+
 Platform::Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D fVecSize, float fRot) :AGameObject(strName)
 {
 	this->fVecTranslate = fVecTranslate;
@@ -20,8 +20,6 @@ void Platform::initialize()
 	pCollider->setListener(this);
 	this->attachComponent((AComponent*)pCollider);
 
-	ColliderRenderer* pColRenderer = new ColliderRenderer(pCollider);
-	this->attachComponent(pColRenderer);
 }
 
 

@@ -84,7 +84,8 @@ void TileMapRenderer::drawWidget()
             destRect = pCam->worldToScreenRect(destRect);
             if (this->inCameraView(destRect))
             {
-                SDL_SetRenderDrawColor(this->pRenderer, 255, 255, 255, 100);
+                SDL_SetRenderDrawBlendMode(this->pRenderer, SDL_BLENDMODE_BLEND);
+                SDL_SetRenderDrawColor(this->pRenderer, 127, 127, 127, 63);
                 SDL_RenderRect(this->pRenderer, &destRect);
             }
         }

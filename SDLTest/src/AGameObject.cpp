@@ -99,10 +99,9 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
 
     if (showWidgets)
     {
-        for (AComponent* pComponent : vecRenderer)
+        for (AComponent* pComponent : vecComponent)
         {
-            ARenderer* renderer = (ARenderer*)pComponent;
-            renderer->drawWidget();
+            pComponent->drawWidget();
         }
     }
 }

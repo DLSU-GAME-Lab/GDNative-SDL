@@ -1,6 +1,7 @@
 #include "BoxCollider.h"
 #include "AGameObject.h"
-
+#include "CameraManager.h"
+#include "RendererContext.h"
 
 BoxCollider::BoxCollider(std::string strName) : ACollider(strName)
 {
@@ -16,6 +17,20 @@ void BoxCollider::onAttach()
 void BoxCollider::perform()
 {
 	
+}
+
+void BoxCollider::drawWidget()
+{
+	Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
+	SDL_FRect tempRect = this->getGlobalBounds();
+	AGameObject* owner = this->getOwner();
+
+	if (!pOwner->getIsScreenObject()) tempRect = pCam->worldToScreenRect(tempRect);
+	SDL_SetRenderDrawBlendMode(RendererContext::getInstance()->getRenderer(), SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(RendererContext::getInstance()->getRenderer(), 0, 255, 0, 31);  // RGBA
+	SDL_RenderFillRect(RendererContext::getInstance()->getRenderer(), &tempRect);
+	SDL_SetRenderDrawColor(RendererContext::getInstance()->getRenderer(), 0, 255, 0, 127);  // RGBA
+	SDL_RenderRect(RendererContext::getInstance()->getRenderer(), &tempRect);
 }
 
 bool BoxCollider::isColliding(ACollider* pCollider)

@@ -11,9 +11,6 @@ protected:
 public:
     ARenderer(const std::string& strName);
 
-    virtual void perform() = 0;
-    virtual void drawWidget() = 0;
-
     void setSDLRenderer(SDL_Renderer* pRenderer);
     bool inCameraView(SDL_FRect spriteRect);
 };

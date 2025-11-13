@@ -231,9 +231,6 @@
     <ClCompile Include="src\UIManager.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\ColliderRenderer.cpp">
-      <Filter>Component\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="src\PlatformerLevel1Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -337,6 +334,12 @@
       <Filter>GameObject\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\AInteractable.cpp">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gate.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InteractabeGate.cpp">
       <Filter>Component\Script\Interactable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -545,9 +548,6 @@
     <ClInclude Include="include\EditorMode.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\ColliderRenderer.h">
-      <Filter>Component\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="include\PuzzleLevel1Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -657,6 +657,12 @@
     </ClInclude>
     <ClInclude Include="include\PauseScreen.h">
       <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Gate.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InteractabeGate.h">
+      <Filter>Component\Script\Interactable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

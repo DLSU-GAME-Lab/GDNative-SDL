@@ -14,7 +14,7 @@ private:
     static RendererContext* P_SHARED_INSTANCE;
 
 private:
-    RendererContext() {};
+    RendererContext(SDL_Renderer* pRenderer);
     RendererContext(const RendererContext&) {};
     RendererContext& operator=(const RendererContext&) {};
 

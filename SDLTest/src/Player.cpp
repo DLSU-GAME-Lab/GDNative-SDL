@@ -3,7 +3,6 @@
 #include "SpriteAnimator.h"
 #include "PlayerController.h"
 #include "PhysicsSystem.h"
-#include "ColliderRenderer.h"
 #include "CameraController.h"
 
 Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Player")
@@ -47,9 +46,6 @@ void Player::initialize()
     pRB->setDrag(0.0f);
     pRB->setGravityEnabled(true);
     this->attachComponent(pRB);
-
-    ColliderRenderer* pColRenderer = new ColliderRenderer(pRB);
-    this->attachComponent(pColRenderer);
 
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator, pRB);
     pPlayerController->setMoveSpeed(300.0f);

@@ -24,6 +24,7 @@ public:
 public:
     virtual void onAttach() override;
     void perform() override;
+    void drawWidget() override;
     bool isColliding(ACollider* pCollider) override;
 
     virtual void onCollisionEnter(ACollider* pCollider) override;

@@ -136,7 +136,12 @@ void SpriteRenderer::perform() {
 
 void SpriteRenderer::drawWidget()
 {
+    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
+    AGameObject* owner = this->getOwner();
 
+    SDL_SetRenderDrawBlendMode(this->pRenderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 127);  // RGBA
+    SDL_RenderRect(pRenderer, &mDestRect);
 }
 
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)

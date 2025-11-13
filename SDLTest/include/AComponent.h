@@ -25,6 +25,7 @@ public:
 
 public:
     virtual void onAttach() {};
+    virtual void drawWidget() {};
     virtual void perform() = 0;
 
 public:

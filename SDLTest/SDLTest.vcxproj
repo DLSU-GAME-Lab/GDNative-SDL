@@ -132,6 +132,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AInteractable.cpp" />
+    <ClCompile Include="src\Gate.cpp" />
+    <ClCompile Include="src\InteractabeGate.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
     <ClCompile Include="src\DialogueToggle.cpp" />
@@ -156,7 +158,6 @@
     <ClCompile Include="src\BoxCollider.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CameraManager.cpp" />
-    <ClCompile Include="src\ColliderRenderer.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
     <ClCompile Include="src\DialogueRenderer.cpp" />
     <ClCompile Include="src\Diary.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="imgui\include\imstb_truetype.h" />
     <ClInclude Include="include\AButton.h" />
     <ClInclude Include="include\CameraController.h" />
+    <ClInclude Include="include\Gate.h" />
     <ClInclude Include="include\Gem.h" />
     <ClInclude Include="include\ICollisionListener.h" />
     <ClInclude Include="include\AComponent.h" />
@@ -249,7 +251,6 @@
     <ClInclude Include="include\BoxCollider.h" />
     <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\CameraManager.h" />
-    <ClInclude Include="include\ColliderRenderer.h" />
     <ClInclude Include="include\CustomStyles.h" />
     <ClInclude Include="include\DialogueRenderer.h" />
     <ClInclude Include="include\Diary.h" />
@@ -275,6 +276,7 @@
     <ClInclude Include="include\GUIUtils.h" />
     <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
+    <ClInclude Include="include\InteractabeGate.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\ObjectiveIntro.h" />

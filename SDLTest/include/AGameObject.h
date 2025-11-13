@@ -18,8 +18,11 @@ protected:
     bool bIsScreenObject;
     bool bFollowParent;
     Vector2D fVecTranslate;
+    Vector2D fVecLocalTranslate;
     Vector2D fVecScale;
+    Vector2D fVecLocalScale;
     float fRot;
+    float fLocalRot;
     Vector2D fWindowSize;
 public:
     AGameObject(std::string strName);
@@ -30,7 +33,6 @@ public:
     virtual void processInput(SDL_Event* eEvent);
     virtual void update(float fDeltaTime);
     virtual void draw(SDL_Renderer* pRenderer);
-    virtual SDL_FRect getGlobalBounds();
 
 public:
     void attachChild(AGameObject* pChild);
@@ -51,11 +53,17 @@ public:
     AGameObject* getParent() const;
     void setParent(AGameObject* pParent);
     void setPos(Vector2D fVecTranslate);
+    void setLocalPos(Vector2D fVecTranslate);
     void setScale(Vector2D fVecScale);
+    void setLocalScale(Vector2D fVecScale);
     Vector2D getPos();
+    Vector2D getLocalPos();
     Vector2D getScale();
+    Vector2D getLocalScale();
     void setRot(float fRot);
+    void setLocalRot(float fRot);
     float getRot();
+    float getLocalRot();
 
     bool getIsScreenObject() const;
     void setIsScreenObject(bool bIsScreenObject);

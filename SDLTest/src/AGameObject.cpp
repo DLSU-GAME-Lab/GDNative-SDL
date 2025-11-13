@@ -342,7 +342,7 @@ void AGameObject::setRot(float fRot)
     this->fRot = fRot;
 }
 
-void AGameObject::seLocaltRot(float fRot)
+void AGameObject::setLocalRot(float fRot)
 {
     if (this->pParent)
     {

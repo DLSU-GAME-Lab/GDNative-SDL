@@ -51,6 +51,7 @@ void LobbyScene::onLoadObjects()
 	this->createExitMenu();
 
 	DialogueBox* pDialogueBox = new DialogueBox("DialogueBox");
+	pDialogueBox->setIsScreenObject(true);
 	GameObjectManager::getInstance()->addObject(pDialogueBox);
 	pDialogueBox->setEnabled(false);
 

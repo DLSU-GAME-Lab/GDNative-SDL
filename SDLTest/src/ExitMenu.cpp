@@ -4,6 +4,7 @@ ExitMenu::ExitMenu(std::string strName):AGameObject(strName)
 {
     this->EKey = EventKey::RETURN_SCREEN;
 	this->bListenerEnabled = true;
+	this->bIsScreenObject = true;
 }
 
 ExitMenu::~ExitMenu()
@@ -13,18 +14,17 @@ ExitMenu::~ExitMenu()
 void ExitMenu::initialize()
 {
 	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
-	pExitBG->setPos(Vector2D(575, 300));
+	pExitBG->setPos(Vector2D(575, 250));
 
 	this->attachChild(pExitBG);
 	Text* pExitText = new Text("Exit_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pExitText->setMessage("Go Back to Title \n Screen ?");
-	pExitText->setPos(Vector2D(0, 50));
+	pExitText->setPos(Vector2D(950, 450));
 	pExitText->setScale(Vector2D(1, 1));
 	pExitBG->attachChild(pExitText);
 
 
 	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
-	pDecline->setPos(Vector2D(-200, -300));
 	pDecline->setScale(Vector2D(.15, .15));
 	pExitBG->attachChild(pDecline);
 
@@ -34,13 +34,12 @@ void ExitMenu::initialize()
 
 	Text* pDeclineText = new Text("Decline_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pDeclineText->setMessage("No");
-	pDeclineText->setPos(Vector2D(-200, -300));
 	pDeclineText->setScale(Vector2D(.75, .75));
 	pDecline->attachChild(pDeclineText);
+	pDecline->setPos(Vector2D(750, 800));
 
 
 	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
-	pAccept->setPos(Vector2D(250, -300));
 	pAccept->setScale(Vector2D(.15, .15));
 	pExitBG->attachChild(pAccept);
 
@@ -49,9 +48,9 @@ void ExitMenu::initialize()
 
 	Text* pAcceptText = new Text("Accept_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pAcceptText->setMessage("Yes");
-	pAcceptText->setPos(Vector2D(250, -300));
 	pAcceptText->setScale(Vector2D(.75, .75));
 	pAccept->attachChild(pAcceptText);
+	pAccept->setPos(Vector2D(1250, 800));
 
 
 

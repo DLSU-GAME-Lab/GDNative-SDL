@@ -34,7 +34,7 @@ void DialogueBox::initialize()
     this->pDialogueText->setScale(Vector2D(1,1));
     this->pDialogueText->setColor(SDL_Color(0, 0, 0, 255));
     this->pDialogueBox->attachChild(this->pDialogueText);
-    this->pDialogueBox->setPos(Vector2D(0, -350));
+    this->pDialogueBox->setPos(Vector2D(950, 900));
 
     DialogueToggle* pDiaTog = new DialogueToggle(EventKey::DIALOGUE_SCREEN);
     pTransBack->attachComponent(pDiaTog);

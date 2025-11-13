@@ -75,6 +75,7 @@ void PuzzleHint::onEventTrigger(std::unordered_map<std::string, void*> mapParame
 	else if(this->bEnabled && bFromToggle)
 	{
 		this->setEnabled(false);
+		EventBroadcaster::getInstance()->enableAllListeners();
 	}
 }
 

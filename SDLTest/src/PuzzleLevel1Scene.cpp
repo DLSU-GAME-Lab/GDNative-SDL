@@ -133,13 +133,14 @@ void PuzzleLevel1Scene::onLoadObjects()
 	pPauseScreen->setEnabled(false);
 	 
 	ObjectiveIntro* pObjectiveIntro = new ObjectiveIntro("L1_Obj", "Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3");
+	pObjectiveIntro->setIsScreenObject(true);
 	pObjectiveIntro->setPos(Vector2D(0,0));
 	GameObjectManager::getInstance()->addObject(pObjectiveIntro);
 
 	StoryWindow* pStoryWindow = new StoryWindow("Puzzle1StoryWindow");
 	pStoryWindow->setPos(Vector2D(0, 0));
 	GameObjectManager::getInstance()->addObject(pStoryWindow);
-	pStoryWindow->setEnabled(true);
+	pStoryWindow->setEnabled(false);
 
 }
 

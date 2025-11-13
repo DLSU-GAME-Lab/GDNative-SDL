@@ -45,9 +45,12 @@ void AGameObject::processInput(SDL_Event* eEvent)
     auto vecInput = this->getComponentsRecursively(ComponentType::INPUT);
     for (AComponent* pComponent : vecInput)
     {
-        AGeneralInput* input = (AGeneralInput*)pComponent;
-        input->setEvent(eEvent);
-        input->perform();
+        if (pComponent->getEnabled())
+        {
+            AGeneralInput* input = (AGeneralInput*)pComponent;
+            input->setEvent(eEvent);
+            input->perform();
+        }
     }
 
 }
@@ -57,16 +60,22 @@ void AGameObject::update(float fDeltaTime)
     auto vecScript = this->getComponentsRecursively(ComponentType::SCRIPT);
     for (AComponent* pComponent : vecScript)
     {
-        pComponent->setDeltaTime(fDeltaTime);
-        pComponent->perform();
+        if (pComponent->getEnabled())
+        {
+            pComponent->setDeltaTime(fDeltaTime);
+            pComponent->perform();
+        }
     }
 
     auto vecAnimator = this->getComponentsRecursively(ComponentType::ANIMATOR);
     for (AComponent* pComponent : vecAnimator)
     {
-        AAnimator* animator = (AAnimator*)pComponent;
-        pComponent->setDeltaTime(fDeltaTime);
-        pComponent->perform();
+        if (pComponent->getEnabled())
+        {
+            AAnimator* animator = (AAnimator*)pComponent;
+            pComponent->setDeltaTime(fDeltaTime);
+            pComponent->perform();
+        }
     }
 }
 
@@ -76,13 +85,16 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
     auto vecRenderer = this->getComponentsRecursively(ComponentType::RENDERER);
     for (AComponent* pComponent : vecRenderer)
     {
-        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
-        if (!pOwner || !pOwner->isGloballyEnabled())
-            continue;
+        if (pComponent->getEnabled())
+        {
+            AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+            if (!pOwner || !pOwner->isGloballyEnabled())
+                continue;
 
-        ARenderer* renderer = (ARenderer*)pComponent;
-        renderer->setSDLRenderer(pRenderer);
-        pComponent->perform();
+            ARenderer* renderer = (ARenderer*)pComponent;
+            renderer->setSDLRenderer(pRenderer);
+            pComponent->perform();
+        }
     }
 
     if (showWidgets)

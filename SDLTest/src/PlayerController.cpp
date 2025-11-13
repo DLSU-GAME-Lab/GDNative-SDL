@@ -53,9 +53,14 @@ void PlayerController::onCollisionEnter(ACollider* pCollider)
 {
 	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
-		std::cout << "collectable detected." << std::endl;
+		if (pCollider->getIsTrigger())
+		{
+			std::cout << "collectable detected." << std::endl;
+		}
+		else
+			std::cout << "huh?" << std::endl;
 	}
-	else if (pCollider)
+	else if (pCollider && !pCollider->getIsTrigger())
 	{
 		std::cout << pCollider->getOwner()->getName() << std::endl;
 	}

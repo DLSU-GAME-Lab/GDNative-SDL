@@ -3,7 +3,7 @@
 
 CollectableGem::CollectableGem() : AInteractable("CollectableGem")
 {
-
+	
 }
 
 void CollectableGem::perform()

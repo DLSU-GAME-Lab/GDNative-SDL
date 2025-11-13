@@ -58,7 +58,8 @@ bool BoxCollider::isColliding(ACollider* pCollider)
 	bool bIntersectX = fLeftA <= fRightB && fRightA >= fLeftB;
 	bool bIntersectY = fBotA <= fTopB && fTopA >= fBotB;
 
-	if (bIntersectX && bIntersectY && !pCollider->getIsTrigger())
+	if (bIntersectX && bIntersectY &&
+		!this->bIsTrigger && !pCollider->getIsTrigger())
 	{
 		float fBot = fTopB - fBotA;
 		float fTop = fTopA - fBotB;
@@ -113,6 +114,7 @@ void BoxCollider::onCollisionExit(ACollider * pCollider)
 	this->bCollideRight = false;
 	this->bCollideBottom = false;
 	this->bCollideTop = false;
+	this->intersection = Vector2D(0.0f);
 }
 
 

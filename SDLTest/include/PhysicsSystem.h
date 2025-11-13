@@ -3,17 +3,20 @@
 #include "AComponent.h"
 #include "EnumComponentType.h"
 #include "ACollider.h"
+#include "RigidBody.h"
 
 class PhysicsSystem: AComponent
 {
 private:
     std::vector<ACollider*> vecTrackedCollider;
     std::vector<ACollider*> vecUntrackedCollider;
+    std::vector<RigidBody*> vecRigidBody;
 public:
     void perform();
     void checkCollision();
     void trackCollider(ACollider* pCollider);
     void untrackCollider(ACollider* pCollider);
+    void addRigidBody(RigidBody* pRigidBody);
     void cleanUp();
 
 private:

@@ -1,5 +1,6 @@
 #include "RigidBody.h"
 #include "AGameObject.h"
+#include "PhysicsSystem.h"
 
 RigidBody::RigidBody() : BoxCollider("RigidBody")
 {
@@ -7,6 +8,8 @@ RigidBody::RigidBody() : BoxCollider("RigidBody")
 	this->fDrag = 0.0f;
 	this->bGravityEnabled = false;
 	this->bGrounded = false;
+
+	PhysicsSystem::getInstance()->addRigidBody(this);
 }
 
 void RigidBody::addForce(Vector2D force, bool instant)

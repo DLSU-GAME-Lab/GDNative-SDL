@@ -13,13 +13,13 @@ void PhysicsSystem::checkCollision()
     ACollider* pColliderA = NULL;
     ACollider* pColliderB = NULL;
 
+    for (auto pRigidBody : this->vecRigidBody)
+    {
+        pRigidBody->physicsUpdate();
+    }
+
     for (int i = 0; i < this->vecTrackedCollider.size(); i++) {
         pColliderA = this->vecTrackedCollider[i];
-
-        if (RigidBody* pRigidBody = dynamic_cast<RigidBody*>(pColliderA))
-        {
-            pRigidBody->physicsUpdate();
-        }
 
         for (int j = i + 1; j < this->vecTrackedCollider.size(); j++) {
             pColliderB = this->vecTrackedCollider[j];
@@ -31,6 +31,7 @@ void PhysicsSystem::checkCollision()
 
                 if (isColliding && !collidedAwithB && !collidedBwithA)
                 {
+                    pColliderB->isColliding(pColliderA);
                     pColliderA->setCollided(pColliderB, true);
                     pColliderB->setCollided(pColliderA, true);
                     pColliderA->onCollisionEnter(pColliderB);
@@ -38,6 +39,7 @@ void PhysicsSystem::checkCollision()
                 }
                 else if (isColliding && collidedAwithB && collidedBwithA)
                 {
+                    pColliderB->isColliding(pColliderA);
                     pColliderA->onCollisionContinue(pColliderB);
                     pColliderB->onCollisionContinue(pColliderA);
                 }
@@ -50,11 +52,11 @@ void PhysicsSystem::checkCollision()
                 }
             }
         }
+    }
 
-        if (RigidBody* pRigidBody = dynamic_cast<RigidBody*>(pColliderA))
-        {
-            pRigidBody->physicsLateUpdate();
-        }
+    for (auto pRigidBody : this->vecRigidBody)
+    {
+        pRigidBody->physicsLateUpdate();
     }
 
     this->cleanUp();
@@ -67,6 +69,11 @@ void PhysicsSystem::trackCollider(ACollider* pCollider) {
 
 void PhysicsSystem::untrackCollider(ACollider* pCollider) {
     this->vecUntrackedCollider.push_back(pCollider);
+}
+
+void PhysicsSystem::addRigidBody(RigidBody* pRigidBody)
+{
+    this->vecRigidBody.push_back(pRigidBody);
 }
 
 void PhysicsSystem::cleanUp()

@@ -21,6 +21,7 @@ public:
     virtual void onCollisionEnter(ACollider* pCollider) override;
     virtual void onCollisionContinue(ACollider* pCollider) override;
     virtual void onCollisionExit(ACollider* pCollider) override;
+    virtual void cleanCollisions() override;
     void physicsUpdate();
     void physicsLateUpdate();
 

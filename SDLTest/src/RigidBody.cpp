@@ -36,6 +36,13 @@ void RigidBody::onCollisionExit(ACollider* pCollider)
 	this->bGrounded = this->bCollideBottom;
 }
 
+void RigidBody::cleanCollisions()
+{
+	BoxCollider::cleanCollisions();
+	this->force = 0.0f;
+	this->velocity = 0.0f;
+}
+
 void RigidBody::physicsUpdate()
 {
 	if (this->bGravityEnabled && !this->bGrounded)

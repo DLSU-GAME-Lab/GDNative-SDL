@@ -27,6 +27,7 @@ int ACollider::findCollider(ACollider* pCollider)
 void ACollider::cleanCollisions()
 {
 	this->vecCollided.clear();
+	this->intersection = 0.0f;
 }
 
 void ACollider::onCollisionEnter(ACollider* pCollider)

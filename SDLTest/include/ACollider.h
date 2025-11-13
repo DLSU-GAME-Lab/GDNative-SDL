@@ -22,7 +22,7 @@ public:
     virtual bool isColliding(ACollider* pCollider) = 0;
 
     int findCollider(ACollider* pCollider);
-    void cleanCollisions();
+    virtual void cleanCollisions();
 
     virtual void onCollisionEnter(ACollider* pCollider);
     virtual void onCollisionContinue(ACollider* pCollider);

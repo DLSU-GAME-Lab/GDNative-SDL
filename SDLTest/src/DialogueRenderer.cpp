@@ -85,16 +85,13 @@ void DialogueRenderer::perform()
 
             if (SDL_GetRectIntersectionFloat(&parentRect, &mDestRect, &croppedSrcRect))
             {
-                float offsetX = croppedSrcRect.x - mDestRect.x;
-                float offsetY = croppedSrcRect.y - mDestRect.y;
-                float offsetW = mDestRect.w - croppedSrcRect.w;
-                float offsetH = mDestRect.h - croppedSrcRect.h;
-
-                srcRect.x = offsetX;
-                srcRect.y = offsetY;
+                srcRect.x = 0;
+                srcRect.y = 0;
                 srcRect.w = croppedSrcRect.w;
                 srcRect.h = croppedSrcRect.h;
 
+                float offsetX = croppedSrcRect.x - mDestRect.x;
+                float offsetY = croppedSrcRect.y - mDestRect.y;
                 mDestRect = croppedSrcRect;
                 mDestRect.w -= offsetX;
                 mDestRect.h -= offsetY;

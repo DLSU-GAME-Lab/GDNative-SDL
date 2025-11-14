@@ -277,46 +277,35 @@ void AGameObject::setParent(AGameObject* pParent)
 void AGameObject::setPos(Vector2D fVecTranslate)
 {
     this->fVecTranslate = fVecTranslate;
-    if (!this->vecChildren.empty())
+    for (AGameObject* child : vecChildren)
     {
-        for(AGameObject* child: vecChildren)
-        {
-            
-            Vector2D fVecNewPos(child->getPos().x + this->getPos().x, child->getPos().y + this->getPos().y);
-            child->setPos(fVecNewPos);
-  
-        }
+        Vector2D newPos = this->fVecTranslate;
+        newPos += child->getPos();
+        child->setPos(newPos);
     }
-
 }
 
 void AGameObject::setLocalPos(Vector2D fVecTranslate)
 {
-    if (this->pParent)
-    {
-        this->fVecTranslate = this->pParent->getPos() + fVecTranslate;
-    }
-    else
-    {
-        this->fVecTranslate = fVecTranslate;
-    }
+    if (this->pParent) this->setPos(this->pParent->getPos() + fVecTranslate);
+    else this->setPos(fVecTranslate);
 }
 
 void AGameObject::setScale(Vector2D fVecScale)
 {
     this->fVecScale = fVecScale;
+    for (AGameObject* child : vecChildren)
+    {
+        Vector2D newScale = this->fVecScale;
+        newScale += child->getScale();
+        child->setScale(newScale);
+    }
 }
 
 void AGameObject::setLocalScale(Vector2D fVecScale)
 {
-    if (this->pParent)
-    {
-        this->fVecScale = this->pParent->getScale() + fVecScale;
-    }
-    else
-    {
-        this->fVecScale = fVecScale;
-    }
+    if (this->pParent) this->setScale(this->pParent->getScale() + fVecScale);
+    else this->setScale(fVecScale);
 }
 
 Vector2D AGameObject::getPos()
@@ -328,6 +317,8 @@ Vector2D AGameObject::getLocalPos()
 {
     if(this->pParent)
         return this->pParent->getPos() - this->fVecTranslate;
+
+    return this->fVecTranslate;
 }
 
 Vector2D AGameObject::getScale()
@@ -339,24 +330,26 @@ Vector2D AGameObject::getLocalScale()
 {
     if (this->pParent)
         return this->pParent->getScale() - this->fVecScale;
+
+    return this->fVecScale;
 }
 
 
 void AGameObject::setRot(float fRot)
 {
     this->fRot = fRot;
+    for (AGameObject* child : vecChildren)
+    {
+        float newRot = this->fRot;
+        newRot += child->getRot();
+        child->setRot(newRot);
+    }
 }
 
 void AGameObject::setLocalRot(float fRot)
 {
-    if (this->pParent)
-    {
-        this->fRot = this->pParent->getRot() + fRot;
-    }
-    else
-    {
-        this->fRot = fRot;
-    }
+    if (this->pParent) this->setRot(this->pParent->getRot() + fRot);
+    else this->setRot(fRot);
 }
 
 float AGameObject::getRot()
@@ -368,6 +361,8 @@ float AGameObject::getLocalRot()
 {
     if (this->pParent)
         return this->pParent->getRot() - this->fRot;
+
+    return this->fRot;
 }
 
 bool AGameObject::getIsScreenObject() const

@@ -14,6 +14,7 @@ void Librarian::initialize()
 {
     //1000, 350
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Librarian");
+    pSpriteRenderer->setCropRect({ 0.25f, 0.2f, 0.5f, 0.8f });
     this->attachComponent((AComponent*)pSpriteRenderer);
 
     auto vecSprite = TextureManager::getInstance()->getTexture("Librarian", 0, 6);

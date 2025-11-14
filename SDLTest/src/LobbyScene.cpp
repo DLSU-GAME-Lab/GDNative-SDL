@@ -51,7 +51,6 @@ void LobbyScene::onLoadObjects()
 	this->createExitMenu();
 
 	DialogueBox* pDialogueBox = new DialogueBox("DialogueBox");
-	pDialogueBox->setIsScreenObject(true);
 	GameObjectManager::getInstance()->addObject(pDialogueBox);
 	pDialogueBox->setEnabled(false);
 
@@ -244,37 +243,30 @@ void LobbyScene::createDiary()
 	EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
 	this->createPageOne(pFirstPageHolder);
 	pFirstPageHolder->setEnabled(false);
-	pFirstPageHolder->setFollowParent(true);
 
 	EmptyObject* pSecondPageHolder = new EmptyObject("Second_Page");
 	this->createPageTwo(pSecondPageHolder);
 	pSecondPageHolder->setEnabled(false);
-	pSecondPageHolder->setFollowParent(false);
 
 	EmptyObject* pThirdPageHolder = new EmptyObject("Third_Page");
 	this->createPageThree(pThirdPageHolder);
 	pThirdPageHolder->setEnabled(false);
-	pThirdPageHolder->setFollowParent(false);
 
 	EmptyObject* pFourthPageHolder = new EmptyObject("Fourth_Page");
 	this->createPageFour(pFourthPageHolder);
 	pFourthPageHolder->setEnabled(false);
-	pFourthPageHolder->setFollowParent(false);
 
 	EmptyObject* pFifthPageHolder = new EmptyObject("Fifth_Page");
 	this->createPageFive(pFifthPageHolder);
 	pFifthPageHolder->setEnabled(false);
-	pFifthPageHolder->setFollowParent(false);
 
 	EmptyObject* pSixthPageHolder = new EmptyObject("Sixth_Page");
 	this->createPageSix(pSixthPageHolder);
 	pSixthPageHolder->setEnabled(false);
-	pSixthPageHolder->setFollowParent(false);
 
 	EmptyObject* pSeventhPageHolder = new EmptyObject("Seventh_Page");
 	this->createPageSeven(pSeventhPageHolder);
 	pSeventhPageHolder->setEnabled(false);
-	pSeventhPageHolder->setFollowParent(false);
 
 	pDiaryProper->addPage(pFirstPageHolder);
 	pDiaryProper->addPage(pSecondPageHolder);

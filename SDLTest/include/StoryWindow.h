@@ -5,6 +5,9 @@
 #include "Background.h"
 #include "Scroller.h"
 #include "Text.h"
+#include "EventBroadcaster.h"
+#include "GUIButton.h"
+#include "GUIToggle.h"
 class StoryWindow: public AGameObject, EventListener
 {
 private:

@@ -51,21 +51,6 @@ void Diary::addPageText(std::string strTitle, std::string strStartText)
 	this->vecStartTexts.push_back(strStartText);
 }
 
-void Diary::otherPagesFollow()
-{
-	for (int i =1; i < this->vecPages.size(); i++)
-	{
-		this->vecPages[i]->setFollowParent(true);
-	}
-}
-
-void Diary::otherPagesStopFollow()
-{
-	for (int i = 1; i < this->vecPages.size(); i++)
-	{
-		this->vecPages[i]->setFollowParent(false);
-	}
-}
 
 void Diary::addPage(EmptyObject* pPage)
 {
@@ -114,6 +99,15 @@ void Diary::regressPage()
 	}
 }
 
+void Diary::resetPages()
+{
+	this->vecPages[dCurrentPage]->setEnabled(true);
+	for (int i = 1; i < this->vecPages.size(); i++)
+	{
+		this->vecPages[i]->setEnabled(false);
+	}
+}
+
 void Diary::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {
 
@@ -127,15 +121,14 @@ void Diary::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 	if (!this->bEnabled)
 	{
 		this->setEnabled(true);
+		this->resetPages();
 		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
 		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
 		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
 	}
 	else if (this->bEnabled && bFromToggle)
 	{
-		this->otherPagesFollow();
 		this->setEnabled(false);
-		this->otherPagesStopFollow();
 		this->dCurrentPage = 0;
 		EventBroadcaster::getInstance()->enableAllListeners();
 

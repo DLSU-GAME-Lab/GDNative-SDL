@@ -4,6 +4,7 @@ PauseScreen::PauseScreen(std::string strName): AGameObject(strName)
 {
 	this->EKey = EventKey::PAUSE_SCREEN;
 	this->bListenerEnabled = true;
+	this->bIsScreenObject = true;
 }
 PauseScreen::~PauseScreen()
 {

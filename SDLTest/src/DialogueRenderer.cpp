@@ -96,10 +96,10 @@ void DialogueRenderer::perform()
                 mDestRect.w -= offsetX;
                 mDestRect.h -= offsetY;
 
-                std::cout << "Self: " << mDestRect.x << ", " << mDestRect.y << ", " << mDestRect.w << ", " << mDestRect.h << std::endl;
+     /*           std::cout << "Self: " << mDestRect.x << ", " << mDestRect.y << ", " << mDestRect.w << ", " << mDestRect.h << std::endl;
                 std::cout << "Parent: " << parentRect.x << ", " << parentRect.y << ", " << parentRect.w << ", " << parentRect.h << std::endl;
                 std::cout << "Source: " << srcRect.x << ", " << srcRect.y << ", " << srcRect.w << ", " << srcRect.h << std::endl;
-                std::cout << "Cropped Source: " << croppedSrcRect.x << ", " << croppedSrcRect.y << ", " << croppedSrcRect.w << ", " << croppedSrcRect.h << std::endl;
+                std::cout << "Cropped Source: " << croppedSrcRect.x << ", " << croppedSrcRect.y << ", " << croppedSrcRect.w << ", " << croppedSrcRect.h << std::endl;*/
 
             }
         }

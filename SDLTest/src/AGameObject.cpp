@@ -232,17 +232,6 @@ bool AGameObject::getEnabled() const
 void AGameObject::setEnabled(bool bEnabled)
 {
     this->bEnabled = bEnabled;
-    if (!this->vecChildren.empty())
-    {
-        for (AGameObject* pObject:vecChildren)
-        {
-            if(pObject->getFollowParent())
-            {
-                pObject->setEnabled(bEnabled);
-            }
-            
-        }
-    }
 }
 
 std::string AGameObject::getName() const

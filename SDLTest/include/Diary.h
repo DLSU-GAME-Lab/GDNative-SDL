@@ -28,11 +28,10 @@ public:
 	int getCurrentPage();
 	void setCurrentPage(int dCurrentPage);
 	void addPageText(std::string strTitle, std::string strStartText);
-	void otherPagesFollow();
-	void otherPagesStopFollow();
 	void addPage(EmptyObject* pPage);
 	void progressPage();
 	void regressPage();
+	void resetPages();
 
 	// Inherited via EventListener
 	void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;

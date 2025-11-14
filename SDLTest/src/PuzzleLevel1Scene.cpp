@@ -128,7 +128,6 @@ void PuzzleLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pHint);
 
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
-	pPauseScreen->setIsScreenObject(true);
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
 	pPauseScreen->setEnabled(false);
 	 

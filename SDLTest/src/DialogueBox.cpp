@@ -8,6 +8,7 @@ DialogueBox::DialogueBox(std::string strName):AGameObject(strName)
     this->EKey = EventKey::DIALOGUE_SCREEN;
     this->nCounter = 0;
     this->vecDialogue = {};
+    this->bIsScreenObject = true;
 }
 
 DialogueBox::~DialogueBox()
@@ -25,10 +26,12 @@ void DialogueBox::initialize()
 
 
     this->pDialogueBox = new Prop("DialogueBox", "Square", Vector2D(0, 0), Vector2D(1, 1), 0, false);
+    this->pDialogueBox->setIsScreenObject(true);
     this->pDialogueBox->setScale(Vector2D(3, .5));
     this->attachChild(this->pDialogueBox);
     this->vecDialogue.push_back("Anything on Your Mind ?");
     this->pDialogueText = new Text("Speaker", "JainiPurva-Regular.ttf", 90, 0, false);
+    this->pDialogueText->setIsScreenObject(true);
     this->pDialogueText->setMessage("PlaceHolder");
     this->pDialogueText->setPos(Vector2D(0,0));
     this->pDialogueText->setScale(Vector2D(1,1));

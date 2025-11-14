@@ -20,16 +20,15 @@ void ExitMenu::initialize()
 	Text* pExitText = new Text("Exit_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pExitText->setIsScreenObject(true);
 	pExitText->setMessage("Go Back to Title \n Screen ?");
+	pExitBG->attachChild(pExitText);
 	pExitText->setPos(Vector2D(950, 450));
 	pExitText->setScale(Vector2D(1, 1));
-	pExitBG->attachChild(pExitText);
-
 
 	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
 	pDecline->setIsScreenObject(true);
-
-	pDecline->setScale(Vector2D(.15, .15));
 	pExitBG->attachChild(pDecline);
+	pDecline->setScale(Vector2D(.15, .15));
+
 
 	GUIToggle* pToggle = new GUIToggle(EventKey::RETURN_SCREEN);
 
@@ -39,16 +38,16 @@ void ExitMenu::initialize()
 	pDeclineText->setIsScreenObject(true);
 
 	pDeclineText->setMessage("No");
-	pDeclineText->setScale(Vector2D(.75, .75));
 	pDecline->attachChild(pDeclineText);
+	pDeclineText->setScale(Vector2D(.75, .75));
 	pDecline->setPos(Vector2D(750, 800));
 
 
 	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
 	pAccept->setIsScreenObject(true);
-
-	pAccept->setScale(Vector2D(.15, .15));
 	pExitBG->attachChild(pAccept);
+	pAccept->setScale(Vector2D(.15, .15));
+
 
 	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
 	pAccept->attachComponent(pTitleSwitch);
@@ -57,8 +56,8 @@ void ExitMenu::initialize()
 	pAcceptText->setIsScreenObject(true);
 
 	pAcceptText->setMessage("Yes");
-	pAcceptText->setScale(Vector2D(.75, .75));
 	pAccept->attachChild(pAcceptText);
+	pAcceptText->setScale(Vector2D(.75, .75));
 	pAccept->setPos(Vector2D(1250, 800));
 
 

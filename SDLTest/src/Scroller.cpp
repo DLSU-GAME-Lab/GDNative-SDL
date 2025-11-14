@@ -4,6 +4,8 @@ Scroller::Scroller(std::string strName, Text* pScrollableText):AComponent(strNam
 {
 	this->pScrollableText = pScrollableText;
 	this->bDragging = false;
+    this->bVert = false;
+    this->bHori = false;
 }
 
 Scroller::~Scroller()
@@ -25,14 +27,24 @@ void Scroller::perform()
         }
         else
         {
-            float fDeltaX = pInput->getMousePos().x - this->fPrevMouseX;
-            float fDeltaY = pInput->getMousePos().y - this->fPrevMouseY;
-            this->fPrevMouseX = pInput->getMousePos().x;
-            this->fPrevMouseY = pInput->getMousePos().y;
+            float fDeltaX = 0;
+            float fDeltaY = 0;
+            if(this->bHori)
+            {
+                fDeltaX = pInput->getMousePos().x - this->fPrevMouseX;
+                this->fPrevMouseX = pInput->getMousePos().x;
+            }
+            if(this->bVert)
+            {
+                fDeltaY = pInput->getMousePos().y - this->fPrevMouseY;
+                this->fPrevMouseY = pInput->getMousePos().y;
+            }
 
-            
+            float fX = this->pScrollableText->getPos().x + fDeltaX;
 
-            this->pScrollableText->setPos(Vector2D(this->pScrollableText->getPos().x + fDeltaX, this->pScrollableText->getPos().y + fDeltaY));
+            float fY = this->pScrollableText->getPos().y + fDeltaY;
+        
+            this->pScrollableText->setPos(Vector2D(fX, fY));
 
         }
     }
@@ -41,4 +53,14 @@ void Scroller::perform()
         bDragging = false;
     }
 
+}
+
+void Scroller::setHori(bool bHori)
+{
+    this->bHori = bHori;
+}
+
+void Scroller::setVert(bool bVert)
+{
+    this->bVert = bVert;
 }

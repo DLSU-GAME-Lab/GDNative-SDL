@@ -31,20 +31,24 @@ void StoryWindow::initialize()
 	pTitle->setMessage("Story");
 	pTitle->setPos(Vector2D(1000, 100));
 	this->attachChild(pTitle);
+	pTitle->setScale(Vector2D(1, 1));
+	pTitle->setPos(Vector2D(1000, 100));
 
 	Text* pLineBreak = new Text("LineBreak", "JainiPurva-Regular.ttf", 90, 0, false);
 	pLineBreak->setIsScreenObject(true);
 	pLineBreak->setMessage("----------------------------------------");
-	pLineBreak->setPos(Vector2D(1000, 150));
 	this->attachChild(pLineBreak);
+	pLineBreak->setPos(Vector2D(1000, 150));
+	pLineBreak->setScale(Vector2D(1, 1));
 
 	std::string strMessage = "The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues.\n The 20 meter pacer test will begin in 30 seconds.Line up at the start.The running speed starts slowly but gets faster\n each minute after you hear this signal bodeboop.A sing lap should be completed every time you hear this sound.ding\n Remember to run in a straight line and run as long as possible.The second time you fail to complete a lap before the sound,\nyour test is over.The test will begin on the word start.On your mark.Get ready! Start.ding?\n";
 
 	Text* pMessage = new Text("Message", "JainiPurva-Regular.ttf", 45, 0, false);
 	pMessage->setIsScreenObject(true);
 	pMessage->setMessage(strMessage + "\n" + strMessage + "\n" + strMessage + "\n"+ strMessage);
-	pMessage->setPos(Vector2D(0, 0));
 	pParentBG->attachChild(pMessage);
+	pMessage->setPos(Vector2D(0, 0));
+	pMessage->setScale(Vector2D(1, 1));
 
 	DialogueRenderer* pRenderer = ((DialogueRenderer*)pMessage->findComponentByName("DialogueRenderer"));
 	pRenderer->setCropEnabled(true);
@@ -53,21 +57,21 @@ void StoryWindow::initialize()
 
 	Scroller* pScroller = new Scroller("StoryScroller", pMessage);
 	pParentBG->attachComponent(pScroller);
+	pScroller->setVert(true);
 
 	GUIButton* pButton = new GUIButton("CloseButton", "Close_Button");
 	GUIToggle* pToggle = new GUIToggle(EventKey::STORY_SCREEN);
 	pButton->setIsScreenObject(true);
-	pButton->setScale(Vector2D(.15, .15));
 	pButton->attachComponent(pToggle);
 	this->attachChild(pButton);
-
+	pButton->setScale(Vector2D(.15, .15));
 
 	Text* pDeclineText = new Text("Decline_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pDeclineText->setIsScreenObject(true);
 	pDeclineText->setMessage("Close");
-	pDeclineText->setScale(Vector2D(.75, .75));
 	pButton->attachChild(pDeclineText);
 	pButton->setPos(Vector2D(1000, 950));
+	pDeclineText->setScale(Vector2D(.75, .75));
 
 
 	

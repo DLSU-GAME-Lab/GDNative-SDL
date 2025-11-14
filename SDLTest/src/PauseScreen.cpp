@@ -22,45 +22,50 @@ void PauseScreen::initialize()
 	Text* pPauseText = new Text("PauseText", "JainiPurva-Regular.ttf", 120, -15);
 	pPauseText->setIsScreenObject(true);
 	pPauseText->setMessage("Paused");
-	pPauseText->setPos(Vector2D(550, 200));
-	pPauseText->setColor(SDL_Color(165, 42, 42, 255));
 	pTransBack->attachChild(pPauseText);
+	pPauseText->setPos(Vector2D(550, 200));
+	pPauseText->setScale(Vector2D(1, 1));
+	pPauseText->setColor(SDL_Color(165, 42, 42, 255));
 
 	TextureManager::getInstance()->load("GUI/button5.png", "BrownButton");
 	GUIButton* pResume = new GUIButton("ResumeButton", "BrownButton", false);
 	pResume->setIsScreenObject(true);
 	GUIToggle* pToggle = new GUIToggle(EventKey::PAUSE_SCREEN);
-	pResume->setRot(-17.5);
-	pResume->setScale(Vector2D(.15, .15));
-	pResume->setPos(Vector2D(500 , 350));
 	pResume->attachComponent(pToggle);
 	pTransBack->attachChild(pResume);
+	pResume->setRot(-17.5);
+	pResume->setScale(Vector2D(.15, .15));
+	pResume->setPos(Vector2D(500, 350));
 
 	Text* pResumeText = new Text("ResumeText", "JainiPurva-Regular.ttf", 45, -15);
 	pResumeText->setIsScreenObject(true);
 	pResumeText->setMessage("Resume");
+	pResume->attachChild(pResumeText);
 	pResumeText->setRot(-17.5);
 	pResumeText->setPos(Vector2D(500, 350));
+	pResumeText->setScale(Vector2D(1, 1));
 	pResumeText->setColor(SDL_Color(255, 255, 255, 255));
-	pResume->attachChild(pResumeText);
+
 
 	GUIButton* pQuit = new GUIButton("QuitButton", "BrownButton", false);
 	pQuit->setIsScreenObject(true);
 	SceneSwitcher* pSceneSwitcher = new SceneSwitcher(SceneTag::LOBBY_SCENE);
+	pQuit->attachComponent(pSceneSwitcher);
+	pTransBack->attachChild(pQuit);
 	pQuit->setRot(-17);
 	pQuit->setScale(Vector2D(.15, .15));
 	pQuit->setPos(Vector2D(500, 550));
-	pQuit->attachComponent(pSceneSwitcher);
-	pTransBack->attachChild(pQuit);
 
 	Text* pQuitText = new Text("QuitText", "JainiPurva-Regular.ttf", 45, -15);
 	pQuitText->setIsScreenObject(true);
 	pQuitText->setMessage("Quit Stage");
+	pQuit->attachChild(pQuitText);
 	pQuitText->setRot(-17);
 	pQuitText->setPos(Vector2D(500, 550));
+	pQuitText->setScale(Vector2D(1, 1));
 	pQuitText->setColor(SDL_Color(255, 255, 255, 255));
 
-	pQuit->attachChild(pQuitText);
+
 	AnimatedSprite* pAnimSprite = new AnimatedSprite("PauseAnim", "Pause", Vector2D(250, 0.0f), Vector2D(0.9f), 0.0f, 12);
 	pAnimSprite->setIsScreenObject(true);
 	this->attachChild(pAnimSprite);

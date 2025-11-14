@@ -10,6 +10,8 @@ class Scroller:public AComponent
 		bool bDragging;
 		float fPrevMouseY;
 		float fPrevMouseX;
+		bool bVert;
+		bool bHori;
 	public:
 		Scroller(std::string strName, Text* pScrollableText);
 		~Scroller();
@@ -17,5 +19,8 @@ class Scroller:public AComponent
 
 		// Inherited via AComponent
 		void perform() override;
+	public:
+		void setHori(bool bHori);
+		void setVert(bool bVert);
 };
 

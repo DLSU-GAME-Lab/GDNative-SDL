@@ -111,6 +111,7 @@ void Title_Scene::createButtons()
     Text* pStartText = new Text("Start_Text", "Maragsa.otf", 90, 0.f, false);
     pStartText->setMessage("Start Game");
     pStartButton->attachChild(pStartText);
+    pStartText->setScale(Vector2D(1,1));
     pStartButton->setPos(Vector2D(-580, -150));
 
 }

@@ -219,26 +219,25 @@ void LobbyScene::createDiary()
 	GameObjectManager::getInstance()->addObject(pDiaryProper);
 
 	GUIButton* pClose = new GUIButton("Close_Button", "Back");
-	pClose->setPos(Vector2D(-750, 400));
-	pClose->setScale(Vector2D(.05f, .05f));
 	GUIToggle* pToggleClose = new GUIToggle(EventKey::DIARY_SCREEN);
 	pClose->attachComponent(pToggleClose);
 	pDiaryProper->attachChild(pClose);
+	pClose->setPos(Vector2D(-750, 400));
+	pClose->setScale(Vector2D(.05f, .05f));
 	//-755, -365
 	GUIButton* pProgress = new GUIButton("Progress", "Page_Change");
-	pProgress->setPos(Vector2D(770, -365));
-	pProgress->setScale(Vector2D(.05f, .05f));
 	PageChangeToggle* pForward = new PageChangeToggle("Diary", true);
 	pProgress->attachComponent(pForward);
 	pDiaryProper->attachChild(pProgress);
+	pProgress->setPos(Vector2D(770, -365));
+	pProgress->setScale(Vector2D(.05f, .05f));
 
 	GUIButton* pRegress = new GUIButton("Regress", "Page_Change", true);
-	pRegress->setPos(Vector2D(-755, -365));
-	pRegress->setScale(Vector2D(.05f, .05f));
 	PageChangeToggle* pBackward = new PageChangeToggle("Diary", false);
 	pRegress->attachComponent(pBackward);
 	pDiaryProper->attachChild(pRegress);
-
+	pRegress->setPos(Vector2D(-755, -365));
+	pRegress->setScale(Vector2D(.05f, .05f));
 
 	EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
 	this->createPageOne(pFirstPageHolder);
@@ -288,73 +287,73 @@ void LobbyScene::createPageOne(AGameObject* pParent)
 
 	Text* pS = new Text("S_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
 	pS->setMessage("S");
-	pS->setPos(Vector2D(-580, 40)); 
-	pS->setScale(Vector2D(1.5, 1.5));
 	pS->setColor(colorRed);
 	pParent->attachChild(pS);
+	pS->setPos(Vector2D(-580, 40));
+	pS->setScale(Vector2D(1.5, 1.5));
 
 	Text* pOmebody = new Text("omebody", "JainiPurva-Regular.ttf", 45, 0, false);
 	pOmebody->setMessage("omebody");
-	pOmebody->setPos(Vector2D(-440, 25));
-	pOmebody->setScale(Vector2D(1.5, 1.5));
 	pOmebody->setColor(colorRed);
 	pParent->attachChild(pOmebody);
+	pOmebody->setPos(Vector2D(-440, 25));
+	pOmebody->setScale(Vector2D(1.5, 1.5));
 
 	Text* pW = new Text("W_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
 	pW->setMessage("W");
-	pW->setPos(Vector2D(-580, -140));
-	pW->setScale(Vector2D(1.5, 1.5));
 	pW->setColor(colorYellow);
 	pParent->attachChild(pW);
+	pW->setPos(Vector2D(-580, -140));
+	pW->setScale(Vector2D(1.5, 1.5));
 
 	Text* pAnted = new Text("anted", "JainiPurva-Regular.ttf", 45, 0, false);
 	pAnted->setMessage("anted");
-	pAnted->setPos(Vector2D(-470, -160));
-	pAnted->setScale(Vector2D(1.5, 1.5));
 	pAnted->setColor(colorYellow);
 	pParent->attachChild(pAnted);
+	pAnted->setPos(Vector2D(-470, -160));
+	pAnted->setScale(Vector2D(1.5, 1.5));
 
 	Text* pB = new Text("B_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
 	pB->setMessage("B");
-	pB->setPos(Vector2D(-580, -300));
-	pB->setScale(Vector2D(1.5, 1.5));
 	pB->setColor(colorCyan);
 	pParent->attachChild(pB);
+	pB->setPos(Vector2D(-580, -300));
+	pB->setScale(Vector2D(1.5, 1.5));
 
 	Text* pUt = new Text("ut", "JainiPurva-Regular.ttf", 45, 0, false);
 	pUt->setMessage("ut");
-	pUt->setPos(Vector2D(-520, -320));
-	pUt->setScale(Vector2D(1.5, 1.5));
 	pUt->setColor(colorCyan);
 	pParent->attachChild(pUt);
+	pUt->setPos(Vector2D(-520, -320));
+	pUt->setScale(Vector2D(1.5, 1.5));
 
 	Text* pS2 = new Text("S2_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
 	pS2->setMessage("S");
-	pS2->setPos(Vector2D(-110, 40));
-	pS2->setScale(Vector2D(1.5, 1.5));
 	pS2->setColor(colorBlue);
 	pParent->attachChild(pS2);
+	pS2->setPos(Vector2D(-110, 40));
+	pS2->setScale(Vector2D(1.5, 1.5));
 
 	Text* pO = new Text("O_Letter", "JainiPurva-Regular.ttf", 45, 0, false);
 	pO->setMessage("o");
-	pO->setPos(Vector2D(-55, 25));
-	pO->setScale(Vector2D(1.5, 1.5));
 	pO->setColor(colorBlue);
 	pParent->attachChild(pO);
+	pO->setPos(Vector2D(-55, 25));
+	pO->setScale(Vector2D(1.5, 1.5));
 
 	Text* pT = new Text("T_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
 	pT->setMessage("T");
-	pT->setPos(Vector2D(-110, -140));
-	pT->setScale(Vector2D(1.5, 1.5));
 	pT->setColor(colorPurple);
 	pParent->attachChild(pT);
+	pT->setPos(Vector2D(-110, -140));
+	pT->setScale(Vector2D(1.5, 1.5));
 
 	Text* pHen = new Text("hen", "JainiPurva-Regular.ttf", 45, 0, false);
 	pHen->setMessage("hen");
-	pHen->setPos(Vector2D(-55, -160));
-	pHen->setScale(Vector2D(1.5, 1.5));
 	pHen->setColor(colorPurple);
 	pParent->attachChild(pHen);
+	pHen->setPos(Vector2D(-55, -160));
+	pHen->setScale(Vector2D(1.5, 1.5));
 }
 
 void LobbyScene::createPageTwo(AGameObject* pParent)

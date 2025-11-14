@@ -232,7 +232,6 @@ bool AGameObject::getEnabled() const
 void AGameObject::setEnabled(bool bEnabled)
 {
     this->bEnabled = bEnabled;
-    std::cout << this->getName() + "Enabled" << std::endl;
 }
 
 std::string AGameObject::getName() const

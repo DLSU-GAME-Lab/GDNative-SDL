@@ -73,6 +73,7 @@ void SpriteAnimator::setNextState()
 
 void SpriteAnimator::onAnimationFinished()
 {
+	mapAnims[strState]->pause();
 	for (auto pListener : this->vecListener)
 	{
 		pListener->onAnimationFinished();

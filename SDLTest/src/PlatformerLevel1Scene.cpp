@@ -15,7 +15,7 @@
 #include "GUIButton.h"
 #include "ObjectiveManager.h"
 #include "Gate.h"
-
+#include "StoryWindow.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -64,6 +64,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/inventory.png", "Items_Button");
 	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("GUI/arrow.png", "Arrow");
+	TextureManager::getInstance()->load("GUI/button6.png", "Close_Button");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -397,8 +398,8 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pStoryButton->setIsScreenObject(true);
 	pStoryButton->setPos(Vector2D(1640.0f, 100.0f));
 	pStoryButton->setScale(Vector2D(0.08f));
-	//GUIToggle* pStoryToggle = new GUIToggle();
-	//pStoryButton->attachComponent(pStoryToggle);
+	GUIToggle* pStoryToggle = new GUIToggle(EventKey::STORY_SCREEN);
+	pStoryButton->attachComponent(pStoryToggle);
 
 	GUIButton* pItemsButton = new GUIButton("Items_Button", "Items_Button");
 	pItemsButton->setIsScreenObject(true);
@@ -462,6 +463,11 @@ void PlatformerLevel1Scene::onLoadObjects()
 	ObjectiveManager* pObjectiveManager = new ObjectiveManager();
 	pObjectiveManagerObj->attachComponent(pObjectiveManager);
 	GameObjectManager::getInstance()->addObject(pObjectiveManagerObj);
+
+	StoryWindow* pStoryWindow = new StoryWindow("Platformer1StoryWindow");
+	pStoryWindow->setPos(Vector2D(0, 0));
+	GameObjectManager::getInstance()->addObject(pStoryWindow);
+	pStoryWindow->setEnabled(false);
 }
 
 void PlatformerLevel1Scene::onUnloadResources()

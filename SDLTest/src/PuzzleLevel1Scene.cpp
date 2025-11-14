@@ -46,6 +46,7 @@ void PuzzleLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/tablet.png", "Tablet");
 
 	TextureManager::getInstance()->loadFromFolder("animations/level_intro", "Intro");
+	TextureManager::getInstance()->loadFromFolder("animations/pause_animation", "Pause");
 
 }
 
@@ -129,7 +130,7 @@ void PuzzleLevel1Scene::onLoadObjects()
 
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
-	pPauseScreen->setEnabled(false);
+	pPauseScreen->setEnabled(true);
 	 
 	ObjectiveIntro* pObjectiveIntro = new ObjectiveIntro("L1_Obj", "Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3");
 	pObjectiveIntro->setIsScreenObject(true);
@@ -158,6 +159,7 @@ void PuzzleLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Close_Button");
 	TextureManager::getInstance()->unload("Tablet");
 	TextureManager::getInstance()->unload("Intro");
+	TextureManager::getInstance()->unload("Pause");
 	FontManager::getInstance()->unloadAllFonts();
 	EventBroadcaster::getInstance()->unregisterAllListeners();
 }

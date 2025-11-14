@@ -10,7 +10,9 @@
 #include "SceneSwitcher.h"
 #include "TextureManager.h"
 #include "CameraManager.h"
-class PauseScreen:public AGameObject, EventListener
+#include "AnimatedSprite.h"
+#include "IAnimatorListener.h"
+class PauseScreen:public AGameObject, EventListener, IAnimatorListener
 {
 private:
 	EventKey EKey;
@@ -28,5 +30,8 @@ public:
 	bool isListenerEnabled() override;
 	void setListenerEnabled(bool bListenerEnabled) override;
 	std::string getListenerOwnerName() override;
+
+	// Inherited via IAnimatorListener
+	void onAnimationFinished() override;
 };
 

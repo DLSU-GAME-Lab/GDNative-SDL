@@ -1,4 +1,5 @@
 #include "PauseScreen.h"
+#include "SpriteAnimator.h"
 
 PauseScreen::PauseScreen(std::string strName): AGameObject(strName)
 {
@@ -23,7 +24,7 @@ void PauseScreen::initialize()
 	pPauseText->setMessage("Paused");
 	pPauseText->setPos(Vector2D(550, 200));
 	pPauseText->setColor(SDL_Color(165, 42, 42, 255));
-	this->attachChild(pPauseText);
+	pTransBack->attachChild(pPauseText);
 
 	TextureManager::getInstance()->load("GUI/button5.png", "BrownButton");
 	GUIButton* pResume = new GUIButton("ResumeButton", "BrownButton", false);
@@ -33,7 +34,7 @@ void PauseScreen::initialize()
 	pResume->setScale(Vector2D(.15, .15));
 	pResume->setPos(Vector2D(500 , 350));
 	pResume->attachComponent(pToggle);
-	this->attachChild(pResume);
+	pTransBack->attachChild(pResume);
 
 	Text* pResumeText = new Text("ResumeText", "JainiPurva-Regular.ttf", 45, -15);
 	pResumeText->setIsScreenObject(true);
@@ -41,7 +42,7 @@ void PauseScreen::initialize()
 	pResumeText->setRot(-17.5);
 	pResumeText->setPos(Vector2D(500, 350));
 	pResumeText->setColor(SDL_Color(255, 255, 255, 255));
-	this->attachChild(pResumeText);
+	pResume->attachChild(pResumeText);
 
 	GUIButton* pQuit = new GUIButton("QuitButton", "BrownButton", false);
 	pQuit->setIsScreenObject(true);
@@ -50,7 +51,7 @@ void PauseScreen::initialize()
 	pQuit->setScale(Vector2D(.15, .15));
 	pQuit->setPos(Vector2D(500, 550));
 	pQuit->attachComponent(pSceneSwitcher);
-	this->attachChild(pQuit);
+	pTransBack->attachChild(pQuit);
 
 	Text* pQuitText = new Text("QuitText", "JainiPurva-Regular.ttf", 45, -15);
 	pQuitText->setIsScreenObject(true);
@@ -59,8 +60,19 @@ void PauseScreen::initialize()
 	pQuitText->setPos(Vector2D(500, 550));
 	pQuitText->setColor(SDL_Color(255, 255, 255, 255));
 
-	this->attachChild(pQuitText);
+	pQuit->attachChild(pQuitText);
+	AnimatedSprite* pAnimSprite = new AnimatedSprite("PauseAnim", "Pause", Vector2D(250, 0.0f), Vector2D(0.9f), 0.0f, 12);
+	pAnimSprite->setIsScreenObject(true);
+	this->attachChild(pAnimSprite);
+	SpriteAnimator* pAnimator = (SpriteAnimator*)pAnimSprite->findComponentByName("SpriteAnimator");
+	SpriteRenderer* pSpriteRenderer = (SpriteRenderer*)pAnimSprite->findComponentByName("SpriteRenderer");
+	pSpriteRenderer->setPivot(Vector2D(0, 0));
+ 	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
+	pAnimator->getCurrentAnimation()->setOnAnimFinished(OnAnimFinished::FUNC);
 
+	pTransBack->setEnabled(false);
+	pAnimSprite->setEnabled(false);
+	pAnimator->addListener(this);
 	EventBroadcaster::getInstance()->registerListener(this);
 
 }
@@ -68,7 +80,10 @@ void PauseScreen::initialize()
 void PauseScreen::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {
 	//Play animation
-	std::cout << "enter" << std::endl;
+	Background* pTransBack = (Background*)this->findChildByName("TransparentBG");
+	AnimatedSprite* pAnimSprite = (AnimatedSprite*)this->findChildByName("PauseAnim");
+	SpriteAnimator* pAnimator = (SpriteAnimator*)pAnimSprite->findComponentByName("SpriteAnimator");
+
 	bool bFromToggle = false;
 	if (mapParameter.find("Sender") != mapParameter.end())
 	{
@@ -76,16 +91,20 @@ void PauseScreen::onEventTrigger(std::unordered_map<std::string, void*> mapParam
 		bFromToggle = (senderType == "ResumeButton");
 
 	}
-	if (!this->bEnabled)
+	if (!pTransBack->getEnabled())
 	{
-		std::cout << "Enter" << std::endl;
-		this->setEnabled(true);
+		pAnimSprite->setEnabled(true);
 		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
+		pAnimator->getCurrentAnimation()->stop();
+		pAnimator->getCurrentAnimation()->play();
+
+	
 	}
-	else if (this->bEnabled && bFromToggle)
+	else if (pTransBack->getEnabled() && bFromToggle)
 	{
 
-		this->setEnabled(false);
+		pTransBack->setEnabled(false);
+		pAnimSprite->setEnabled(false);
 		EventBroadcaster::getInstance()->enableAllListeners();
 
 	}
@@ -110,4 +129,10 @@ void PauseScreen::setListenerEnabled(bool bListenerEnabled)
 std::string PauseScreen::getListenerOwnerName()
 {
 	return this->strName;
+}
+
+void PauseScreen::onAnimationFinished()
+{
+	Background* pTransBack = (Background*)this->findChildByName("TransparentBG");
+	pTransBack->setEnabled(true);
 }

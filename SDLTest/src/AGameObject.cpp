@@ -120,7 +120,7 @@ void AGameObject::attachChild(AGameObject * pChild)
     if (this->bIsScreenObject != pChild->getIsScreenObject())
     {
         pChild->setIsScreenObject(this->bIsScreenObject);
-        std::cout << "[" << this->strName << "] WARNING: Child has inherited screen object bool of parent!" << std::endl;
+        std::cout << "[" << this->strName << "] WARNING: Attached child [" << pChild->getName() << "] has inherited screen object bool of parent!" << std::endl;
     }
     pChild->setParent(this);
     pChild->initialize();

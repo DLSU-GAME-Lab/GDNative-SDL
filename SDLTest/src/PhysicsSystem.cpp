@@ -5,6 +5,13 @@
 
 void PhysicsSystem::perform() 
 {
+    if (this->fDelayTicks > 0.0f)
+    {
+        this->fDelayTicks -= this->fDeltaTime;
+        std::cout << this->fDelayTicks << std::endl;
+        return;
+    }
+
     this->checkCollision();
 }
 

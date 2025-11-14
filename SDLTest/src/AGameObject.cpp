@@ -44,7 +44,7 @@ void AGameObject::processInput(SDL_Event* eEvent)
     for (AComponent* pComponent : vecInput)
     {
         AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
-        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
         
         AGeneralInput* input = (AGeneralInput*)pComponent;
         input->setEvent(eEvent);
@@ -58,7 +58,7 @@ void AGameObject::update(float fDeltaTime)
     for (AComponent* pComponent : vecScript)
     {
         AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
-        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
 
         pComponent->setDeltaTime(fDeltaTime);
         pComponent->perform();
@@ -69,7 +69,7 @@ void AGameObject::update(float fDeltaTime)
     for (AComponent* pComponent : vecAnimator)
     {
         AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
-        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
 
         pComponent->setDeltaTime(fDeltaTime);
         pComponent->perform();
@@ -83,7 +83,7 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
     for (AComponent* pComponent : vecRenderer)
     {
         AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
-        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
 
         ARenderer* renderer = (ARenderer*)pComponent;
         renderer->setSDLRenderer(pRenderer);

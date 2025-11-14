@@ -5,12 +5,14 @@
 #include "ACollider.h"
 #include "RigidBody.h"
 
-class PhysicsSystem: AComponent
+class PhysicsSystem: public AComponent
 {
 private:
     std::vector<ACollider*> vecTrackedCollider;
     std::vector<ACollider*> vecUntrackedCollider;
     std::vector<RigidBody*> vecRigidBody;
+    float fDelayTicks = 1.0f;
+
 public:
     void perform();
     void checkCollision();

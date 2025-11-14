@@ -60,7 +60,6 @@ void RigidBody::physicsUpdate()
 	//}
 
 	//this->force = totalForce;
-
 	this->velocity += this->force * this->fDeltaTime;
 
 	if (this->force.SqrMagnitude() < 0.01f)

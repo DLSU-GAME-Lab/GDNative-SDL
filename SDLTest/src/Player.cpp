@@ -48,6 +48,11 @@ void Player::initialize()
     pRB->setGravityEnabled(true);
     this->attachComponent(pRB);
 
+    Prop* pQMark = new Prop("Q_Mark", "Q_Mark", Vector2D(0.0f, 0.0f), Vector2D(0.2f, 0.2f), -30.0f);
+    this->attachChild(pQMark);
+    pQMark->setLocalPos(Vector2D(100.0f, 200.0f));
+    pQMark->setEnabled(false);
+
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator, pRB);
     pPlayerController->setMoveSpeed(300.0f);
     pPlayerController->setJumpForce(600.f);
@@ -58,10 +63,6 @@ void Player::initialize()
     pCamComtroller->setOffset(Vector2D(0.0f, 200.0f));
     pCamComtroller->setLookAhead(Vector2D(500.0f, 100.0f));
     this->attachComponent(pCamComtroller);
-
-    Prop* pQMark = new Prop("Q_Mark", "Q_Mark", Vector2D(0.0f, 0.0f), Vector2D(0.5f, 0.5f), -45.0f);
-    this->attachChild(pQMark);
-    pQMark->setLocalPos(Vector2D(100.0f, 200.0f));
 }
 
 void Player::onCollisionEnter(ACollider* pCollider)

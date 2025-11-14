@@ -11,6 +11,7 @@ PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite,
 	this->pRigidBody = pRigidBody;
 	this->fMoveSpeed = 100.0f;
 	this->fJumpForce = 100.0f;
+	this->pQMark = NULL;
 
 	this->pRigidBody->setListener(this);
 }
@@ -18,6 +19,11 @@ PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite,
 PlayerController::~PlayerController()
 {
 
+}
+
+void PlayerController::onAttach()
+{
+	this->pQMark = this->pOwner->findChildByName("Q_Mark");
 }
 
 void PlayerController::perform()
@@ -54,6 +60,7 @@ void PlayerController::onCollisionEnter(ACollider* pCollider)
 	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
 		std::cout << "collectable detected." << std::endl;
+		this->pQMark->setEnabled(true);
 	}
 	else if (pCollider)
 	{
@@ -71,7 +78,10 @@ void PlayerController::onCollisionContinue(ACollider * pCollider)
 
 void PlayerController::onCollisionExit(ACollider * pCollider)
 {
-
+	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
+	{
+		pCollectable->onInteract(); this->pQMark->setEnabled(false);
+	}
 }
 
 void PlayerController::setMoveSpeed(float fMoveSpeed)

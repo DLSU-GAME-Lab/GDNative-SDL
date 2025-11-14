@@ -85,22 +85,37 @@ void DialogueRenderer::perform()
 
             if (SDL_GetRectIntersectionFloat(&parentRect, &mDestRect, &croppedSrcRect))
             {
-                srcRect.x = 0;
-                srcRect.y = 0;
-                srcRect.w = croppedSrcRect.w;
-                srcRect.h = croppedSrcRect.h;
-
+                // offset in screen (dest) pixels between the cropped area and the original dest rect
                 float offsetX = croppedSrcRect.x - mDestRect.x;
                 float offsetY = croppedSrcRect.y - mDestRect.y;
-                mDestRect = croppedSrcRect;
-                mDestRect.w -= offsetX;
-                mDestRect.h -= offsetY;
 
-     /*           std::cout << "Self: " << mDestRect.x << ", " << mDestRect.y << ", " << mDestRect.w << ", " << mDestRect.h << std::endl;
+                // Set destination to the cropped rectangle (this is in screen coords)
+                mDestRect = croppedSrcRect;
+
+                // Map dest (screen) pixels back to texture (source) pixels using the owner's scale.
+                // size = texSize * scale earlier, so 1 source-pixel = scale pixels on screen.
+                Vector2D scale = owner->getScale();
+
+                // avoid division by zero
+                float invScaleX = (scale.x != 0.0f) ? (1.0f / scale.x) : 1.0f;
+                float invScaleY = (scale.y != 0.0f) ? (1.0f / scale.y) : 1.0f;
+
+                // compute source rect in texture pixel coordinates
+                srcRect.x = offsetX * invScaleX;                         // how many texture pixels from left
+                srcRect.y = this->fScrollOffset + (offsetY * invScaleY); // add scroll offset (texture pixels)
+                srcRect.w = croppedSrcRect.w * invScaleX;                // width in texture pixels
+                srcRect.h = croppedSrcRect.h * invScaleY;                // height in texture pixels
+
+                // clamp source rect to valid texture bounds just in case
+                if (srcRect.x < 0) srcRect.x = 0;
+                if (srcRect.y < 0) srcRect.y = 0;
+                if (srcRect.x + srcRect.w > texSize.x) srcRect.w = texSize.x - srcRect.x;
+                if (srcRect.y + srcRect.h > texSize.y) srcRect.h = texSize.y - srcRect.y;
+
+                std::cout << "Self: " << mDestRect.x << ", " << mDestRect.y << ", " << mDestRect.w << ", " << mDestRect.h << std::endl;
                 std::cout << "Parent: " << parentRect.x << ", " << parentRect.y << ", " << parentRect.w << ", " << parentRect.h << std::endl;
                 std::cout << "Source: " << srcRect.x << ", " << srcRect.y << ", " << srcRect.w << ", " << srcRect.h << std::endl;
-                std::cout << "Cropped Source: " << croppedSrcRect.x << ", " << croppedSrcRect.y << ", " << croppedSrcRect.w << ", " << croppedSrcRect.h << std::endl;*/
-
+                std::cout << "Cropped Source: " << croppedSrcRect.x << ", " << croppedSrcRect.y << ", " << croppedSrcRect.w << ", " << croppedSrcRect.h << std::endl;
             }
         }
     }
@@ -204,5 +219,5 @@ void DialogueRenderer::setViewHeight(float fViewHeight)
 
 float DialogueRenderer::getViewHeight()
 {
-    return 0.0f;
+    return this->fViewHeight;
 }

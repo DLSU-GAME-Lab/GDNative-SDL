@@ -28,19 +28,18 @@ ObjectiveManager::ObjectiveManager() : AComponent("ObjectiveManager", ComponentT
 
 ObjectiveManager::~ObjectiveManager()
 {
-    // if your EventBroadcaster needs explicit unregistering, do it here.
     // if (EventBroadcaster::getInstance()) EventBroadcaster::getInstance()->unregisterListener(this);
 }
 
 void ObjectiveManager::initialize()
 {
-    // attempt to resolve major objects — may be nullptr if created after this component
+    // attempt to resolve major objects
     pPlayer = GameObjectManager::getInstance()->findObjectByName("Player");
     pArrow = GameObjectManager::getInstance()->findObjectByName("Arrow");
     pObjectivePanel = GameObjectManager::getInstance()->findObjectByName("ObjectivePanel");
     pOptionalPanel = GameObjectManager::getInstance()->findObjectByName("OptionalPanel");
 
-    // only find the Objective button; we will ignore Story/Items (single-button policy)
+    // only find the Objective button
     pObjectiveButton = GameObjectManager::getInstance()->findObjectByName("Objective_Button");
 
     // don't forcibly enable arrow here — it should start hidden and only be enabled when a path starts
@@ -62,8 +61,8 @@ void ObjectiveManager::perform()
     // lazy-find scene objects in case initialization ran before they were created
     if (!pPlayer)           pPlayer = GameObjectManager::getInstance()->findObjectByName("Player");
     if (!pArrow)            pArrow = GameObjectManager::getInstance()->findObjectByName("Arrow");
-    if (!pObjectivePanel)   pObjectivePanel = GameObjectManager::getInstance()->findObjectByName("ObjectivePanel");
-    if (!pOptionalPanel)    pOptionalPanel = GameObjectManager::getInstance()->findObjectByName("OptionalPanel");
+    //if (!pObjectivePanel)   pObjectivePanel = GameObjectManager::getInstance()->findObjectByName("ObjectivePanel");
+    //if (!pOptionalPanel)    pOptionalPanel = GameObjectManager::getInstance()->findObjectByName("OptionalPanel");
     if (!pObjectiveButton)  pObjectiveButton = GameObjectManager::getInstance()->findObjectByName("Objective_Button");
 
     // debug heartbeat
@@ -289,10 +288,6 @@ ButtonInput* ObjectiveManager::findButtonInput(AGameObject* pObj)
     }
     return nullptr;
 }
-
-/* -------------------
-   Event listener API
-   ------------------- */
 
 void ObjectiveManager::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {

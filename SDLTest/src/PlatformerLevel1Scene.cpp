@@ -425,7 +425,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	// create a Background child that actually provides a SpriteRenderer for hit tests
 	Background* pObjBack = new Background("Objective_Button_Back", "Square", Vector2D(1.f));
 	pObjBack->setIsScreenObject(true);
-	pObjBack->setPos(Vector2D(0.0f, 0.0f)); // RELATIVE to GUIButton
+	pObjBack->setPos(Vector2D(34.0f, 345.0f)); // RELATIVE to GUIButton
 	pObjBack->setScale(Vector2D(0.08f));
 	pObjectiveButton->attachChild(pObjBack);
 
@@ -448,35 +448,17 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	// register it so it draws and receives input
 	GameObjectManager::getInstance()->addObject(pObjectiveButton);
-
-	// create small hidden panels so ObjectiveManager finds don't spam errors
-	Prop* pObjectivePanel = new Prop("ObjectivePanel", "Square", Vector2D(0.0f, 0.0f), 1.0f);
-	pObjectivePanel->setIsScreenObject(true);
-	pObjectivePanel->setScale(Vector2D(0.5f));
-	pObjectivePanel->setEnabled(false);
-	GameObjectManager::getInstance()->addObject(pObjectivePanel);
-
-	Prop* pOptionalPanel = new Prop("OptionalPanel", "Square", Vector2D(0.0f, 0.0f), 1.0f);
-	pOptionalPanel->setIsScreenObject(true);
-	pOptionalPanel->setScale(Vector2D(0.4f));
-	pOptionalPanel->setEnabled(false);
-	GameObjectManager::getInstance()->addObject(pOptionalPanel);
-
-
-
-
-
 	
 	// --- ARROW creation ---
 	Prop* pArrow = new Prop("Arrow", "Arrow", Vector2D(1077.777f, 463.686f), 1.0f);
 	pArrow->setScale(Vector2D(.8f));
-	pArrow->setIsScreenObject(false);                  // optional: treat as UI so it doesn't move with camera
+	pArrow->setIsScreenObject(false);                   // optional: treat as UI so it doesn't move with camera
 	pArrow->setEnabled(false);                          // start hidden
 	GameObjectManager::getInstance()->addObject(pArrow);
 
 	// create objectivemanager object
 	Prop* pObjectiveManagerObj = new Prop("ObjectiveManager_Object", "Arrow", Vector2D(0, 0), 1.0f);
-	pObjectiveManagerObj->setEnabled(true); // hide it if you don't want it drawn
+	pObjectiveManagerObj->setEnabled(true);
 	ObjectiveManager* pObjectiveManager = new ObjectiveManager();
 	pObjectiveManagerObj->attachComponent(pObjectiveManager);
 	GameObjectManager::getInstance()->addObject(pObjectiveManagerObj);

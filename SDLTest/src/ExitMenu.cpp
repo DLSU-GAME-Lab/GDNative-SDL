@@ -63,7 +63,6 @@ void ExitMenu::initialize()
 
 
 
-	pExitBG->setEnabled(false);
 	EventBroadcaster::getInstance()->registerListener(this);
 }
 
@@ -79,6 +78,7 @@ void ExitMenu::onEventTrigger(std::unordered_map<std::string, void*> mapParamete
 	if (!this->bEnabled)
 	{
 		this->setEnabled(true);
+		std::cout << "Enable " + this->getName() << std::endl;
 		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
 	}
 	else if (this->bEnabled && bFromToggle)

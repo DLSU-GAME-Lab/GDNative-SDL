@@ -62,9 +62,10 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/pause.png", "Pause_Button");
 	TextureManager::getInstance()->load("GUI/story.png", "Story_Button");
 	TextureManager::getInstance()->load("GUI/inventory.png", "Items_Button");
+	TextureManager::getInstance()->load("GUI/button6.png", "Close_Button");
 	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("GUI/arrow.png", "Arrow");
-	TextureManager::getInstance()->load("GUI/button6.png", "Close_Button");
+	TextureManager::getInstance()->load("GUI/question_mark.png", "Q_Mark");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -504,6 +505,8 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Pause_Button");
 	TextureManager::getInstance()->unload("Story_Button");
 	TextureManager::getInstance()->unload("Items_Button");
+	TextureManager::getInstance()->unload("Close_Button");
 	TextureManager::getInstance()->unload("Square");
 	TextureManager::getInstance()->unload("Arrow");
+	TextureManager::getInstance()->unload("Q_Mark");
 }

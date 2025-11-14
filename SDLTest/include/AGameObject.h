@@ -16,14 +16,10 @@ protected:
 
     // X and Y since 2d
     bool bIsScreenObject;
-    bool bFollowParent;
     Vector2D fVecTranslate;
-    Vector2D fVecLocalTranslate;
     Vector2D fVecScale;
-    Vector2D fVecLocalScale;
     float fRot;
-    float fLocalRot;
-    Vector2D fWindowSize;
+
 public:
     AGameObject(std::string strName);
     virtual ~AGameObject();

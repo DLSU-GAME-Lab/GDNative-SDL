@@ -9,7 +9,6 @@ AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
     bEnabled = true;
-    bFollowParent = true;
     pParent = NULL;
     // defaults:
     this->fRot = 0.0f;
@@ -44,14 +43,13 @@ void AGameObject::processInput(SDL_Event* eEvent)
     auto vecInput = this->getComponentsRecursively(ComponentType::INPUT);
     for (AComponent* pComponent : vecInput)
     {
-        if (pComponent->getEnabled())
-        {
-            AGeneralInput* input = (AGeneralInput*)pComponent;
-            input->setEvent(eEvent);
-            input->perform();
-        }
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
+        
+        AGeneralInput* input = (AGeneralInput*)pComponent;
+        input->setEvent(eEvent);
+        input->perform();
     }
-
 }
 
 void AGameObject::update(float fDeltaTime)
@@ -59,22 +57,22 @@ void AGameObject::update(float fDeltaTime)
     auto vecScript = this->getComponentsRecursively(ComponentType::SCRIPT);
     for (AComponent* pComponent : vecScript)
     {
-        if (pComponent->getEnabled())
-        {
-            pComponent->setDeltaTime(fDeltaTime);
-            pComponent->perform();
-        }
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
+
+        pComponent->setDeltaTime(fDeltaTime);
+        pComponent->perform();
     }
 
+    // Always update animations last
     auto vecAnimator = this->getComponentsRecursively(ComponentType::ANIMATOR);
     for (AComponent* pComponent : vecAnimator)
     {
-        if (pComponent->getEnabled())
-        {
-            AAnimator* animator = (AAnimator*)pComponent;
-            pComponent->setDeltaTime(fDeltaTime);
-            pComponent->perform();
-        }
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
+
+        pComponent->setDeltaTime(fDeltaTime);
+        pComponent->perform();
     }
 }
 
@@ -84,34 +82,22 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
     auto vecRenderer = this->getComponentsRecursively(ComponentType::RENDERER);
     for (AComponent* pComponent : vecRenderer)
     {
-        if (pComponent->getEnabled())
-        {
-            AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
-            if (!pOwner || !pOwner->isGloballyEnabled())
-                continue;
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled()) continue;
 
-            ARenderer* renderer = (ARenderer*)pComponent;
-            renderer->setSDLRenderer(pRenderer);
-            pComponent->perform();
-        }
+        ARenderer* renderer = (ARenderer*)pComponent;
+        renderer->setSDLRenderer(pRenderer);
+        pComponent->perform();
     }
-    for (AGameObject* child : vecChildren)
-    {
-        if (child && child->getEnabled())
-        {
-            child->draw(pRenderer);
 
-        }
-    }
     if (showWidgets)
     {
         for (AComponent* pComponent : vecComponent)
         {
-            pComponent->drawWidget();
+            if (pComponent->getOwner()->getEnabled() && pComponent->getEnabled())
+                pComponent->drawWidget();
         }
     }
-
-
 }
 
 void AGameObject::attachChild(AGameObject * pChild)
@@ -374,16 +360,6 @@ void AGameObject::setIsScreenObject(bool bIsScreenObject)
 {
     if (this->pParent) return;
     this->bIsScreenObject = bIsScreenObject;
-}
-
-bool AGameObject::getFollowParent()
-{
-    return this->bFollowParent;
-}
-
-void AGameObject::setFollowParent(bool bFollowParent)
-{
-    this->bFollowParent = bFollowParent;
 }
 
 bool AGameObject::isGloballyEnabled() const

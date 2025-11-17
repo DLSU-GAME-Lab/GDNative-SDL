@@ -6,4 +6,5 @@ enum class ComponentType : int {
     SCRIPT,
     RENDERER,
     ANIMATOR,
+    PHYSICS
 };

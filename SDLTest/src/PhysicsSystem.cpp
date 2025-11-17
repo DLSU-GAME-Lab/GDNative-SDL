@@ -5,13 +5,11 @@
 
 void PhysicsSystem::perform() 
 {
-    if (this->fDelayTicks > 0.0f)
+    if (this->fDeltaTime > this->F_MAX_DELTA_TIME)
     {
-        this->fDelayTicks -= this->fDeltaTime;
-        std::cout << this->fDelayTicks << std::endl;
+        std::cout << "Physics update skipped." << std::endl;
         return;
     }
-
     this->checkCollision();
 }
 
@@ -22,14 +20,18 @@ void PhysicsSystem::checkCollision()
 
     for (auto pRigidBody : this->vecRigidBody)
     {
+		pRigidBody->setDeltaTime(this->fDeltaTime);
         pRigidBody->physicsUpdate();
     }
 
     for (int i = 0; i < this->vecTrackedCollider.size(); i++) {
         pColliderA = this->vecTrackedCollider[i];
+		pColliderA->setDeltaTime(this->fDeltaTime);
 
         for (int j = i + 1; j < this->vecTrackedCollider.size(); j++) {
             pColliderB = this->vecTrackedCollider[j];
+			pColliderB->setDeltaTime(this->fDeltaTime);
+
             if (pColliderA != pColliderB) {
 
                 bool isColliding = pColliderA->isColliding(pColliderB);

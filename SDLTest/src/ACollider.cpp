@@ -1,7 +1,7 @@
 #include "ACollider.h"
 #include "PhysicsSystem.h"
 
-ACollider::ACollider(std::string strName) : AComponent(strName,ComponentType::SCRIPT)
+ACollider::ACollider(std::string strName) : AComponent(strName,ComponentType::PHYSICS)
 {
 	this->bCleanUp = false;
 	this->bIsTrigger = false;

@@ -13,7 +13,6 @@ private:
     std::vector<AudioClip*> vecAudioClip;
     std::unordered_map<std::string, AudioClip*> mapAudioClip;
     std::vector<SDL_AudioStream*> vecFinishedStream;
-    SDL_Mutex* pMutex;
 
 public:
     void load(std::string strPath, std::string strName);

@@ -11,7 +11,7 @@ private:
     std::vector<ACollider*> vecTrackedCollider;
     std::vector<ACollider*> vecUntrackedCollider;
     std::vector<RigidBody*> vecRigidBody;
-    float fDelayTicks = 2.0f;
+    const float F_MAX_DELTA_TIME = 0.2f;
 
 public:
     void perform();

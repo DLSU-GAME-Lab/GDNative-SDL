@@ -39,8 +39,9 @@ void AudioManager::unload(std::string strName)
 
 void AudioManager::play(std::string strName)
 {
+    // TODO: Destroy Audio stream when done playing
     if (!this->mapAudioClip.contains(strName)) return;
-    SDL_AudioStream* pAudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec, audioStreamCallback, NULL);
+    SDL_AudioStream* pAudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec, NULL, NULL);
     AudioClip* pClip = this->mapAudioClip[strName];
     SDL_PutAudioStreamData(pAudioStream, pClip->buffer, pClip->length);
     SDL_ResumeAudioStreamDevice(pAudioStream);
@@ -48,23 +49,19 @@ void AudioManager::play(std::string strName)
 
 void AudioManager::cleanUp()
 {
-    SDL_LockMutex(this->pMutex);
     for (int i = 0; i < this->vecFinishedStream.size(); i++)
     {
 		SDL_DestroyAudioStream(this->vecFinishedStream[i]);
     }
     this->vecFinishedStream.clear();
-    SDL_UnlockMutex(this->pMutex);
 }
 
 void AudioManager::audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal)
 {
-    //std::cout << "Stream: " << pStream << " Playing: " << nExtra << " Total: " << nTotal << std::endl;
+    std::cout << "Stream: " << pStream << " Playing: " << nExtra << " Total: " << nTotal << std::endl;
     if (nExtra == nTotal)
     {
-        SDL_LockMutex(P_SHARED_INSTANCE->pMutex);
         P_SHARED_INSTANCE->vecFinishedStream.push_back(pStream);
-        SDL_UnlockMutex(P_SHARED_INSTANCE->pMutex);
 		//std::cout << "destroying stream." << std::endl;
     }
 }
@@ -79,8 +76,8 @@ AudioManager::AudioManager()
     this->mSpec.freq = 44100; // Sample rate
     this->mSpec.format = SDL_AUDIO_F32; // Audio format
     this->mSpec.channels = 2; // Stereo
-	this->pMutex = SDL_CreateMutex();
 
+    // TODO: Use SDL_mixer
 	//MIX_Mixer* pMixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec);
  //   if (pMixer == NULL)
  //   {

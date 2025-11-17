@@ -185,6 +185,7 @@
     <ClCompile Include="src\PageChangeToggle.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
     <ClCompile Include="src\Platform.cpp" />
+    <ClCompile Include="src\PlatformerPickupGUI.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
     <ClCompile Include="src\Prop.cpp" />
@@ -297,6 +298,7 @@
     <ClInclude Include="include\PageChangeToggle.h" />
     <ClInclude Include="include\PhysicsSystem.h" />
     <ClInclude Include="include\Platform.h" />
+    <ClInclude Include="include\PlatformerPickupGUI.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />

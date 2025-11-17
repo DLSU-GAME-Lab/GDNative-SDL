@@ -17,6 +17,7 @@
 #include "Gate.h"
 #include "StoryWindow.h"
 #include "AudioManager.h"
+#include "PlatformerPickupGUI.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -33,6 +34,8 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->loadFromFolder("animations/player_run", "player_run");
 	TextureManager::getInstance()->loadFromFolder("animations/player_jump", "player_jump");
 	TextureManager::getInstance()->loadFromFolder("animations/player_falling", "player_fall");
+	TextureManager::getInstance()->loadFromFolder("animations/pause_animation", "Pause");
+	TextureManager::getInstance()->loadFromFolder("animations/player_grab_gem", "Pickup");
 
 	TextureManager::getInstance()->load("platformer/trees.png", "Trees_BG");
 	TextureManager::getInstance()->load("platformer/gate.png", "Gate");
@@ -418,7 +421,6 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
-	pPauseScreen->setEnabled(false);
 
 	// ------ OBJECTIVE MANAGER ------
 	// --- OBJECTIVE BUTTON creation ---
@@ -472,6 +474,10 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pStoryWindow->setPos(Vector2D(0, 0));
 	GameObjectManager::getInstance()->addObject(pStoryWindow);
 	pStoryWindow->setEnabled(false);
+
+	PlatformerPickupGUI* pPickupGUI = new PlatformerPickupGUI("Platformer1PickupGUI");
+	pStoryWindow->setPos(Vector2D(0, 0));
+	GameObjectManager::getInstance()->addObject(pPickupGUI);
 }
 
 void PlatformerLevel1Scene::onUnloadResources()
@@ -480,6 +486,8 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("player_run");
 	TextureManager::getInstance()->unload("player_jump");
 	TextureManager::getInstance()->unload("player_fall");
+	TextureManager::getInstance()->unload("Pause");
+	TextureManager::getInstance()->unload("Pickup");
 
 	TextureManager::getInstance()->unload("Trees_BG");
 	TextureManager::getInstance()->unload("Gate");

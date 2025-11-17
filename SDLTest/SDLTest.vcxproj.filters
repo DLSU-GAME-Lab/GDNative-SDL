@@ -267,9 +267,7 @@
     <ClCompile Include="src\MathUtils.cpp">
       <Filter>Component\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\AInteractable.cpp" />
-    <ClCompile Include="src\StoryWindow.cpp" />
     <ClCompile Include="src\CollectableGem.cpp">
       <Filter>Component\Script\Interactable</Filter>
     </ClCompile>
@@ -346,12 +344,23 @@
     </ClCompile>
     <ClCompile Include="src\Gate.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
-    <ClCompile Include="src\Scroller.cpp" />
     <ClCompile Include="src\AudioClip.cpp">
       <Filter>Singleton\Audio</Filter>
     </ClCompile>
     <ClCompile Include="src\AudioManager.cpp">
       <Filter>Singleton\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StoryWindow.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scroller.cpp">
+      <Filter>Component\Script\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlatformerPickupGUI.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectiveIntro.cpp">
+      <Filter>GameObject\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -598,8 +607,6 @@
     <ClInclude Include="include\EnumOnAnimFinished.h">
       <Filter>Enum</Filter>
     </ClInclude>
-    <ClInclude Include="include\ObjectiveIntro.h" />
-    <ClInclude Include="include\StoryWindow.h" />
     <ClInclude Include="include\AInteractable.h">
       <Filter>Component\Script\Interactable</Filter>
     </ClInclude>
@@ -672,12 +679,23 @@
     <ClInclude Include="include\Gate.h" />
     <ClInclude Include="include\InteractabeGate.h" />
     <ClInclude Include="include\ObjectiveManager.h" />
-    <ClInclude Include="include\Scroller.h" />
     <ClInclude Include="include\AudioClip.h">
       <Filter>Singleton\Audio</Filter>
     </ClInclude>
     <ClInclude Include="include\AudioManager.h">
       <Filter>Singleton\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StoryWindow.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Scroller.h">
+      <Filter>Component\Script\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlatformerPickupGUI.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ObjectiveIntro.h">
+      <Filter>GameObject\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

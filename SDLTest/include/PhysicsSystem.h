@@ -11,7 +11,7 @@ private:
     std::vector<ACollider*> vecTrackedCollider;
     std::vector<ACollider*> vecUntrackedCollider;
     std::vector<RigidBody*> vecRigidBody;
-    float fDelayTicks = 1.0f;
+    float fDelayTicks = 2.0f;
 
 public:
     void perform();

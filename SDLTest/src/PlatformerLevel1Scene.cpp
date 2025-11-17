@@ -72,6 +72,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/question_mark.png", "Q_Mark");
 
 	AudioManager::getInstance()->load("Audio/error.wav", "error");
+	AudioManager::getInstance()->load("Audio/TheFatRat - Unity.wav", "Unity");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -478,6 +479,8 @@ void PlatformerLevel1Scene::onLoadObjects()
 	PlatformerPickupGUI* pPickupGUI = new PlatformerPickupGUI("Platformer1PickupGUI");
 	pStoryWindow->setPos(Vector2D(0, 0));
 	GameObjectManager::getInstance()->addObject(pPickupGUI);
+
+	AudioManager::getInstance()->play("Unity");
 }
 
 void PlatformerLevel1Scene::onUnloadResources()
@@ -522,4 +525,5 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Q_Mark");
 
 	AudioManager::getInstance()->unload("error");
+	AudioManager::getInstance()->unload("Unity");
 }

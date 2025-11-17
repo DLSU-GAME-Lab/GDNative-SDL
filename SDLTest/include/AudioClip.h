@@ -10,7 +10,12 @@ private:
     AudioClip(Uint8* buffer, Uint32 length);
     ~AudioClip();
 
+public:
+    Uint8* getBuffer() const;
+    Uint32 getLength() const;
+
     friend class AudioManager;
+
 };
 
 

@@ -132,6 +132,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AInteractable.cpp" />
+    <ClCompile Include="src\AudioClip.cpp" />
+    <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\Gate.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
@@ -225,6 +227,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AInteractable.h" />
+    <ClInclude Include="include\AudioClip.h" />
+    <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\CollectableGem.h" />
     <ClInclude Include="include\DialogueToggle.h" />
     <ClInclude Include="include\AAnimator.h" />

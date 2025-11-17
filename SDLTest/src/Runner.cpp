@@ -22,6 +22,7 @@
 #include "UIManager.h"
 #include "SceneTransitionManager.h" 
 #include "FontManager.h"
+#include "AudioManager.h"
 
 // metrics
 #include "MetricsManager.h"
@@ -45,7 +46,7 @@
 // increasing sizes of G/R/M at runtime if more content is created.
 Runner::Runner()
 {
-	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) == 0)
+	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_AUDIO) == 0)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
 	}
@@ -96,6 +97,7 @@ Runner::Runner()
 	CameraManager::getInstance()->setWindowSize(this->pWindow);
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
+	AudioManager::initialize();
 	UIManager::initialize(this->pWindow, this->pRenderer);
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
@@ -116,7 +118,7 @@ Runner::~Runner()
 #if EDITOR_MODE
 	Editor::EditorModule::destroy();
 #endif
-
+	AudioManager::destroy();
 	UIManager::destroy();
 	TextureManager::destroy();
 	CameraManager::destroy();

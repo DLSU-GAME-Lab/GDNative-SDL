@@ -76,6 +76,9 @@
     <Filter Include="GameObject\Platformer">
       <UniqueIdentifier>{48c65fc3-753c-4ba4-af97-885c08950dae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Singleton\Audio">
+      <UniqueIdentifier>{01e3ee1b-d397-43b1-a7be-37108110a65a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -340,6 +343,15 @@
     <ClCompile Include="src\StoryWindow.cpp" />
     <ClCompile Include="src\ObjectiveManager.cpp">
       <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gate.cpp" />
+    <ClCompile Include="src\InteractabeGate.cpp" />
+    <ClCompile Include="src\Scroller.cpp" />
+    <ClCompile Include="src\AudioClip.cpp">
+      <Filter>Singleton\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioManager.cpp">
+      <Filter>Singleton\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -656,6 +668,16 @@
     </ClInclude>
     <ClInclude Include="include\PauseScreen.h">
       <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Gate.h" />
+    <ClInclude Include="include\InteractabeGate.h" />
+    <ClInclude Include="include\ObjectiveManager.h" />
+    <ClInclude Include="include\Scroller.h" />
+    <ClInclude Include="include\AudioClip.h">
+      <Filter>Singleton\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AudioManager.h">
+      <Filter>Singleton\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,7 @@
 #include "ObjectiveManager.h"
 #include "Gate.h"
 #include "StoryWindow.h"
+#include "AudioManager.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -66,6 +67,8 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("GUI/arrow.png", "Arrow");
 	TextureManager::getInstance()->load("GUI/question_mark.png", "Q_Mark");
+
+	AudioManager::getInstance()->load("Audio/error.wav", "error");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -509,4 +512,6 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Square");
 	TextureManager::getInstance()->unload("Arrow");
 	TextureManager::getInstance()->unload("Q_Mark");
+
+	AudioManager::getInstance()->unload("error");
 }

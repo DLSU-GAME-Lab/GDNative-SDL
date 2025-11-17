@@ -1,6 +1,7 @@
 #include "PlayerController.h"
 #include "AGameObject.h"
 #include "AInteractable.h"
+#include "AudioManager.h"
 
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
 	: AComponent("PlayerController", ComponentType::SCRIPT)
@@ -44,6 +45,7 @@ void PlayerController::perform()
 		{
 			this->pAnimator->play("jump");
 			this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
+			AudioManager::getInstance()->play("error");
 		}
 
 		if (this->pInput->getMovement() != Vector2D::Zero())

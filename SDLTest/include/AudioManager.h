@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AudioClip.h"
-#include <SDL3_mixer/SDL_mixer.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -11,21 +10,23 @@ class AudioManager
 private:
     struct AudioData
     {
-        std::string strName;
+        std::string strClipName;
         SDL_AudioStream* pStream;
         float fProgress;
-        bool bFinished;
+        bool bCleanUp;
     };
 
     SDL_AudioSpec mSpec;
     std::vector<AudioClip*> vecAudioClip;
     std::unordered_map<std::string, AudioClip*> mapAudioClip;
-    std::vector<AudioData*> vecFinished;
+    std::unordered_map<std::string, AudioData*> mapPlaying;
+    std::vector<AudioData*> vecToDestroy;
 
 public:
     void load(std::string strPath, std::string strName);
     void unload(std::string strName);
-    void play(std::string strName);
+    void play(std::string strName, std::string streamKey = "");
+	void stop(std::string streamKey);
     void cleanUp();
 
 private:

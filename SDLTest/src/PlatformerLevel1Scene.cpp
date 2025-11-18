@@ -480,7 +480,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pStoryWindow->setPos(Vector2D(0, 0));
 	GameObjectManager::getInstance()->addObject(pPickupGUI);
 
-	AudioManager::getInstance()->play("Unity");
+	AudioManager::getInstance()->play("Unity", "BGM");
 }
 
 void PlatformerLevel1Scene::onUnloadResources()
@@ -526,4 +526,10 @@ void PlatformerLevel1Scene::onUnloadResources()
 
 	AudioManager::getInstance()->unload("error");
 	AudioManager::getInstance()->unload("Unity");
+}
+
+void PlatformerLevel1Scene::onUnloadObjects()
+{
+	AudioManager::getInstance()->stop("BGM");
+	AScene::onUnloadObjects();
 }

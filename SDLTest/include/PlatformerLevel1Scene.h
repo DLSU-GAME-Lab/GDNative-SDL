@@ -12,5 +12,6 @@ public:
     virtual void onLoadResources() override;
     virtual void onLoadObjects() override;
     virtual void onUnloadResources() override;
+	virtual void onUnloadObjects() override;
 };
 

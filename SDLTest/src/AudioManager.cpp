@@ -36,7 +36,7 @@ void AudioManager::unload(std::string strName)
     }
 }
 
-void AudioManager::play(std::string strName, std::string streamKey)
+void AudioManager::play(std::string strName, std::string streamKey, float fVolume)
 {
     if (!this->mapAudioClip.contains(strName)) return;
 
@@ -47,26 +47,52 @@ void AudioManager::play(std::string strName, std::string streamKey)
 
     SDL_AudioStream* pAudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec, audioStreamCallback, pAudioData);
 	pAudioData->pStream = pAudioStream;
-	if (!streamKey.empty()) this->mapPlaying[streamKey] = pAudioData;
+
+    if (!streamKey.empty())
+    {
+		pAudioData->strKey = streamKey;
+        this->mapPlaying[streamKey] = pAudioData;
+    }
 
     AudioClip* pClip = this->mapAudioClip[strName];
     SDL_PutAudioStreamData(pAudioStream, pClip->buffer, pClip->length);
+	SDL_SetAudioStreamGain(pAudioStream, fVolume);
     SDL_ResumeAudioStreamDevice(pAudioStream);
 }
 
 void AudioManager::stop(std::string streamKey)
 {
+    if (!this->mapPlaying.contains(streamKey)) return;
 	this->mapPlaying[streamKey]->bCleanUp = true;
+	this->vecToDestroy.push_back(this->mapPlaying[streamKey]);
+	SDL_ClearAudioStream(this->mapPlaying[streamKey]->pStream);
+    std::cout << "[Audio Manager] LOG: Stopping stream \"" << streamKey << "\" playing the clip \"" << this->mapPlaying[streamKey]->strClipName << "\"" << std::endl;
 }
 
 void AudioManager::cleanUp()
 {
     for (int i = this->vecToDestroy.size() - 1; i >= 0; i--)
     {
+        if (this->mapPlaying.contains(this->vecToDestroy[i]->strKey))
+            this->mapPlaying.erase(this->vecToDestroy[i]->strKey);
+
 		SDL_DestroyAudioStream(this->vecToDestroy[i]->pStream);
 		delete this->vecToDestroy[i];
     }
     this->vecToDestroy.clear();
+}
+
+void AudioManager::setVolume(std::string streamKey, float fVolume)
+{
+    if (this->mapPlaying.contains(streamKey))
+        SDL_SetAudioStreamGain(this->mapPlaying[streamKey]->pStream, fVolume);
+}
+
+float AudioManager::getVolume(std::string streamKey)
+{
+    if (this->mapPlaying.contains(streamKey))
+        return SDL_GetAudioStreamGain(this->mapPlaying[streamKey]->pStream);
+    else return -1.0f;
 }
 
 void AudioManager::audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal)
@@ -76,7 +102,7 @@ void AudioManager::audioStreamCallback(void* pData, SDL_AudioStream* pStream, in
     if (pAudioData->fProgress == 1.0f && !pAudioData->bCleanUp)
     {
 		pAudioData->bCleanUp = true;
-        P_SHARED_INSTANCE->vecToDestroy.push_back(pAudioData);
+		P_SHARED_INSTANCE->vecToDestroy.push_back(pAudioData);
 		std::cout << "Stream playing \"" << pAudioData->strClipName << "\" finished." << std::endl;
     }
 }

@@ -11,6 +11,7 @@ private:
     struct AudioData
     {
         std::string strClipName;
+        std::string strKey;
         SDL_AudioStream* pStream;
         float fProgress;
         bool bCleanUp;
@@ -25,9 +26,14 @@ private:
 public:
     void load(std::string strPath, std::string strName);
     void unload(std::string strName);
-    void play(std::string strName, std::string streamKey = "");
+
+    void play(std::string strName, std::string streamKey = "", float fVolume = 1.0f);
 	void stop(std::string streamKey);
+
     void cleanUp();
+
+	void setVolume(std::string streamKey, float fVolume);
+	float getVolume(std::string streamKey);
 
 private:
     static void audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal);

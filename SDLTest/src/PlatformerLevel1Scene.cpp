@@ -17,7 +17,6 @@
 #include "Gate.h"
 #include "StoryWindow.h"
 #include "AudioManager.h"
-#include "PlatformerPickupGUI.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -26,6 +25,33 @@ PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEV
 PlatformerLevel1Scene::~PlatformerLevel1Scene()
 {
 
+}
+
+void PlatformerLevel1Scene::addPickupDialogue(PlatformerPickupGUI* pGUI)
+{
+	std::vector<std::string> vecGemType;
+	std::vector<std::string> vecTitles;
+	std::vector<std::string> vecText;
+	vecGemType.push_back("Gem_Cyan");
+	vecGemType.push_back("Gem_Green");
+	vecGemType.push_back("Gem_Orange");
+	vecGemType.push_back("Gem_Purple");
+	vecGemType.push_back("Gem_Red");
+	vecTitles.push_back("Character");
+	vecTitles.push_back("Initiating Event");
+	vecTitles.push_back("Problem");
+	vecTitles.push_back("Plan");
+	vecTitles.push_back("Consequence");
+	vecText.push_back("The Young Moth is the Main \n Character");
+	vecText.push_back("To Experience the flame's \n beauty");
+	vecText.push_back("it was deadly");
+	vecText.push_back("She ignored her mother's \n warning");
+	vecText.push_back("She died, teaching the \n narrator to respect danger");
+	for (int i = 0; i < vecGemType.size(); i++)
+	{
+		pGUI->addPickupDialogue(vecGemType[i], vecTitles[i]);   // Title as first line
+		pGUI->addPickupDialogue(vecGemType[i], vecText[i]);     // Text as second line
+	}
 }
 
 void PlatformerLevel1Scene::onLoadResources()
@@ -475,9 +501,10 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pStoryWindow->setPos(Vector2D(0, 0));
 	GameObjectManager::getInstance()->addObject(pStoryWindow);
 	pStoryWindow->setEnabled(false);
+	pStoryWindow->setPos(Vector2D(0, 0));
 
 	PlatformerPickupGUI* pPickupGUI = new PlatformerPickupGUI("Platformer1PickupGUI");
-	pStoryWindow->setPos(Vector2D(0, 0));
+	this->addPickupDialogue(pPickupGUI);
 	GameObjectManager::getInstance()->addObject(pPickupGUI);
 
 	AudioManager::getInstance()->play("Unity", "BGM");

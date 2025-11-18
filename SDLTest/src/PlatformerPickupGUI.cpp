@@ -3,11 +3,15 @@
 #include "EventBroadcaster.h" 
 #include "Background.h"
 #include "TextureManager.h"
+#include "GUIToggle.h"
+#include "ButtonInput.h"
+#include "Text.h"
 PlatformerPickupGUI::PlatformerPickupGUI(std::string strName):AGameObject(strName)
 {
 	this->EKey = EventKey::ITEM_PICKUP;
 	this->bIsListenerEnabled = true;
 	this->bIsScreenObject = true;
+	this->mapickupDialogue = {};
 }
 
 PlatformerPickupGUI::~PlatformerPickupGUI()
@@ -20,6 +24,10 @@ void PlatformerPickupGUI::initialize()
 	this->attachChild(pTransBack);
 	SpriteRenderer* pTransBGR = (SpriteRenderer*)pTransBack->findComponentByName("SpriteRenderer");
 	pTransBGR->setColor({ 250, 227, 150, 127 });
+	ButtonInput* pInput = new ButtonInput(pTransBGR);
+	pTransBack->attachComponent(pInput);
+	GUIToggle* pToggle = new GUIToggle(EventKey::ITEM_PICKUP);
+	pTransBack->attachComponent(pToggle);
 
 	AnimatedSprite* pAnimatedCharacter = new AnimatedSprite("PickupAnim", "Pickup",Vector2D(0),Vector2D(1.f),0,12);
 	pAnimatedCharacter->setIsScreenObject(true);
@@ -30,12 +38,22 @@ void PlatformerPickupGUI::initialize()
 	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
 	pAnimator->getCurrentAnimation()->setOnAnimFinished(OnAnimFinished::FUNC);
 
-
-
 	Prop* pGem = new Prop("Gem", "Gem_Red", Vector2D(0), Vector2D(0.5f), 0, false);
 	pGem->setIsScreenObject(true);
 	pTransBack->attachChild(pGem);
 	pGem->setPos(Vector2D(1250, 600));
+
+	Text* pTitle = new Text("Title", "JainiPurva-Regular.ttf",20, 0, false);
+	pTitle->setMessage("Character");
+	pTitle->setIsScreenObject(true);
+	pGem->attachChild(pTitle);
+	pTitle->setPos(Vector2D(1250, 450));
+
+	Text* pText = new Text("Text", "JainiPurva-Regular.ttf", 12, 0, false);
+	pText->setMessage("The Young Moth is the Main \n Character");
+	pText->setIsScreenObject(true);
+	pGem->attachChild(pText);
+	pText->setPos(Vector2D(1250, 550));
 
 	pTransBack->setEnabled(false);
 	pAnimatedCharacter->setEnabled(false);
@@ -57,13 +75,15 @@ void PlatformerPickupGUI::onEventTrigger(std::unordered_map<std::string, void*> 
 		//Play animation
 	Background* pTransBack = (Background*)this->findChildByName("TransparentBG");
 	AnimatedSprite* pAnimSprite = (AnimatedSprite*)this->findChildByName("PickupAnim");
+	Text* pTitle = (Text*)pTransBack->findChildByName("Gem")->findChildByName("Title");
+	Text* pText = (Text*)pTransBack->findChildByName("Gem")->findChildByName("Text");
 	SpriteAnimator* pAnimator = (SpriteAnimator*)pAnimSprite->findComponentByName("SpriteAnimator");
 
 	bool bFromToggle = false;
 	if (mapParameter.find("Sender") != mapParameter.end())
 	{
 		std::string senderType = *static_cast<std::string*>(mapParameter["Sender"]);
-		bFromToggle = (senderType == "ResumeButton");
+		bFromToggle = (senderType == "TransparentBG");
 
 	}
 	if (!pTransBack->getEnabled())
@@ -75,6 +95,8 @@ void PlatformerPickupGUI::onEventTrigger(std::unordered_map<std::string, void*> 
 		if (mapParameter.find("GemName") != mapParameter.end())
 		{
 			std::string strGemName = *static_cast<std::string*>(mapParameter["GemName"]);
+			pTitle->modifyText(this->mapickupDialogue[strGemName][0]);
+			pText->modifyText(this->mapickupDialogue[strGemName][1]);
 			this->changeGem(strGemName);
 		}
 
@@ -110,6 +132,13 @@ std::string PlatformerPickupGUI::getListenerOwnerName()
 {
 	return this->strName;
 }
+
+void PlatformerPickupGUI::addPickupDialogue(std::string strKey, std::string strDialogue)
+{
+	this->mapickupDialogue[strKey].push_back(strDialogue);
+}
+
+
 
 void PlatformerPickupGUI::onAnimationFinished()
 {

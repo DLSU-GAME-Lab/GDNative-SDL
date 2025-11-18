@@ -3,12 +3,14 @@
 #include "IAnimatorListener.h"
 #include "AGameObject.h"
 #include "AnimatedSprite.h"
+
 #include "Prop.h"
 class PlatformerPickupGUI:public AGameObject, EventListener,IAnimatorListener
 {
 private:
 	EventKey EKey;
 	bool bIsListenerEnabled;
+	std::unordered_map <std::string, std::vector<std::string>> mapickupDialogue;
 public: 
 	PlatformerPickupGUI(std::string strName);
 	~PlatformerPickupGUI();
@@ -20,7 +22,7 @@ public:
 	bool isListenerEnabled() override;
 	void setListenerEnabled(bool bListenerEnabled) override;
 	std::string getListenerOwnerName() override;
-
+	void addPickupDialogue(std::string strKey, std::string strDialogue);
 	// Inherited via IAnimatorListener
 	void onAnimationFinished() override;
 };

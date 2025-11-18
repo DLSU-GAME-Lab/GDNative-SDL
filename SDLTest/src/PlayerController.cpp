@@ -82,7 +82,7 @@ void PlayerController::onCollisionExit(ACollider * pCollider)
 {
 	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
-		pCollectable->onInteract(); this->pQMark->setEnabled(false);
+		this->pQMark->setEnabled(false);
 	}
 }
 

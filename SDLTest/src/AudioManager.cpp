@@ -41,7 +41,12 @@ void AudioManager::play(std::string strName)
 {
     // TODO: Destroy Audio stream when done playing
     if (!this->mapAudioClip.contains(strName)) return;
-    SDL_AudioStream* pAudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec, NULL, NULL);
+	AudioData* pAudioData = new AudioData();
+    pAudioData->strName = strName;
+	pAudioData->fProgress = 0.0f;
+	pAudioData->bFinished = false;
+    SDL_AudioStream* pAudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec, audioStreamCallback, pAudioData);
+	pAudioData->pStream = pAudioStream;
     AudioClip* pClip = this->mapAudioClip[strName];
     SDL_PutAudioStreamData(pAudioStream, pClip->buffer, pClip->length);
     SDL_ResumeAudioStreamDevice(pAudioStream);
@@ -49,20 +54,25 @@ void AudioManager::play(std::string strName)
 
 void AudioManager::cleanUp()
 {
-    for (int i = 0; i < this->vecFinishedStream.size(); i++)
+    for (int i = this->vecFinished.size() - 1; i >= 0; i--)
     {
-		SDL_DestroyAudioStream(this->vecFinishedStream[i]);
+		SDL_DestroyAudioStream(this->vecFinished[i]->pStream);
+		delete this->vecFinished[i];
     }
-    this->vecFinishedStream.clear();
+    this->vecFinished.clear();
 }
 
 void AudioManager::audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal)
 {
-    std::cout << "Stream: " << pStream << " Playing: " << nExtra << " Total: " << nTotal << std::endl;
-    if (nExtra == nTotal)
+    //std::cout << "Stream: " << pStream << " Playing: " << nExtra << " Total: " << nTotal << std::endl;
+	AudioData* pAudioData = static_cast<AudioData*>(pData);
+	pAudioData->fProgress = (float)nExtra / (float)nTotal;
+    if (nExtra == nTotal && !pAudioData->bFinished)
     {
-        P_SHARED_INSTANCE->vecFinishedStream.push_back(pStream);
-		//std::cout << "destroying stream." << std::endl;
+		pAudioData->bFinished = true;
+		pAudioData->pStream = pStream;
+        P_SHARED_INSTANCE->vecFinished.push_back(pAudioData);
+		std::cout << "Stream playing \"" << pAudioData->strName << "\" finished." << std::endl;
     }
 }
 
@@ -79,10 +89,9 @@ AudioManager::AudioManager()
 
     // TODO: Use SDL_mixer
 	//MIX_Mixer* pMixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec);
- //   if (pMixer == NULL)
- //   {
- //       std::cerr << "[ERROR] : Failed to create Audio Mixer! "
- //           << "Error: " << SDL_GetError() << std::endl;
+    //if (pMixer == NULL)
+    //{
+    //   std::cerr << "[ERROR] : Failed to create Audio Mixer! " << "Error: " << SDL_GetError() << std::endl;
 	//}
 	//else SDL_free(pMixer);
 }

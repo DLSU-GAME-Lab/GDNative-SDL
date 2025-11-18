@@ -9,10 +9,18 @@
 class AudioManager
 {
 private:
+    struct AudioData
+    {
+        std::string strName;
+        SDL_AudioStream* pStream;
+        float fProgress;
+        bool bFinished;
+    };
+
     SDL_AudioSpec mSpec;
     std::vector<AudioClip*> vecAudioClip;
     std::unordered_map<std::string, AudioClip*> mapAudioClip;
-    std::vector<SDL_AudioStream*> vecFinishedStream;
+    std::vector<AudioData*> vecFinished;
 
 public:
     void load(std::string strPath, std::string strName);

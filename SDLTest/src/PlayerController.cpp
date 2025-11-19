@@ -45,7 +45,7 @@ void PlayerController::perform()
 		{
 			this->pAnimator->play("jump");
 			this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
-			AudioManager::getInstance()->play("error");
+			AudioManager::getInstance()->play("error", AudioGroupTag::SFX);
 		}
 
 		if (this->pInput->getMovement() != Vector2D::Zero())

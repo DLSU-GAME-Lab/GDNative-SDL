@@ -507,7 +507,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	this->addPickupDialogue(pPickupGUI);
 	GameObjectManager::getInstance()->addObject(pPickupGUI);
 
-	AudioManager::getInstance()->play("Unity", "BGM", 0.2f);
+	AudioManager::getInstance()->play("Unity", AudioGroupTag::MUSIC, "BGM");
 }
 
 void PlatformerLevel1Scene::onUnloadResources()
@@ -557,6 +557,6 @@ void PlatformerLevel1Scene::onUnloadResources()
 
 void PlatformerLevel1Scene::onUnloadObjects()
 {
-	AudioManager::getInstance()->stop("BGM");
+	AudioManager::getInstance()->stopAll();
 	AScene::onUnloadObjects();
 }

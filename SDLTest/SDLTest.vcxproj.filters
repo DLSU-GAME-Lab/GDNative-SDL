@@ -697,6 +697,9 @@
     <ClInclude Include="include\ObjectiveIntro.h">
       <Filter>GameObject\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="include\EnumAudioGroupTag.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

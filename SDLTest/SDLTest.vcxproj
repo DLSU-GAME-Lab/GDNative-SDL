@@ -234,6 +234,7 @@
     <ClInclude Include="include\DialogueToggle.h" />
     <ClInclude Include="include\AAnimator.h" />
     <ClInclude Include="include\DialogueBox.h" />
+    <ClInclude Include="include\EnumAudioGroupTag.h" />
     <ClInclude Include="include\EnumOnAnimFinished.h" />
     <ClInclude Include="include\ExitMenu.h" />
     <ClInclude Include="include\ACollider.h" />

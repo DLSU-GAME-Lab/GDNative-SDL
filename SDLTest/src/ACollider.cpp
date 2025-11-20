@@ -88,6 +88,11 @@ void ACollider::setCollided(ACollider* pCollider, bool bCollided)
 	}
 }
 
+std::vector<ACollider*> ACollider::getCollidedWith()
+{
+	return this->vecCollided;
+}
+
 bool ACollider::isCleanUp()
 {
 	return this->bCleanUp;

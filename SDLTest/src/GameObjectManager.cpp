@@ -64,20 +64,10 @@ void GameObjectManager::addObject(AGameObject* pGameObject)
 // linear search or causes shifting.
 void GameObjectManager::deleteObject(AGameObject* pGameObject)
 {
-    std::string strName = pGameObject->getName();
-    int nIndex = -1;
-
-    for(int i = 0; i < this->vecGameObject.size() && nIndex == -1; i++)
-    {
-        if(this->vecGameObject[i] == pGameObject)
-            nIndex = i;
+    if (std::find(this->vecPendingDeletion.begin(), this->vecPendingDeletion.end(), pGameObject) == this->vecPendingDeletion.end()) {
+        this->vecPendingDeletion.push_back(pGameObject);
     }
 
-    if(nIndex != -1) {
-        this->mapGameObject.erase(this->vecGameObject[nIndex]->getName());
-        this->vecGameObject.erase(this->vecGameObject.begin() + nIndex);
-        delete pGameObject;
-    }
 }
 
 // deleteObjectByName: name lookup (map) then delete
@@ -102,6 +92,22 @@ void GameObjectManager::deleteAllObjects()
     // Clear containers, O(1) operations relative to content
     this->vecGameObject.clear();
     this->mapGameObject.clear();
+}
+
+void GameObjectManager::cleanUpDeletedObjects()
+{
+    for (AGameObject* pObject : vecPendingDeletion) {
+        auto it = std::find(vecGameObject.begin(), vecGameObject.end(), pObject);
+        if (it != vecGameObject.end()) {
+            vecGameObject.erase(it);
+        }
+
+        mapGameObject.erase(pObject->getName());
+        delete pObject;
+    }
+
+    vecPendingDeletion.clear();
+
 }
 
 // findObjectByName: map lookup

@@ -34,6 +34,7 @@ public:
     void setIsTrigger(bool bIsTrigger);
     bool hasCollided(ACollider* pCollider);
     void setCollided(ACollider* pCollider, bool bCollided);
+    std::vector<ACollider*> getCollidedWith();
 
     bool isCleanUp();
     void setCleanUp(bool bCleanUp);

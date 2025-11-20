@@ -69,8 +69,8 @@ void PhysicsSystem::checkCollision()
     {
         pRigidBody->physicsLateUpdate();
     }
-
     this->cleanUp();
+
 }
 
 void PhysicsSystem::trackCollider(ACollider* pCollider) {
@@ -90,13 +90,22 @@ void PhysicsSystem::addRigidBody(RigidBody* pRigidBody)
 void PhysicsSystem::cleanUp()
 {
     for (ACollider* pCollider : this->vecTrackedCollider) {
-        if (pCollider->isCleanUp())
-        {
+        if (pCollider->isCleanUp()) {
+            // Notify all colliders of exit
+            for (ACollider* pOther : pCollider->getCollidedWith()) {
+                if (pOther) {
+                    pCollider->onCollisionExit(pOther);
+                    pOther->onCollisionExit(pCollider);
+                    pCollider->setCollided(pOther, false);
+                    pOther->setCollided(pCollider, false);
+                }
+            }
+
             this->vecUntrackedCollider.push_back(pCollider);
-            std::cout << "Collider: " << pCollider->getName() << " is being removed from tracking." << std::endl;
         }
-    
     }
+
+
 
     ACollider* pCollider = NULL;
     int nIndex;
@@ -104,7 +113,6 @@ void PhysicsSystem::cleanUp()
     for (int i = 0; i < this->vecUntrackedCollider.size(); i++) {
         pCollider = this->vecUntrackedCollider[i];
         nIndex = findTrackedCollider(pCollider);
-
         if (nIndex != -1)
             this->vecTrackedCollider.erase(this->vecTrackedCollider.begin() + nIndex);
     }

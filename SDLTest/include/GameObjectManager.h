@@ -9,6 +9,8 @@ class GameObjectManager
 private:
     std::unordered_map<std::string, AGameObject*> mapGameObject;
     std::vector<AGameObject*> vecGameObject;
+    std::vector<AGameObject*> vecPendingDeletion;
+
 
 public:
     void processInput(SDL_Event* eEvent);
@@ -19,6 +21,7 @@ public:
     void deleteObject(AGameObject* pGameObject);
     void deleteObjectByName(std::string strName);
     void deleteAllObjects();
+    void cleanUpDeletedObjects();
 
     AGameObject* findObjectByName(std::string strName);
     void setObjectName(std::string strName, std::string strNewName);

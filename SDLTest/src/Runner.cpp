@@ -262,6 +262,7 @@ void Runner::update(float fDeltaTime)
 	GameObjectManager::getInstance()->update(fDeltaTime);
 	AudioManager::getInstance()->update();
 	SceneTransitionManager::getInstance()->update();
+	GameObjectManager::getInstance()->cleanUpDeletedObjects();
 }
 
 // render: clears, draws, and presents

@@ -20,7 +20,8 @@ void CollectableGem::onInteract()
 	mapParam["GemName"] = static_cast<void*>(&strName);
 	EventBroadcaster::getInstance()->broadcast(EventKey::ITEM_PICKUP, mapParam);
 	AudioManager::getInstance()->play(new AudioPlayer("Pickup", AudioGroupTag::SFX));
-	PhysicsSystem::getInstance()->untrackCollider(this);
 	this->pOwner->setEnabled(false);
-	//GameObjectManager::getInstance()->deleteObject(this->pOwner);
+	this->bCleanUp = true;
+	//PhysicsSystem::getInstance()->cleanUp();
+	GameObjectManager::getInstance()->deleteObject(this->pOwner);
 }

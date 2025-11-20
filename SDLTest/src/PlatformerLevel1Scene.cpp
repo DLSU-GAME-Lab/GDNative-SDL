@@ -112,6 +112,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/arrow.png", "Arrow");
 	TextureManager::getInstance()->load("GUI/question_mark.png", "Q_Mark");
 	TextureManager::getInstance()->load("GUI/back.png", "Return");
+	TextureManager::getInstance()->load("GUI/tablet.png", "Tablet");
 
 	AudioManager::getInstance()->load("Audio/error.wav", "error");
 	AudioManager::getInstance()->load("Audio/TheFatRat - Unity.wav", "Unity");
@@ -583,6 +584,7 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Square");
 	TextureManager::getInstance()->unload("Arrow");
 	TextureManager::getInstance()->unload("Q_Mark");
+	TextureManager::getInstance()->unload("Tablet");
 
 	AudioManager::getInstance()->unload("error");
 	AudioManager::getInstance()->unload("Unity");

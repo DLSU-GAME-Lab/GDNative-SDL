@@ -24,7 +24,6 @@ InventoryGUI::~InventoryGUI()
 
 void InventoryGUI::initialize()
 {
-	this->pPlayer = (Player*)GameObjectManager::getInstance()->findObjectByName("Player");
 	Background* pTransBack = new Background("TransparentBG", "Square", Vector2D(5.f));
 	this->attachChild(pTransBack);
 	SpriteRenderer* pTransBGR = (SpriteRenderer*)pTransBack->findComponentByName("SpriteRenderer");
@@ -40,6 +39,7 @@ void InventoryGUI::initialize()
 	pAnimator->getCurrentAnimation()->setOnAnimFinished(OnAnimFinished::FUNC);
 
 	Prop* pGemInfo = new Prop("InfoGem", "Gem_Colorless_Inventory", Vector2D(0), Vector2D(.9f), 0, false);
+	pGemInfo->setIsScreenObject(true);
 	this->attachChild(pGemInfo);
 	pGemInfo->setPos(Vector2D(1000, 550));
 
@@ -59,7 +59,15 @@ void InventoryGUI::initialize()
 	pText->setScale(Vector2D(1, 1));
 	pText->setRot(-14);
 
+	Prop* pInventoryBG = new Prop("InventoryBG", "Tablet", Vector2D(0), Vector2D(1.f), 0, false);
+	pInventoryBG->setIsScreenObject(true);
+	pTransBack->attachChild(pInventoryBG);
+	pInventoryBG->setScale(Vector2D(.4, 1.25));
+	pInventoryBG->setPos(Vector2D(2000,550));
+
+
 	GUIButton* pReturn = new GUIButton("ReturnButton", "Return", false);
+	pReturn->setIsScreenObject(true);
 	pTransBack->attachChild(pReturn);
 	GUIToggle* pToggle = new GUIToggle(EventKey::INVENTORY_SCREEN);
 	pReturn->attachComponent(pToggle);

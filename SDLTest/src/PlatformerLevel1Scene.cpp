@@ -1,4 +1,5 @@
 #include "PlatformerLevel1Scene.h"
+#include "ObjectiveButton_Controller.h"
 #include "TextureManager.h"
 #include "GameObjectManager.h"
 #include "CameraManager.h"
@@ -112,6 +113,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/arrow.png", "Arrow");
 	TextureManager::getInstance()->load("GUI/question_mark.png", "Q_Mark");
 	TextureManager::getInstance()->load("GUI/back.png", "Return");
+	TextureManager::getInstance()->load("GUI/ArrowVector.png", "Arrow_Vector");
 	TextureManager::getInstance()->load("GUI/tablet.png", "Tablet");
 
 	//AudioManager::getInstance()->load("Audio/error.wav", "error");
@@ -470,41 +472,75 @@ void PlatformerLevel1Scene::onLoadObjects()
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
 
-	// ------ OBJECTIVE MANAGER ------
-	// --- OBJECTIVE BUTTON creation ---
+	// ---------- OBJECTIVE MANAGER ----------
+	// ---------- OBJECTIVE BUTTON creation ----------
 	GUIButton* pObjectiveButton = new GUIButton("Objective_Button", "Square");
 	pObjectiveButton->setIsScreenObject(true);
 	pObjectiveButton->setPos(Vector2D(54.0f, 365.0f));
-	pObjectiveButton->setScale(Vector2D(0.08f));
+	pObjectiveButton->setScale(Vector2D(0.8f, 0.08f)); // width & height
 
-	// create a Background child that actually provides a SpriteRenderer for hit tests
-	Background* pObjBack = new Background("Objective_Button_Back", "Square", Vector2D(1.f));
-	pObjBack->setIsScreenObject(true);
-	pObjBack->setPos(Vector2D(34.0f, 345.0f)); // RELATIVE to GUIButton
-	pObjBack->setScale(Vector2D(0.08f));
-	pObjectiveButton->attachChild(pObjBack);
+	// attach GUIToggle (events) to the GUIButton itself
+	GUIToggle* pObjectiveToggle = new GUIToggle(EventKey::OBJECTIVE_BUTTON);
+	pObjectiveButton->attachComponent(pObjectiveToggle);
 
-	// button settings
-	SpriteRenderer* pObjSR = (SpriteRenderer*)pObjBack->findComponentByName("SpriteRenderer");
+	// register it so it draws and receives input
+	GameObjectManager::getInstance()->addObject(pObjectiveButton);
+
+	// Button appearance settings
+	SpriteRenderer* pObjSR = (SpriteRenderer*)pObjectiveButton->findComponentByName("SpriteRenderer");
 	if (pObjSR) {
 		pObjSR->setColor({ 238, 202, 161, 255 });
-		std::cout << "[Scene] Objective_Button SpriteRenderer found on Background; color set\n";
-		std::cout << "[Scene] DEBUG: pObjSR OK, texture ptr=" << pObjSR->getTexture() << "\n";
+		std::cout << "[Scene] Objective_Button SpriteRenderer found on GUIButton; color set\n";
 	}
 	else {
-		std::cout << "[Scene] WARNING: Objective_Button SpriteRenderer NOT found on Background\n";
+		std::cout << "[Scene] WARNING: Objective_Button SpriteRenderer NOT found on GUIButton\n";
 	}
 
-	// Button input + toggle attached to the background (the hit target)
+	// add ButtonInput so controller can detect clicks
 	ButtonInput* pBtnInput = new ButtonInput(pObjSR);
-	pObjBack->attachComponent(pBtnInput);
-	GUIToggle* pObjectiveToggle = new GUIToggle(EventKey::OBJECTIVE_BUTTON);
-	pObjBack->attachComponent(pObjectiveToggle);
+	pObjectiveButton->attachComponent(pBtnInput);
+
+	// ---------- ArrowVector / Arrow in button child (always visible) ----------
+	Sprite* pArrowChild = new Sprite("ObjectiveArrow", "Arrow_Vector", Vector2D(22.0f, 0.0f), 1.0f);
+	pArrowChild->setIsScreenObject(true);
+	pArrowChild->setScale(Vector2D(0.1f, 0.8f));
+	pArrowChild->setEnabled(true);
+	pObjectiveButton->attachChild(pArrowChild);
+
+	// ---------- Label child for button (text background) ----------
+	Sprite* pLabelBG = new Sprite("ObjectiveLabelBG", "Square", Vector2D(90.0f, 0.0f), 1.0f);
+	pLabelBG->setIsScreenObject(true);
+	pLabelBG->setScale(Vector2D(2.0f, 2.0f));
+	pLabelBG->setPos(Vector2D(250.0f, 0.0f));
+	pObjectiveButton->attachChild(pLabelBG);
+	pLabelBG->setEnabled(false);
+
+	// attach DialogueRenderer to label and load text
+	Text* pObjLabel = new Text("ObjectiveLabelText", "JainiPurva-Regular.ttf", 30, 0.f, false);
+	pObjLabel->setMessage("Objective: Find gems");
+	
+	// Local position relative to the button (tweak x so it sits to the right)
+	pObjLabel->setPos(Vector2D(70.0f, 0.0f)); // move right of the collapsed arrow
+	
+	// keep it screen-space and visible initially
+	pObjLabel->setIsScreenObject(true);
+	pObjLabel->setScale(Vector2D(1.0f, 10.0f));
+	
+	// Attach label as child of the GUI button so it moves with it
+	pObjectiveButton->attachChild(pObjLabel);
+
+	// Hide label initially (will be enabled by controller on expand)
+	pLabelBG->setEnabled(false);
+
+	// ---------- attach ObjectiveButton controller script ----------
+	// controller->initialize() will be called when components are initialized.
+	ObjectiveButton_Controller* ctrl = new ObjectiveButton_Controller();
+	pObjectiveButton->attachComponent(ctrl);
 
 	// register it so it draws and receives input
 	GameObjectManager::getInstance()->addObject(pObjectiveButton);
 	
-	// --- ARROW creation ---
+	// ---------- ARROW creation ----------
 	Sprite* pArrow = new Sprite("Arrow", "Arrow", Vector2D(1077.777f, 463.686f), 1.0f);
 	pArrow->setScale(Vector2D(.8f));
 	pArrow->setIsScreenObject(false);                   // optional: treat as UI so it doesn't move with camera
@@ -517,6 +553,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	ObjectiveManager* pObjectiveManager = new ObjectiveManager();
 	pObjectiveManagerObj->attachComponent(pObjectiveManager);
 	GameObjectManager::getInstance()->addObject(pObjectiveManagerObj);
+	pObjectiveManager->initialize();	// start pathfinding
 
 	StoryWindow* pStoryWindow = new StoryWindow("Platformer1StoryWindow");
 	pStoryWindow->setPos(Vector2D(0, 0));
@@ -579,8 +616,6 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Gem_Red_Inventory");
 	TextureManager::getInstance()->unload("Gem_Colorless_Inventory");
 
-
-
 	TextureManager::getInstance()->unload("Pause_Button");
 	TextureManager::getInstance()->unload("Story_Button");
 	TextureManager::getInstance()->unload("Items_Button");
@@ -588,6 +623,7 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Square");
 	TextureManager::getInstance()->unload("Arrow");
 	TextureManager::getInstance()->unload("Q_Mark");
+	TextureManager::getInstance()->unload("Arrow_Vector");
 	TextureManager::getInstance()->unload("Tablet");
 
 	//AudioManager::getInstance()->unload("error");

@@ -138,6 +138,7 @@
     <ClCompile Include="src\Gate.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
     <ClCompile Include="src\InventoryGUI.cpp" />
+    <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
     <ClCompile Include="src\DialogueToggle.cpp" />
@@ -293,6 +294,7 @@
     <ClInclude Include="include\InventoryGUI.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\MathUtils.h" />
+    <ClInclude Include="include\ObjectiveButton_Controller.h" />
     <ClInclude Include="include\ObjectiveIntro.h" />
     <ClInclude Include="include\ObjectiveManager.h" />
     <ClInclude Include="include\PauseScreen.h" />

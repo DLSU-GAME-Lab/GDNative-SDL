@@ -46,6 +46,9 @@ private:
     bool bListenerEnabled = true;
     EventKey EKey = EventKey::OBJECTIVE_BUTTON; // must exist in EnumEventKey.h
 
+    // only try panel lookups a limited number of times to avoid repeated error logs
+    bool bTriedFindPanels = false;
+
 public:
     ObjectiveManager();
     ~ObjectiveManager();

@@ -375,6 +375,9 @@
     <ClCompile Include="src\InventoryGUI.cpp">
       <Filter>GameObject\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\Inventory.cpp" />
+    <ClCompile Include="src\InventoryGUI.cpp" />
+    <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -719,6 +722,9 @@
     <ClInclude Include="include\Gate.h">
       <Filter>GameObject\Platformer</Filter>
     </ClInclude>
+    <ClInclude Include="include\Inventory.h" />
+    <ClInclude Include="include\InventoryGUI.h" />
+    <ClInclude Include="include\ObjectiveButton_Controller.h" />
     <ClInclude Include="include\IAudioPlayerListener.h">
       <Filter>Interface</Filter>
     </ClInclude>

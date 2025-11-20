@@ -11,6 +11,11 @@ AudioClip::~AudioClip()
 	SDL_free(this->buffer);
 }
 
+std::string AudioClip::getName() const
+{
+	return this->strName;
+}
+
 Uint8* AudioClip::getBuffer() const
 {
 	return this->buffer;

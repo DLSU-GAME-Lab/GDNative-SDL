@@ -36,6 +36,14 @@ void AudioManager::unload(std::string strName)
     }
 }
 
+AudioClip* AudioManager::getAudioClip(std::string strName)
+{
+    if (this->mapAudioClip.contains(strName))
+        return this->mapAudioClip[strName];
+
+	return NULL;
+}
+
 void AudioManager::play(std::string strName, std::string streamKey, float fVolume)
 {
 	play(strName, AudioGroupTag::NONE, streamKey, fVolume);
@@ -45,22 +53,22 @@ void AudioManager::play(std::string strName, AudioGroupTag ETag, std::string str
 {
     if (!this->mapAudioClip.contains(strName)) return;
 
-	AudioData* pAudioData = new AudioData();
-	this->vecPlaying.push_back(pAudioData);
-    this->mapPlaying[streamKey] = pAudioData;
-    pAudioData->strClipName = strName;
-    pAudioData->strKey = streamKey;
-	pAudioData->fProgress = 0.0f;
-	pAudioData->bCleanUp = false;
-	pAudioData->ETag = ETag;
+	AudioData* pPlayer = new AudioData();
+	this->vecPlaying.push_back(pPlayer);
+    this->mapPlaying[streamKey] = pPlayer;
+    pPlayer->strClipName = strName;
+    pPlayer->strKey = streamKey;
+	pPlayer->fProgress = 0.0f;
+	pPlayer->bCleanUp = false;
+	pPlayer->ETag = ETag;
 
-    SDL_AudioStream* pAudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec, audioStreamCallback, pAudioData);
-	pAudioData->pStream = pAudioStream;
+    SDL_AudioStream* pAudioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &this->mSpec, audioStreamCallback, pPlayer);
+	pPlayer->pStream = pAudioStream;
 
     AudioClip* pClip = this->mapAudioClip[strName];
     SDL_PutAudioStreamData(pAudioStream, pClip->buffer, pClip->length);
 
-    if (pAudioData->ETag != AudioGroupTag::NONE)
+    if (pPlayer->ETag != AudioGroupTag::NONE)
 	    SDL_SetAudioStreamGain(pAudioStream, fVolume);
     else SDL_SetAudioStreamGain(pAudioStream, this->mapGroupVolumes[ETag]);
     SDL_ResumeAudioStreamDevice(pAudioStream);
@@ -78,11 +86,11 @@ void AudioManager::stop(std::string streamKey)
 void AudioManager::stopAll()
 {
     std::cout << "[Audio Manager] LOG: Stopping all audio streams" << std::endl;
-    for (auto pAudioData : this->vecPlaying)
+    for (auto pPlayer : this->vecPlaying)
     {
-        pAudioData->bCleanUp = true;
-        this->vecToDestroy.push_back(pAudioData);
-        SDL_ClearAudioStream(pAudioData->pStream);
+        pPlayer->bCleanUp = true;
+        this->vecToDestroy.push_back(pPlayer);
+        SDL_ClearAudioStream(pPlayer->pStream);
 	}
     this->vecPlaying.clear();
     this->mapPlaying.clear();
@@ -125,11 +133,11 @@ void AudioManager::setVolume(std::string streamKey, float fVolume)
 void AudioManager::setVolume(AudioGroupTag ETag, float fVolume)
 {
 	this->mapGroupVolumes[ETag] = fVolume;
-    for (auto pAudioData : this->vecPlaying)
+    for (auto pPlayer : this->vecPlaying)
     {
-        if (pAudioData->ETag == ETag)
+        if (pPlayer->ETag == ETag)
         {
-            SDL_SetAudioStreamGain(pAudioData->pStream, fVolume);
+            SDL_SetAudioStreamGain(pPlayer->pStream, fVolume);
         }
 	}
 }
@@ -148,13 +156,13 @@ float AudioManager::getVolume(AudioGroupTag ETag)
 
 void AudioManager::audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal)
 {
-	AudioData* pAudioData = static_cast<AudioData*>(pData);
-	pAudioData->fProgress = (float)nExtra / (float)nTotal;
-    if (pAudioData->fProgress == 1.0f && !pAudioData->bCleanUp)
+	AudioData* pPlayer = static_cast<AudioData*>(pData);
+	pPlayer->fProgress = (float)nExtra / (float)nTotal;
+    if (pPlayer->fProgress == 1.0f && !pPlayer->bCleanUp)
     {
-		pAudioData->bCleanUp = true;
-		P_SHARED_INSTANCE->vecToDestroy.push_back(pAudioData);
-		std::cout << "Stream playing \"" << pAudioData->strClipName << "\" finished." << std::endl;
+		pPlayer->bCleanUp = true;
+		P_SHARED_INSTANCE->vecToDestroy.push_back(pPlayer);
+		std::cout << "Stream playing \"" << pPlayer->strClipName << "\" finished." << std::endl;
     }
 }
 

@@ -10,6 +10,7 @@
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "Prop.h"
+#include "AudioManager.h"
 
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
@@ -21,6 +22,7 @@ void Title_Scene::onLoadResources()
     this->loadText();
     this->loadAnimatedTextures();
     this->loadSceneTextures();
+	AudioManager::getInstance()->load("sounds/Music/TitleScreen_Song.wav", "TitleScreen_Music");
 }
 
 void Title_Scene::onLoadObjects()
@@ -29,6 +31,8 @@ void Title_Scene::onLoadObjects()
     // create and register game objects for the title scene
     this->createScene();
     this->createButtons();
+
+	AudioManager::getInstance()->play("TitleScreen_Music", AudioGroupTag::MUSIC, "TitleScreen_Music_Stream");
 
     //// create a button that switches to the Lobby scene when clicked
     //UIButton* pStartButton = new UIButton(
@@ -61,6 +65,7 @@ void Title_Scene::onUnloadResources()
 void Title_Scene::onUnloadObjects()
 {
     // base implementation to remove all objects
+	AudioManager::getInstance()->stopAll();
     AScene::onUnloadObjects();
 }
 

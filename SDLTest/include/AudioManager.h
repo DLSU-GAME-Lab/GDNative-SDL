@@ -1,7 +1,6 @@
 #pragma once
 
-#include "AudioClip.h"
-#include "EnumAudioGroupTag.h"
+#include "AudioPlayer.h"
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -14,6 +13,7 @@ private:
         std::string strClipName;
         std::string strKey;
         AudioGroupTag ETag;
+		OnAudioFinished EOnFinished;
         SDL_AudioStream* pStream;
         float fProgress;
         bool bCleanUp;
@@ -29,11 +29,10 @@ private:
 
     std::vector<AudioData*> vecToDestroy;
 
-    void stopByData(AudioData* pData);
-
 public:
     void load(std::string strPath, std::string strName);
     void unload(std::string strName);
+	AudioClip* getAudioClip(std::string strName);
 
     void play(std::string strName, std::string streamKey, float fVolume);
     void play(std::string strName, AudioGroupTag ETag = AudioGroupTag::NONE, std::string streamKey = "", float fVolume = 1.0f);
@@ -48,6 +47,7 @@ public:
 	float getVolume(AudioGroupTag ETag);
 
 private:
+    void stopByData(AudioData* pPlayer);
     static void audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal);
 
     /* * * * * * * * * * * * * * * * * * * * *

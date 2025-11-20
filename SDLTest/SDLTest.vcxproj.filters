@@ -40,23 +40,14 @@
     <Filter Include="Component\Renderer">
       <UniqueIdentifier>{ad36d0c4-2e17-4527-b0ba-25960e59320d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\Utils">
-      <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Component\Physics">
       <UniqueIdentifier>{e1dc5107-1463-4b4d-ab54-ea021daf0c19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\Physics\Interface">
-      <UniqueIdentifier>{27c3607a-38f9-4739-aada-b394ac1d5f90}</UniqueIdentifier>
     </Filter>
     <Filter Include="Component\Animation">
       <UniqueIdentifier>{c3b38311-c13a-445a-b092-6599d035b112}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tweeny">
       <UniqueIdentifier>{f6131c00-4aa1-406e-ae2f-4c621cd3fde7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\Animation\Interface">
-      <UniqueIdentifier>{e194bc77-0d97-49ee-af6f-b68e0c01108f}</UniqueIdentifier>
     </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{07981001-7933-49b9-9172-4b13320e3787}</UniqueIdentifier>
@@ -78,6 +69,12 @@
     </Filter>
     <Filter Include="Singleton\Audio">
       <UniqueIdentifier>{01e3ee1b-d397-43b1-a7be-37108110a65a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{a2b56863-289b-4ab1-a2d6-27d71bef86b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +193,7 @@
       <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="src\StringUtils.cpp">
-      <Filter>Component\Utils</Filter>
+      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\SpriteAnimator.cpp">
       <Filter>Component\Animation</Filter>
@@ -265,9 +262,8 @@
       <Filter>Component\Animation</Filter>
     </ClCompile>
     <ClCompile Include="src\MathUtils.cpp">
-      <Filter>Component\Utils</Filter>
+      <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\AInteractable.cpp" />
     <ClCompile Include="src\CollectableGem.cpp">
       <Filter>Component\Script\Interactable</Filter>
     </ClCompile>
@@ -296,7 +292,7 @@
       <Filter>Component\Script\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\GUIUtils.cpp">
-      <Filter>Component\Utils</Filter>
+      <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="src\AButton.cpp">
       <Filter>GameObject\GUI</Filter>
@@ -342,8 +338,6 @@
     <ClCompile Include="src\ObjectiveManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
-    <ClCompile Include="src\Gate.cpp" />
-    <ClCompile Include="src\InteractabeGate.cpp" />
     <ClCompile Include="src\AudioClip.cpp">
       <Filter>Singleton\Audio</Filter>
     </ClCompile>
@@ -361,6 +355,18 @@
     </ClCompile>
     <ClCompile Include="src\ObjectiveIntro.cpp">
       <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioPlayer.cpp">
+      <Filter>Singleton\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AInteractable.cpp">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InteractabeGate.cpp">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gate.cpp">
+      <Filter>GameObject\Platformer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -497,7 +503,7 @@
       <Filter>Enum</Filter>
     </ClInclude>
     <ClInclude Include="include\StringUtils.h">
-      <Filter>Component\Utils</Filter>
+      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\SpriteAnimator.h">
       <Filter>Component\Animation</Filter>
@@ -547,9 +553,6 @@
     <ClInclude Include="include\ARenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\IAnimatorListener.h">
-      <Filter>Component\Animation\Interface</Filter>
-    </ClInclude>
     <ClInclude Include="include\AUIScreen.h">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -580,9 +583,6 @@
     <ClInclude Include="include\ACollider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="include\ICollisionListener.h">
-      <Filter>Component\Physics\Interface</Filter>
-    </ClInclude>
     <ClInclude Include="include\BoxCollider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
@@ -602,7 +602,7 @@
       <Filter>Component\Animation</Filter>
     </ClInclude>
     <ClInclude Include="include\MathUtils.h">
-      <Filter>Component\Utils</Filter>
+      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\EnumOnAnimFinished.h">
       <Filter>Enum</Filter>
@@ -638,7 +638,7 @@
       <Filter>Component\Script\GUI</Filter>
     </ClInclude>
     <ClInclude Include="include\GUIUtils.h">
-      <Filter>Component\Utils</Filter>
+      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\AButton.h">
       <Filter>GameObject\GUI</Filter>
@@ -676,8 +676,6 @@
     <ClInclude Include="include\PauseScreen.h">
       <Filter>GameObject\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\Gate.h" />
-    <ClInclude Include="include\InteractabeGate.h" />
     <ClInclude Include="include\ObjectiveManager.h" />
     <ClInclude Include="include\AudioClip.h">
       <Filter>Singleton\Audio</Filter>
@@ -699,6 +697,24 @@
     </ClInclude>
     <ClInclude Include="include\EnumAudioGroupTag.h">
       <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EnumOnAudioFinished.h">
+      <Filter>Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IAnimatorListener.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ICollisionListener.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AudioPlayer.h">
+      <Filter>Singleton\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InteractabeGate.h">
+      <Filter>Component\Script\Interactable</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Gate.h">
+      <Filter>GameObject\Platformer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

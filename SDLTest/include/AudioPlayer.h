@@ -3,7 +3,9 @@
 #include "AudioClip.h"
 #include "EnumAudioGroupTag.h"
 #include "EnumOnAudioFinished.h"
+#include "IAudioPlayerListener.h"
 #include <string>
+#include <vector>
 
 class AudioPlayer
 {
@@ -18,14 +20,18 @@ private:
     bool bFinished;
     bool bCleanUp;
 
+	std::vector<IAudioPlayerListener*> vecListener;
+
 public:
     AudioPlayer(std::string strClipName, AudioGroupTag ETag);
     AudioPlayer(std::string strClipName, float fVolume);
     AudioPlayer(std::string strClipName, std::string strKey, AudioGroupTag ETag, OnAudioFinished EOnFinished = OnAudioFinished::STOP, float fVolume = 1.0f);
 
+    void addListener(IAudioPlayerListener* pListener);
+    void removeListener(IAudioPlayerListener* pListener);
+
 private:
 	void onFinished();
-    static void audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal);
 
 	friend class AudioManager;
 };

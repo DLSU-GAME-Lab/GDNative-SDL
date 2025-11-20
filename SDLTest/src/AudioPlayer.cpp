@@ -21,51 +21,23 @@ AudioPlayer::AudioPlayer(std::string strClipName, std::string strKey, AudioGroup
 	this->fProgress = 0.0f;
 	this->bFinished = false;
 	this->bCleanUp = false;
+	this->pStream = NULL;
+}
 
-	SDL_AudioSpec spec = {};
-	spec.freq = 44100;
-	spec.format = SDL_AUDIO_F32;
-	spec.channels = 2;
-	this->pStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec, audioStreamCallback, this);
-	SDL_PutAudioStreamData(this->pStream, this->pClip->getBuffer(), this->pClip->getLength());
+void AudioPlayer::addListener(IAudioPlayerListener* pListener)
+{
+	this->vecListener.push_back(pListener);
+}
 
-	if (this->ETag != AudioGroupTag::NONE)
-		SDL_SetAudioStreamGain(this->pStream, fVolume);
-	else SDL_SetAudioStreamGain(this->pStream, AudioManager::getInstance()->getVolume(this->ETag));
-	SDL_ResumeAudioStreamDevice(this->pStream);
+void AudioPlayer::removeListener(IAudioPlayerListener* pListener)
+{
+	this->vecListener.erase(std::remove(this->vecListener.begin(), this->vecListener.end(), pListener), this->vecListener.end());
 }
 
 void AudioPlayer::onFinished()
 {
-	this->bCleanUp = true;
-	// TODO: Add custom functionality here
-}
-
-void AudioPlayer::audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal)
-{
-	AudioPlayer* pPlayer = static_cast<AudioPlayer*>(pData);
-	pPlayer->fProgress = (float)nExtra / (float)nTotal;
-	if (pPlayer->fProgress == 1.0f && !pPlayer->bFinished)
+	for (auto listener : this->vecListener)
 	{
-		pPlayer->bFinished = true;
-		switch (pPlayer->EOnFinished)
-		{
-		case OnAudioFinished::STOP:
-			pPlayer->bCleanUp = true;
-			break;
-		case OnAudioFinished::PAUSE:
-			SDL_PauseAudioStreamDevice(pPlayer->pStream);
-			break;
-		case OnAudioFinished::LOOP:
-			pPlayer->bFinished = false;
-			SDL_PutAudioStreamData(pPlayer->pStream, pPlayer->pClip->getBuffer(), pPlayer->pClip->getLength());
-			break;
-		case OnAudioFinished::FUNC:
-			pPlayer->onFinished();
-			break;
-		default:
-			break;
-		}
-		std::cout << "Audio Player playing \"" << pPlayer->pClip->getName() << "\" has finished." << std::endl;
+		listener->onAudioFinished();
 	}
 }

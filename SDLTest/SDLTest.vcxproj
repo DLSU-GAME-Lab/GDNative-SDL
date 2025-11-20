@@ -255,6 +255,7 @@
     <ClInclude Include="include\CameraController.h" />
     <ClInclude Include="include\Gate.h" />
     <ClInclude Include="include\Gem.h" />
+    <ClInclude Include="include\IAudioPlayerListener.h" />
     <ClInclude Include="include\ICollisionListener.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />

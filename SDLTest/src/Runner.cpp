@@ -260,6 +260,7 @@ void Runner::processEvents(SDL_Event* eEvent)
 void Runner::update(float fDeltaTime)
 {
 	GameObjectManager::getInstance()->update(fDeltaTime);
+	AudioManager::getInstance()->update();
 	SceneTransitionManager::getInstance()->update();
 }
 

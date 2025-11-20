@@ -716,6 +716,9 @@
     <ClInclude Include="include\Gate.h">
       <Filter>GameObject\Platformer</Filter>
     </ClInclude>
+    <ClInclude Include="include\IAudioPlayerListener.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

@@ -8,47 +8,38 @@
 class AudioManager
 {
 private:
-    struct AudioData
-    {
-        std::string strClipName;
-        std::string strKey;
-        AudioGroupTag ETag;
-		OnAudioFinished EOnFinished;
-        SDL_AudioStream* pStream;
-        float fProgress;
-        bool bCleanUp;
-    };
-
     SDL_AudioSpec mSpec;
     std::vector<AudioClip*> vecAudioClip;
     std::unordered_map<std::string, AudioClip*> mapAudioClip;
 
-    std::vector<AudioData*> vecPlaying;
-    std::unordered_map<std::string, AudioData*> mapPlaying;
+    std::vector<AudioPlayer*> vecPlaying;
+    std::unordered_map<std::string, AudioPlayer*> mapPlaying;
     std::unordered_map<AudioGroupTag, float> mapGroupVolumes;
 
-    std::vector<AudioData*> vecToDestroy;
+    std::vector<AudioPlayer*> vecToDestroy;
 
 public:
     void load(std::string strPath, std::string strName);
     void unload(std::string strName);
 	AudioClip* getAudioClip(std::string strName);
 
-    void play(std::string strName, std::string streamKey, float fVolume);
-    void play(std::string strName, AudioGroupTag ETag = AudioGroupTag::NONE, std::string streamKey = "", float fVolume = 1.0f);
-	void stop(std::string streamKey);
+	void play(AudioPlayer* pPlayer);
+	void stop(std::string strKey);
 	void stopAll();
 
+	void update();
     void cleanUp();
 
-	void setVolume(std::string streamKey, float fVolume);
+	void setVolume(std::string strKey, float fVolume);
 	void setVolume(AudioGroupTag ETag, float fVolume);
-	float getVolume(std::string streamKey);
+	float getVolume(std::string strKey);
 	float getVolume(AudioGroupTag ETag);
 
 private:
-    void stopByData(AudioData* pPlayer);
+    void stopByData(AudioPlayer* pPlayer);
     static void audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal);
+
+	friend class AudioPlayer;
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

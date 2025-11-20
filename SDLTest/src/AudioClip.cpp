@@ -1,7 +1,8 @@
 #include "AudioClip.h"
 
-AudioClip::AudioClip(Uint8* buffer, Uint32 length)
+AudioClip::AudioClip(std::string strName, Uint8* buffer, Uint32 length)
 {
+	this->strName = strName;
 	this->buffer = buffer;
 	this->length = length;
 }

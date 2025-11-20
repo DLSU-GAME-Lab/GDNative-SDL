@@ -32,7 +32,8 @@ void Title_Scene::onLoadObjects()
     this->createScene();
     this->createButtons();
 
-	AudioManager::getInstance()->play("TitleScreen_Music", AudioGroupTag::MUSIC, "TitleScreen_Music_Stream");
+	AudioPlayer* pBGM = new AudioPlayer("TitleScreen_Music", "Title_BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP);
+	AudioManager::getInstance()->play(pBGM);
 
     //// create a button that switches to the Lobby scene when clicked
     //UIButton* pStartButton = new UIButton(

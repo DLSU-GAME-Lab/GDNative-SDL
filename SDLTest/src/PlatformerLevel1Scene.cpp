@@ -527,7 +527,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pInventoryGUI);
 	this->addPickupDialogue(pPickupGUI,pInventoryGUI);
 
-	AudioManager::getInstance()->play("Unity", AudioGroupTag::MUSIC, "BGM");
+	AudioManager::getInstance()->play(new AudioPlayer("Unity", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void PlatformerLevel1Scene::onUnloadResources()

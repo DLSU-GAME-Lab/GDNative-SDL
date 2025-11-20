@@ -41,7 +41,7 @@ void PlatformerPickupGUI::initialize()
 	Sprite* pGem = new Sprite("Gem", "Gem_Red_Grab", Vector2D(0), Vector2D(0.125f), 0, false);
 	pGem->setIsScreenObject(true);
 	pTransBack->attachChild(pGem);
-	pGem->setPos(Vector2D(1050, 600));
+	pGem->setPos(Vector2D(1250, 600));
 
 	Text* pTitle = new Text("Title", "JainiPurva-Regular.ttf",45, 0, false);
 	pTitle->setMessage("Character");

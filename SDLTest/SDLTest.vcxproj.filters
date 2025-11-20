@@ -120,9 +120,6 @@
     <ClCompile Include="src\AnimatedSprite.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\Prop.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="src\Vector2D.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -333,8 +330,6 @@
     <ClCompile Include="src\AInteractable.cpp">
       <Filter>Component\Script\Interactable</Filter>
     </ClCompile>
-    <ClCompile Include="src\ObjectiveIntro.cpp" />
-    <ClCompile Include="src\StoryWindow.cpp" />
     <ClCompile Include="src\ObjectiveManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
@@ -367,6 +362,18 @@
     </ClCompile>
     <ClCompile Include="src\Gate.cpp">
       <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StoryWindow.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectiveIntro.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InventoryGUI.cpp">
+      <Filter>GameObject\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -419,9 +426,6 @@
       <Filter>Enum</Filter>
     </ClInclude>
     <ClInclude Include="include\AnimatedSprite.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Prop.h">
       <Filter>GameObject</Filter>
     </ClInclude>
     <ClInclude Include="include\Vector2D.h">
@@ -676,7 +680,6 @@
     <ClInclude Include="include\PauseScreen.h">
       <Filter>GameObject\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\ObjectiveManager.h" />
     <ClInclude Include="include\AudioClip.h">
       <Filter>Singleton\Audio</Filter>
     </ClInclude>
@@ -718,6 +721,15 @@
     </ClInclude>
     <ClInclude Include="include\IAudioPlayerListener.h">
       <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sprite.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ObjectiveManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InventoryGUI.h">
+      <Filter>GameObject\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

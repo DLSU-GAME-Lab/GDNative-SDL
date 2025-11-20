@@ -19,6 +19,7 @@
 #include "SpriteAnimator.h"
 #include "TweenAnimator.h"
 #include "DialogueBox.h"
+#include "AudioManager.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -36,6 +37,7 @@ void LobbyScene::onLoadResources()
 	this->loadAnimatedTextures();
 	this->loadSceneTextures();
 	this->loadFonts();
+	AudioManager::getInstance()->load("sounds/Music/Lobby.wav", "Lobby_Music");
 
 }
 
@@ -53,7 +55,7 @@ void LobbyScene::onLoadObjects()
 	DialogueBox* pDialogueBox = new DialogueBox("DialogueBox");
 	GameObjectManager::getInstance()->addObject(pDialogueBox);
 	pDialogueBox->setEnabled(false);
-
+	AudioManager::getInstance()->play(new AudioPlayer("Lobby_Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void LobbyScene::onUnloadResources()
@@ -84,7 +86,14 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Page_Change");
 	FontManager::getInstance()->unloadAllFonts();
 	EventBroadcaster::getInstance()->unregisterAllListeners();
+	AudioManager::getInstance()->unload("Lobby_Music");
 
+}
+
+void LobbyScene::onUnloadObjects()
+{
+	AudioManager::getInstance()->stopAll();
+	AScene::onUnloadObjects();
 }
 
 void LobbyScene::loadFonts()

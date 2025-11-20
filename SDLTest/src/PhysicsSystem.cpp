@@ -26,10 +26,12 @@ void PhysicsSystem::checkCollision()
 
     for (int i = 0; i < this->vecTrackedCollider.size(); i++) {
         pColliderA = this->vecTrackedCollider[i];
+        if (!pColliderA->getEnabled()) continue;
 		pColliderA->setDeltaTime(this->fDeltaTime);
 
         for (int j = i + 1; j < this->vecTrackedCollider.size(); j++) {
             pColliderB = this->vecTrackedCollider[j];
+            if (!pColliderB->getEnabled()) continue;
 			pColliderB->setDeltaTime(this->fDeltaTime);
 
             if (pColliderA != pColliderB) {

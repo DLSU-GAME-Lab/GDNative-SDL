@@ -69,7 +69,6 @@ void AudioManager::stop(std::string strKey)
     if (!this->mapPlaying.contains(strKey)) return;
     this->mapPlaying[strKey]->bCleanUp = true;
     this->vecToDestroy.push_back(this->mapPlaying[strKey]);
-	SDL_ClearAudioStream(this->mapPlaying[strKey]->pStream);
     std::cout << "[Audio Manager] LOG: Stopping player \"" << strKey << "\" playing the clip \"" << this->mapPlaying[strKey]->pClip->getName() << "\"" << std::endl;
 }
 

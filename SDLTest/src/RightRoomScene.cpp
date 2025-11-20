@@ -12,6 +12,7 @@
 #include "SpriteAnimator.h"
 #include "Animation.h"
 #include "AnimatedSprite.h"
+#include "AudioManager.h"
 RightRoomScene::RightRoomScene():AScene(SceneTag::RIGHT_ROOM_SCENE)
 {
 }
@@ -25,6 +26,7 @@ void RightRoomScene::onLoadResources()
 	this->loadSceneTextures();
 	this->loadAnimatedTextures();
 	this->loadFonts();
+	AudioManager::getInstance()->load("sounds/Music/SideRooms.wav", "SideRooms_Music");
 }
 
 void RightRoomScene::onLoadObjects()
@@ -37,6 +39,7 @@ void RightRoomScene::onLoadObjects()
 	this->createScene();
 	this->createButtons();
 	this->createExitMenu();
+	AudioManager::getInstance()->play(new AudioPlayer("SideRooms_Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void RightRoomScene::onUnloadResources()
@@ -50,6 +53,13 @@ void RightRoomScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Button_Choices");
 	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
 	FontManager::getInstance()->unloadAllFonts();
+	AudioManager::getInstance()->unload("SideRooms_Music");
+}
+
+void RightRoomScene::onUnloadObjects()
+{
+	AudioManager::getInstance()->stopAll();
+	AScene::onUnloadObjects();
 }
 
 void RightRoomScene::loadFonts()

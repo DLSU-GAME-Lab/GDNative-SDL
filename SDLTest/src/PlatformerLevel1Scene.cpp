@@ -114,8 +114,12 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/back.png", "Return");
 	TextureManager::getInstance()->load("GUI/tablet.png", "Tablet");
 
-	AudioManager::getInstance()->load("Audio/error.wav", "error");
-	AudioManager::getInstance()->load("Audio/TheFatRat - Unity.wav", "Unity");
+	//AudioManager::getInstance()->load("Audio/error.wav", "error");
+	//AudioManager::getInstance()->load("Audio/TheFatRat - Unity.wav", "Unity");
+	AudioManager::getInstance()->load("sounds/Music/Jungle.wav", "Jungle");
+	AudioManager::getInstance()->load("sounds/SFX/arcade-game-jump.wav", "Jump");
+	AudioManager::getInstance()->load("sounds/SFX/feet-landing-jump.wav", "Land");
+	AudioManager::getInstance()->load("sounds/SFX/Pickup_Gem.wav", "Pickup");
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -527,7 +531,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pInventoryGUI);
 	this->addPickupDialogue(pPickupGUI,pInventoryGUI);
 
-	AudioManager::getInstance()->play(new AudioPlayer("Unity", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
+	AudioManager::getInstance()->play(new AudioPlayer("Jungle", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void PlatformerLevel1Scene::onUnloadResources()
@@ -586,8 +590,12 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Q_Mark");
 	TextureManager::getInstance()->unload("Tablet");
 
-	AudioManager::getInstance()->unload("error");
-	AudioManager::getInstance()->unload("Unity");
+	//AudioManager::getInstance()->unload("error");
+	//AudioManager::getInstance()->unload("Unity");
+	AudioManager::getInstance()->unload("Jungle");
+	AudioManager::getInstance()->unload("Jump");
+	AudioManager::getInstance()->unload("Land");
+	AudioManager::getInstance()->unload("Pickup");
 }
 
 void PlatformerLevel1Scene::onUnloadObjects()

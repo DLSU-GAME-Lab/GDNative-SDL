@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AComponent.h"
+#include "AGameObject.h"
 
 AComponent::AComponent(std::string strName, ComponentType EType)
 {
@@ -43,7 +44,7 @@ void AComponent::setEnabled(bool bEnabled)
 
 bool AComponent::getEnabled() const
 {
-    return this->bEnabled;
+    return this->bEnabled || this->pOwner->getEnabled();
 }
 
 AGameObject* AComponent::getOwner() const

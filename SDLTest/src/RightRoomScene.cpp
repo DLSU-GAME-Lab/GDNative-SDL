@@ -1,7 +1,7 @@
 #include "RightRoomScene.h"
 #include "Background.h"
 #include "Player.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "FontManager.h"
@@ -109,7 +109,7 @@ void RightRoomScene::createScene()
 	pBook->attachComponent(pPuzzleRoom);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBook);
 
-	Prop* pRedDragon = new Prop("Red_Dragon", "Red_Dragon", Vector2D(-640.f, -395.f), Vector2D(.5f, .5f), 0, false);
+	Sprite* pRedDragon = new Sprite("Red_Dragon", "Red_Dragon", Vector2D(-640.f, -395.f), Vector2D(.5f, .5f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pRedDragon);
 
 	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);

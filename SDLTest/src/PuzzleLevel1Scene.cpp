@@ -4,7 +4,7 @@
 #include "CameraManager.h"
 #include "FontManager.h"
 #include "Background.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "PuzzleToken.h"
 #include "GUIButton.h"
 #include "GUIToggle.h"
@@ -58,15 +58,15 @@ void PuzzleLevel1Scene::onLoadObjects()
 	Background* pBG = new Background("Background", "BG", Vector2D(1.0f, 0.9f));
 	GameObjectManager::getInstance()->addObject(pBG);
 
-	Prop* pDragonHead = new Prop("Dragon_Head", "Dragon_Head", Vector2D(-360.0f, 50.0f), Vector2D(0.6f));
-	Prop* pDragonTail = new Prop("Dragon_Tail", "Dragon_Tail", Vector2D(450.0f, 50.0f), Vector2D(0.6f));
+	Sprite* pDragonHead = new Sprite("Dragon_Head", "Dragon_Head", Vector2D(-360.0f, 50.0f), Vector2D(0.6f));
+	Sprite* pDragonTail = new Sprite("Dragon_Tail", "Dragon_Tail", Vector2D(450.0f, 50.0f), Vector2D(0.6f));
 
 	GameObjectManager::getInstance()->addObject(pDragonHead);
 	GameObjectManager::getInstance()->addObject(pDragonTail);
 
-	Prop* pDragonTile1 = new Prop("Dragon_Tile_1", "Dragon_Tile", Vector2D(-410.0f, 50.0f), Vector2D(0.95f));
-	Prop* pDragonTile2 = new Prop("Dragon_Tile_2", "Dragon_Tile", Vector2D(-30.0f, 50.0f), Vector2D(0.95f));
-	Prop* pDragonTile3 = new Prop("Dragon_Tile_3", "Dragon_Tile", Vector2D(350.0f, 50.0f), Vector2D(0.95f));
+	Sprite* pDragonTile1 = new Sprite("Dragon_Tile_1", "Dragon_Tile", Vector2D(-410.0f, 50.0f), Vector2D(0.95f));
+	Sprite* pDragonTile2 = new Sprite("Dragon_Tile_2", "Dragon_Tile", Vector2D(-30.0f, 50.0f), Vector2D(0.95f));
+	Sprite* pDragonTile3 = new Sprite("Dragon_Tile_3", "Dragon_Tile", Vector2D(350.0f, 50.0f), Vector2D(0.95f));
 	Text* pTileText1 = new Text("Tile_Text_1",  "Maragsa.otf", 200,0,false);
 	pTileText1->setMessage("1");
 	pTileText1->setPos(Vector2D(-380.0f, 30.0f));
@@ -88,9 +88,9 @@ void PuzzleLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pTileText2);
 	GameObjectManager::getInstance()->addObject(pTileText3);
 
-	Prop* pBlank1 = new Prop("Token_Blank_1", "Token_Blank", Vector2D(-280.0f, -375.0f), Vector2D(0.45f));
-	Prop* pBlank2 = new Prop("Token_Blank_2", "Token_Blank", Vector2D(0.0f, -375.0f), Vector2D(0.45f));
-	Prop* pBlank3 = new Prop("Token_Blank_3", "Token_Blank", Vector2D(280.0f, -375.0f), Vector2D(0.45f));
+	Sprite* pBlank1 = new Sprite("Token_Blank_1", "Token_Blank", Vector2D(-280.0f, -375.0f), Vector2D(0.45f));
+	Sprite* pBlank2 = new Sprite("Token_Blank_2", "Token_Blank", Vector2D(0.0f, -375.0f), Vector2D(0.45f));
+	Sprite* pBlank3 = new Sprite("Token_Blank_3", "Token_Blank", Vector2D(280.0f, -375.0f), Vector2D(0.45f));
 
 	GameObjectManager::getInstance()->addObject(pBlank1);
 	GameObjectManager::getInstance()->addObject(pBlank2);

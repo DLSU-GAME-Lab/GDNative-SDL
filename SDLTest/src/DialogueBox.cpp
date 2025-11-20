@@ -25,7 +25,7 @@ void DialogueBox::initialize()
     pTransBack->attachComponent(pBackgroundInput);
 
 
-    this->pDialogueBox = new Prop("DialogueBox", "Square", Vector2D(0, 0), Vector2D(1, 1), 0, false);
+    this->pDialogueBox = new Sprite("DialogueBox", "Square", Vector2D(0, 0), Vector2D(1, 1), 0, false);
     this->pDialogueBox->setIsScreenObject(true);
     this->pDialogueBox->setScale(Vector2D(3, .5));
     this->attachChild(this->pDialogueBox);

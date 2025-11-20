@@ -38,7 +38,7 @@ void PlatformerPickupGUI::initialize()
 	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
 	pAnimator->getCurrentAnimation()->setOnAnimFinished(OnAnimFinished::FUNC);
 
-	Prop* pGem = new Prop("Gem", "Gem_Red_Grab", Vector2D(0), Vector2D(0.125f), 0, false);
+	Sprite* pGem = new Sprite("Gem", "Gem_Red_Grab", Vector2D(0), Vector2D(0.125f), 0, false);
 	pGem->setIsScreenObject(true);
 	pTransBack->attachChild(pGem);
 	pGem->setPos(Vector2D(1050, 600));

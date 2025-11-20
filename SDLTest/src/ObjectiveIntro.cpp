@@ -19,7 +19,7 @@ void ObjectiveIntro::initialize()
 	SpriteRenderer* pTransBGR = (SpriteRenderer*)pTransBG->findComponentByName("SpriteRenderer");
 	pTransBGR->setColor({ 0, 0, 0, 127 });
 
-	Prop* pTablet = new Prop("Tablet", "Tablet", Vector2D(0.0f), Vector2D(0.9f));
+	Sprite* pTablet = new Sprite("Tablet", "Tablet", Vector2D(0.0f), Vector2D(0.9f));
 	pTablet->setIsScreenObject(true);
 	pTransBG->attachChild(pTablet);
 	pTablet->setPos(Vector2D(1000, 450));

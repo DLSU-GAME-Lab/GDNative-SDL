@@ -10,7 +10,7 @@
 #include "SpriteAnimator.h"
 #include "Background.h"
 #include "Platform.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "Gem.h"
 #include "GUIButton.h"
 #include "ObjectiveManager.h"
@@ -127,7 +127,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	for (int i = 0; i < 3; i++)
 	{
 		std::string name = "Trees_BG_" + std::to_string(i);
-		Prop* pBG = new Prop(name, "Trees_BG", Vector2D((i * 4000.0f) + 2450.0f, 1520.0f), 1.0f);
+		Sprite* pBG = new Sprite(name, "Trees_BG", Vector2D((i * 4000.0f) + 2450.0f, 1520.0f), 1.0f);
 		GameObjectManager::getInstance()->addObject(pBG);
 	}
 
@@ -139,7 +139,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pGate->setPos(Vector2D(10000.0f, 1130.0f));
 	GameObjectManager::getInstance()->addObject(pGate);
 
-	Prop* pStatue = new Prop("Statue_Carabao", "Statue_Carabao", Vector2D(10380.0f, 1100.0f), Vector2D(0.3f));
+	Sprite* pStatue = new Sprite("Statue_Carabao", "Statue_Carabao", Vector2D(10380.0f, 1100.0f), Vector2D(0.3f));
 	GameObjectManager::getInstance()->addObject(pStatue);
 
 	Gem* pGem1 = new Gem("Gem_Cyan");
@@ -501,14 +501,14 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pObjectiveButton);
 	
 	// --- ARROW creation ---
-	Prop* pArrow = new Prop("Arrow", "Arrow", Vector2D(1077.777f, 463.686f), 1.0f);
+	Sprite* pArrow = new Sprite("Arrow", "Arrow", Vector2D(1077.777f, 463.686f), 1.0f);
 	pArrow->setScale(Vector2D(.8f));
 	pArrow->setIsScreenObject(false);                   // optional: treat as UI so it doesn't move with camera
 	pArrow->setEnabled(false);                          // start hidden
 	GameObjectManager::getInstance()->addObject(pArrow);
 
 	// create objectivemanager object
-	Prop* pObjectiveManagerObj = new Prop("ObjectiveManager_Object", "Arrow", Vector2D(0, 0), 1.0f);
+	Sprite* pObjectiveManagerObj = new Sprite("ObjectiveManager_Object", "Arrow", Vector2D(0, 0), 1.0f);
 	pObjectiveManagerObj->setEnabled(true);
 	ObjectiveManager* pObjectiveManager = new ObjectiveManager();
 	pObjectiveManagerObj->attachComponent(pObjectiveManager);

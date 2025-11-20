@@ -137,7 +137,6 @@
     <ClCompile Include="src\AudioPlayer.cpp" />
     <ClCompile Include="src\Gate.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
-    <ClCompile Include="src\Inventory.cpp" />
     <ClCompile Include="src\InventoryGUI.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
@@ -191,7 +190,7 @@
     <ClCompile Include="src\PlatformerPickupGUI.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
-    <ClCompile Include="src\Prop.cpp" />
+    <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\Background.cpp" />
@@ -291,7 +290,6 @@
     <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\InteractabeGate.h" />
-    <ClInclude Include="include\Inventory.h" />
     <ClInclude Include="include\InventoryGUI.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\MathUtils.h" />
@@ -334,7 +332,7 @@
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\Title_Scene.h" />
-    <ClInclude Include="include\Prop.h" />
+    <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\TokenController.h" />
     <ClInclude Include="include\TweenAnimator.h" />
     <ClInclude Include="include\UIManager.h" />

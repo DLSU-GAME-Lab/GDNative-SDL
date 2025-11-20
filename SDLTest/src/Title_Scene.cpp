@@ -9,7 +9,7 @@
 #include "Text.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "AudioManager.h"
 
 Title_Scene::Title_Scene()
@@ -136,10 +136,10 @@ void Title_Scene::createScene()
     AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-300, 60.f), Vector2D(1.f, 1.f), 0.f, 8);
     GameObjectManager::getInstance()->addObject(pPlayer);
 
-    Prop* pLogo = new Prop("Game_Logo", "Title_Banner", Vector2D(-550, 200), Vector2D(1.f, 1.f), 0.f, false);
+    Sprite* pLogo = new Sprite("Game_Logo", "Title_Banner", Vector2D(-550, 200), Vector2D(1.f, 1.f), 0.f, false);
     GameObjectManager::getInstance()->addObject(pLogo);
 
-    Prop* pDLSULogo = new Prop("DLSU_Logos", "DLSU_Logos", Vector2D(580, -420), Vector2D(.75f, .75f), 0.f, false);
+    Sprite* pDLSULogo = new Sprite("DLSU_Logos", "DLSU_Logos", Vector2D(580, -420), Vector2D(.75f, .75f), 0.f, false);
     GameObjectManager::getInstance()->addObject(pDLSULogo);
 
 }

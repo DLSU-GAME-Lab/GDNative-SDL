@@ -3,7 +3,7 @@
 #include "EventListener.h"
 #include "AnimatedSprite.h"
 #include "IAnimatorListener.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "Player.h"
 class InventoryGUI:public AGameObject, EventListener,IAnimatorListener
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include "AGameObject.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "EventListener.h"
 #include "Background.h"
 #include "Scroller.h"

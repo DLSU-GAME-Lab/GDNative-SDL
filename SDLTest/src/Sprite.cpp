@@ -1,7 +1,7 @@
-#include "Prop.h"
+#include "Sprite.h"
 #include "SpriteRenderer.h"
 
-Prop::Prop(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX):
+Sprite::Sprite(const std::string& strName, const std::string& strImageName, Vector2D fVecTranslate, Vector2D fVecScale, float fRot, bool bFlipX):
 	AGameObject(strName), strImageName(strImageName),bFlipX(bFlipX)
 {
 	this->fVecTranslate = fVecTranslate;
@@ -9,7 +9,7 @@ Prop::Prop(const std::string& strName, const std::string& strImageName, Vector2D
 	this->fRot = fRot;
 }
 
-void Prop::initialize()
+void Sprite::initialize()
 {
 	SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName);
 	this->attachComponent((AComponent*)pSpriteRenderer);

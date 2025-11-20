@@ -4,7 +4,7 @@
 #include "AGameObject.h"
 #include "AnimatedSprite.h"
 
-#include "Prop.h"
+#include "Sprite.h"
 class PlatformerPickupGUI:public AGameObject, EventListener,IAnimatorListener
 {
 private:

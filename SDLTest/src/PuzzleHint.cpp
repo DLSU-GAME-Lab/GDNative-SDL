@@ -15,8 +15,8 @@ PuzzleHint::~PuzzleHint()
 void PuzzleHint::initialize()
 {
 	TextureManager::getInstance()->load("sequence_game/Popup_Panel.png", "HintPage");
-	Prop* pProp = new Prop("HintPage", "HintPage", Vector2D(0), Vector2D(1), 0);
-	this->attachChild(pProp);
+	Sprite* pSprite = new Sprite("HintPage", "HintPage", Vector2D(0), Vector2D(1), 0);
+	this->attachChild(pSprite);
 
 	this->pText = new Text("TextHint", "Maragsa.otf", 90);
 	this->pText->setMessage("Place Holder");

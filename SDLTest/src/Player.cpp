@@ -4,7 +4,7 @@
 #include "PlayerController.h"
 #include "PhysicsSystem.h"
 #include "CameraController.h"
-#include "Prop.h"
+#include "Sprite.h"
 
 Player::Player(Vector2D fVecTranslate, Vector2D fVecScale, float fRot):AGameObject("Player")
 {
@@ -48,7 +48,7 @@ void Player::initialize()
     pRB->setGravityEnabled(true);
     this->attachComponent(pRB);
 
-    Prop* pQMark = new Prop("Q_Mark", "Q_Mark", Vector2D(0.0f, 0.0f), Vector2D(0.2f, 0.2f), -30.0f);
+    Sprite* pQMark = new Sprite("Q_Mark", "Q_Mark", Vector2D(0.0f, 0.0f), Vector2D(0.2f, 0.2f), -30.0f);
     this->attachChild(pQMark);
     pQMark->setLocalPos(Vector2D(100.0f, 200.0f));
     pQMark->setEnabled(false);

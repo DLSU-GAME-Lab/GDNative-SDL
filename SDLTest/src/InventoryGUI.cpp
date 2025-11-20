@@ -38,7 +38,7 @@ void InventoryGUI::initialize()
 	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
 	pAnimator->getCurrentAnimation()->setOnAnimFinished(OnAnimFinished::FUNC);
 
-	Prop* pGemInfo = new Prop("InfoGem", "Gem_Colorless_Inventory", Vector2D(0), Vector2D(.9f), 0, false);
+	Sprite* pGemInfo = new Sprite("InfoGem", "Gem_Colorless_Inventory", Vector2D(0), Vector2D(.9f), 0, false);
 	pGemInfo->setIsScreenObject(true);
 	this->attachChild(pGemInfo);
 	pGemInfo->setPos(Vector2D(1000, 550));
@@ -59,7 +59,7 @@ void InventoryGUI::initialize()
 	pText->setScale(Vector2D(1, 1));
 	pText->setRot(-14);
 
-	Prop* pInventoryBG = new Prop("InventoryBG", "Tablet", Vector2D(0), Vector2D(1.f), 0, false);
+	Sprite* pInventoryBG = new Sprite("InventoryBG", "Tablet", Vector2D(0), Vector2D(1.f), 0, false);
 	pInventoryBG->setIsScreenObject(true);
 	pTransBack->attachChild(pInventoryBG);
 	pInventoryBG->setScale(Vector2D(.4, 1.25));
@@ -92,7 +92,7 @@ void InventoryGUI::onEventTrigger(std::unordered_map<std::string, void*> mapPara
 {
 	Background* pTransBack = (Background*)this->findChildByName("TransparentBG");
 	AnimatedSprite* pAnimSprite = (AnimatedSprite*)this->findChildByName("InventoryAnim");
-	Prop* pGem = (Prop*)this->findChildByName("InfoGem");
+	Sprite* pGem = (Sprite*)this->findChildByName("InfoGem");
 	Text* pTitle = (Text*)pGem->findChildByName("Title");
 	Text* pText = (Text*)pGem->findChildByName("Text");
 	SpriteAnimator* pAnimator = (SpriteAnimator*)pAnimSprite->findComponentByName("SpriteAnimator");
@@ -163,7 +163,7 @@ std::string InventoryGUI::getListenerOwnerName()
 void InventoryGUI::onAnimationFinished()
 {
 	Background* pTransBack = (Background*)this->findChildByName("TransparentBG");
-	Prop* pGem = (Prop*)this->findChildByName("InfoGem");
+	Sprite* pGem = (Sprite*)this->findChildByName("InfoGem");
 	pTransBack->setEnabled(true);
 	pGem->setEnabled(true);
 }

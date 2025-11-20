@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Librarian.h"
 #include "Fairy.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "GUIToggle.h"
@@ -154,7 +154,7 @@ void LobbyScene::createScene()
 	Background* pBackground = new Background("Lobby_Background", "Lobby_Background", Vector2D(0.33f, 0.4f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
-	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
+	Sprite* pLadder = new Sprite("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
 
 	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
@@ -170,14 +170,14 @@ void LobbyScene::createScene()
 	Fairy* pFairy = new Fairy(Vector2D(250, -140), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
 
-	Prop* pLamps = new Prop("Lamps", "Lamps", Vector2D(-550, 350), Vector2D(1.f, 1.f), 0, false);
+	Sprite* pLamps = new Sprite("Lamps", "Lamps", Vector2D(-550, 350), Vector2D(1.f, 1.f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLamps);
 
 
-	Prop* pChair = new Prop("Chair", "Chair", Vector2D(-600, -365), Vector2D(0.75f, 0.75f), 0, false);
+	Sprite* pChair = new Sprite("Chair", "Chair", Vector2D(-600, -365), Vector2D(0.75f, 0.75f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pChair);
 
-	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
+	Sprite* pDesk = new Sprite("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
 
 
@@ -208,34 +208,34 @@ void LobbyScene::createDiary()
 
 	GameObjectManager::getInstance()->addObject(pDiary);
 
-	Diary* pDiaryProper = new Diary("SWBST_BG", Vector2D(0, 0), Vector2D(1, 1));
-	pDiaryProper->addPageText("Ano ang SWBST?", "Ang SWBST ay isang paraan upang madaling matukoy ang mahahalagang bahagi ng \n kuwento at matulungan kang buod ng kuwento.\nAng mga titik ng SWBST ay kumakatawan sa mga sumusunod : ");
-	pDiaryProper->addPageText("Somebody", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang \n gusto ng karakter?");
-	pDiaryProper->addPageText("Wanted", "Inilalarawan nito kung ano ang gusto ng karakter.Tanunging sa iyong sarili, ano ang gusto ng \n karakter?");
-	pDiaryProper->addPageText("But", "Kapag may karakter, may problemang kinakaharap ang karakter. Tanungin ang iyong sarili, ano \n ang problema sa kuwento na kinakaharap ng pangunahing tauhan?");
-	pDiaryProper->addPageText("So", "Sinusubukan ng pangunahing tauhan lutasin ang problema. Tanungin ang iyong sarili kung \n Paano malulutas ng karakte ang problema.");
-	pDiaryProper->addPageText("Then", "Ano ang mangyayari pagkatapos subukan ng pangunahing tauhan na lutasin ang problema? \n ");
-	pDiaryProper->addPageText("Summary", "Upang Ibuod ang mga tanong na dapat mong itanong sa iyong sarili pagkatapos \n basahin ang isang kuwento:");
-	GameObjectManager::getInstance()->addObject(pDiaryProper);
+	Diary* pDiarySpriteer = new Diary("SWBST_BG", Vector2D(0, 0), Vector2D(1, 1));
+	pDiarySpriteer->addPageText("Ano ang SWBST?", "Ang SWBST ay isang paraan upang madaling matukoy ang mahahalagang bahagi ng \n kuwento at matulungan kang buod ng kuwento.\nAng mga titik ng SWBST ay kumakatawan sa mga sumusunod : ");
+	pDiarySpriteer->addPageText("Somebody", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang \n gusto ng karakter?");
+	pDiarySpriteer->addPageText("Wanted", "Inilalarawan nito kung ano ang gusto ng karakter.Tanunging sa iyong sarili, ano ang gusto ng \n karakter?");
+	pDiarySpriteer->addPageText("But", "Kapag may karakter, may problemang kinakaharap ang karakter. Tanungin ang iyong sarili, ano \n ang problema sa kuwento na kinakaharap ng pangunahing tauhan?");
+	pDiarySpriteer->addPageText("So", "Sinusubukan ng pangunahing tauhan lutasin ang problema. Tanungin ang iyong sarili kung \n Paano malulutas ng karakte ang problema.");
+	pDiarySpriteer->addPageText("Then", "Ano ang mangyayari pagkatapos subukan ng pangunahing tauhan na lutasin ang problema? \n ");
+	pDiarySpriteer->addPageText("Summary", "Upang Ibuod ang mga tanong na dapat mong itanong sa iyong sarili pagkatapos \n basahin ang isang kuwento:");
+	GameObjectManager::getInstance()->addObject(pDiarySpriteer);
 
 	GUIButton* pClose = new GUIButton("Close_Button", "Back");
 	GUIToggle* pToggleClose = new GUIToggle(EventKey::DIARY_SCREEN);
 	pClose->attachComponent(pToggleClose);
-	pDiaryProper->attachChild(pClose);
+	pDiarySpriteer->attachChild(pClose);
 	pClose->setPos(Vector2D(-750, 400));
 	pClose->setScale(Vector2D(.05f, .05f));
 	//-755, -365
 	GUIButton* pProgress = new GUIButton("Progress", "Page_Change");
 	PageChangeToggle* pForward = new PageChangeToggle("Diary", true);
 	pProgress->attachComponent(pForward);
-	pDiaryProper->attachChild(pProgress);
+	pDiarySpriteer->attachChild(pProgress);
 	pProgress->setPos(Vector2D(770, -365));
 	pProgress->setScale(Vector2D(.05f, .05f));
 
 	GUIButton* pRegress = new GUIButton("Regress", "Page_Change", true);
 	PageChangeToggle* pBackward = new PageChangeToggle("Diary", false);
 	pRegress->attachComponent(pBackward);
-	pDiaryProper->attachChild(pRegress);
+	pDiarySpriteer->attachChild(pRegress);
 	pRegress->setPos(Vector2D(-755, -365));
 	pRegress->setScale(Vector2D(.05f, .05f));
 
@@ -267,22 +267,22 @@ void LobbyScene::createDiary()
 	this->createPageSeven(pSeventhPageHolder);
 	pSeventhPageHolder->setEnabled(false);
 
-	pDiaryProper->addPage(pFirstPageHolder);
-	pDiaryProper->addPage(pSecondPageHolder);
-	pDiaryProper->addPage(pThirdPageHolder);
-	pDiaryProper->addPage(pFourthPageHolder);
-	pDiaryProper->addPage(pFifthPageHolder);
-	pDiaryProper->addPage(pSixthPageHolder);
-	pDiaryProper->addPage(pSeventhPageHolder);
+	pDiarySpriteer->addPage(pFirstPageHolder);
+	pDiarySpriteer->addPage(pSecondPageHolder);
+	pDiarySpriteer->addPage(pThirdPageHolder);
+	pDiarySpriteer->addPage(pFourthPageHolder);
+	pDiarySpriteer->addPage(pFifthPageHolder);
+	pDiarySpriteer->addPage(pSixthPageHolder);
+	pDiarySpriteer->addPage(pSeventhPageHolder);
 
-	pDiaryProper->setEnabled(false);
+	pDiarySpriteer->setEnabled(false);
 
 }
 
 void LobbyScene::createPageOne(AGameObject* pParent)
 {
 	
-	Prop* pIntro = new Prop("FairyIntro", "Intro", Vector2D(0, -0), Vector2D(1, 1), 0, false);
+	Sprite* pIntro = new Sprite("FairyIntro", "Intro", Vector2D(0, -0), Vector2D(1, 1), 0, false);
 	pParent->attachChild(pIntro);
 
 	Text* pS = new Text("S_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
@@ -358,7 +358,7 @@ void LobbyScene::createPageOne(AGameObject* pParent)
 
 void LobbyScene::createPageTwo(AGameObject* pParent)
 {
-	Prop* pSomebody = new Prop("Somebody", "Somebody", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	Sprite* pSomebody = new Sprite("Somebody", "Somebody", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
 	pParent->attachChild(pSomebody);
 
 	Text* pTao = new Text("Tao", "JainiPurva-Regular.ttf", 45, 0, false);
@@ -385,7 +385,7 @@ void LobbyScene::createPageTwo(AGameObject* pParent)
 
 void LobbyScene::createPageThree(AGameObject* pParent)
 {
-	Prop* pWanted = new Prop("Wanted", "Wanted", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	Sprite* pWanted = new Sprite("Wanted", "Wanted", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
 	pParent->attachChild(pWanted);
 
 	Text* pStudent = new Text("Student", "JainiPurva-Regular.ttf", 45, 0, false);
@@ -413,7 +413,7 @@ void LobbyScene::createPageThree(AGameObject* pParent)
 
 void LobbyScene::createPageFour(AGameObject* pParent)
 {
-	Prop* pBut = new Prop("But", "But", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	Sprite* pBut = new Sprite("But", "But", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
 	pParent->attachChild(pBut);
 	
 	Text* pStudent = new Text("Page4_Student", "JainiPurva-Regular.ttf", 45, 0, false);
@@ -441,7 +441,7 @@ void LobbyScene::createPageFour(AGameObject* pParent)
 
 void LobbyScene::createPageFive(AGameObject* pParent)
 {
-	Prop* pSo = new Prop("So", "So", Vector2D(0, -40), Vector2D(.75, .75), 0, false);
+	Sprite* pSo = new Sprite("So", "So", Vector2D(0, -40), Vector2D(.75, .75), 0, false);
 	pParent->attachChild(pSo);
 
 	Text* pStudent = new Text("Page5_Student", "JainiPurva-Regular.ttf", 45, 0, false);
@@ -468,7 +468,7 @@ void LobbyScene::createPageFive(AGameObject* pParent)
 
 void LobbyScene::createPageSix(AGameObject* pParent)
 {
-	Prop* pThen = new Prop("Then", "Then", Vector2D(0, -0), Vector2D(.75, .75), 0, false);
+	Sprite* pThen = new Sprite("Then", "Then", Vector2D(0, -0), Vector2D(.75, .75), 0, false);
 	pParent->attachChild(pThen);
 
 	Text* pStudent = new Text("Page6_Student", "JainiPurva-Regular.ttf", 45, 0, false);

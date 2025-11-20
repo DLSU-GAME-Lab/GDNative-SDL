@@ -5,7 +5,7 @@
 #include "AGameObject.h"
 #include "EventListener.h"
 #include "Text.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "GUIButton.h"
 #include "GUIToggle.h"
 class PuzzleHint:public AGameObject, EventListener

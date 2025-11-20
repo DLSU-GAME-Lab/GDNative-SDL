@@ -1,7 +1,7 @@
 #include "LeftRoomScene.h"
 #include "Background.h"
 #include "Player.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "FontManager.h"
@@ -101,10 +101,10 @@ void LeftRoomScene::createScene()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	pBackground->setPos(Vector2D(0.f, -9.f));
 
-	Prop* pPedestal[5];
+	Sprite* pPedestal[5];
 	for (int i = 0; i < 5; i++)
 	{
-		pPedestal[i] = new Prop("Pedestal" + i, "Pedestal", Vector2D(0, 0), Vector2D(.75f, .75f), 0.f, false);
+		pPedestal[i] = new Sprite("Pedestal" + i, "Pedestal", Vector2D(0, 0), Vector2D(.75f, .75f), 0.f, false);
 		GameObjectManager::getInstance()->addObject((AGameObject*)pPedestal[i]);
 	}
 	pPedestal[0]->setPos(Vector2D(-600, -300));

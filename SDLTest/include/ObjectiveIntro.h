@@ -3,7 +3,7 @@
 #include "Background.h"
 #include "GameObjectManager.h"
 #include "SpriteRenderer.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "Text.h"
 #include "AnimatedSprite.h"
 #include "SpriteAnimator.h"

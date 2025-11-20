@@ -1,7 +1,7 @@
 #pragma once
 #include "AGameObject.h"
 #include "Text.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "EventListener.h"
 #include "Background.h"
 #include "SpriteRenderer.h"
@@ -11,7 +11,7 @@
 class DialogueBox : public AGameObject,EventListener
 {
 private:
-	Prop* pDialogueBox;
+	Sprite* pDialogueBox;
 	Text* pDialogueText;
 	EventKey EKey;
 	bool bListenerEnabled;

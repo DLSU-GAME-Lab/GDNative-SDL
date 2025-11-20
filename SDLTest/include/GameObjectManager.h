@@ -21,6 +21,7 @@ public:
     void deleteAllObjects();
 
     AGameObject* findObjectByName(std::string strName);
+    void setObjectName(std::string strName, std::string strNewName);
     std::vector<AGameObject*>& getAllObjects();
 
     /* * * * * * * * * * * * * * * * * * * * *

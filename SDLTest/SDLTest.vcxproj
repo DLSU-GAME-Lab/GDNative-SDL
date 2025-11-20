@@ -137,6 +137,8 @@
     <ClCompile Include="src\AudioPlayer.cpp" />
     <ClCompile Include="src\Gate.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
+    <ClCompile Include="src\Inventory.cpp" />
+    <ClCompile Include="src\InventoryGUI.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
     <ClCompile Include="src\DialogueToggle.cpp" />
@@ -288,6 +290,8 @@
     <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\InteractabeGate.h" />
+    <ClInclude Include="include\Inventory.h" />
+    <ClInclude Include="include\InventoryGUI.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\ObjectiveIntro.h" />

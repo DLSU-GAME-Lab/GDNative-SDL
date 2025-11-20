@@ -119,6 +119,14 @@ AGameObject* GameObjectManager::findObjectByName(std::string strName)
     }
 }
 
+void GameObjectManager::setObjectName(std::string strName, std::string strNewName)
+{
+    AGameObject* gameObject = this->mapGameObject[strName];
+    gameObject->setName(strNewName);
+    this->mapGameObject.erase(strName);
+    this->mapGameObject[strNewName] = gameObject;
+}
+
 // getAllObjects: O(1) to return reference; iterating callers will pay O(G).
 std::vector<AGameObject*>& GameObjectManager::getAllObjects()
 {

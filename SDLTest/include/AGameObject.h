@@ -46,6 +46,7 @@ public:
     bool getEnabled() const;
     void setEnabled(bool bEnabled);
     std::string getName() const;
+    void setName(std::string strName);
     AGameObject* getParent() const;
     void setParent(AGameObject* pParent);
     void setPos(Vector2D fVecTranslate);

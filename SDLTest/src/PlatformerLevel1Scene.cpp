@@ -17,6 +17,7 @@
 #include "Gate.h"
 #include "StoryWindow.h"
 #include "AudioManager.h"
+#include "InventoryGUI.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -27,7 +28,7 @@ PlatformerLevel1Scene::~PlatformerLevel1Scene()
 
 }
 
-void PlatformerLevel1Scene::addPickupDialogue(PlatformerPickupGUI* pGUI)
+void PlatformerLevel1Scene::addPickupDialogue(PlatformerPickupGUI* pPickupGUI, InventoryGUI* pInvenGUI)
 {
 	std::vector<std::string> vecGemType;
 	std::vector<std::string> vecTitles;
@@ -49,8 +50,10 @@ void PlatformerLevel1Scene::addPickupDialogue(PlatformerPickupGUI* pGUI)
 	vecText.push_back("She died, teaching the \n narrator to respect danger");
 	for (int i = 0; i < vecGemType.size(); i++)
 	{
-		pGUI->addPickupDialogue(vecGemType[i], vecTitles[i]);   // Title as first line
-		pGUI->addPickupDialogue(vecGemType[i], vecText[i]);     // Text as second line
+		pPickupGUI->addPickupDialogue(vecGemType[i], vecTitles[i]);   // Title as first line
+		pPickupGUI->addPickupDialogue(vecGemType[i], vecText[i]);     // Text as second line
+		pInvenGUI->addPickupDialogue(vecGemType[i], vecTitles[i]);   // Title as first line
+		pInvenGUI->addPickupDialogue(vecGemType[i], vecText[i]);     // Text as second line
 	}
 }
 
@@ -62,6 +65,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->loadFromFolder("animations/player_falling", "player_fall");
 	TextureManager::getInstance()->loadFromFolder("animations/pause_animation", "Pause");
 	TextureManager::getInstance()->loadFromFolder("animations/player_grab_gem", "Pickup");
+	TextureManager::getInstance()->loadFromFolder("animations/inventory_animation", "Inventory");
 
 	TextureManager::getInstance()->load("platformer/trees.png", "Trees_BG");
 	TextureManager::getInstance()->load("platformer/gate.png", "Gate");
@@ -88,6 +92,17 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("gems/gem_orange.png", "Gem_Orange");
 	TextureManager::getInstance()->load("gems/gem_purple.png", "Gem_Purple");
 	TextureManager::getInstance()->load("gems/gem_red.png", "Gem_Red");
+	TextureManager::getInstance()->load("gems/blue_grab_gem.png", "Gem_Cyan_Grab");
+	TextureManager::getInstance()->load("gems/green_grab_gem.png", "Gem_Green_grab");
+	TextureManager::getInstance()->load("gems/orange_grab_gem.png", "Gem_Orange_Grab");
+	TextureManager::getInstance()->load("gems/purple_grab_gem.png", "Gem_Purple_grab");
+	TextureManager::getInstance()->load("gems/red_grab_gem.png", "Gem_Red_Grab");
+	TextureManager::getInstance()->load("gems/blue_inventory_gem.png", "Gem_Cyan_Inventory");
+	TextureManager::getInstance()->load("gems/green_inventory_gem.png", "Gem_Green_Inventory");
+	TextureManager::getInstance()->load("gems/orange_inventory_gem.png", "Gem_Orange_Inventory");
+	TextureManager::getInstance()->load("gems/purple_inventory_gem.png", "Gem_Purple_Inventory");
+	TextureManager::getInstance()->load("gems/red_inventory_gem.png", "Gem_Red_Inventory");
+	TextureManager::getInstance()->load("gems/colorless_inventory_gem.png", "Gem_Colorless_Inventory");
 
 	TextureManager::getInstance()->load("GUI/pause.png", "Pause_Button");
 	TextureManager::getInstance()->load("GUI/story.png", "Story_Button");
@@ -96,6 +111,7 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("GUI/arrow.png", "Arrow");
 	TextureManager::getInstance()->load("GUI/question_mark.png", "Q_Mark");
+	TextureManager::getInstance()->load("GUI/back.png", "Return");
 
 	AudioManager::getInstance()->load("Audio/error.wav", "error");
 	AudioManager::getInstance()->load("Audio/TheFatRat - Unity.wav", "Unity");
@@ -439,8 +455,8 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pItemsButton->setIsScreenObject(true);
 	pItemsButton->setPos(Vector2D(1820.0f, 100.0f));
 	pItemsButton->setScale(Vector2D(0.08f));
-	//GUIToggle* pItemsToggle = new GUIToggle();
-	//pItemsButton->attachComponent(pItemsToggle);
+	GUIToggle* pItemsToggle = new GUIToggle(EventKey::INVENTORY_SCREEN);
+	pItemsButton->attachComponent(pItemsToggle);
 
 	GameObjectManager::getInstance()->addObject(pPauseButton);
 	GameObjectManager::getInstance()->addObject(pStoryButton);
@@ -504,8 +520,11 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pStoryWindow->setPos(Vector2D(0, 0));
 
 	PlatformerPickupGUI* pPickupGUI = new PlatformerPickupGUI("Platformer1PickupGUI");
-	this->addPickupDialogue(pPickupGUI);
 	GameObjectManager::getInstance()->addObject(pPickupGUI);
+
+	InventoryGUI* pInventoryGUI = new InventoryGUI("Platformer1InventoryGUI");
+	GameObjectManager::getInstance()->addObject(pInventoryGUI);
+	this->addPickupDialogue(pPickupGUI,pInventoryGUI);
 
 	AudioManager::getInstance()->play("Unity", AudioGroupTag::MUSIC, "BGM");
 }
@@ -518,6 +537,7 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("player_fall");
 	TextureManager::getInstance()->unload("Pause");
 	TextureManager::getInstance()->unload("Pickup");
+	TextureManager::getInstance()->unload("Inventory");
 
 	TextureManager::getInstance()->unload("Trees_BG");
 	TextureManager::getInstance()->unload("Gate");
@@ -538,10 +558,23 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Grass_Platform");
 
 	TextureManager::getInstance()->unload("Gem_Cyan");
+	TextureManager::getInstance()->unload("Gem_Cyan_Grab");
+	TextureManager::getInstance()->unload("Gem_Cyan_Inventory");
 	TextureManager::getInstance()->unload("Gem_Green");
+	TextureManager::getInstance()->unload("Gem_Green_Grab");
+	TextureManager::getInstance()->unload("Gem_Green_Inventory");
 	TextureManager::getInstance()->unload("Gem_Orange");
+	TextureManager::getInstance()->unload("Gem_Orange_Grab");
+	TextureManager::getInstance()->unload("Gem_Orange_Inventory");
 	TextureManager::getInstance()->unload("Gem_Purple");
+	TextureManager::getInstance()->unload("Gem_Purple_Grab");
+	TextureManager::getInstance()->unload("Gem_Purple_Inventory");
 	TextureManager::getInstance()->unload("Gem_Red");
+	TextureManager::getInstance()->unload("Gem_Red_Grab");
+	TextureManager::getInstance()->unload("Gem_Red_Inventory");
+	TextureManager::getInstance()->unload("Gem_Colorless_Inventory");
+
+
 
 	TextureManager::getInstance()->unload("Pause_Button");
 	TextureManager::getInstance()->unload("Story_Button");

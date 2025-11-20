@@ -239,6 +239,11 @@ std::string AGameObject::getName() const
     return this->strName;
 }
 
+void AGameObject::setName(std::string strName)
+{
+    this->strName = strName;
+}
+
 AGameObject* AGameObject::getParent() const
 {
     return this->pParent;

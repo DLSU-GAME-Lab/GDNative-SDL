@@ -38,22 +38,24 @@ void PlatformerPickupGUI::initialize()
 	pAnimator->getCurrentAnimation()->setType(AnimationType::ONCE);
 	pAnimator->getCurrentAnimation()->setOnAnimFinished(OnAnimFinished::FUNC);
 
-	Prop* pGem = new Prop("Gem", "Gem_Red", Vector2D(0), Vector2D(0.5f), 0, false);
+	Prop* pGem = new Prop("Gem", "Gem_Red_Grab", Vector2D(0), Vector2D(0.125f), 0, false);
 	pGem->setIsScreenObject(true);
 	pTransBack->attachChild(pGem);
-	pGem->setPos(Vector2D(1250, 600));
+	pGem->setPos(Vector2D(1050, 600));
 
-	Text* pTitle = new Text("Title", "JainiPurva-Regular.ttf",20, 0, false);
+	Text* pTitle = new Text("Title", "JainiPurva-Regular.ttf",45, 0, false);
 	pTitle->setMessage("Character");
 	pTitle->setIsScreenObject(true);
 	pGem->attachChild(pTitle);
 	pTitle->setPos(Vector2D(1250, 450));
+	pTitle->setScale(Vector2D(1, 1));
 
-	Text* pText = new Text("Text", "JainiPurva-Regular.ttf", 12, 0, false);
+	Text* pText = new Text("Text", "JainiPurva-Regular.ttf", 30, 0, false);
 	pText->setMessage("The Young Moth is the Main \n Character");
 	pText->setIsScreenObject(true);
 	pGem->attachChild(pText);
 	pText->setPos(Vector2D(1250, 550));
+	pText->setScale(Vector2D(1, 1));
 
 	pTransBack->setEnabled(false);
 	pAnimatedCharacter->setEnabled(false);
@@ -97,7 +99,7 @@ void PlatformerPickupGUI::onEventTrigger(std::unordered_map<std::string, void*> 
 			std::string strGemName = *static_cast<std::string*>(mapParameter["GemName"]);
 			pTitle->modifyText(this->mapickupDialogue[strGemName][0]);
 			pText->modifyText(this->mapickupDialogue[strGemName][1]);
-			this->changeGem(strGemName);
+			this->changeGem(strGemName+"_Inventory");
 		}
 
 

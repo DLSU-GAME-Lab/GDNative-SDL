@@ -12,6 +12,7 @@ enum class EventKey : int {
     OBJECTIVE_SCREEN,
     OBJECTIVE_BUTTON,
     ITEM_PICKUP,
+    INVENTORY_SCREEN
 };
 
 #endif

@@ -1,17 +1,23 @@
 #pragma once
 
-#include "AComponent.h"
+#include "AAnimator.h"
 #include "SpriteRenderer.h"
 #include "Animation.h"
+#include "IAnimatorListener.h"
 #include <unordered_map>
 
-class SpriteAnimator : public AComponent
+class SpriteAnimator : public AAnimator
 {
 private:
 	SpriteRenderer* pSpriteRenderer;
 	std::string strState;
 	std::vector<Animation*> vecAnims;
 	std::unordered_map<std::string, Animation*> mapAnims;
+	std::vector<IAnimatorListener*> vecListener;
+
+private:
+	void setNextState();
+	void onAnimationFinished();
 
 public:
 	SpriteAnimator(SpriteRenderer* pSpriteRenderer);
@@ -21,11 +27,14 @@ public:
 	virtual void onAttach() override;
 	virtual void perform() override;
 
+	void play(std::string strState = "");
+	void pause();
 	void stop();
-	void play(std::string strState);
 
 	void addAnimation(Animation* pAnimation);
 	void setAnimationState(std::string strState);
+	void addListener(IAnimatorListener* pListener);
+	void removeListener(IAnimatorListener* pListener);
 
 	Animation* getCurrentAnimation();
 };

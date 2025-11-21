@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------------------
 
 #include "GameObjectManager.h"
-#include "Collider.h"
 #include <iostream>
 
 // processInput: forwards a single SDL_Event to every enabled object.
@@ -65,20 +64,10 @@ void GameObjectManager::addObject(AGameObject* pGameObject)
 // linear search or causes shifting.
 void GameObjectManager::deleteObject(AGameObject* pGameObject)
 {
-    std::string strName = pGameObject->getName();
-    int nIndex = -1;
-
-    for(int i = 0; i < this->vecGameObject.size() && nIndex == -1; i++)
-    {
-        if(this->vecGameObject[i] == pGameObject)
-            nIndex = i;
+    if (std::find(this->vecPendingDeletion.begin(), this->vecPendingDeletion.end(), pGameObject) == this->vecPendingDeletion.end()) {
+        this->vecPendingDeletion.push_back(pGameObject);
     }
 
-    if(nIndex != -1) {
-        this->mapGameObject.erase(this->vecGameObject[nIndex]->getName());
-        this->vecGameObject.erase(this->vecGameObject.begin() + nIndex);
-        delete pGameObject;
-    }
 }
 
 // deleteObjectByName: name lookup (map) then delete
@@ -104,21 +93,23 @@ void GameObjectManager::deleteAllObjects()
     this->vecGameObject.clear();
     this->mapGameObject.clear();
 }
-void GameObjectManager::sortObjectToEnd(AGameObject* pGameObject)
+
+void GameObjectManager::cleanUpDeletedObjects()
 {
-    int nIndex = -1, nIndex1 = this->vecGameObject.size() - 1;
-    AGameObject* pHolder;
-    for (int i = 0; i < this->vecGameObject.size() && nIndex == -1; i++)
-    {
-        if (vecGameObject[i]->getName() == pGameObject->getName())
-        {
-            nIndex = i;
+    for (AGameObject* pObject : vecPendingDeletion) {
+        auto it = std::find(vecGameObject.begin(), vecGameObject.end(), pObject);
+        if (it != vecGameObject.end()) {
+            vecGameObject.erase(it);
         }
+
+        mapGameObject.erase(pObject->getName());
+        delete pObject;
     }
-    pHolder = this->vecGameObject[nIndex1];
-    this->vecGameObject[nIndex1] = this->vecGameObject[nIndex];
-    this->vecGameObject[nIndex] = pHolder;
+
+    vecPendingDeletion.clear();
+
 }
+
 // findObjectByName: map lookup
 // Complexity: average-case O(1) (unordered_map) or O(log G) (ordered map).
 // Note: using operator[] for lookup has side-effects (insertion) which may
@@ -132,6 +123,14 @@ AGameObject* GameObjectManager::findObjectByName(std::string strName)
         std::cout << "[ERROR] : Object [" << strName << "] NOT found." << std::endl;
         return NULL;
     }
+}
+
+void GameObjectManager::setObjectName(std::string strName, std::string strNewName)
+{
+    AGameObject* gameObject = this->mapGameObject[strName];
+    gameObject->setName(strNewName);
+    this->mapGameObject.erase(strName);
+    this->mapGameObject[strNewName] = gameObject;
 }
 
 // getAllObjects: O(1) to return reference; iterating callers will pay O(G).

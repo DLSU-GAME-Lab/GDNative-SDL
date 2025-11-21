@@ -1,10 +1,12 @@
 #include "Animation.h"
+#include <cmath>
 
 Animation::Animation(
     std::string strName,
     std::vector<SDL_Texture*> vecFrames,
     Uint8 nFrameRate,
     AnimationType EType,
+	OnAnimFinished EOnFinished,
     std::string strNextState
 )
 {
@@ -12,27 +14,30 @@ Animation::Animation(
     this->vecFrames = vecFrames;
     this->nFrameRate = nFrameRate;
     this->EType = EType;
+	this->EOnFinished = EOnFinished;
     this->strNextState = strNextState;
 
-	this->bIsPlaying = false;
-	this->bIsReverse = false;
-	this->fTicks = 0.0f;
-	this->nFrameIndex = 0;
-
-	if (this->vecFrames.empty()) this->pCurrentFrame = NULL;
-	else this->pCurrentFrame = this->vecFrames[0];
-
-}
-
-void Animation::stop()
-{
-	this->bIsPlaying = false;
-	this->fTicks = 0;
+	this->stop();
 }
 
 void Animation::play()
 {
 	this->bIsPlaying = true;
+	this->bFinished = false;
+}
+
+void Animation::pause()
+{
+	this->bIsPlaying = false;
+}
+
+void Animation::stop()
+{
+	this->bIsPlaying = false;
+	this->bFinished = false;
+	this->bIsReverse = false;
+	this->fTicks = 0.0f;
+	this->nFrameIndex = 0;
 }
 
 void Animation::step(float fDeltaTime)
@@ -44,8 +49,7 @@ void Animation::step(float fDeltaTime)
 
 	if (this->fTicks >= ticksPerFrame)
 	{
-		while (this->fTicks >= ticksPerFrame)
-			this->fTicks -= ticksPerFrame;
+		this->fTicks = std::fmod(this->fTicks, ticksPerFrame);
 
 		if (!this->bIsReverse) this->nFrameIndex++;
 		else this->nFrameIndex--;
@@ -53,10 +57,7 @@ void Animation::step(float fDeltaTime)
 		switch (this->EType)
 		{
 		case AnimationType::ONCE:
-			if (this->nFrameIndex == this->vecFrames.size() - 1)
-			{
-				this->stop();
-			}
+			if (this->nFrameIndex == this->vecFrames.size() - 1) this->bFinished = true;
 			break;
 
 		case AnimationType::LOOP:
@@ -78,18 +79,16 @@ void Animation::step(float fDeltaTime)
 			}
 			else if (this->nFrameIndex == 0)
 			{
-				this->bIsReverse = false;
-				this->stop();
+				this->bFinished = true;
 			}
 			break;
 		}
-		this->pCurrentFrame = this->vecFrames[this->nFrameIndex];
 	}
 }
 
-bool Animation::playNext()
+bool Animation::finished() const
 {
-	return this->EType == AnimationType::ONCE && !this->bIsPlaying && !this->strNextState.empty();
+	return this->bFinished;
 }
 
 void Animation::setFrameRate(Uint8 nFrameRate)
@@ -107,6 +106,11 @@ void Animation::setNextState(std::string strNextState)
     this->strNextState = strNextState;
 }
 
+void Animation::setOnAnimFinished(OnAnimFinished EOnFinished)
+{
+	this->EOnFinished = EOnFinished;
+}
+
 bool Animation::isPlaying() const
 {
 	return this->bIsPlaying;
@@ -119,7 +123,7 @@ std::string Animation::getName() const
 
 SDL_Texture* Animation::getCurrentFrame() const
 {
-	return this->pCurrentFrame;
+	return this->vecFrames.empty() ? NULL : this->vecFrames[this->nFrameIndex];
 }
 
 unsigned int Animation::getFrameCount()
@@ -140,6 +144,11 @@ float Animation::getFrameRate() const
 AnimationType Animation::getType() const
 {
     return this->EType;
+}
+
+OnAnimFinished Animation::getOnAnimFinished() const
+{
+	return this->EOnFinished;
 }
 
 std::string Animation::getNextState() const

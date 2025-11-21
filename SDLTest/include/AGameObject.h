@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AComponent.h"
-#include "SpriteRenderer.h"
 #include "Vector2D.h"
 #include <vector>
 
@@ -10,14 +9,13 @@ class AGameObject
 protected:
     bool bEnabled;
     std::string strName;
-
+    
     AGameObject* pParent;
     std::vector<AGameObject*> vecChildren;
     std::vector<AComponent*> vecComponent;
 
     // X and Y since 2d
     bool bIsScreenObject;
-    bool bFollowParent;
     Vector2D fVecTranslate;
     Vector2D fVecScale;
     float fRot;
@@ -31,7 +29,6 @@ public:
     virtual void processInput(SDL_Event* eEvent);
     virtual void update(float fDeltaTime);
     virtual void draw(SDL_Renderer* pRenderer);
-    virtual SDL_FRect getGlobalBounds();
 
 public:
     void attachChild(AGameObject* pChild);
@@ -49,14 +46,21 @@ public:
     bool getEnabled() const;
     void setEnabled(bool bEnabled);
     std::string getName() const;
+    void setName(std::string strName);
     AGameObject* getParent() const;
     void setParent(AGameObject* pParent);
     void setPos(Vector2D fVecTranslate);
+    void setLocalPos(Vector2D fVecTranslate);
     void setScale(Vector2D fVecScale);
+    void setLocalScale(Vector2D fVecScale);
     Vector2D getPos();
+    Vector2D getLocalPos();
     Vector2D getScale();
+    Vector2D getLocalScale();
     void setRot(float fRot);
+    void setLocalRot(float fRot);
     float getRot();
+    float getLocalRot();
 
     bool getIsScreenObject() const;
     void setIsScreenObject(bool bIsScreenObject);

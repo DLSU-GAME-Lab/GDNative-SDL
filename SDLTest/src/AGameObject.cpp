@@ -1,14 +1,15 @@
 #include "AGameObject.h"
 #include "AGeneralInput.h"
+#include "ARenderer.h"
+#include "AAnimator.h"
+#include "Settings.h"
 #include <iostream>
-#include "Collider.h"
+
 AGameObject::AGameObject(std::string strName)
 {
     this->strName = strName;
     bEnabled = true;
-    bFollowParent = true;
     pParent = NULL;
-
     // defaults:
     this->fRot = 0.0f;
     this->fVecScale = Vector2D(1, 1);
@@ -42,11 +43,13 @@ void AGameObject::processInput(SDL_Event* eEvent)
     auto vecInput = this->getComponentsRecursively(ComponentType::INPUT);
     for (AComponent* pComponent : vecInput)
     {
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
+        
         AGeneralInput* input = (AGeneralInput*)pComponent;
         input->setEvent(eEvent);
         input->perform();
     }
-
 }
 
 void AGameObject::update(float fDeltaTime)
@@ -54,6 +57,20 @@ void AGameObject::update(float fDeltaTime)
     auto vecScript = this->getComponentsRecursively(ComponentType::SCRIPT);
     for (AComponent* pComponent : vecScript)
     {
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
+
+        pComponent->setDeltaTime(fDeltaTime);
+        pComponent->perform();
+    }
+
+    // Always update animations last
+    auto vecAnimator = this->getComponentsRecursively(ComponentType::ANIMATOR);
+    for (AComponent* pComponent : vecAnimator)
+    {
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
+
         pComponent->setDeltaTime(fDeltaTime);
         pComponent->perform();
     }
@@ -66,26 +83,34 @@ void AGameObject::draw(SDL_Renderer* pRenderer)
     for (AComponent* pComponent : vecRenderer)
     {
         AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
-        if (!pOwner || !pOwner->isGloballyEnabled())
-            continue;
+        if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
 
         ARenderer* renderer = (ARenderer*)pComponent;
         renderer->setSDLRenderer(pRenderer);
         pComponent->perform();
     }
 
+    if (showWidgets)
+    {
+        for (AComponent* pComponent : vecComponent)
+        {
+            if (pComponent->getOwner()->getEnabled() && pComponent->getEnabled())
+                pComponent->drawWidget();
+        }
+    }
 }
-SDL_FRect  AGameObject::getGlobalBounds()
-{
-    SpriteRenderer* renderer = (SpriteRenderer*)this->findComponentByName("SpriteRenderer");
-    SDL_FRect CTransform = renderer->getRect();
-    return CTransform;
-}
+
 void AGameObject::attachChild(AGameObject * pChild)
 {
     this->vecChildren.push_back(pChild);
+    if (this->bIsScreenObject != pChild->getIsScreenObject())
+    {
+        pChild->setIsScreenObject(this->bIsScreenObject);
+        std::cout << "[" << this->strName << "] WARNING: Attached child [" << pChild->getName() << "] has inherited screen object bool of parent!" << std::endl;
+    }
     pChild->setParent(this);
     pChild->initialize();
+    
 }
 
 void AGameObject::detachChild(AGameObject * pChild)
@@ -156,7 +181,6 @@ AComponent* AGameObject::findComponentByName(std::string strName)
             return pComponent;
     }
 
-    std::cout << "[ERROR] : Component [" << strName << "] NOT found." << std::endl;
     return NULL;
 }
 
@@ -208,22 +232,16 @@ bool AGameObject::getEnabled() const
 void AGameObject::setEnabled(bool bEnabled)
 {
     this->bEnabled = bEnabled;
-    if (!this->vecChildren.empty())
-    {
-        for (AGameObject* pObject:vecChildren)
-        {
-            if(pObject->getFollowParent())
-            {
-                pObject->setEnabled(bEnabled);
-            }
-            
-        }
-    }
 }
 
 std::string AGameObject::getName() const
 {
     return this->strName;
+}
+
+void AGameObject::setName(std::string strName)
+{
+    this->strName = strName;
 }
 
 AGameObject* AGameObject::getParent() const
@@ -238,48 +256,72 @@ void AGameObject::setParent(AGameObject* pParent)
 
 void AGameObject::setPos(Vector2D fVecTranslate)
 {
-    this->fVecTranslate = fVecTranslate;
-    if (!this->vecChildren.empty())
-    {
-        for(AGameObject* child: vecChildren)
-        {
-            if (child->pParent->getParent() != nullptr)
-            {
-                child->setPos(child->getParent()->getPos());
-            }
-            else
-            {
-                Vector2D fVecNewPos(child->getPos().x + child->getParent()->getPos().x, child->getPos().y + child->getParent()->getPos().y);
-                child->setPos(fVecNewPos);
-            }
-  
-        }
-    }
+    if (this->pParent) this->fVecTranslate = fVecTranslate - this->pParent->getPos();
+    else this->fVecTranslate = fVecTranslate;
+}
 
+void AGameObject::setLocalPos(Vector2D fVecTranslate)
+{
+    this->fVecTranslate = fVecTranslate;
 }
 
 void AGameObject::setScale(Vector2D fVecScale)
 {
+    if (this->pParent) this->fVecScale = fVecScale / this->pParent->getScale();
+    else this->fVecScale = fVecScale;
+}
+
+void AGameObject::setLocalScale(Vector2D fVecScale)
+{
     this->fVecScale = fVecScale;
 }
 
+void AGameObject::setRot(float fRot)
+{
+    if (this->pParent) this->fRot = fRot - this->pParent->getRot();
+    else this->fRot = fRot;
+}
+
+void AGameObject::setLocalRot(float fRot)
+{
+    this->fRot = fRot;
+}
+
 Vector2D AGameObject::getPos()
+{
+    if (this->pParent)
+        return this->pParent->getPos() + this->fVecTranslate;
+
+    return this->fVecTranslate;
+}
+
+Vector2D AGameObject::getLocalPos()
 {
     return this->fVecTranslate;
 }
 
 Vector2D AGameObject::getScale()
 {
+    if (this->pParent)
+        return this->pParent->getScale() * this->fVecScale;
+
     return this->fVecScale;
 }
 
-
-void AGameObject::setRot(float fRot)
+Vector2D AGameObject::getLocalScale()
 {
-    this->fRot = fRot;
+    return this->fVecScale;
 }
 
 float AGameObject::getRot()
+{
+    if (this->pParent)
+        return this->pParent->getRot() + this->fRot;
+
+    return this->fRot;
+}
+
+float AGameObject::getLocalRot()
 {
     return this->fRot;
 }
@@ -291,17 +333,8 @@ bool AGameObject::getIsScreenObject() const
 
 void AGameObject::setIsScreenObject(bool bIsScreenObject)
 {
+    if (this->pParent) return;
     this->bIsScreenObject = bIsScreenObject;
-}
-
-bool AGameObject::getFollowParent()
-{
-    return this->bFollowParent;
-}
-
-void AGameObject::setFollowParent(bool bFollowParent)
-{
-    this->bFollowParent = bFollowParent;
 }
 
 bool AGameObject::isGloballyEnabled() const

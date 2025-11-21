@@ -19,10 +19,14 @@ public:
 
 	void onAttach() override;
 	void perform() override;
+	void drawWidget() override;
 
 	void addTile(Uint64 c, Uint64 r, SDL_Texture* pTile);
 
 	void setTileSize(float fTileWidth, float fTileHeight);
 	void setOffset(Vector2D offset);
+
+	Vector2D getCellSize();
+	Vector2D getTilePosition(Uint64 c, Uint64 r, bool clamp = false);
 };
 

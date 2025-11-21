@@ -1,37 +1,72 @@
 #include "FontManager.h"
 
-TTF_Font* FontManager::getFont(std::string strFontName)
+TTF_Font* FontManager::getFont(const std::string& fontKey, int fontSize)
 {
-    if (this->mapFonts[strFontName] != NULL)
-        return this->mapFonts[strFontName];
+    std::string fullKey = fontKey + "_" + std::to_string(fontSize);
+    auto it = mapFonts.find(fullKey);
+    if (it != mapFonts.end()) return it->second;
 
-    else {
-        std::cout << "[ERROR] : Font [" << strFontName << "] NOT found." << std::endl;
-        return NULL;
-    }
-    
+    std::cerr << "[ERROR] Font [" << fullKey << "] not found.\n";
+    return nullptr;
 }
 
-void FontManager::loadFont(std::string strItem, std::string strName, int dFontSize)
+void FontManager::loadFont(const std::string& fileName, const std::string& fontKey, int fontSize)
 {
-    std::string strPath = "Assets/Fonts/" + strItem;
-    // DEBUG: print what path is being loaded
-    std::cout << "[DEBUG] Attempting to load font: " << strPath << std::endl;
-    
-    TTF_Font* fontLoad;
-    if (fontLoad = TTF_OpenFont(strPath.c_str(), dFontSize) ; fontLoad == nullptr)
+    std::string path = "Assets/Fonts/" + fileName;
+    std::string fullKey = fontKey + "_" + std::to_string(fontSize);
+
+    if (mapFonts.contains(fullKey)) return;
+
+    TTF_Font* font = TTF_OpenFont(path.c_str(), fontSize);
+    if (!font) {
+        std::cerr << "[ERROR] Failed to load font [" << fullKey << "]: " << SDL_GetError() << std::endl;
+        return;
+    }
+    else
     {
-        std::cout << "[ERROR] : Font[" << strName << "] could not be loaded. " << SDL_GetError() << std::endl;
+        std::cout << "[DEBUG] " << fullKey << " has been loaded" << std::endl;
+    }
+    mapFonts[fullKey] = font;
+}
+
+void FontManager::unloadFontFamily(const std::string& fontKey)
+{
+    for (auto it = mapFonts.begin(); it != mapFonts.end(); ) {
+        if (it->first.starts_with(fontKey + "_")) {
+            TTF_CloseFont(it->second);
+            it = mapFonts.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}
+
+void FontManager::unloadAllFonts()
+{
+    if (mapFonts.empty())
+    {
+        std::cout << "[FontManager] No fonts to unload.\n";
+        return;
+    }
+    for (auto& pair : mapFonts)
+    {
+        if (pair.second)
+        {
+            std::cout << "[DEBUG] " << pair.first << " has been removed" << std::endl;
+
+            TTF_CloseFont(pair.second);
+        }
     }
 
-    this->mapFonts[strName] = (fontLoad);
+    mapFonts.clear();
+    std::cout << "[FontManager] All fonts unloaded.\n";
+
 }
-void FontManager::unloadFont(std::string strName)
-{
-    TTF_CloseFont(this->mapFonts[strName]);
-    this->mapFonts.erase(strName);
-    std::cout << "Font: " << strName << " Unloaded" << std::endl;
-}
+
+
+
+
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */

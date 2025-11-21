@@ -13,6 +13,7 @@ private:
     AScene* pActiveScene = NULL;
     bool bLoading = false;
     SceneTag ESceneToLoad = SceneTag::NONE;
+    SDL_Renderer* pRenderer;
 
 public:
     void registerScene(AScene* pScene);
@@ -24,6 +25,7 @@ public:
     bool isLoaded(SceneTag ETag);
     SceneTag getLoadedSceneTag() const;
     int getRegisteredSceneAmount() const;
+
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

@@ -94,23 +94,20 @@ void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
     ImGui::DragFloat("Move Speed", &this->fCamMoveSpeed);
     ImGui::DragFloat("Scale Speed", &this->fCamScaleSpeed);
     
-    if (ImGui::DragFloat2("Position", scenePos) &&
-        ImGui::IsItemDeactivatedAfterEdit())
+    if (ImGui::DragFloat2("Position", scenePos))
     {
         cam->setPos(Vector2D(scenePos[0], scenePos[1]));
     }
 
-    if (ImGui::DragFloat2("Scale", sceneScale, 1.0f, 0.001f, 0.0f) &&
-        ImGui::IsItemDeactivatedAfterEdit())
+    if (ImGui::DragFloat2("Scale", sceneScale, 0.01f, 0.001f, 0.0f))
     {
         cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
     }
 
-    //if (ImGui::DragFloat("Rotation", &sceneRot) &&
-    //    ImGui::IsItemDeactivatedAfterEdit())
-    //{
-    //    cam->setRot(sceneRot);
-    //}
+    if (ImGui::DragFloat("Rotation", &sceneRot))
+    {
+        cam->setRot(sceneRot);
+    }
 
     ImGui::EndChild();
 }
@@ -139,22 +136,19 @@ void InspectorScreen::showTransform(ImGuiChildFlags childFlags)
         float sceneRot = rot;
         float sceneScale[] = { scale.x, scale.y };
 
-        if (ImGui::InputFloat2("Position", scenePos) &&
-            ImGui::IsItemDeactivatedAfterEdit())
+        if (ImGui::DragFloat2("Position", scenePos))
         {
             this->selectedObject->setPos(Vector2D(scenePos[0], scenePos[1]));
         }
 
-        if (ImGui::InputFloat("Rotation", &sceneRot) &&
-            ImGui::IsItemDeactivatedAfterEdit())
-        {
-            this->selectedObject->setRot(sceneRot);
-        }
-
-        if (ImGui::InputFloat2("Scale", sceneScale) &&
-            ImGui::IsItemDeactivatedAfterEdit())
+        if (ImGui::DragFloat2("Scale", sceneScale, 0.01f, 0.0f, 0.0f))
         {
             this->selectedObject->setScale(Vector2D(sceneScale[0], sceneScale[1]));
+        }
+
+        if (ImGui::DragFloat("Rotation", &sceneRot))
+        {
+            this->selectedObject->setRot(sceneRot);
         }
     }
     ImGui::EndChild();

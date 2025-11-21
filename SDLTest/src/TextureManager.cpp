@@ -10,6 +10,7 @@
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
+#include "RendererContext.h"
 
 // load: per-file cost dominated by I/O and decoding. Algorithmic container
 // insertions are O(1). As number of textures V increases, memory usage and
@@ -73,13 +74,13 @@ void TextureManager::loadFromFolder(std::string strPath, std::string strName)
 
 // loadFromText: O(1) algorithmically; TTF rendering cost is an expensive
 // constant that affects wall-time.
-void TextureManager::loadFromText(std::string strName, std::string fontType, std::string textureText, SDL_Color textColor)
+void TextureManager::loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor)
 {
     // O(1): creates texture from text; I/O and render cost from SDL_ttf.
-    SDL_Surface* textSurface = TTF_RenderText_Blended(FontManager::getInstance()->getFont(fontType), textureText.c_str(), 0, textColor);
+    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(FontManager::getInstance()->getFont(fontType, nFontSize), textureText.c_str(), 0, textColor, 0);
     if (textSurface == nullptr)
     {
-        std::cout<<"[ERROR]: Could not render text." << SDL_GetError() << std::endl;
+        std::cout << "[ERROR]: Could not render text." << SDL_GetError() << std::endl;
         return;
     }
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, textSurface);
@@ -158,6 +159,7 @@ SDL_Texture* TextureManager::get(const std::string& strName)
  *       SINGLETON-RELATED CONTENT       * 
  * * * * * * * * * * * * * * * * * * * * */
 TextureManager* TextureManager::P_SHARED_INSTANCE = NULL;
+
 
 void TextureManager::initialize(SDL_Renderer* pRenderer)
 {

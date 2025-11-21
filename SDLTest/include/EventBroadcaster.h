@@ -19,6 +19,9 @@ class EventBroadcaster {
         void unregisterListener(EventListener* pListener);
         void unregisterAllListeners();
         void broadcast(EventKey EKey, std::unordered_map<std::string, void*> mapParameter = {});
+        void disableOtherListenerExcept(EventListener* pListenerExcluded);
+        void enableListener(std::string strName);
+        void enableAllListeners();
 
     private:
         int findListener(EventListener* pListener, std::vector<EventListener*> vecListener = {});

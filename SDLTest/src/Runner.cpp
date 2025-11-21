@@ -29,6 +29,7 @@
 #include "SceneTransitionManager.h" 
 #include "FontManager.h"
 #include "EventBroadcaster.h"
+#include "AudioManager.h"
 
 // metrics
 #include "MetricsManager.h"
@@ -44,16 +45,12 @@
 
 Runner::Runner()
 {
-	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO) == 0)
+	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_AUDIO) == 0)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
 	}
 
-	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Hello World",
-		"!! Your SDL project successfully runs on Android !!", NULL) == 0)
-	{
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_ShowSimpleMessageBox failed (%s)", SDL_GetError());
-	}
+	
 
 	std::cout << "|===========================================|\n";
 	std::cout << "|----------| SDL VERSION: " <<
@@ -95,24 +92,17 @@ Runner::Runner()
 	CameraManager::getInstance()->setWindowSize(this->pWindow);
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
+	CameraManager::initialize();
+	RendererContext::initialize(this->pRenderer);
+	// setWindowSize likely O(1) or O(#render targets)
+	CameraManager::getInstance()->setWindowSize(this->pWindow);
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
-	EventBroadcaster::initialize();
+	AudioManager::initialize();
+	UIManager::initialize(this->pWindow, this->pRenderer);
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
-
-#if !EDITOR_MODE
-	std::cout << "[Runner] Initializing ImGui (runner-owned)..." << std::endl;
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplSDL3_InitForSDLRenderer(this->pWindow, this->pRenderer);
-	ImGui_ImplSDLRenderer3_Init(this->pRenderer);
-#else
-	std::cout << "[Runner] Editor mode active: UIManager should own ImGui." << std::endl;
-#endif
-
 #if EDITOR_MODE
 	Editor::EditorModule::initialize(this->pWindow, this->pRenderer);
 #endif
@@ -135,7 +125,8 @@ Runner::~Runner()
 #if EDITOR_MODE
 	Editor::EditorModule::destroy();
 #endif
-
+	AudioManager::destroy();
+	UIManager::destroy();
 	TextureManager::destroy();
 	CameraManager::destroy();
 	SceneManager::destroy();
@@ -143,6 +134,7 @@ Runner::~Runner()
 	SceneTransitionManager::destroy();
 	EventBroadcaster::destroy();
 	MetricsManager::destroy();
+	RendererContext::destroy();
 
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
@@ -230,7 +222,9 @@ void Runner::processEvents(SDL_Event* eEvent)
 void Runner::update(float fDeltaTime)
 {
 	GameObjectManager::getInstance()->update(fDeltaTime);
+	AudioManager::getInstance()->update();
 	SceneTransitionManager::getInstance()->update();
+	GameObjectManager::getInstance()->cleanUpDeletedObjects();
 }
 
 void Runner::render()
@@ -262,7 +256,12 @@ void Runner::render()
 	// draw fade/transition overlay last
 	SceneTransitionManager::getInstance()->draw(this->pRenderer);
 
-	SDL_RenderPresent(this->pRenderer);
+	MetricsManager::getInstance()->drawGUI();
+	UIManager::getInstance()->drawAllUI(this->pRenderer);
+
+	// present the frame. This call may block until GPU / vsync flush depending
+	// on renderer configuration - it's expensive in time but constant in ops.
+	SDL_RenderPresent(this->pRenderer); // O(1) but expensive in time
 }
 
 void Runner::registerScenes()

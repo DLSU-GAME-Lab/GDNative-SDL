@@ -85,8 +85,8 @@ void Editor::EditorModule::updateGameObjects(float fDeltaTime)
 
         if (camScale.x < 0.0f)
         {
-            camScale.x = 0.0f;
-            camScale.y = 0.0f;
+            camScale.x = 0.001f;
+            camScale.y = 0.001f;
         }
 
         cam->setScale(camScale);
@@ -165,10 +165,7 @@ bool Editor::EditorModule::contains(AGameObject* pObject, Vector2D mousePos)
 Vector2D Editor::EditorModule::getMouseWorldPos() const
 {
     Camera* cam = CameraManager::getInstance()->getCurrentCamera();
-    Vector2D mouseWorldPos;
-
-    mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
-    mouseWorldPos.y = (-(this->mousePos.y - cam->getPos().y - cam->getHalfHeight())) * cam->getScale().y;
+    Vector2D mouseWorldPos = cam->screenToWorldPoint(this->mousePos);
 
     return mouseWorldPos;
 }

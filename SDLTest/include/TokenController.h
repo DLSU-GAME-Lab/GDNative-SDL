@@ -1,6 +1,7 @@
 #pragma once
 #include "AComponent.h"
 #include "ButtonInput.h"
+#include "EventBroadcaster.h"
 class TokenController : public AComponent
 {
 private:

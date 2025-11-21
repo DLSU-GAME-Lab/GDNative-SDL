@@ -7,6 +7,8 @@ ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 	this->bHolding = false;
 	this->bDragging = false;
 	this->bClicked = false;
+	this->bRightClick = false;
+	this->bLefttClick = false;
 }
 
 ButtonInput::~ButtonInput()
@@ -50,11 +52,7 @@ Vector2D ButtonInput::getMousePos() const
 Vector2D ButtonInput::getMouseWorldPos() const
 {
 	Camera* cam = CameraManager::getInstance()->getCurrentCamera();
-	Vector2D mouseWorldPos;
-
-	mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
-	mouseWorldPos.y = (-(this->mousePos.y - cam->getPos().y - cam->getHalfHeight())) * cam->getScale().y;
-
+	Vector2D mouseWorldPos = cam->screenToWorldPoint(mousePos);
 	return mouseWorldPos;
 }
 
@@ -78,6 +76,26 @@ void ButtonInput::setClicked(bool bClicked)
 	this->bClicked = bClicked;
 }
 
+bool ButtonInput::isRightClick()
+{
+	return this->bRightClick;
+}
+
+void ButtonInput::setRightClick(bool bRightClick)
+{
+	this->bRightClick = bRightClick;
+}
+
+bool ButtonInput::isLeftClick()
+{
+	return this->bLefttClick;
+}
+
+void ButtonInput::setLeftClick(bool bLeftClick)
+{
+	this->bLefttClick = bLeftClick;
+}
+
 void ButtonInput::onMouseHovered(Vector2D mousePos)
 {
 	this->mousePos = mousePos;
@@ -88,6 +106,7 @@ void ButtonInput::onMouseHovered(Vector2D mousePos)
 void ButtonInput::onMouseButtonDown(Uint8 mouseButton)
 {
 	this->bHolding = true;
+
 }
 
 void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
@@ -95,6 +114,15 @@ void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 	this->bHolding = false;
 	this->bDragging = false;
 	this->bClicked = true;
+	if (mouseButton == SDL_BUTTON_RIGHT)
+	{
+		this->bRightClick = true;
+	}
+	else if (mouseButton == SDL_BUTTON_LEFT)
+	{
+		this->bLefttClick = true;
+	}
+
 }
 
 bool ButtonInput::contains() const

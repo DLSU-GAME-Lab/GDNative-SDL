@@ -12,10 +12,12 @@ private:
     SDL_Texture* pTexture;
     SDL_Color mColor;
     SDL_FRect mDestRect;
+    SDL_FRect mCropRect;
     bool flipX, flipY;
     double dAngle;
     std::string m_textureKey;
     Vector2D texSize;
+    Vector2D crop;
     Vector2D pivot;
 
 public:
@@ -25,6 +27,7 @@ public:
     ~SpriteRenderer();
 
     void perform() override;
+    void drawWidget() override;
 
     // setters
     void setTexture(SDL_Texture* pTexture);
@@ -37,11 +40,13 @@ public:
     void setAngle(double dAngle);
     void setPivot(Vector2D pivot);
     void setColor(SDL_Color color);
+    void setCropRect(SDL_FRect mCropRect);
 
     // getters
     SDL_Texture* getTexture();
     SDL_Color getColor() const;
     SDL_FRect getRect() const;
+    SDL_FRect getCropRect() const;
     bool getflipX();
     bool getFlipY();
     double getAngle();

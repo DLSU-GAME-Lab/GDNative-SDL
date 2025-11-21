@@ -87,7 +87,7 @@ void GameObjectManager::deleteAllObjects()
 {
     // Iterate once: erase from map and delete each pointer.
     for (int i = 0; i < this->vecGameObject.size(); i++)
-        delete this->vecGameObject[i];
+        this->deleteObject(this->vecGameObject[i]);
 
     // Clear containers, O(1) operations relative to content
     this->vecGameObject.clear();

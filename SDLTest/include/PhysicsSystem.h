@@ -20,6 +20,8 @@ public:
     void untrackCollider(ACollider* pCollider);
     void addRigidBody(RigidBody* pRigidBody);
     void cleanUp();
+    void clearAll();
+   
 
 private:
     int findTrackedCollider(ACollider* pCollider);

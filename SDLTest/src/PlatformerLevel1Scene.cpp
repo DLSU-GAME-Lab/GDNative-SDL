@@ -636,7 +636,6 @@ void PlatformerLevel1Scene::onUnloadResources()
 
 void PlatformerLevel1Scene::onUnloadObjects()
 {
-	PhysicsSystem::getInstance()->clearAll();
 	AudioManager::getInstance()->stopAll();
 	AScene::onUnloadObjects();
 }

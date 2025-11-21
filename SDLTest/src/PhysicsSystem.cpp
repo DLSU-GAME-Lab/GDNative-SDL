@@ -120,14 +120,6 @@ void PhysicsSystem::cleanUp()
     this->vecUntrackedCollider.clear();
 }
 
-void PhysicsSystem::clearAll()
-{
-    
-    vecTrackedCollider.clear();
-    vecUntrackedCollider.clear();
-    vecRigidBody.clear();
-    
-}
 
 int PhysicsSystem::findTrackedCollider(ACollider* pCollider) {
     int nIndex = -1;

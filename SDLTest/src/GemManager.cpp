@@ -5,6 +5,7 @@
 #include <ctime>
 #include <cstdlib>
 #include "EventBroadcaster.h"
+#include "AudioManager.h"
 void GemManager::onAttach()
 {
     for (Uint8 r = 0; r < this->nHeight; r++)
@@ -32,6 +33,16 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("gems/SP_Gem_Purple.png", "Purple");
     TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "Red");
     TextureManager::getInstance()->load("gems/SP_Gem_White.png", "White");
+
+	AudioManager::getInstance()->load("sounds/SFX/Swap_SFX.wav", "Swap");
+	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_1.wav", "Match_1");
+	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_2.wav", "Match_2");
+	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_3.wav", "Match_3");
+
+	AudioManager::getInstance()->load("sounds/SFX/Win_SFX.wav", "Win_SFX");
+	AudioManager::getInstance()->load("sounds/SFX/Win_Laugh.wav", "Win_Laugh");
+	AudioManager::getInstance()->load("sounds/SFX/Lose_SFX.wav", "Lose_SFX");
+	AudioManager::getInstance()->load("sounds/SFX/Lose_Sigh.wav", "Lose_Sigh");
 }
 
 void GemManager::unloadResources()
@@ -42,6 +53,16 @@ void GemManager::unloadResources()
     TextureManager::getInstance()->unload("Purple");
     TextureManager::getInstance()->unload("Red");
     TextureManager::getInstance()->unload("White");
+
+    AudioManager::getInstance()->unload("Swap");
+    AudioManager::getInstance()->unload("Match_1");
+    AudioManager::getInstance()->unload("Match_2");
+    AudioManager::getInstance()->unload("Match_3");
+
+    AudioManager::getInstance()->unload("Win_SFX");
+    AudioManager::getInstance()->unload("Win_Laugh");
+    AudioManager::getInstance()->unload("Lose_SFX");
+    AudioManager::getInstance()->unload("Lose_Laugh");
 }
 
 // user selected a gem; handle selection, swapping, checking, and chain reactions
@@ -97,6 +118,7 @@ void GemManager::moveGems()
 
     this->setTween(*this->pSelected[0], Vector2D(0.0f));
     this->setTween(*this->pSelected[1], Vector2D(0.0f));
+    AudioManager::getInstance()->play(new AudioPlayer("Swap", AudioGroupTag::SFX));
 }
 
 void GemManager::setTween(GemData gemData, Vector2D startOffset, bool bounce)
@@ -409,8 +431,13 @@ void GemManager::updateBoard()
             }
             toRemove.clear();
 
+            std::string sfxName = "Match_";
+            sfxName += std::to_string((rand() % 3) + 1);
+            AudioManager::getInstance()->play(new AudioPlayer(sfxName, AudioGroupTag::SFX));
+
             this->cascadeDown();
             this->spawnGems(this->fGemScale);
+
         } while (this->checkMatches());
         AGameObject* pHolder = GameObjectManager::getInstance()->findObjectByName("EndScreen");
         GameObjectManager::getInstance()->sortObjectToEnd(pHolder);

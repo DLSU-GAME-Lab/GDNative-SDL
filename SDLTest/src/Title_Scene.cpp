@@ -8,6 +8,7 @@
 #include "Sprite.h"
 #include "AnimatedSprite.h"
 #include "SceneSwitcher.h"
+#include "AudioManager.h"
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
 {
@@ -28,6 +29,7 @@ void Title_Scene::onLoadResources()
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_LevelEntry_Bg.png", "Level_Button");
     TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
     TextureManager::getInstance()->load("Sprite_Bubble_Small.png", "Bubble");
+    AudioManager::getInstance()->load("sounds/Music/Music_Loop.wav", "Music");
 }
 
 void Title_Scene::onLoadObjects()
@@ -82,7 +84,9 @@ void Title_Scene::onLoadObjects()
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelThree);
     SceneSwitcher* pLevelThreeSwitcher = new SceneSwitcher(SceneTag::LEVEL_3_SCENE);
     pLevelThree->attachComponent(pLevelThreeSwitcher);
-  
+    
+    if (!AudioManager::getInstance()->isPlaying("BGM"))
+	    AudioManager::getInstance()->play(new AudioPlayer("Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void Title_Scene::onUnloadResources()
@@ -103,6 +107,7 @@ void Title_Scene::onUnloadResources()
 
 void Title_Scene::onUnloadObjects()
 {
+    AudioManager::getInstance()->unload("Music");
     // base implementation to remove all objects
     AScene::onUnloadObjects();
 }

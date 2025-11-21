@@ -1,5 +1,6 @@
 #include "TrackerManager.h"
 #include "GameObjectManager.h"
+#include "AudioManager.h"
 TrackerManager* TrackerManager::P_SHARED_INSTANCE = NULL;
 
 TrackerManager::TrackerManager(std::string strName, AGameObject* pOwner) :AComponent(strName, ComponentType::SCRIPT)
@@ -109,6 +110,8 @@ void TrackerManager::onEventTrigger(std::unordered_map<std::string, void*> mapPa
 			//broadcast event for victory screen
 			victoryParams["isVictory"] = static_cast<void*>(&this->bVictory);
 			EventBroadcaster::getInstance()->broadcast(EventKey::GAME_END, victoryParams);
+			AudioManager::getInstance()->play(new AudioPlayer("Win_SFX", AudioGroupTag::SFX));
+			AudioManager::getInstance()->play(new AudioPlayer("Win_Laugh", AudioGroupTag::SFX));
 		}
 	}
 

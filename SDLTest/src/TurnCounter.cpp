@@ -1,6 +1,7 @@
 #include "TurnCounter.h"
 #include "GameObjectManager.h"
 #include "EndScreen.h"
+#include "AudioManager.h"
 TurnCounter::TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, Vector2D fVecScale):AGameObject(strName)
 {
 	this->nTurnsLeft = nTurnsLeft;
@@ -72,6 +73,8 @@ void TurnCounter::updateCounter(int nSubtractValue)
 		bool bVictory = false;
 		victoryParams["isVictory"] = static_cast<void*>(&bVictory);
 		EventBroadcaster::getInstance()->broadcast(EventKey::GAME_END, victoryParams);
+		AudioManager::getInstance()->play(new AudioPlayer("Lose_SFX", AudioGroupTag::SFX));
+		AudioManager::getInstance()->play(new AudioPlayer("Lose_Sigh", AudioGroupTag::SFX));
 	}
 	Text* pText = (Text*)this->findChildByName(this->getName());
 	pText->modifyText(std::to_string(this->nTurnsLeft));

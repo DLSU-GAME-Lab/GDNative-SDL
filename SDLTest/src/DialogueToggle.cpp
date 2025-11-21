@@ -1,5 +1,7 @@
 #include "DialogueToggle.h"
-
+#include"ButtonInput.h"
+#include "EventBroadcaster.h"
+#include "AGameObject.h"
 DialogueToggle::DialogueToggle(EventKey EKey):AComponent("DialogueToggle",ComponentType::SCRIPT)
 {
 	this->nCounter = 0;

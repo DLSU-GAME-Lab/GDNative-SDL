@@ -22,12 +22,10 @@ void EndScreen::initialize()
 {
 
 	this->pWinBanner = new Sprite("VictoryRibbon", "Victory_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
-	this->pWinBanner->setFollowParent(false);
 	this->pWinBanner->setEnabled(false);
 	this->attachChild(this->pWinBanner);
 
 	this->pLoseBanner = new Sprite("DefeatRibbon", "Defeat_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
-	this->pLoseBanner->setFollowParent(false);
 	this->pLoseBanner->setEnabled(false);
 	this->attachChild(this->pLoseBanner);
 
@@ -37,21 +35,25 @@ void EndScreen::initialize()
 	SceneSwitcher* pSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
 	pReturn->attachComponent(pSwitcher);
 
-	Text* pVictoryText = new Text("VictoryText", "Victory", Vector2D(0, 250), Vector2D(2, 2), 0, false);
-	pVictoryText->setFont("Curse45");
+	Text* pVictoryText = new Text("VictoryText", "CurseCasual.ttf", 90, 0, false);
+	pVictoryText->setMessage("Victory");
 	pVictoryText->setColor(SDL_Color(255, 223, 0, 255));
 	pWinBanner->attachChild(pVictoryText);
+	pVictoryText->setPos(Vector2D(0, 250));
 
-	Text* pDefeatText = new Text("DefeatText", "Defeat", Vector2D(0, 250), Vector2D(2, 2), 0, false);
-	pDefeatText->setFont("Curse45");
+	Text* pDefeatText = new Text("DefeatText", "CurseCasual.ttf", 90, 0, false);
+	pDefeatText->setMessage("Defeat");
 	pDefeatText->setColor(SDL_Color(255, 223, 0, 255));
 	pLoseBanner->attachChild(pDefeatText);
+	pDefeatText->setPos(Vector2D(0, 250));
 
-	Text* pReturnText = new Text("ReturnText", "Level Select", Vector2D(0, -100), Vector2D(1, 1), 0, false);
-	pReturnText->setFont("Curse45");
+	Text* pReturnText = new Text("ReturnText", "CurseCasual.ttf", 45, 0, false);
+	pReturnText->setMessage("Level Select");
 	pReturnText->setColor(SDL_Color(255, 255, 255, 255));
 	pReturn->attachChild(pReturnText);
 	EventBroadcaster::getInstance()->registerListener(this);
+	pDefeatText->setPos(Vector2D(0, -100));
+
 
 }
 
@@ -65,11 +67,14 @@ void EndScreen::onEventTrigger(std::unordered_map<std::string, void*> mapParamet
 	{
 		this->bEnabled = true;
 		this->pWinBanner->setEnabled(true);
+		this->pLoseBanner->setEnabled(false);
 	}
 	else
 	{
 		this->bEnabled = true;
 		this->pLoseBanner->setEnabled(true);
+		this->pWinBanner->setEnabled(false);
+
 	}
 }
 

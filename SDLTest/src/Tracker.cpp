@@ -19,9 +19,10 @@ void Tracker::initialize()
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName);
     this->attachComponent((AComponent*)pSpriteRenderer);
 
-    Text* pCounterText = new Text(this->strName, std::to_string(this->nTargetLeft), Vector2D(-40, 0), Vector2D(.75, .75), 0, false);
-    pCounterText->setFont("Curse45");
+    Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 35, 0, false);
+    pCounterText->setMessage(std::to_string(this->nTargetLeft));
     this->attachChild(pCounterText);
+    pCounterText->setPos(Vector2D(-40, 0));
 }
 
 void Tracker::updateScore(int nSubtractValue)

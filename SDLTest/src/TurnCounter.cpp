@@ -43,12 +43,15 @@ std::string TurnCounter::getListenerOwnerName()
 
 void TurnCounter::initialize()
 {
-	Text* pTitleText = new Text(this->strName + "Text", "Turns Left: ", this->fVecPos + Vector2D(0,30), this->fVecScale, 0, false);
-	pTitleText->setFont("Curse45");
+	Text* pTitleText = new Text(this->strName + "Text", "CurseCasual.ttf", 35, 0, false);
+	pTitleText->setMessage("Turns Left: ");
 	this->attachChild(pTitleText);
-	Text* pCounterText = new Text(this->strName, std::to_string(this->nTurnsLeft),this->fVecPos, this->fVecScale, 0, false);
-	pCounterText->setFont("Curse45");
+	pTitleText->setPos(this->fVecPos + Vector2D(0, 30));
+
+	Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 35, 0, false);;
+	pCounterText->setMessage(std::to_string(this->nTurnsLeft));
 	this->attachChild(pCounterText);
+	pCounterText->setPos(this->fVecPos);
 	EventBroadcaster::getInstance()->registerListener(this);
 }
 void TurnCounter::disableCounter()

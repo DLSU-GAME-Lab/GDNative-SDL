@@ -74,7 +74,6 @@ void Level_3_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Victory_Ribbon");
 	TextureManager::getInstance()->unload("Defeat_Ribbon");
 	TextureManager::getInstance()->unload("Green_Button");
-	FontManager::getInstance()->unloadFont("Curse45");
 	TextureManager::getInstance()->unload("Red");
 	TextureManager::getInstance()->unload("Green");
 	TextureManager::getInstance()->unload("Blue");

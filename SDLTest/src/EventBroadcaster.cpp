@@ -94,4 +94,9 @@ EventBroadcaster* EventBroadcaster::getInstance() {
 
     return P_SHARED_INSTANCE;
 }
+
+void EventBroadcaster::destroy()
+{
+
+}
 /* * * * * * * * * * * * * * * * * * * * */

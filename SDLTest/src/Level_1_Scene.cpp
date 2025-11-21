@@ -25,7 +25,7 @@ void Level_1_Scene::onLoadResources()
 	TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
 	TextureManager::getInstance()->load("levels/Level_1.png", "Level_Container");
 	TextureManager::getInstance()->load("Sprite_Bubble_Small.png", "Bubble");
-	FontManager::getInstance()->loadFont("CurseCasual.ttf", "Curse45", 45);
+	FontManager::getInstance()->loadFont("", "Curse45", 45);
 	GemManager::loadResources();
 }
 
@@ -64,7 +64,6 @@ void Level_1_Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("Victory_Ribbon");
 	TextureManager::getInstance()->unload("Defeat_Ribbon");
 	TextureManager::getInstance()->unload("Green_Button");
-	FontManager::getInstance()->unloadFont("Curse45");
 	TextureManager::getInstance()->unload("Red");
 	TextureManager::getInstance()->unload("Green");
 	TextureManager::getInstance()->unload("Blue");

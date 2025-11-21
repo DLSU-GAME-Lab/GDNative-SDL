@@ -70,12 +70,4 @@ void Text::modifyText(std::string strNewText)
 	pRenderer->loadFromText(this->strName, key, this->nFontSize, strNewText, this->color);
 }
 
-void Text::modifyText(std::string strNewText)
-{
-	TextureManager::getInstance()->unload(this->strName + " Text");
-	TextureManager::getInstance()->loadFromText(this->strName + " Text", this->strFontName, strNewText, this->color);
-	SpriteRenderer* pRenderer = (SpriteRenderer*)this->findComponentByName("SpriteRenderer");
-	SDL_Texture* pTex = TextureManager::getInstance()->get(this->strName + " Text");
-	pRenderer->setTexture(pTex);
 
-}

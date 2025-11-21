@@ -1,6 +1,6 @@
 #pragma once
-#include "DialogueBox.h"
 #include "AComponent.h"
+#include "EnumEventKey.h"
 class DialogueToggle:public AComponent
 {
 private:

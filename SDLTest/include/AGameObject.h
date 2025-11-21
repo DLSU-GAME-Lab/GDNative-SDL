@@ -64,8 +64,7 @@ public:
 
     bool getIsScreenObject() const;
     void setIsScreenObject(bool bIsScreenObject);
-    bool getFollowParent();
-    void setFollowParent(bool bFollowParent);
+
     bool isGloballyEnabled() const;
  
 

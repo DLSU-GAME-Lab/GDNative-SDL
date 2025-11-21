@@ -176,6 +176,11 @@ float AudioManager::getVolume(AudioGroupTag ETag)
     return this->mapGroupVolumes[ETag];
 }
 
+bool AudioManager::isPlaying(std::string strKey)
+{
+    return this->mapPlaying.contains(strKey);
+}
+
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */

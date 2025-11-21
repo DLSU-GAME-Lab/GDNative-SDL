@@ -34,6 +34,7 @@ public:
 	void setVolume(AudioGroupTag ETag, float fVolume);
 	float getVolume(std::string strKey);
 	float getVolume(AudioGroupTag ETag);
+    bool isPlaying(std::string strKey);
 
 private:
     void stopByData(AudioPlayer* pPlayer);

@@ -13,7 +13,6 @@ TurnCounter::TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, 
 
 TurnCounter::~TurnCounter()
 {
-	EventBroadcaster::getInstance()->unregisterListener(this);
 }
 
 void TurnCounter::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)

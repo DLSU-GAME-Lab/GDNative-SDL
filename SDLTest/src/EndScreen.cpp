@@ -17,7 +17,6 @@ EndScreen::EndScreen(std::string strName):AGameObject(strName)
 
 EndScreen::~EndScreen()
 {
-	EventBroadcaster::getInstance()->unregisterListener(this);
 
 }
 

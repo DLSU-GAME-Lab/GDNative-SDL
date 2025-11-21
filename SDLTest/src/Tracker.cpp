@@ -6,7 +6,7 @@ Tracker::Tracker(std::string strName, std::string strImageName, GemType EGem, in
     this->nTargetLeft = this->nTargetDestroy = nTargetDestroy;
     this->strImageName = strImageName;
     this->fVecTranslate = Vector2D(0, 0);
-    this->fVecScale = Vector2D(.075, .075);
+    this->fVecScale = Vector2D(1, 1);
     this->EGem = EGem;
     this->bIsZero = false;
 }

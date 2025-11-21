@@ -117,3 +117,16 @@ EventKey TrackerManager::getKey()
 {
 	return this->EKey;
 }
+
+bool TrackerManager::isListenerEnabled()
+{
+	return false;
+}
+
+void TrackerManager::setListenerEnabled(bool bListenerEnabled)
+{}
+
+std::string TrackerManager::getListenerOwnerName()
+{
+	return std::string();
+}

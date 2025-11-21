@@ -28,6 +28,9 @@ public:
     // Inherited via EventListener
     void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;
     EventKey getKey() override;
+    virtual bool isListenerEnabled() override;
+    virtual void setListenerEnabled(bool bListenerEnabled) override;
+    virtual std::string getListenerOwnerName() override;
     /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */

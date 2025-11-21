@@ -1,6 +1,6 @@
 #pragma once
 #include "string"
-#include "Prop.h"
+#include "Sprite.h"
 #include "AGameObject.h"
 #include "Text.h"
 #include "EnumGemType.h"

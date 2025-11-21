@@ -103,19 +103,19 @@ void Level_3_Scene::loadGUI()
 
 	BubbleManager::initialize(50);
 
-	Prop* pObjectBG = new Prop("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
+	Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
 
-	Prop* pLevelContainer = new Prop("Level_Container", "Level_Container", Vector2D(0, -20), Vector2D(1.5f, 1.5f), 0.0f, false);
+	Sprite* pLevelContainer = new Sprite("Level_Container", "Level_Container", Vector2D(0, -20), Vector2D(1.5f, 1.5f), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLevelContainer);
 
-	Prop* pLowerUIContainer = new Prop("Lower_UI_Container", "UI_Container", Vector2D(0, -540), Vector2D(20, 2.f), 0.0f, false);
+	Sprite* pLowerUIContainer = new Sprite("Lower_UI_Container", "UI_Container", Vector2D(0, -540), Vector2D(20, 2.f), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLowerUIContainer);
 
-	Prop* pUpperUIContainer = new Prop("Upper_UI_Container", "Top_UI_Container", Vector2D(0, 520), Vector2D(500, 1.f), 0.0f, false);
+	Sprite* pUpperUIContainer = new Sprite("Upper_UI_Container", "Top_UI_Container", Vector2D(0, 520), Vector2D(500, 1.f), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pUpperUIContainer);
 
-	Prop* pUIContainerExtra = new Prop("Level_Container_Extra", "Level_Container_Extra", Vector2D(0, 547), Vector2D(1, 1), 0.0f, false);
+	Sprite* pUIContainerExtra = new Sprite("Level_Container_Extra", "Level_Container_Extra", Vector2D(0, 547), Vector2D(1, 1), 0.0f, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pUIContainerExtra);
 
 	GUIButton* pSettings = new GUIButton("Settings", "Settings");

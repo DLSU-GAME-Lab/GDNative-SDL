@@ -413,7 +413,7 @@ void GemManager::updateBoard()
             this->spawnGems(this->fGemScale);
         } while (this->checkMatches());
         AGameObject* pHolder = GameObjectManager::getInstance()->findObjectByName("EndScreen");
-        GameObjectManager::getInstance()->sortObjectToEnd(pHolder);
+        //GameObjectManager::getInstance()->sortObjectToEnd(pHolder);
     }
     else this->moveGems();
 

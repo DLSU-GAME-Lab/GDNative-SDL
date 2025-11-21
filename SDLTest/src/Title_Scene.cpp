@@ -5,7 +5,7 @@
 #include "TextureManager.h"
 #include "BubbleManager.h"
 #include "EnumSceneTag.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "AnimatedSprite.h"
 #include "SceneSwitcher.h"
 Title_Scene::Title_Scene()
@@ -37,31 +37,31 @@ void Title_Scene::onLoadObjects()
 
     BubbleManager::initialize(50);
 
-    Prop* pObjectBG = new Prop("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
+    Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
 
-    Prop* pLogo = new Prop("Title_Logo", "Title_Logo",Vector2D(0, 250), Vector2D(0.5f, 0.5f), 0.0f, false);
+    Sprite* pLogo = new Sprite("Title_Logo", "Title_Logo",Vector2D(0, 250), Vector2D(0.5f, 0.5f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pLogo);
 
-    Prop* pYellow = new Prop("Yellow", "Yellow", Vector2D(-320, 300), Vector2D(.35f, .35f), -45, false);
+    Sprite* pYellow = new Sprite("Yellow", "Yellow", Vector2D(-320, 300), Vector2D(.35f, .35f), -45, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pYellow);
 
-    Prop* pFish = new Prop("Blue", "Blue", Vector2D(-450, 150), Vector2D(.35f, .35f), 25.0f, false);
+    Sprite* pFish = new Sprite("Blue", "Blue", Vector2D(-450, 150), Vector2D(.35f, .35f), 25.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pFish);
 
-    Prop* pPurple = new Prop("Purple", "Purple", Vector2D(470, 360), Vector2D(.35f, .35f), 45.0f, false);
+    Sprite* pPurple = new Sprite("Purple", "Purple", Vector2D(470, 360), Vector2D(.35f, .35f), 45.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pPurple);
 
-    Prop* pRed = new Prop("Red", "Red", Vector2D(450, 150), Vector2D(.35f, .35f), 0.0f, false);
+    Sprite* pRed = new Sprite("Red", "Red", Vector2D(450, 150), Vector2D(.35f, .35f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pRed);
 
-    Prop* pWhite = new Prop("White", "White", Vector2D(-420, 450), Vector2D(.35f, .35f), 0.0f, false);
+    Sprite* pWhite = new Sprite("White", "White", Vector2D(-420, 450), Vector2D(.35f, .35f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pWhite);
 
-    Prop* pGreen = new Prop("Green", "Green", Vector2D(350, 200), Vector2D(.35f, .35f), 0.0f, false);
+    Sprite* pGreen = new Sprite("Green", "Green", Vector2D(350, 200), Vector2D(.35f, .35f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pGreen);
 
-    Prop* pLevelSelect = new Prop("Level_Select", "Button_Container", Vector2D(0, -210), Vector2D(3.5f, 2.0f), 0.0f, false);
+    Sprite* pLevelSelect = new Sprite("Level_Select", "Button_Container", Vector2D(0, -210), Vector2D(3.5f, 2.0f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelSelect);
 
 

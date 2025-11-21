@@ -5,6 +5,7 @@
 #include "TurnCounter.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
+#include "Sprite.h"
 EndScreen::EndScreen(std::string strName):AGameObject(strName)
 {
 	this->bEnabled = true;
@@ -20,12 +21,12 @@ EndScreen::~EndScreen()
 void EndScreen::initialize()
 {
 
-	this->pWinBanner = new Prop("VictoryRibbon", "Victory_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
+	this->pWinBanner = new Sprite("VictoryRibbon", "Victory_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
 	this->pWinBanner->setFollowParent(false);
 	this->pWinBanner->setEnabled(false);
 	this->attachChild(this->pWinBanner);
 
-	this->pLoseBanner = new Prop("DefeatRibbon", "Defeat_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
+	this->pLoseBanner = new Sprite("DefeatRibbon", "Defeat_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
 	this->pLoseBanner->setFollowParent(false);
 	this->pLoseBanner->setEnabled(false);
 	this->attachChild(this->pLoseBanner);
@@ -75,4 +76,17 @@ void EndScreen::onEventTrigger(std::unordered_map<std::string, void*> mapParamet
 EventKey EndScreen::getKey()
 {
 	return this->EKey;
+}
+
+bool EndScreen::isListenerEnabled()
+{
+	return false;
+}
+
+void EndScreen::setListenerEnabled(bool bListenerEnabled)
+{}
+
+std::string EndScreen::getListenerOwnerName()
+{
+	return std::string();
 }

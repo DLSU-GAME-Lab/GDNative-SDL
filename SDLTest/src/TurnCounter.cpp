@@ -28,6 +28,19 @@ EventKey TurnCounter::getKey()
 	return EventKey::COUNTER_SUBTRACT;
 }
 
+bool TurnCounter::isListenerEnabled()
+{
+	return false;
+}
+
+void TurnCounter::setListenerEnabled(bool bListenerEnabled)
+{}
+
+std::string TurnCounter::getListenerOwnerName()
+{
+	return std::string();
+}
+
 void TurnCounter::initialize()
 {
 	Text* pTitleText = new Text(this->strName + "Text", "Turns Left: ", this->fVecPos + Vector2D(0,30), this->fVecScale, 0, false);

@@ -30,6 +30,8 @@
 #include "FontManager.h"
 #include "EventBroadcaster.h"
 #include "AudioManager.h"
+#include "CameraManager.h"
+#include "RendererContext.h"
 
 // metrics
 #include "MetricsManager.h"

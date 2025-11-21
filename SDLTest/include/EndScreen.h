@@ -8,6 +8,7 @@ private:
 	EventKey EKey;
 	AGameObject* pWinBanner;
 	AGameObject* pLoseBanner;
+	bool bListenerEnabled;
 
 public:
 	EndScreen(std::string strName);

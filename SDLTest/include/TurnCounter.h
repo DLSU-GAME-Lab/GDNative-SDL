@@ -11,6 +11,7 @@ private:
 	Vector2D fVecScale;
 	EventKey EKey;
 	bool bCounterEnabled;
+	bool bListenerEnabled;
 public:
 	TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, Vector2D fVecScale);
 	~TurnCounter();

@@ -8,6 +8,7 @@ TurnCounter::TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, 
 	this->fVecPos = fVecPos;
 	this->fVecScale = fVecScale;
 	this->bCounterEnabled = true;
+	this->bListenerEnabled = true;
 }
 
 TurnCounter::~TurnCounter()
@@ -30,15 +31,17 @@ EventKey TurnCounter::getKey()
 
 bool TurnCounter::isListenerEnabled()
 {
-	return false;
+	return this->bListenerEnabled;
 }
 
 void TurnCounter::setListenerEnabled(bool bListenerEnabled)
-{}
+{
+	this->bListenerEnabled = bListenerEnabled;
+}
 
 std::string TurnCounter::getListenerOwnerName()
 {
-	return std::string();
+	return this->strName;
 }
 
 void TurnCounter::initialize()

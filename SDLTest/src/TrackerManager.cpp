@@ -8,6 +8,8 @@ TrackerManager::TrackerManager(std::string strName, AGameObject* pOwner) :ACompo
 	this->attachOwner(pOwner);
 	this->bVictory = false;
 	this->bTrackerEnabled = true;
+	this->bListenerEnabled = true;
+
 }
 TrackerManager* TrackerManager::getInstance()
 {
@@ -120,13 +122,15 @@ EventKey TrackerManager::getKey()
 
 bool TrackerManager::isListenerEnabled()
 {
-	return false;
+	return this->bListenerEnabled;
 }
 
 void TrackerManager::setListenerEnabled(bool bListenerEnabled)
-{}
+{
+	this->bListenerEnabled = bListenerEnabled;
+}
 
 std::string TrackerManager::getListenerOwnerName()
 {
-	return std::string();
+	return this->strName;
 }

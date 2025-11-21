@@ -10,6 +10,9 @@ EndScreen::EndScreen(std::string strName):AGameObject(strName)
 {
 	this->bEnabled = true;
 	this->EKey = EventKey::GAME_END;
+	this->bListenerEnabled = true;
+	this->pWinBanner = NULL;
+	this->pLoseBanner = NULL;
 }
 
 EndScreen::~EndScreen()
@@ -85,13 +88,15 @@ EventKey EndScreen::getKey()
 
 bool EndScreen::isListenerEnabled()
 {
-	return false;
+	return this->bListenerEnabled;
 }
 
 void EndScreen::setListenerEnabled(bool bListenerEnabled)
-{}
+{
+	this->bListenerEnabled = bListenerEnabled;
+}
 
 std::string EndScreen::getListenerOwnerName()
 {
-	return std::string();
+	return this->strName;
 }

@@ -15,6 +15,7 @@ private:
     EventKey EKey;
     bool bVictory;
     bool bTrackerEnabled;
+    bool bListenerEnabled;
 public:
     void perform();
     void registerTracker(Tracker* pTracker);

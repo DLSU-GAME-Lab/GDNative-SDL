@@ -19,6 +19,7 @@
 #include "StoryWindow.h"
 #include "AudioManager.h"
 #include "InventoryGUI.h"
+#include "FontManager.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -632,6 +633,7 @@ void PlatformerLevel1Scene::onUnloadResources()
 	AudioManager::getInstance()->unload("Jump");
 	AudioManager::getInstance()->unload("Land");
 	AudioManager::getInstance()->unload("Pickup");
+	FontManager::getInstance()->unloadAllFonts();
 }
 
 void PlatformerLevel1Scene::onUnloadObjects()

@@ -12,9 +12,9 @@
 // E increase, this term can dominate frame cost.
 void GameObjectManager::processInput(SDL_Event* eEvent)
 {
-    for(AGameObject* pGameObject : this->vecGameObject)
+    for (AGameObject* pGameObject : this->vecGameObject)
     {
-        if(pGameObject->getEnabled())
+        if (pGameObject->getEnabled())
             pGameObject->processInput(eEvent);
     }
 }
@@ -64,10 +64,21 @@ void GameObjectManager::addObject(AGameObject* pGameObject)
 // linear search or causes shifting.
 void GameObjectManager::deleteObject(AGameObject* pGameObject)
 {
-    if (std::find(this->vecPendingDeletion.begin(), this->vecPendingDeletion.end(), pGameObject) == this->vecPendingDeletion.end()) {
-        this->vecPendingDeletion.push_back(pGameObject);
+    std::string strName = pGameObject->getName();
+    int nIndex = -1;
+
+    for (int i = 0; i < this->vecGameObject.size() && nIndex == -1; i++)
+    {
+        if (this->vecGameObject[i] == pGameObject)
+            nIndex = i;
     }
 
+    if (nIndex != -1)
+    {
+        this->mapGameObject.erase(this->vecGameObject[nIndex]->getName());
+        this->vecGameObject.erase(this->vecGameObject.begin() + nIndex);
+        delete pGameObject;
+    }
 }
 
 // deleteObjectByName: name lookup (map) then delete
@@ -137,6 +148,23 @@ void GameObjectManager::setObjectName(std::string strName, std::string strNewNam
 std::vector<AGameObject*>& GameObjectManager::getAllObjects()
 {
     return this->vecGameObject;
+}
+
+void GameObjectManager::sortObjectToEnd(AGameObject* pGameObject)
+
+{
+    int nIndex = -1, nIndex1 = this->vecGameObject.size() - 1;
+    AGameObject* pHolder;
+    for (int i = 0; i < this->vecGameObject.size() && nIndex == -1; i++)
+    {
+        if (vecGameObject[i]->getName() == pGameObject->getName())
+        {
+            nIndex = i;
+        }
+    }
+    pHolder = this->vecGameObject[nIndex1];
+    this->vecGameObject[nIndex1] = this->vecGameObject[nIndex];
+    this->vecGameObject[nIndex] = pHolder;
 }
 
 /* * * * * * * * * * * * * * * * * * * * *

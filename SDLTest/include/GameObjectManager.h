@@ -11,7 +11,6 @@ private:
     std::vector<AGameObject*> vecGameObject;
     std::vector<AGameObject*> vecPendingDeletion;
 
-
 public:
     void processInput(SDL_Event* eEvent);
     void update(float fDeltaTime);
@@ -26,6 +25,7 @@ public:
     AGameObject* findObjectByName(std::string strName);
     void setObjectName(std::string strName, std::string strNewName);
     std::vector<AGameObject*>& getAllObjects();
+	void sortObjectToEnd(AGameObject* pGameObject);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

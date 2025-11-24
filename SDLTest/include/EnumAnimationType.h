@@ -4,5 +4,6 @@ enum class AnimationType
 {
 	ONCE = 0,
 	LOOP,
-	PINGPONG
+	YOYO,
+	YOYO_ONCE
 };

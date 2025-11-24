@@ -1,6 +1,6 @@
 #include "CustomStyles.h"
 
-void Editor::CustomStyles::StyleColorsCrimson()
+void CustomStyles::StyleColorsCrimson()
 {
     ImGuiStyle* style = &ImGui::GetStyle();
     ImVec4* colors = style->Colors;
@@ -74,7 +74,7 @@ void Editor::CustomStyles::StyleColorsCrimson()
     colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
-void Editor::CustomStyles::StyleColorsEvangelion()
+void CustomStyles::StyleColorsEvangelion()
 {
     ImGuiStyle* style = &ImGui::GetStyle();
     ImVec4* colors = style->Colors;
@@ -155,12 +155,12 @@ void Editor::CustomStyles::StyleColorsEvangelion()
     colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 }
 
-void Editor::CustomStyles::StyleColorsDarkForest()
+void CustomStyles::StyleColorsDarkForest()
 {
 
 }
 
-ImVec4 Editor::CustomStyles::Alpha(const ImVec4& color, float a)
+ImVec4 CustomStyles::Alpha(const ImVec4& color, float a)
 {
     return ImVec4(color.x, color.y, color.z, a);
 }

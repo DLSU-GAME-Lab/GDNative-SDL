@@ -5,7 +5,7 @@
 #include "EnumSceneTag.h"
 #include "AGameObject.h"
 #include <SDL3/SDL.h>
-
+#include "EventBroadcaster.h"
 //#include "FontManager.h"
 //#include "SFXManager.h"
 

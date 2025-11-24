@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "AGameObject.h"
+#include "MathUtils.h"
 
 Camera::Camera()
 {
@@ -13,32 +14,55 @@ Camera::~Camera()
 
 }
 
-Vector2D Camera::screenToWorldPoint(Vector2D screenPoint) const
+Vector2D Camera::screenToWorldPoint(const Vector2D& screenPoint) const
 {
-
 	Vector2D worldPoint;
-	worldPoint.x = (screenPoint.x + this->position.x - this->getHalfWidth()) * this->scale.x;
-	worldPoint.y = (-(screenPoint.y + this->position.y - this->getHalfHeight()) - this->windowSize.y) * this->scale.y;
 
-	//Vector2D worldPoint;
-	//worldPoint.x = (screenPoint.x + this->position.x - this->getHalfWidth()) * this->scale.x;
-	//worldPoint.y = -(screenPoint.y - this->position.y - this->getHalfHeight()) * this->scale.y;
+	worldPoint.x = ((screenPoint.x - this->getHalfWidth()) * this->scale.x) + this->position.x;
+	worldPoint.y = (-(screenPoint.y - this->getHalfHeight()) * this->scale.y) + this->position.y;
+	// TODO: fix rotations
 
 	return worldPoint;
 }
 
-Vector2D Camera::worldToScreenPoint(Vector2D worldPoint) const
+Vector2D Camera::worldToScreenPoint(const Vector2D& worldPoint) const
 {
+	Vector2D screenPoint = (worldPoint - this->position) / this->scale;
+	float radians = MathUtils::toRadians(this->rotation);
 
-	Vector2D screenPoint;
-	screenPoint.x = (worldPoint.x - this->position.x + this->getHalfWidth()) / this->scale.x;
-	screenPoint.y = (-(worldPoint.y - this->position.y + this->getHalfHeight()) + this->windowSize.y) / this->scale.y;
-
-	//Vector2D screenPoint;
-	//screenPoint.x = (worldPoint.x - this->position.x + this->getHalfWidth()) / this->scale.x;
-	//screenPoint.y = -(worldPoint.y + this->position.y + this->getHalfHeight()) / this->scale.y;
+	screenPoint.x = screenPoint.x + this->getHalfWidth();
+	screenPoint.y = -screenPoint.y + this->getHalfHeight();
+	// TODO: fix rotations
+	//screenPoint.x = (screenPoint.x * std::cosf(radians)) - (screenPoint.y * std::sinf(radians));
+	//screenPoint.y = (screenPoint.y * std::sinf(radians)) + (screenPoint.x * std::cosf(radians));
 
 	return screenPoint;
+}
+
+SDL_FRect Camera::screenToWorldRect(const SDL_FRect& screenRect) const
+{
+	SDL_FRect worldRect = {};
+	Vector2D worldPos = screenToWorldPoint(Vector2D(screenRect.x, screenRect.y));
+
+	worldRect.w = screenRect.w * this->scale.x;
+	worldRect.h = screenRect.h * this->scale.y;
+	worldRect.x = worldPos.x;
+	worldRect.y = worldPos.y + worldRect.h;
+
+	return worldRect;
+}
+
+SDL_FRect Camera::worldToScreenRect(const SDL_FRect& worldRect) const
+{
+	SDL_FRect screenRect = {};
+	Vector2D screenPos = worldToScreenPoint(Vector2D(worldRect.x, worldRect.y));
+
+	screenRect.w = worldRect.w / this->scale.x;
+	screenRect.h = worldRect.h / this->scale.y;
+	screenRect.x = screenPos.x;
+	screenRect.y = screenPos.y - screenRect.h;
+
+	return screenRect;
 }
 
 Vector2D Camera::getWindowSize()

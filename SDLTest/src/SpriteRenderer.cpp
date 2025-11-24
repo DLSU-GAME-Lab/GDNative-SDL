@@ -1,23 +1,30 @@
+// ---------------------------------------------------------------------------
+// Responsibilities: per-object transform and texture draw.
+// ---------------------------------------------------------------------------
+
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
-#include "RenderSystem.h"
 #include "AGameObject.h"
 #include "Settings.h"
 
-SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y, float w, float h)
-    : AComponent("SpriteRenderer", ComponentType::RENDERER), pTexture(nullptr), m_textureKey(textureName)
+// Constructor: texture lookup may be O(T) where T is number of
+// textures stored under a name (small in typical cases). Overall O(1) prep.
+SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Color color)
+    : ARenderer("SpriteRenderer"), pTexture(nullptr), m_textureKey(textureName)
 {
+    // Constructor setup: mostly O(1) except for texture lookup.
     this->flipX = false;
     this->flipY = false;
     this->dAngle = 0.0;
     this->texSize = Vector2D(0.0f, 0.0f);
     this->pivot = Vector2D(0.5f, 0.5f);
+    this->mColor = color;
 
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
     if (!textures.empty()) {
-        pTexture = textures[0];
+        pTexture = textures[0]; // O(1) fetch from vector
     }
     else {
         std::cerr << "[ERROR] : Texture not found: " << textureName << std::endl;
@@ -34,17 +41,22 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, float x, float y,
         this->texSize = Vector2D(0.0f, 0.0f);
     }
 
+    this->mCropRect = { 0, 0, 1, 1 };
+
     //SDL_Point anchor = { texW / 2,texH / 2 };
-    mDestRect.x = x;
-    mDestRect.y = y;
-    mDestRect.w = (w > 0) ? w : this->texSize.x;
-    mDestRect.h = (h > 0) ? h : this->texSize.y;
+    mDestRect.x = 0;
+    mDestRect.y = 0;
+    mDestRect.w = this->texSize.x;
+    mDestRect.h = this->texSize.y;
 
     //mDestRect.x = anchor.x - (mDestRect.w / 2);
     //mDestRect.y = anchor.y - (mDestRect.h / 2);
 }
 
+// Initialize: texture lookup may be O(T) where T is number of
+// textures stored under a name (small in typical cases). Overall O(1) prep.
 void SpriteRenderer::initialize() {
+    // O(T): retrieves texture, updates size, registers sprite.
     auto textures = TextureManager::getInstance()->getTexture(m_textureKey);
     if (!textures.empty()) {
         pTexture = textures[0];
@@ -64,64 +76,82 @@ void SpriteRenderer::initialize() {
             << m_textureKey << std::endl;
     }
 
-    // register this sprite with the system
-    RenderSystem::getInstance()->registerSpriteRenderer(this);
 }
 
+// Destructor: deregisters from RenderSystem — deregistration cost is O(S).
 SpriteRenderer::~SpriteRenderer() {
+    // O(R): deregistration scans list in RenderSystem.
     // unregister when destroyed
-    RenderSystem::getInstance()->unregisterSpriteRenderer(this);
+
 }
 
-void SpriteRenderer::draw(SDL_Renderer* pRenderer, Camera* pCam) {
+// perform: per-sprite O(1) math and single GPU draw call. As number of sprites R
+// increases, total cost per-frame increases linearly (O(R)). GPU cost per
+// perform is a significant constant-time cost in wall-time.
+void SpriteRenderer::perform() {
+    // O(1): All operations are per-sprite math and rendering.
+    // Real runtime cost dominated by GPU draw call.
     AGameObject* owner = this->getOwner();
-    if (owner)
+    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
+    this->dAngle = -owner->getRot();
+
+    SDL_FRect srcRect = {};
+    srcRect.x = this->mCropRect.x * this->texSize.x;
+    srcRect.y = this->mCropRect.y * this->texSize.y;
+    srcRect.w = this->mCropRect.w * this->texSize.x;
+    srcRect.h = this->mCropRect.h * this->texSize.y;
+
+    Vector2D scale = owner->getScale();
+    Vector2D size = Vector2D(srcRect.w, srcRect.h) * scale;
+    Vector2D pos = owner->getPos();
+    pos -= size * this->pivot;
+
+    mDestRect.x = pos.x;
+    mDestRect.y = pos.y;
+    mDestRect.w = size.x;
+    mDestRect.h = size.y;
+
+    if (!owner->getIsScreenObject())
     {
-        //TODO: fix the rotations. better if we used a transform matrix.
-        this->dAngle = owner->getRot();
-
-        Vector2D screenPos;
-        Vector2D screenSize = this->texSize * owner->getScale();
-
-        if (owner->getIsScreenObject())
-        {
-            screenPos = owner->getPos() + screenSize;
-        }
-        else
-        {
-            screenSize /= pCam->getScale();
-            screenPos = pCam->worldToScreenPoint(owner->getPos());
-            this->dAngle -= pCam->getRot();
-        }
-
-        screenPos -= screenSize * this->pivot;
-        //TODO: Fix the negative rect error (screenPos)
-        mDestRect.x = screenPos.x;
-        mDestRect.y = screenPos.y;
-        mDestRect.w = screenSize.x;
-        mDestRect.h = screenSize.y;
+        mDestRect = pCam->worldToScreenRect(mDestRect);
+        this->dAngle += pCam->getRot();
     }
 
-    if (pTexture) {
-        /*std::cout << "[Draw] Texture=" << m_textureKey
-            << " Pos(" << mDestRect.x << "," << mDestRect.y << ")"
-            << " Size(" << mDestRect.w << "," << mDestRect.h << ")" << std::endl;
-        */
-        if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL); //replace with both flipped when available
-        if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
-        else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
-        else SDL_RenderTextureRotated(pRenderer, pTexture, NULL, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
-        //SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
-    }
+    if (this->inCameraView(mDestRect))
+    {
+        // GPU draw call: theoretical O(1), but expensive constant cost.
+        if (pTexture)
+        {
+            SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
+            SDL_SetTextureAlphaMod(pTexture, mColor.a);
 
-    // additional log
-    else if (SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect) < 0) {
-        SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
+            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
+            else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
+            else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
+            else SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
+        }
+
+        // additional log
+        else if (SDL_RenderTexture(pRenderer, pTexture, &srcRect, &mDestRect) < 0)
+        {
+            SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
+        }
     }
 }
 
-void SpriteRenderer::perform()
+void SpriteRenderer::drawWidget()
 {
+    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
+    AGameObject* owner = this->getOwner();
+
+    SDL_SetRenderDrawBlendMode(this->pRenderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 127);
+    SDL_RenderRect(pRenderer, &mDestRect);
+
+    Vector2D pos = pCam->worldToScreenPoint(owner->getPos());
+    SDL_FRect pivotRect = { pos.x - 4, pos.y - 4, 8, 8 };
+    SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(pRenderer, &pivotRect);
 }
 
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)
@@ -160,9 +190,36 @@ void SpriteRenderer::setPivot(Vector2D pivot)
     this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
 }
 
+void SpriteRenderer::setColor(SDL_Color color)
+{
+    this->mColor = color;
+}
+
+//Set crop based on percentage (0.0f - 1.0f)
+void SpriteRenderer::setCropRect(SDL_FRect mCropRect)
+{
+    this->mCropRect = mCropRect;
+}
+
+
 SDL_Texture* SpriteRenderer::getTexture()
 {
     return this->pTexture;
+}
+
+SDL_Color SpriteRenderer::getColor() const
+{
+    return this->mColor;
+}
+
+SDL_FRect SpriteRenderer::getRect() const
+{
+    return this->mDestRect;
+}
+
+SDL_FRect SpriteRenderer::getCropRect() const
+{
+    return this->mCropRect;
 }
 
 bool SpriteRenderer::getflipX()

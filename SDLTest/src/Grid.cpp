@@ -1,105 +1,48 @@
 #include "Grid.h"
+#include "AGameObject.h"
 
-Grid::Grid(std::string strName, Uint8 w, Uint8 h, float nCellSize) : AComponent(strName, ComponentType::SCRIPT)
+Grid::Grid(std::string strName, ComponentType EType, float fWidth, float fHeight) : AComponent(strName, EType)
 {
-	this->nWidth = w;
-	this->nHeight = h;
-	this->nCellSize = nCellSize;
+	this->fWidth = fWidth;
+	this->fHeight = fHeight;
+}
 
-	Vector2D cellSize = Vector2D(nCellSize);
-	Vector2D gridSize = Vector2D(w, h);
+void Grid::onAttach()
+{
+	
+}
 
-	for (Uint8 c = 0; c < h; c++)
+// set cell object, return true on success
+bool Grid::setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject)
+{
+	if (r >= this->gridCells.size() || c >= this->gridCells[r].size()) return false;
+
+	this->gridCells[r][c].obj = pGameObject;
+	return true;
+}
+
+// get cell world position; return empty vector on bad indices
+Vector2D Grid::getCellPosition(Uint64 r, Uint64 c)
+{
+	return Vector2D(r * fHeight, c * fWidth) + this->pOwner->getPos();
+}
+
+// get cell object pointer; return nullptr on bad indices
+AGameObject* Grid::getCellObject(Uint64 r, Uint64 c)
+{
+	if (r >= this->gridCells.size() || c >= this->gridCells[r].size()) return nullptr;
+	return this->gridCells[r][c].obj;
+}
+
+// find cell by object pointer; returns pointer to cell data or NULL
+CellData* Grid::getCellFromObject(AGameObject* pObject)
+{
+	for (Uint64 r = 0; r < this->gridCells.size(); r++)
 	{
-		for (Uint8 r = 0; r < w; r++)
+		for (Uint64 c = 0; c < this->gridCells[r].size(); c++)
 		{
-			Vector2D pos = cellSize * (Vector2D(r, c) - gridSize);
-			this->vecCell.push_back({ r, c, pos, NULL, false });
+			if (this->gridCells[r][c].obj == pObject) return &this->gridCells[r][c];
 		}
-	}
-}
-
-void Grid::perform()
-{
-
-}
-
-std::vector<AGameObject*> Grid::getAdjacentObjects(AGameObject* pGameObject, bool bIncludeDiagonals)
-{
-	std::vector<AGameObject*> vecAdjacent;
-	CellData cell = getCellDataFromObject(pGameObject);
-
-	for (Uint8 c = 0; c < 3; c++)
-	{
-		for (Uint8 r = 0; r < 3; r++)
-		{
-			int row = cell.r - r;
-			int col = cell.c = c;
-
-			if (row < 0 || row >= this->nWidth ||
-				col < 0 || col >= this->nHeight)
-			{
-				continue;
-			}
-			else
-			{
-				vecAdjacent.push_back(getCellObject(row, col));
-			}
-		}
-	}
-
-	return vecAdjacent;
-}
-
-void Grid::setBlockedCell(Uint8 r, Uint8 c, bool bBlocked)
-{
-	if (r >= this->nWidth || c >= this->nHeight) return;
-
-	for (CellData cell : this->vecCell)
-	{
-		if (cell.r == r && cell.c == c)
-		{
-			cell.blocked = bBlocked;
-			return;
-		}
-	}
-}
-
-bool Grid::setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject)
-{
-	if (r >= this->nWidth || c >= this->nHeight) return false;
-
-	for (CellData cell : this->vecCell)
-	{
-		if (cell.r == r && cell.c == c)
-		{
-			if (cell.blocked) return false;
-			else
-			{
-				cell.obj = pGameObject;
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-Grid::CellData Grid::getCellDataFromObject(AGameObject* pGameObject)
-{
-	for (CellData cell : this->vecCell)
-	{
-		if (cell.obj == pGameObject) return cell;
-	}
-}
-
-AGameObject* Grid::getCellObject(Uint8 r, Uint8 c)
-{
-	if (r >= this->nWidth || c >= this->nHeight) return nullptr;
-
-	for (CellData cell : this->vecCell)
-	{
-		if (cell.r == r && cell.c == c) return cell.obj;
 	}
 
 	return nullptr;

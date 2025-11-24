@@ -9,7 +9,8 @@
 #include "Text.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
-#include "Prop.h"
+#include "Sprite.h"
+#include "AudioManager.h"
 
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
@@ -21,13 +22,18 @@ void Title_Scene::onLoadResources()
     this->loadText();
     this->loadAnimatedTextures();
     this->loadSceneTextures();
+	AudioManager::getInstance()->load("sounds/Music/TitleScreen_Song.wav", "TitleScreen_Music");
 }
 
 void Title_Scene::onLoadObjects()
 {
+    CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0));
     // create and register game objects for the title scene
     this->createScene();
     this->createButtons();
+
+	AudioPlayer* pBGM = new AudioPlayer("TitleScreen_Music", "Title_BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP);
+	AudioManager::getInstance()->play(pBGM);
 
     //// create a button that switches to the Lobby scene when clicked
     //UIButton* pStartButton = new UIButton(
@@ -54,18 +60,19 @@ void Title_Scene::onUnloadResources()
     TextureManager::getInstance()->unload("Fairy");
     TextureManager::getInstance()->unload("Title_Banner");
     TextureManager::getInstance()->unload("DLSU_Logos");
-    FontManager::getInstance()->unloadFont("LazyFont");
+    FontManager::getInstance()->unloadAllFonts();
 }
 
 void Title_Scene::onUnloadObjects()
 {
     // base implementation to remove all objects
+	AudioManager::getInstance()->stopAll();
     AScene::onUnloadObjects();
 }
 
 void Title_Scene::loadText()
 {
-    FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
+    //FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
 }
 void Title_Scene::loadAnimatedTextures()
 {
@@ -91,7 +98,7 @@ void Title_Scene::loadAnimatedTextures()
 void Title_Scene::loadSceneTextures()
 {
     TextureManager::getInstance()->load("title_screen_pngs/title_screen_bg.png", "Title_Background");
-    TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Start_Button");
+    TextureManager::getInstance()->load("GUI/title_button.png", "Start_Button");
     TextureManager::getInstance()->load("title_screen_pngs/game_logo.png", "Title_Banner");
     TextureManager::getInstance()->load("title_screen_pngs/DLSU_logos.png", "DLSU_Logos");
 }
@@ -106,10 +113,11 @@ void Title_Scene::createButtons()
     SceneSwitcher* pSceneSwitcher = new SceneSwitcher(SceneTag::LOBBY_SCENE);
     pStartButton->attachComponent(pSceneSwitcher);
     GameObjectManager::getInstance()->addObject(pStartButton);
-    Text* pStartText = new Text("Start_Text", "Start Game", Vector2D(0, 0), Vector2D(1, 1), 0.f, false);
-    pStartText->setFont("LazyFont90");
+
+    Text* pStartText = new Text("Start_Text", "Maragsa.otf", 90, 0.f, false);
+    pStartText->setMessage("Start Game");
     pStartButton->attachChild(pStartText);
-    GameObjectManager::getInstance()->addObject(pStartText);
+    pStartText->setScale(Vector2D(1,1));
     pStartButton->setPos(Vector2D(-580, -150));
 
 }
@@ -128,10 +136,10 @@ void Title_Scene::createScene()
     AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-300, 60.f), Vector2D(1.f, 1.f), 0.f, 8);
     GameObjectManager::getInstance()->addObject(pPlayer);
 
-    Prop* pLogo = new Prop("Game_Logo", "Title_Banner", Vector2D(-550, 200), Vector2D(1.f, 1.f), 0.f, false);
+    Sprite* pLogo = new Sprite("Game_Logo", "Title_Banner", Vector2D(-550, 200), Vector2D(1.f, 1.f), 0.f, false);
     GameObjectManager::getInstance()->addObject(pLogo);
 
-    Prop* pDLSULogo = new Prop("DLSU_Logos", "DLSU_Logos", Vector2D(580, -420), Vector2D(.75f, .75f), 0.f, false);
+    Sprite* pDLSULogo = new Sprite("DLSU_Logos", "DLSU_Logos", Vector2D(580, -420), Vector2D(.75f, .75f), 0.f, false);
     GameObjectManager::getInstance()->addObject(pDLSULogo);
 
 }

@@ -1,9 +1,10 @@
 #include "AScene.h"
-#include "RenderSystem.h"
 
 AScene::AScene(SceneTag ETag) : ETag(ETag) {}
 
-void AScene::onUnloadObjects() {
+void AScene::onUnloadObjects() 
+{
+    EventBroadcaster::getInstance()->unregisterAllListeners();
     GameObjectManager::getInstance()->deleteAllObjects();
 }
 

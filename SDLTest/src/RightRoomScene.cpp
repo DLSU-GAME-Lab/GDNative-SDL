@@ -1,13 +1,18 @@
 #include "RightRoomScene.h"
 #include "Background.h"
 #include "Player.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "FontManager.h"
 #include "Text.h"
 #include "GUIToggle.h"
 #include "Settings.h"
+#include "EmptyObject.h"
+#include "SpriteAnimator.h"
+#include "Animation.h"
+#include "AnimatedSprite.h"
+#include "AudioManager.h"
 RightRoomScene::RightRoomScene():AScene(SceneTag::RIGHT_ROOM_SCENE)
 {
 }
@@ -21,13 +26,20 @@ void RightRoomScene::onLoadResources()
 	this->loadSceneTextures();
 	this->loadAnimatedTextures();
 	this->loadFonts();
+	AudioManager::getInstance()->load("sounds/Music/SideRooms.wav", "SideRooms_Music");
 }
 
 void RightRoomScene::onLoadObjects()
 {
+	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0));
+	//EmptyObject* pPhysManagerHolder;
+	//pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
+	//PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
+	//GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
 	this->createScene();
 	this->createButtons();
 	this->createExitMenu();
+	AudioManager::getInstance()->play(new AudioPlayer("SideRooms_Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void RightRoomScene::onUnloadResources()
@@ -40,7 +52,14 @@ void RightRoomScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Button");
 	TextureManager::getInstance()->unload("Button_Choices");
 	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
-	FontManager::getInstance()->unloadFont("LazyFont90");
+	FontManager::getInstance()->unloadAllFonts();
+	AudioManager::getInstance()->unload("SideRooms_Music");
+}
+
+void RightRoomScene::onUnloadObjects()
+{
+	AudioManager::getInstance()->stopAll();
+	AScene::onUnloadObjects();
 }
 
 void RightRoomScene::loadFonts()
@@ -50,11 +69,8 @@ void RightRoomScene::loadFonts()
 
 void RightRoomScene::loadAnimatedTextures() 
 {
-	for (int i = 0; i < 16; i++)
-	{
-		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Player");
-	}
+	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
+
 }
 
 void RightRoomScene::loadSceneTextures()
@@ -65,10 +81,10 @@ void RightRoomScene::loadSceneTextures()
 	TextureManager::getInstance()->load(strPath, "Book_Yellow");
 	strPath = "right_room/red_dragon.png";
 	TextureManager::getInstance()->load(strPath, "Red_Dragon");
-	TextureManager::getInstance()->load("button.png", "Button");
-	TextureManager::getInstance()->load("back.png", "Back");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
+	TextureManager::getInstance()->load("GUI/button.png", "Button");
+	TextureManager::getInstance()->load("GUI/back.png", "Back");
+	TextureManager::getInstance()->load("GUI/tablet.png", "Return_Dialogue_Holder");
+	TextureManager::getInstance()->load("GUI/title_button.png", "Button_Choices");
 }
 
 void RightRoomScene::createButtons()
@@ -86,7 +102,7 @@ void RightRoomScene::createButtons()
 	GUIButton* pReturn = new GUIButton("Return_Button", "Back");
 	pReturn->setPos(Vector2D(-850, 450));
 	pReturn->setScale(Vector2D(.075f, .075f));
-	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
+	GUIToggle* pToggle = new GUIToggle(EventKey::RETURN_SCREEN);
 	pReturn->attachComponent(pToggle);
 	GameObjectManager::getInstance()->addObject(pReturn);
 }
@@ -96,56 +112,27 @@ void RightRoomScene::createScene()
 	Background* pBackground = new Background("Forest_Area", "Forest_Area", Vector2D(.65f, .9f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
-	Prop* pBook = new Prop("Book_Yellow", "Book_Yellow", Vector2D(-470, 0), Vector2D(.5f, .5f), 0, false);
+	GUIButton* pBook = new GUIButton("Book_Yellow", "Book_Yellow", false);
+	pBook->setPos(Vector2D(-470, 0));
+	pBook->setScale(Vector2D(.5f, .5f));
+	SceneSwitcher* pPuzzleRoom = new SceneSwitcher(SceneTag::PUZZLE_LEVEL_1_SCENE);
+	pBook->attachComponent(pPuzzleRoom);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBook);
 
-	Prop* pRedDragon = new Prop("Red_Dragon", "Red_Dragon", Vector2D(-640.f, -395.f), Vector2D(.5f, .5f), 0, false);
+	Sprite* pRedDragon = new Sprite("Red_Dragon", "Red_Dragon", Vector2D(-640.f, -395.f), Vector2D(.5f, .5f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pRedDragon);
 
-	Player* pPlayer = new Player(Vector2D(0, -315), Vector2D(1.f, 1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
+	GameObjectManager::getInstance()->addObject(pPlayer);
+	Animation* pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
+	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
+	pSpriteAnim->addAnimation(pAnim);
+	pSpriteAnim->play("idle");
 }
 
 void RightRoomScene::createExitMenu()
 {
-	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
-	GameObjectManager::getInstance()->addObject(pExitBG);
-
-	Text* pExitText = new Text("Exit_Text", "Go Back to Title", Vector2D(0, 50), Vector2D(.75, .75), 0.f, false);
-	pExitText->setFont("LazyFont90");
-	Text* pExitText2 = new Text("Exit_Text2", " Screen ?", Vector2D(0, -50), Vector2D(.75, .75), 0.f, false);
-	pExitText2->setFont("LazyFont90");
-	pExitBG->attachChild(pExitText);
-	pExitBG->attachChild(pExitText2);
-	GameObjectManager::getInstance()->addObject(pExitText);
-	GameObjectManager::getInstance()->addObject(pExitText2);
-
-	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
-	pDecline->setPos(Vector2D(-200, -300));
-	pDecline->setScale(Vector2D(.15, .15));
-	GameObjectManager::getInstance()->addObject(pDecline);
-	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
-	pDecline->attachComponent(pToggle);
-
-	Text* pDeclineText = new Text("Decline_Text", "No", Vector2D(-200, -300), Vector2D(.75, .75), 0.f, false);
-	pDeclineText->setFont("LazyFont90");
-	pDecline->attachChild(pDeclineText);
-	GameObjectManager::getInstance()->addObject(pDeclineText);
-
-	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
-	pAccept->setPos(Vector2D(250, -300));
-	pAccept->setScale(Vector2D(.15, .15));
-	GameObjectManager::getInstance()->addObject(pAccept);
-	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
-	pAccept->attachComponent(pTitleSwitch);
-	Text* pAcceptText = new Text("Accept_Text", "Yes", Vector2D(250, -300), Vector2D(.75, .75), 0.f, false);
-	pAcceptText->setFont("LazyFont90");
-	pAccept->attachChild(pAcceptText);
-	GameObjectManager::getInstance()->addObject(pAcceptText);
-
-	pExitBG->attachChild(pDecline);
-	pExitBG->attachChild(pAccept);
-
-	pExitBG->setEnabled(false);
-	pExitBG->setPos(Vector2D(0, 100));
+	ExitMenu* pExitMenu = new ExitMenu("LobbyExitMenu");
+	GameObjectManager::getInstance()->addObject(pExitMenu);
+	pExitMenu->setEnabled(false);
 }

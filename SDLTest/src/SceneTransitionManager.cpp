@@ -1,3 +1,7 @@
+// ---------------------------------------------------------------------------
+// Responsibilities: advance fade transitions, trigger scene loading at midpoint.
+// ---------------------------------------------------------------------------
+
 #include "SceneTransitionManager.h"
 #include "SceneManager.h"
 #include <iostream>
@@ -21,6 +25,8 @@ SceneTransitionManager* SceneTransitionManager::getInstance() {
     return P_SHARED_INSTANCE;
 }
 
+// requestTransition: marks the start of a fade transition. Cheap.
+// Complexity: O(1)
 void SceneTransitionManager::requestTransition(SceneTag nextScene, TransitionType type) {
     if (inTransition) {
         std::cout << "[SceneTransitionManager] Already transitioning." << std::endl;
@@ -37,8 +43,12 @@ void SceneTransitionManager::requestTransition(SceneTag nextScene, TransitionTyp
     std::cout << "[SceneTransitionManager] Transition started." << std::endl;
 }
 
+// update: O(1) per call to advance alpha. At midpoint, triggers scene load
+// via SceneManager. The load call may cause blocking work proportional to
+// the scene's resources/objects. Thus update() itself is O(1) except when it
+// invokes load_work which can be large (load spike).
 void SceneTransitionManager::update() {
-    if (!inTransition) return;
+    if (!inTransition) return; // no work when idle
 
     alpha += speed;
 
@@ -47,6 +57,8 @@ void SceneTransitionManager::update() {
         halfway = true;
 
         std::cout << "[SceneTransitionManager] Midpoint reached, loading new scene..." << std::endl;
+        
+        // Potential heavy operation: blocky if loadScene blocks.
         SceneManager::getInstance()->loadScene(targetScene);
         SceneManager::getInstance()->checkLoadScene(); // Force-load immediately
 
@@ -63,6 +75,7 @@ void SceneTransitionManager::update() {
     }
 }
 
+// draw: O(1) per frame (constant rectangle draw)
 void SceneTransitionManager::draw(SDL_Renderer* pRenderer) {
     if (!inTransition || type == TransitionType::NONE) return;
 

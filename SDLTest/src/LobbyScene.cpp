@@ -3,14 +3,23 @@
 #include "Player.h"
 #include "Librarian.h"
 #include "Fairy.h"
-#include "Prop.h"
+#include "Sprite.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "GUIToggle.h"
 #include "EmptyObject.h"
-#include "FontManager.h"
 #include "Settings.h"
 #include "Text.h"
+#include "Diary.h"
+#include "DiaryToggle.h"
+#include "PageChangeToggle.h"
+#include "Platform.h"
+#include "AnimatedSprite.h"
+#include "Animation.h"
+#include "SpriteAnimator.h"
+#include "TweenAnimator.h"
+#include "DialogueBox.h"
+#include "AudioManager.h"
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -28,34 +37,36 @@ void LobbyScene::onLoadResources()
 	this->loadAnimatedTextures();
 	this->loadSceneTextures();
 	this->loadFonts();
+	AudioManager::getInstance()->load("sounds/Music/Lobby.wav", "Lobby_Music");
 
 }
 
 void LobbyScene::onLoadObjects()
 {
+	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(0));
 	//code for when a scene needs physics
-	//EmptyObject* pPhysManagerHolder;
-	//pPhysManagerHolder = new EmptyObject("Physics Manager Holder");
-	//PhysicsManager::initialize("Physics Manager", pPhysManagerHolder);
-	//GameObjectManager::getInstance()->addObject(pPhysManagerHolder);
+	PhysicsSystem::initialize();
 
 	this->createScene();
 	this->createButtons();
 	this->createDiary();
 	this->createExitMenu();
 
-
-
+	DialogueBox* pDialogueBox = new DialogueBox("DialogueBox");
+	GameObjectManager::getInstance()->addObject(pDialogueBox);
+	pDialogueBox->setEnabled(false);
+	AudioManager::getInstance()->play(new AudioPlayer("Lobby_Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void LobbyScene::onUnloadResources()
 {
 	TextureManager::getInstance()->unload("Lobby_Background");
-	TextureManager::getInstance()->unload("Player");
+	TextureManager::getInstance()->unload("player_idle");
 	TextureManager::getInstance()->unload("Librarian");
 	TextureManager::getInstance()->unload("Fairy");
 	TextureManager::getInstance()->unload("Button");
 	TextureManager::getInstance()->unload("Lamps");
+	TextureManager::getInstance()->unload("Square");
 	TextureManager::getInstance()->unload("Step_Ladder");
 	TextureManager::getInstance()->unload("Chair");
 	TextureManager::getInstance()->unload("Librarian_Desk");
@@ -67,51 +78,58 @@ void LobbyScene::onUnloadResources()
 	TextureManager::getInstance()->unload("Return_Dialogue_Holder");
 	TextureManager::getInstance()->unload("ChangeDisplay");
 	TextureManager::getInstance()->unload("Intro");
-	FontManager::getInstance()->unloadFont("LazyFont90");
-	FontManager::getInstance()->unloadFont("LazyFont45");
+	TextureManager::getInstance()->unload("Somebody");
+	TextureManager::getInstance()->unload("Wanted");
+	TextureManager::getInstance()->unload("But");
+	TextureManager::getInstance()->unload("So");
+	TextureManager::getInstance()->unload("Then");
+	TextureManager::getInstance()->unload("Page_Change");
+	FontManager::getInstance()->unloadAllFonts();
+	EventBroadcaster::getInstance()->unregisterAllListeners();
+	AudioManager::getInstance()->unload("Lobby_Music");
+
+}
+
+void LobbyScene::onUnloadObjects()
+{
+	AudioManager::getInstance()->stopAll();
+	AScene::onUnloadObjects();
 }
 
 void LobbyScene::loadFonts()
 {
 	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
-	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont45", 45);
 }
 
 void LobbyScene::loadAnimatedTextures()
 {
-	for (int i = 0; i < 16; i++)
-	{
-		std::string strPath = "animations/lobby_scene/player/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Player");
-	}
+	TextureManager::getInstance()->loadFromFolder("animations/player_idle", "player_idle");
 
-	for (int i = 0; i < 19; i++)
-	{
-		std::string strPath = "animations/lobby_scene/fairy/frame" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Fairy");
-	}
-
-	for (int i = 0; i < 7; i++)
-	{
-		std::string strPath = "animations/lobby_scene/librarian/Set" + std::to_string(i + 1) + ".png";
-		TextureManager::getInstance()->load(strPath, "Librarian");
-	}
+	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/fairy", "Fairy");
+	TextureManager::getInstance()->loadFromFolder("animations/lobby_scene/librarian", "Librarian");
 }
 
 void LobbyScene::loadSceneTextures()
 {
-	TextureManager::getInstance()->load("button.png", "Button");
+	TextureManager::getInstance()->load("GUI/button.png", "Button");
+	TextureManager::getInstance()->load("GUI/back.png", "Back");
+	TextureManager::getInstance()->load("GUI/tablet.png", "Return_Dialogue_Holder");
+	TextureManager::getInstance()->load("GUI/title_button.png", "Button_Choices");
 	TextureManager::getInstance()->load("lobby_transition_lamps.png", "Lamps");
 	TextureManager::getInstance()->load("stepladder_revised.png", "Step_Ladder");
 	TextureManager::getInstance()->load("monoblock_revised.png", "Chair");
 	TextureManager::getInstance()->load("librariandesk_revised.png", "Librarian_Desk");
 	TextureManager::getInstance()->load("diary.png", "Diary");
-	TextureManager::getInstance()->load("back.png", "Back");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button_2.png", "Return_Dialogue_Holder");
-	TextureManager::getInstance()->load("title_screen_pngs/title_button.png", "Button_Choices");
+	TextureManager::getInstance()->load("Square.png", "Square");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/SWBST_BG.png", "SWBST_BG");
-	TextureManager::getInstance()->load("SWBSTWindowHolder/Play_Icon.png", "ChangeDisplay");
+	TextureManager::getInstance()->load("GUI/play.png", "ChangeDisplay");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Intro.png", "Intro");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/Somebody.png", "Somebody");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/Wanted.png", "Wanted");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/But.png", "But");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/So.png", "So");
+	TextureManager::getInstance()->load("SWBSTWindowHolder/Then.png", "Then");
+	TextureManager::getInstance()->load("GUI/play.png", "Page_Change");
 }
 
 void LobbyScene::createButtons()
@@ -135,7 +153,7 @@ void LobbyScene::createButtons()
 	GUIButton* pReturn = new GUIButton("Return_Button", "Back");
 	pReturn->setPos(Vector2D(-850, 450));
 	pReturn->setScale(Vector2D(.075f, .075f));
-	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
+	GUIToggle* pToggle = new GUIToggle(EventKey::RETURN_SCREEN);
 	pReturn->attachComponent(pToggle);
 	GameObjectManager::getInstance()->addObject(pReturn);
 }
@@ -145,11 +163,15 @@ void LobbyScene::createScene()
 	Background* pBackground = new Background("Lobby_Background", "Lobby_Background", Vector2D(0.33f, 0.4f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
-	Prop* pLadder = new Prop("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
+	Sprite* pLadder = new Sprite("Ladder", "Step_Ladder", Vector2D(0, -250), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLadder);
 
-	Player* pPlayer = new Player(Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.0f);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pPlayer);
+	AnimatedSprite* pPlayer = new AnimatedSprite("Player", "player_idle", Vector2D(-200, -315), Vector2D(1.f, 1.f), 0.f, 8);
+	GameObjectManager::getInstance()->addObject(pPlayer);
+	Animation * pAnim = new Animation("idle", TextureManager::getInstance()->getTexture("player_idle"), 12, AnimationType::LOOP);
+	SpriteAnimator* pSpriteAnim = (SpriteAnimator*)pPlayer->findComponentByName("SpriteAnimator");
+	pSpriteAnim->addAnimation(pAnim);
+	pSpriteAnim->play("idle");
 
 	Librarian* pLibrarian = new Librarian(Vector2D(450, -140), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLibrarian);
@@ -157,115 +179,437 @@ void LobbyScene::createScene()
 	Fairy* pFairy = new Fairy(Vector2D(250, -140), Vector2D(1.f, 1.f), 0.0f);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pFairy);
 
-	Prop* pLamps = new Prop("Lamps", "Lamps", Vector2D(-550, 350), Vector2D(1.f, 1.f), 0, false);
+	Sprite* pLamps = new Sprite("Lamps", "Lamps", Vector2D(-550, 350), Vector2D(1.f, 1.f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLamps);
 
 
-	Prop* pChair = new Prop("Chair", "Chair", Vector2D(-600, -365), Vector2D(0.75f, 0.75f), 0, false);
+	Sprite* pChair = new Sprite("Chair", "Chair", Vector2D(-600, -365), Vector2D(0.75f, 0.75f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pChair);
 
-	Prop* pDesk = new Prop("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
+	Sprite* pDesk = new Sprite("Desk", "Librarian_Desk", Vector2D(400, -365), Vector2D(1.25f, 1.25f), 0, false);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pDesk);
+
+
+
 }
 
 void LobbyScene::createExitMenu()
 {
-	Background* pExitBG = new Background("Exit_Menu_BG", "Return_Dialogue_Holder", Vector2D(.5, .5));
-	GameObjectManager::getInstance()->addObject(pExitBG);
-
-	Text* pExitText = new Text("Exit_Text", "Go Back to Title", Vector2D(0, 50), Vector2D(.75, .75), 0.f, false);
-	pExitText->setFont("LazyFont90");
-	Text* pExitText2 = new Text("Exit_Text2", " Screen ?", Vector2D(0, -50), Vector2D(.75, .75), 0.f, false);
-	pExitText2->setFont("LazyFont90");
-	pExitBG->attachChild(pExitText);
-	pExitBG->attachChild(pExitText2);
-	GameObjectManager::getInstance()->addObject(pExitText);
-	GameObjectManager::getInstance()->addObject(pExitText2);
-
-	GUIButton* pDecline = new GUIButton("Decline", "Button_Choices");
-	pDecline->setPos(Vector2D(-200, -300));
-	pDecline->setScale(Vector2D(.15, .15));
-	GameObjectManager::getInstance()->addObject(pDecline);
-	GUIToggle* pToggle = new GUIToggle("Exit_Menu_BG");
-	pDecline->attachComponent(pToggle);
-
-	Text* pDeclineText = new Text("Decline_Text", "No", Vector2D(-200, -300), Vector2D(.75, .75), 0.f, false);
-	pDeclineText->setFont("LazyFont90");
-	pDecline->attachChild(pDeclineText);
-	GameObjectManager::getInstance()->addObject(pDeclineText);
-
-	GUIButton* pAccept = new GUIButton("Accept", "Button_Choices");
-	pAccept->setPos(Vector2D(250, -300));
-	pAccept->setScale(Vector2D(.15, .15));
-	GameObjectManager::getInstance()->addObject(pAccept);
-	SceneSwitcher* pTitleSwitch = new SceneSwitcher(SceneTag::TITLE_SCENE);
-	pAccept->attachComponent(pTitleSwitch);
-	Text* pAcceptText = new Text("Accept_Text", "Yes", Vector2D(250, -300), Vector2D(.75, .75), 0.f, false);
-	pAcceptText->setFont("LazyFont90");
-	pAccept->attachChild(pAcceptText);
-	GameObjectManager::getInstance()->addObject(pAcceptText);
-
-	pExitBG->attachChild(pDecline);
-	pExitBG->attachChild(pAccept);
-
-	pExitBG->setEnabled(false);
-	pExitBG->setPos(Vector2D(0, 100));
+	ExitMenu* pExitMenu = new ExitMenu("LobbyExitMenu");
+	GameObjectManager::getInstance()->addObject(pExitMenu);
+	pExitMenu->setEnabled(false);
 }
 
 void LobbyScene::createDiary()
 {
-	GUIButton* pDiary = new GUIButton("Diary", "Diary");
+	GUIButton* pDiary = new GUIButton("DiaryButton", "Diary");
 	pDiary->setPos(Vector2D(0, 0));
 	pDiary->setScale(Vector2D(0.25f, 0.25f));
-	GUIToggle* pToggle = new GUIToggle("SWBST_BG");
+	GUIToggle* pToggle = new GUIToggle(EventKey::DIARY_SCREEN);
 	pDiary->attachComponent(pToggle);
+	Vector2D start = Vector2D(0, 0);
+	Vector2D end = Vector2D(0, 50);
+	TweenAnimator* pTween = new TweenAnimator();
+	pTween->setAnimationType(AnimationType::YOYO);
+	pTween->setTweenPos(Tween2D::from(start.x, start.y).to(end.x, end.y).during(1000).via(tweeny::easing::quadraticInOut));
+	pTween->play();
+	pDiary->attachComponent(pTween);
+
 	GameObjectManager::getInstance()->addObject(pDiary);
 
-	Background* pSWBST_BG = new Background("SWBST_BG", "SWBST_BG", Vector2D(1, 1));
-	GameObjectManager::getInstance()->addObject(pSWBST_BG);
+	Diary* pDiarySpriteer = new Diary("SWBST_BG", Vector2D(0, 0), Vector2D(1, 1));
+	pDiarySpriteer->addPageText("Ano ang SWBST?", "Ang SWBST ay isang paraan upang madaling matukoy ang mahahalagang bahagi ng \n kuwento at matulungan kang buod ng kuwento.\nAng mga titik ng SWBST ay kumakatawan sa mga sumusunod : ");
+	pDiarySpriteer->addPageText("Somebody", "Inilalarawan nito kung ano ang gusto ng karakter. Tanunging sa iyong sarili, ano ang \n gusto ng karakter?");
+	pDiarySpriteer->addPageText("Wanted", "Inilalarawan nito kung ano ang gusto ng karakter.Tanunging sa iyong sarili, ano ang gusto ng \n karakter?");
+	pDiarySpriteer->addPageText("But", "Kapag may karakter, may problemang kinakaharap ang karakter. Tanungin ang iyong sarili, ano \n ang problema sa kuwento na kinakaharap ng pangunahing tauhan?");
+	pDiarySpriteer->addPageText("So", "Sinusubukan ng pangunahing tauhan lutasin ang problema. Tanungin ang iyong sarili kung \n Paano malulutas ng karakte ang problema.");
+	pDiarySpriteer->addPageText("Then", "Ano ang mangyayari pagkatapos subukan ng pangunahing tauhan na lutasin ang problema? \n ");
+	pDiarySpriteer->addPageText("Summary", "Upang Ibuod ang mga tanong na dapat mong itanong sa iyong sarili pagkatapos \n basahin ang isang kuwento:");
+	GameObjectManager::getInstance()->addObject(pDiarySpriteer);
 
 	GUIButton* pClose = new GUIButton("Close_Button", "Back");
+	GUIToggle* pToggleClose = new GUIToggle(EventKey::DIARY_SCREEN);
+	pClose->attachComponent(pToggleClose);
+	pDiarySpriteer->attachChild(pClose);
 	pClose->setPos(Vector2D(-750, 400));
 	pClose->setScale(Vector2D(.05f, .05f));
-	GUIToggle* pToggleClose = new GUIToggle("SWBST_BG");
-	pClose->attachComponent(pToggleClose);
-	GameObjectManager::getInstance()->addObject(pClose);
-	pSWBST_BG->attachChild(pClose);
+	//-755, -365
+	GUIButton* pProgress = new GUIButton("Progress", "Page_Change");
+	PageChangeToggle* pForward = new PageChangeToggle("Diary", true);
+	pProgress->attachComponent(pForward);
+	pDiarySpriteer->attachChild(pProgress);
+	pProgress->setPos(Vector2D(770, -365));
+	pProgress->setScale(Vector2D(.05f, .05f));
+
+	GUIButton* pRegress = new GUIButton("Regress", "Page_Change", true);
+	PageChangeToggle* pBackward = new PageChangeToggle("Diary", false);
+	pRegress->attachComponent(pBackward);
+	pDiarySpriteer->attachChild(pRegress);
+	pRegress->setPos(Vector2D(-755, -365));
+	pRegress->setScale(Vector2D(.05f, .05f));
 
 	EmptyObject* pFirstPageHolder = new EmptyObject("First_Page");
-	GameObjectManager::getInstance()->addObject(pFirstPageHolder);
 	this->createPageOne(pFirstPageHolder);
+	pFirstPageHolder->setEnabled(false);
 
-	pSWBST_BG->attachChild(pFirstPageHolder);
-	pSWBST_BG->setEnabled(false);
+	EmptyObject* pSecondPageHolder = new EmptyObject("Second_Page");
+	this->createPageTwo(pSecondPageHolder);
+	pSecondPageHolder->setEnabled(false);
+
+	EmptyObject* pThirdPageHolder = new EmptyObject("Third_Page");
+	this->createPageThree(pThirdPageHolder);
+	pThirdPageHolder->setEnabled(false);
+
+	EmptyObject* pFourthPageHolder = new EmptyObject("Fourth_Page");
+	this->createPageFour(pFourthPageHolder);
+	pFourthPageHolder->setEnabled(false);
+
+	EmptyObject* pFifthPageHolder = new EmptyObject("Fifth_Page");
+	this->createPageFive(pFifthPageHolder);
+	pFifthPageHolder->setEnabled(false);
+
+	EmptyObject* pSixthPageHolder = new EmptyObject("Sixth_Page");
+	this->createPageSix(pSixthPageHolder);
+	pSixthPageHolder->setEnabled(false);
+
+	EmptyObject* pSeventhPageHolder = new EmptyObject("Seventh_Page");
+	this->createPageSeven(pSeventhPageHolder);
+	pSeventhPageHolder->setEnabled(false);
+
+	pDiarySpriteer->addPage(pFirstPageHolder);
+	pDiarySpriteer->addPage(pSecondPageHolder);
+	pDiarySpriteer->addPage(pThirdPageHolder);
+	pDiarySpriteer->addPage(pFourthPageHolder);
+	pDiarySpriteer->addPage(pFifthPageHolder);
+	pDiarySpriteer->addPage(pSixthPageHolder);
+	pDiarySpriteer->addPage(pSeventhPageHolder);
+
+	pDiarySpriteer->setEnabled(false);
 
 }
 
 void LobbyScene::createPageOne(AGameObject* pParent)
 {
 	
-	Text* pTitle = new Text("Page1_Title", "Ano ang SWBST?", Vector2D(0, 400), Vector2D(1, 1), 0.f, false);
-	pTitle->setFont("LazyFont90");
-	pParent->attachChild(pTitle);
-	GameObjectManager::getInstance()->addObject(pTitle);
-
-	Text* pLine1 = new Text("Page1_Line1", "Ang SWBST ay isang paraan upang madaling amtukoy ang mahahalagang bahagi ng", Vector2D(0, 300), Vector2D(.75, .75), 0.f, false);
-	pLine1->setFont("LazyFont45");
-	pParent->attachChild(pLine1);
-	GameObjectManager::getInstance()->addObject(pLine1);
-
-	Text* pLine2 = new Text("Page1_Line2", "kuwento at matulungan kang buod ng kuwento.", Vector2D(-275, 250), Vector2D(.75, .75), 0.f, false);
-	pLine2->setFont("LazyFont45");
-	pParent->attachChild(pLine2);
-	GameObjectManager::getInstance()->addObject(pLine2);
-
-	Text* pLine3 = new Text("Page1_Line3", "Ang mga titik ng SWBST ay kumakatawan sa mga sumusunod:", Vector2D(-180, 150), Vector2D(.75, .75), 0.f, false);
-	pLine3->setFont("LazyFont45");
-	pParent->attachChild(pLine3);
-	GameObjectManager::getInstance()->addObject(pLine3);
-
-	Prop* pIntro = new Prop("FairyIntro", "Intro", Vector2D(0, -0), Vector2D(1, 1), 0, false);
+	Sprite* pIntro = new Sprite("FairyIntro", "Intro", Vector2D(0, -0), Vector2D(1, 1), 0, false);
 	pParent->attachChild(pIntro);
-	GameObjectManager::getInstance()->addObject((AGameObject*)pIntro);
+
+	Text* pS = new Text("S_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS->setMessage("S");
+	pS->setColor(colorRed);
+	pParent->attachChild(pS);
+	pS->setPos(Vector2D(-580, 40));
+	pS->setScale(Vector2D(1.5, 1.5));
+
+	Text* pOmebody = new Text("omebody", "JainiPurva-Regular.ttf", 45, 0, false);
+	pOmebody->setMessage("omebody");
+	pOmebody->setColor(colorRed);
+	pParent->attachChild(pOmebody);
+	pOmebody->setPos(Vector2D(-440, 25));
+	pOmebody->setScale(Vector2D(1.5, 1.5));
+
+	Text* pW = new Text("W_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pW->setMessage("W");
+	pW->setColor(colorYellow);
+	pParent->attachChild(pW);
+	pW->setPos(Vector2D(-580, -140));
+	pW->setScale(Vector2D(1.5, 1.5));
+
+	Text* pAnted = new Text("anted", "JainiPurva-Regular.ttf", 45, 0, false);
+	pAnted->setMessage("anted");
+	pAnted->setColor(colorYellow);
+	pParent->attachChild(pAnted);
+	pAnted->setPos(Vector2D(-470, -160));
+	pAnted->setScale(Vector2D(1.5, 1.5));
+
+	Text* pB = new Text("B_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pB->setMessage("B");
+	pB->setColor(colorCyan);
+	pParent->attachChild(pB);
+	pB->setPos(Vector2D(-580, -300));
+	pB->setScale(Vector2D(1.5, 1.5));
+
+	Text* pUt = new Text("ut", "JainiPurva-Regular.ttf", 45, 0, false);
+	pUt->setMessage("ut");
+	pUt->setColor(colorCyan);
+	pParent->attachChild(pUt);
+	pUt->setPos(Vector2D(-520, -320));
+	pUt->setScale(Vector2D(1.5, 1.5));
+
+	Text* pS2 = new Text("S2_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS2->setMessage("S");
+	pS2->setColor(colorBlue);
+	pParent->attachChild(pS2);
+	pS2->setPos(Vector2D(-110, 40));
+	pS2->setScale(Vector2D(1.5, 1.5));
+
+	Text* pO = new Text("O_Letter", "JainiPurva-Regular.ttf", 45, 0, false);
+	pO->setMessage("o");
+	pO->setColor(colorBlue);
+	pParent->attachChild(pO);
+	pO->setPos(Vector2D(-55, 25));
+	pO->setScale(Vector2D(1.5, 1.5));
+
+	Text* pT = new Text("T_Letter", "JainiPurva-Regular.ttf", 90, 0, false);
+	pT->setMessage("T");
+	pT->setColor(colorPurple);
+	pParent->attachChild(pT);
+	pT->setPos(Vector2D(-110, -140));
+	pT->setScale(Vector2D(1.5, 1.5));
+
+	Text* pHen = new Text("hen", "JainiPurva-Regular.ttf", 45, 0, false);
+	pHen->setMessage("hen");
+	pHen->setColor(colorPurple);
+	pParent->attachChild(pHen);
+	pHen->setPos(Vector2D(-55, -160));
+	pHen->setScale(Vector2D(1.5, 1.5));
+}
+
+void LobbyScene::createPageTwo(AGameObject* pParent)
+{
+	Sprite* pSomebody = new Sprite("Somebody", "Somebody", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pSomebody);
+
+	Text* pTao = new Text("Tao", "JainiPurva-Regular.ttf", 45, 0, false);
+	pTao->setMessage("Tao");
+	pTao->setPos(Vector2D(-330, 0));
+	pTao->setScale(Vector2D(1.5, 1.5));
+	pTao->setColor(colorRed);
+	pParent->attachChild(pTao);
+
+	Text* pHayop = new Text("Hayop", "JainiPurva-Regular.ttf", 45, 0, false);
+	pHayop->setMessage("Hayop");
+	pHayop->setPos(Vector2D(300, 10));
+	pHayop->setScale(Vector2D(1.5, 1.5));
+	pHayop->setColor(colorYellow);
+	pParent->attachChild(pHayop);
+
+	Text* pAtbp = new Text("Atbp", "JainiPurva-Regular.ttf", 45, 0, false);
+	pAtbp->setMessage("at kahit isang nagsasalitang piraso ng papel");
+	pAtbp->setPos(Vector2D(360, -400));
+	pAtbp->setScale(Vector2D(1, 1));
+	pAtbp->setColor(colorBlue);
+	pParent->attachChild(pAtbp);
+}
+
+void LobbyScene::createPageThree(AGameObject* pParent)
+{
+	Sprite* pWanted = new Sprite("Wanted", "Wanted", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pWanted);
+
+	Text* pStudent = new Text("Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student wanted \n to play video games");
+	pStudent->setPos(Vector2D(-400, -295));
+	pStudent->setScale(Vector2D(1, 1));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Cat", "JainiPurva-Regular.ttf", 45, 0, false);
+	pCat->setMessage("The cat wanted to \n eat a fish");
+	pCat->setPos(Vector2D(0, -295));
+	pCat->setScale(Vector2D(1, 1));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Fairy", "JainiPurva-Regular.ttf", 45, 0, false);
+	pFairy->setMessage("The fairy wanted to \n become a human");
+	pFairy->setPos(Vector2D(400, -295));
+	pFairy->setScale(Vector2D(1, 1));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
 
 }
+
+void LobbyScene::createPageFour(AGameObject* pParent)
+{
+	Sprite* pBut = new Sprite("But", "But", Vector2D(0, -85), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pBut);
+	
+	Text* pStudent = new Text("Page4_Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student had a \n failing grade in \n English");
+	pStudent->setPos(Vector2D(-400, -350));
+	pStudent->setScale(Vector2D(1.f, 1.f));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Page4_Cat", "JainiPurva-Regular.ttf",45, 0, false);
+	pCat->setMessage("The cat did not have \n enough money to buy \n the fish");
+	pCat->setPos(Vector2D(0, -275));
+	pCat->setScale(Vector2D(1.f, 1.f));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Page4_Fairy", "JainiPurva-Regular.ttf", 45, 0, false);
+	pFairy->setMessage("The fairy couldn't \n leave her duty \n behind");
+	pFairy->setPos(Vector2D(400, -275));
+	pFairy->setScale(Vector2D(1.f, 1.f));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
+
+}
+
+void LobbyScene::createPageFive(AGameObject* pParent)
+{
+	Sprite* pSo = new Sprite("So", "So", Vector2D(0, -40), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pSo);
+
+	Text* pStudent = new Text("Page5_Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student studied \n hard.");
+	pStudent->setPos(Vector2D(-400, -340));
+	pStudent->setScale(Vector2D(1.f, 1.f));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Page5_Cat", "JainiPurva-Regular.ttf", 45, 0, false);
+	pCat->setMessage("The cat worked as a \n deliveryman to earn \n enough money.");
+	pCat->setPos(Vector2D(0, -340));
+	pCat->setScale(Vector2D(1.f, 1.f));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Page5_Fairy", "JainiPurva-Regular.ttf", 45, 0, false);
+	pFairy->setMessage("The fairy accompanied \n the student in his \n studies.");
+	pFairy->setPos(Vector2D(400, -340));
+	pFairy->setScale(Vector2D(1.f, 1.f));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
+}
+
+void LobbyScene::createPageSix(AGameObject* pParent)
+{
+	Sprite* pThen = new Sprite("Then", "Then", Vector2D(0, -0), Vector2D(.75, .75), 0, false);
+	pParent->attachChild(pThen);
+
+	Text* pStudent = new Text("Page6_Student", "JainiPurva-Regular.ttf", 45, 0, false);
+	pStudent->setMessage("The student got a \n perfect score on his \n next quiz.");
+	pStudent->setPos(Vector2D(-400, -325));
+	pStudent->setScale(Vector2D(1.f, 1.f));
+	pStudent->setColor(colorRed);
+	pParent->attachChild(pStudent);
+
+	Text* pCat = new Text("Page6_Cat", "JainiPurva-Regular.ttf", 45, 0, false);
+	pCat->setMessage("The cat was able to earn \n enough money to buy the \n fish.");
+	pCat->setPos(Vector2D(0, -325));
+	pCat->setScale(Vector2D(1.f, 1.f));
+	pCat->setColor(colorYellow);
+	pParent->attachChild(pCat);
+
+	Text* pFairy = new Text("Page6_Fairy", "JainiPurva-Regular.ttf",45, 0, false);
+	pFairy->setMessage("The fairy became \n human.");
+	pFairy->setPos(Vector2D(400, -275));
+	pFairy->setScale(Vector2D(1.f, 1.f));
+	pFairy->setColor(colorBlue);
+	pParent->attachChild(pFairy);
+
+
+
+}
+
+void LobbyScene::createPageSeven(AGameObject* pParent)
+{
+	Text* pS = new Text("S_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS->setMessage("S");
+	pS->setPos(Vector2D(-560, 110));
+	pS->setScale(Vector2D(1.f, 1.f));
+	pS->setColor(colorRed);
+	pParent->attachChild(pS);
+
+	Text* pOmebody = new Text("omebody1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pOmebody->setMessage("omebody");
+	pOmebody->setPos(Vector2D(-470, 100));
+	pOmebody->setScale(Vector2D(1.f, 1.f));
+	pOmebody->setColor(colorRed);
+	pParent->attachChild(pOmebody);
+
+	Text* pS1Line = new Text("S1_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pS1Line->setMessage("Sino ang Pangunahiing tauhan?");
+	pS1Line->setPos(Vector2D(-195, 100));
+	pS1Line->setScale(Vector2D(.75, .75));
+	pS1Line->setColor(colorRed);
+	pParent->attachChild(pS1Line);
+
+	Text* pW = new Text("W_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pW->setMessage("W");
+	pW->setPos(Vector2D(-560, 15));
+	pW->setScale(Vector2D(1, 1));
+	pW->setColor(colorYellow);
+	pParent->attachChild(pW);
+
+	Text* pAnted = new Text("anted1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pAnted->setMessage("anted");
+	pAnted->setPos(Vector2D(-485, 0));
+	pAnted->setScale(Vector2D(1, 1));
+	pAnted->setColor(colorYellow);
+	pParent->attachChild(pAnted);
+
+	Text* pWLine = new Text("W_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pWLine->setMessage("Ano ang gusto ng karakter?");
+	pWLine->setPos(Vector2D(-220, 0));
+	pWLine->setScale(Vector2D(.75, .75));
+	pWLine->setColor(colorYellow);
+	pParent->attachChild(pWLine);
+
+	Text* pB = new Text("B_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pB->setMessage("B");
+	pB->setPos(Vector2D(-560, -80));
+	pB->setScale(Vector2D(1, 1));
+	pB->setColor(colorCyan);
+	pParent->attachChild(pB);
+
+	Text* pUt = new Text("ut1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pUt->setMessage("ut");
+	pUt->setPos(Vector2D(-510, -90));
+	pUt->setScale(Vector2D(1, 1));
+	pUt->setColor(colorCyan);
+	pParent->attachChild(pUt);
+
+	Text* pBLine = new Text("B_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pBLine->setMessage("Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?");
+	pBLine->setPos(Vector2D(-40, -90));
+	pBLine->setScale(Vector2D(.75, .75));
+	pBLine->setColor(colorCyan);
+	pParent->attachChild(pBLine);
+
+	Text* pS2 = new Text("S2_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pS2->setMessage("S");
+	pS2->setPos(Vector2D(-560, -160));
+	pS2->setScale(Vector2D(1, 1));
+	pS2->setColor(colorBlue);
+	pParent->attachChild(pS2);
+
+	Text* pO = new Text("O_Letter1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pO->setMessage("O");
+	pO->setPos(Vector2D(-530, -175));
+	pO->setScale(Vector2D(1, 1));
+	pO->setColor(colorBlue);
+	pParent->attachChild(pO);
+
+	Text* pS2Line = new Text("S2_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pS2Line->setMessage("Ano ang pumipigil sa karakter sa pagkamit sa kanyang nais?");
+	pS2Line->setPos(Vector2D(-40, -175));
+	pS2Line->setScale(Vector2D(.75, .75));
+	pS2Line->setColor(colorBlue);
+	pParent->attachChild(pS2Line);
+
+	Text* pT = new Text("T_Letter1", "JainiPurva-Regular.ttf", 90, 0, false);
+	pT->setMessage("T");
+	pT->setPos(Vector2D(-560, -280));
+	pT->setScale(Vector2D(1, 1));
+	pT->setColor(colorPurple);
+	pParent->attachChild(pT);
+
+	Text* pHen = new Text("hen1", "JainiPurva-Regular.ttf", 45, 0, false);
+	pHen->setMessage("hen");
+	pHen->setPos(Vector2D(-520, -295));
+	pHen->setScale(Vector2D(1, 1));
+	pHen->setColor(colorPurple);
+	pParent->attachChild(pHen);
+
+	Text* pTLine = new Text("T_Line", "JainiPurva-Regular.ttf", 45, 0.f, false);
+	pTLine->setMessage("Ano ang Nagyari pagkatapos sinubukan ng karakter lutasin ang problema?");
+	pTLine->setPos(Vector2D(35, -295));
+	pTLine->setScale(Vector2D(.75, .75));
+	pTLine->setColor(colorPurple);
+	pParent->attachChild(pTLine);
+}
+

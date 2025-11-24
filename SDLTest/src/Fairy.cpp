@@ -9,19 +9,12 @@ Fairy::Fairy(Vector2D fVecTranslate, Vector2D fVecScale, float fRot) : AGameObje
     this->fRot = fRot;
 }
 
-Fairy::~Fairy()
-{
-
-}
-
 void Fairy::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy", this->fVecTranslate.x, this->fVecTranslate.y);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer("Fairy");
     auto vecSprite = TextureManager::getInstance()->getTexture("Fairy", 0, 18);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, 12);
 
     this->attachComponent((AComponent*)pSpriteRenderer);
     this->attachComponent((AComponent*)pSpriteAnimator);
-    pSpriteAnimator->setAnimationType(AnimationType::PINGPONG);
-    pSpriteAnimator->play();
 }

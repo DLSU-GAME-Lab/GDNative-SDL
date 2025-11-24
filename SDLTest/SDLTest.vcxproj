@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -104,14 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)SDLTest\SDL\include;$(SolutionDir)SDLTest\include;$(SolutionDir)SDLTest\SDL3_image-3.2.4\include;$(SolutionDir)SDLTest\imgui\include;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\include;$(SolutionDir)SDLTest\tweeny\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)SDLTest\SDL\lib\x64;$(SolutionDir)SDLTest\SDL3_image-3.2.4\lib\x64;$(SolutionDir)SDLTest\SDL3_ttf-3.1.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL3.lib;SDL3_test.lib;SDL3_image.lib;SDL3_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL3.lib;SDL3_test.lib;SDL3_image.lib;SDL3_ttf.lib;pdh.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,6 +131,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AInteractable.cpp" />
+    <ClCompile Include="src\AudioClip.cpp" />
+    <ClCompile Include="src\AudioManager.cpp" />
+    <ClCompile Include="src\AudioPlayer.cpp" />
+    <ClCompile Include="src\Gate.cpp" />
+    <ClCompile Include="src\InteractabeGate.cpp" />
+    <ClCompile Include="src\InventoryGUI.cpp" />
+    <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
+    <ClCompile Include="src\ObjectiveIntro.cpp" />
+    <ClCompile Include="src\CollectableGem.cpp" />
+    <ClCompile Include="src\DialogueToggle.cpp" />
+    <ClCompile Include="src\AAnimator.cpp" />
+    <ClCompile Include="src\DialogueBox.cpp" />
+    <ClCompile Include="src\ExitMenu.cpp" />
+    <ClCompile Include="src\ACollider.cpp" />
     <ClCompile Include="imgui\src\imgui.cpp" />
     <ClCompile Include="imgui\src\imgui_demo.cpp" />
     <ClCompile Include="imgui\src\imgui_draw.cpp" />
@@ -138,11 +153,20 @@
     <ClCompile Include="imgui\src\imgui_impl_sdlrenderer3.cpp" />
     <ClCompile Include="imgui\src\imgui_tables.cpp" />
     <ClCompile Include="imgui\src\imgui_widgets.cpp" />
+    <ClCompile Include="src\CameraController.cpp" />
+    <ClCompile Include="src\Gem.cpp" />
+    <ClCompile Include="src\GUIToggle.cpp" />
     <ClCompile Include="src\AButton.cpp" />
     <ClCompile Include="src\AnimatedSprite.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\ARenderer.cpp" />
+    <ClCompile Include="src\BoxCollider.cpp" />
     <ClCompile Include="src\Camera.cpp" />
-    <ClCompile Include="src\Collider.cpp" />
+    <ClCompile Include="src\CameraManager.cpp" />
     <ClCompile Include="src\CustomStyles.cpp" />
+    <ClCompile Include="src\DialogueRenderer.cpp" />
+    <ClCompile Include="src\Diary.cpp" />
+    <ClCompile Include="src\DiaryToggle.cpp" />
     <ClCompile Include="src\EditorModule.cpp" />
     <ClCompile Include="src\EmptyObject.cpp" />
     <ClCompile Include="src\AGeneralInput.cpp" />
@@ -151,16 +175,23 @@
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\GUIButton.cpp" />
     <ClCompile Include="src\GUIManager.cpp" />
-    <ClCompile Include="src\GUIToggle.cpp" />
     <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\LeftRoomScene.cpp" />
+    <ClCompile Include="src\MathUtils.cpp" />
+    <ClCompile Include="src\ObjectiveManager.cpp" />
+    <ClCompile Include="src\PauseScreen.cpp" />
+    <ClCompile Include="src\PerformanceMetricsScreen.cpp" />
+    <ClCompile Include="src\PlatformerLevel1Scene.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
-    <ClCompile Include="src\PhysicsManager.cpp" />
+    <ClCompile Include="src\PageChangeToggle.cpp" />
+    <ClCompile Include="src\PhysicsSystem.cpp" />
+    <ClCompile Include="src\Platform.cpp" />
+    <ClCompile Include="src\PlatformerPickupGUI.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
-    <ClCompile Include="src\Prop.cpp" />
+    <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
     <ClCompile Include="src\Background.cpp" />
@@ -170,23 +201,48 @@
     <ClCompile Include="src\LobbyScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PuzzleHint.cpp" />
+    <ClCompile Include="src\PuzzleLevel1Scene.cpp" />
+    <ClCompile Include="src\PuzzleToken.cpp" />
+    <ClCompile Include="src\RendererContext.cpp" />
     <ClCompile Include="src\RightRoomScene.cpp" />
+    <ClCompile Include="src\RigidBody.cpp" />
     <ClCompile Include="src\Runner.cpp" />
     <ClCompile Include="src\AScene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\SceneSwitcher.cpp" />
     <ClCompile Include="src\SceneTransitionManager.cpp" />
+    <ClCompile Include="src\Scroller.cpp" />
+    <ClCompile Include="src\SequenceGameManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
-    <ClCompile Include="src\RenderSystem.cpp" />
+    <ClCompile Include="src\StoryWindow.cpp" />
+    <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\TileMap.cpp" />
+    <ClCompile Include="src\TileMapRenderer.cpp" />
     <ClCompile Include="src\Title_Scene.cpp" />
+    <ClCompile Include="src\TokenController.cpp" />
+    <ClCompile Include="src\TweenAnimator.cpp" />
     <ClCompile Include="src\UIManager.cpp" />
     <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AInteractable.h" />
+    <ClInclude Include="include\AudioClip.h" />
+    <ClInclude Include="include\AudioManager.h" />
+    <ClInclude Include="include\AudioPlayer.h" />
+    <ClInclude Include="include\CollectableGem.h" />
+    <ClInclude Include="include\DialogueToggle.h" />
+    <ClInclude Include="include\AAnimator.h" />
+    <ClInclude Include="include\DialogueBox.h" />
+    <ClInclude Include="include\EnumAudioGroupTag.h" />
+    <ClInclude Include="include\EnumOnAnimFinished.h" />
+    <ClInclude Include="include\EnumOnAudioFinished.h" />
+    <ClInclude Include="include\ExitMenu.h" />
+    <ClInclude Include="include\ACollider.h" />
     <ClInclude Include="imgui\include\imconfig.h" />
     <ClInclude Include="imgui\include\imgui.h" />
     <ClInclude Include="imgui\include\imgui_impl_sdl3.h" />
@@ -196,13 +252,24 @@
     <ClInclude Include="imgui\include\imstb_textedit.h" />
     <ClInclude Include="imgui\include\imstb_truetype.h" />
     <ClInclude Include="include\AButton.h" />
-    <ClInclude Include="include\ACollisionListener.h" />
+    <ClInclude Include="include\CameraController.h" />
+    <ClInclude Include="include\Gate.h" />
+    <ClInclude Include="include\Gem.h" />
+    <ClInclude Include="include\IAudioPlayerListener.h" />
+    <ClInclude Include="include\ICollisionListener.h" />
     <ClInclude Include="include\AComponent.h" />
     <ClInclude Include="include\AnimatedSprite.h" />
+    <ClInclude Include="include\Animation.h" />
+    <ClInclude Include="include\ARenderer.h" />
     <ClInclude Include="include\Background.h" />
+    <ClInclude Include="include\BoxCollider.h" />
     <ClInclude Include="include\Camera.h" />
-    <ClInclude Include="include\Collider.h" />
+    <ClInclude Include="include\CameraManager.h" />
     <ClInclude Include="include\CustomStyles.h" />
+    <ClInclude Include="include\DialogueRenderer.h" />
+    <ClInclude Include="include\Diary.h" />
+    <ClInclude Include="include\DiaryToggle.h" />
+    <ClInclude Include="include\EditorMode.h" />
     <ClInclude Include="include\EditorModule.h" />
     <ClInclude Include="include\EmptyObject.h" />
     <ClInclude Include="include\EnumAnimationType.h" />
@@ -221,34 +288,73 @@
     <ClInclude Include="include\GUIManager.h" />
     <ClInclude Include="include\GUIToggle.h" />
     <ClInclude Include="include\GUIUtils.h" />
+    <ClInclude Include="include\IAnimatorListener.h" />
     <ClInclude Include="include\InspectorScreen.h" />
+    <ClInclude Include="include\InteractabeGate.h" />
+    <ClInclude Include="include\InventoryGUI.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
+    <ClInclude Include="include\MathUtils.h" />
+    <ClInclude Include="include\ObjectiveButton_Controller.h" />
+    <ClInclude Include="include\ObjectiveIntro.h" />
+    <ClInclude Include="include\ObjectiveManager.h" />
+    <ClInclude Include="include\PauseScreen.h" />
+    <ClInclude Include="include\PerformanceMetricsScreen.h" />
+    <ClInclude Include="include\PlatformerLevel1Scene.h" />
     <ClInclude Include="include\Librarian.h" />
     <ClInclude Include="include\LobbyScene.h" />
     <ClInclude Include="include\MetricsManager.h" />
     <ClInclude Include="include\ButtonInput.h" />
-    <ClInclude Include="include\PhysicsManager.h" />
+    <ClInclude Include="include\PageChangeToggle.h" />
+    <ClInclude Include="include\PhysicsSystem.h" />
+    <ClInclude Include="include\Platform.h" />
+    <ClInclude Include="include\PlatformerPickupGUI.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />
+    <ClInclude Include="include\PuzzleHint.h" />
+    <ClInclude Include="include\PuzzleLevel1Scene.h" />
+    <ClInclude Include="include\PuzzleToken.h" />
+    <ClInclude Include="include\RendererContext.h" />
     <ClInclude Include="include\RightRoomScene.h" />
+    <ClInclude Include="include\RigidBody.h" />
     <ClInclude Include="include\Runner.h" />
     <ClInclude Include="include\AScene.h" />
     <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\SceneSwitcher.h" />
     <ClInclude Include="include\SceneTransitionManager.h" />
+    <ClInclude Include="include\Scroller.h" />
+    <ClInclude Include="include\SequenceGameManager.h" />
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
-    <ClInclude Include="include\RenderSystem.h" />
+    <ClInclude Include="include\StoryWindow.h" />
+    <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />
+    <ClInclude Include="include\TileMap.h" />
+    <ClInclude Include="include\TileMapRenderer.h" />
     <ClInclude Include="include\Title_Scene.h" />
-    <ClInclude Include="include\Prop.h" />
+    <ClInclude Include="include\Sprite.h" />
+    <ClInclude Include="include\TokenController.h" />
+    <ClInclude Include="include\TweenAnimator.h" />
     <ClInclude Include="include\UIManager.h" />
     <ClInclude Include="include\UINames.h" />
     <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
+    <ClInclude Include="tweeny\include\dispatcher.h" />
+    <ClInclude Include="tweeny\include\easing.h" />
+    <ClInclude Include="tweeny\include\easingresolve.h" />
+    <ClInclude Include="tweeny\include\int2type.h" />
+    <ClInclude Include="tweeny\include\tween.h" />
+    <ClInclude Include="tweeny\include\tweenpoint.h" />
+    <ClInclude Include="tweeny\include\tweentraits.h" />
+    <ClInclude Include="tweeny\include\tweeny.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tweeny\include\tween.tcc" />
+    <None Include="tweeny\include\tweenone.tcc" />
+    <None Include="tweeny\include\tweenpoint.tcc" />
+    <None Include="tweeny\include\tweeny.tcc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,11 +15,6 @@ public:
 
 	void setEvent(SDL_Event* eEvent);
 
-//private:
-//	virtual void onMouseHovered(Vector2D mousePos) = 0;
-//	virtual void onMouseButtonDown(Uint8 mouseButton) = 0;
-//	virtual void onMouseButtonUp(Uint8 mouseButton) = 0;
-//	virtual void onKeyPressed() = 0;
-//	virtual void onKeyReleased() = 0;
+
 };
 

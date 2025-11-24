@@ -1,12 +1,20 @@
 #include "PlayerController.h"
 #include "AGameObject.h"
+#include "AInteractable.h"
+#include "AudioManager.h"
 
-PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite) : AComponent("PlayerController", ComponentType::SCRIPT)
+PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
+	: AComponent("PlayerController", ComponentType::SCRIPT)
 {
 	this->pInput = pInput;
 	this->pSprite = pSprite;
-	this->fMoveSpeed = 0.0f;
-	this->fJumpForce = 0.0f;
+	this->pAnimator = pAnimator;
+	this->pRigidBody = pRigidBody;
+	this->fMoveSpeed = 100.0f;
+	this->fJumpForce = 100.0f;
+	this->pQMark = NULL;
+
+	this->pRigidBody->setListener(this);
 }
 
 PlayerController::~PlayerController()
@@ -14,17 +22,68 @@ PlayerController::~PlayerController()
 
 }
 
+void PlayerController::onAttach()
+{
+	this->pQMark = this->pOwner->findChildByName("Q_Mark");
+}
+
 void PlayerController::perform()
 {
 	if (this->pInput == NULL || this->pSprite == NULL) return;
 
-	if (this->pInput->getMoveX() != 0.0f)
-	{
-		Vector2D pos = this->pOwner->getPos();
-		pos.x += this->pInput->getMoveX() * this->fMoveSpeed * this->fDeltaTime;
-		this->pOwner->setPos(pos);
+	this->pRigidBody->setVelocity(this->pInput->getMovement() * this->fMoveSpeed * this->fDeltaTime);
 
-		if (pos.x != 0.0f) this->pSprite->setFlipX(pos.x < 0.0f);
+	if (this->pInput->getMovement() != Vector2D::Zero())
+	{
+		this->pSprite->setFlipX(this->pInput->getMovement().x < 0.0f);
+	}
+	
+	std::string animName = this->pAnimator->getCurrentAnimation()->getName();
+	if (this->pRigidBody->getGrounded())
+	{
+		if (this->pInput->getJumped())
+		{
+			this->pAnimator->play("jump");
+			this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
+			AudioManager::getInstance()->play(new AudioPlayer("Jump", AudioGroupTag::SFX));
+			AudioManager::getInstance()->play(new AudioPlayer("Land", AudioGroupTag::SFX));
+		}
+
+		if (this->pInput->getMovement() != Vector2D::Zero())
+		{
+			this->pAnimator->play("run");
+		}
+		else this->pAnimator->setAnimationState("idle");
+	}
+	else this->pAnimator->play("fall");
+}
+
+void PlayerController::onCollisionEnter(ACollider* pCollider)
+{
+	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
+	{
+		std::cout << "collectable detected." << std::endl;
+		this->pQMark->setEnabled(true);
+	}
+	else if (pCollider)
+	{
+		std::cout << pCollider->getOwner()->getName() << std::endl;
+	}
+}
+
+void PlayerController::onCollisionContinue(ACollider * pCollider)
+{
+	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
+	{
+		if (this->pInput->getInteracted()) pCollectable->onInteract();
+	}
+}
+
+void PlayerController::onCollisionExit(ACollider * pCollider)
+{
+	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
+	{
+		this->pQMark->setEnabled(false);
 	}
 }
 

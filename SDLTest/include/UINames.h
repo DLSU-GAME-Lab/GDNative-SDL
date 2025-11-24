@@ -3,11 +3,8 @@
 #include "unordered_map"
 #include "AUIScreen.h"
 
-namespace Editor
+class UINames
 {
-	class UINames
-	{
-	public:
-		const std::string INSPECTOR_SCREEN = "INSPECTOR_SCREEN";
-	};
-}
+public:
+	const std::string INSPECTOR_SCREEN = "INSPECTOR_SCREEN";
+};

@@ -5,10 +5,9 @@ class GUIButton : public AGameObject
 {
 private:
 	std::string strSpriteName;
-
+	bool bFlipX;
 public:
-	GUIButton(std::string strName, std::string strSpriteName);
-	~GUIButton();
+	GUIButton(std::string strName, std::string strSpriteName, bool bFlipX = false);
 
 	void initialize() override;
 };

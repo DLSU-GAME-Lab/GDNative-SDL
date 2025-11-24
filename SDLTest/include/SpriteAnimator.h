@@ -1,37 +1,40 @@
 #pragma once
 
-#include "AComponent.h"
+#include "AAnimator.h"
 #include "SpriteRenderer.h"
-#include "EnumAnimationType.h"
-#include <SDL3/SDL.h>
-#include <vector>
+#include "Animation.h"
+#include "IAnimatorListener.h"
+#include <unordered_map>
 
-class SpriteAnimator : public AComponent
+class SpriteAnimator : public AAnimator
 {
 private:
 	SpriteRenderer* pSpriteRenderer;
-	std::vector<SDL_Texture*> vecTexture;
-	unsigned int nFrameRate;
+	std::string strState;
+	std::vector<Animation*> vecAnims;
+	std::unordered_map<std::string, Animation*> mapAnims;
+	std::vector<IAnimatorListener*> vecListener;
 
-	bool bIsPlaying;
-	bool bIsReverse;
-	AnimationType EType;
-
-	unsigned int nFrameIndex;
-	float fTicks;
-	float fTicksPerFrame;
+private:
+	void setNextState();
+	void onAnimationFinished();
 
 public:
-	SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFrameRate);
+	SpriteAnimator(SpriteRenderer* pSpriteRenderer);
+	SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, Uint8 nFrameRate);
 	~SpriteAnimator();
 
 	virtual void perform() override;
 
+	void play(std::string strState = "");
+	void pause();
 	void stop();
-	void play();
 
-	void setAnimationType(AnimationType EType);
+	void addAnimation(Animation* pAnimation);
+	void setAnimationState(std::string strState);
+	void addListener(IAnimatorListener* pListener);
+	void removeListener(IAnimatorListener* pListener);
 
-	AnimationType getAnimationType() const;
+	Animation* getCurrentAnimation();
 };
 

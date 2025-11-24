@@ -2,6 +2,7 @@
 #pragma once
 #include "AScene.h"
 #include "EnumSceneTag.h"
+#include "ExitMenu.h"
 class LeftRoomScene :public AScene
 {
 public: 
@@ -11,6 +12,7 @@ public:
 	virtual void onLoadResources() override;
 	virtual void onLoadObjects() override;
 	virtual void onUnloadResources() override;
+	virtual void onUnloadObjects() override;
 public:
 	void loadFonts();
 	void loadAnimatedTextures();

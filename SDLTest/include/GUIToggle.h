@@ -1,11 +1,13 @@
 #pragma once
 #include "AComponent.h"
+#include "EnumEventKey.h"
+#include "EventBroadcaster.h"
 class GUIToggle : public AComponent
 {
 private:
-	std::string strGUIName;
+	EventKey EKey;
 public:
-	GUIToggle(std::string strGUIName);
+	GUIToggle(EventKey EKey);
 	~GUIToggle();
 
 	void perform() override;

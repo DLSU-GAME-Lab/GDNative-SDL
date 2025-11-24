@@ -1,7 +1,9 @@
+#pragma once
 #include "SDL3/SDL_test_font.h"
 #include "SDL3_ttf/SDL_ttf.h"
 #include "unordered_map"
 #include "iostream"
+#include "string"
 class FontManager
 {
 private:
@@ -9,9 +11,10 @@ private:
 
 public:
     // use this
-    TTF_Font* getFont(std::string strFontName);
-    void loadFont(std::string strItem, std::string strName, int dFontSize);
-    void unloadFont(std::string strName);
+    TTF_Font* getFont(const std::string& fontKey, int fontSize);
+    void loadFont(const std::string& fileName, const std::string& fontKey, int fontSize);
+    void unloadFontFamily(const std::string& fontKey);
+    void unloadAllFonts();
     
     /* * * * * * * * * * * * * * * * * * * * *
    *       SINGLETON-RELATED CONTENT       *

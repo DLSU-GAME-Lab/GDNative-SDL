@@ -1,110 +1,149 @@
 #include "SpriteAnimator.h"
+#include "GameObjectManager.h"
 
-#ifdef __ANDROID__
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/android_sink.h"
-#define LOG_DEBUG(...) spdlog::debug(__VA_ARGS__)
-#define LOG_ERROR(...) spdlog::error(__VA_ARGS__)
-#else
-// on windows/linux: just no-op or printf
-#include <cstdio>
-#define LOG_DEBUG(...) printf(__VA_ARGS__); printf("\n")
-#define LOG_ERROR(...) printf(__VA_ARGS__); printf("\n")
-#endif
-
-SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, unsigned int nFrameRate)
-	: AComponent("SpriteAnimator", ComponentType::SCRIPT)
+SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer) : AAnimator("SpriteAnimator")
 {
 	this->pSpriteRenderer = pSpriteRenderer;
-	this->vecTexture = vecTexture;
-	this->nFrameRate = nFrameRate;
+}
 
-	this->bIsPlaying = false;
-	this->bIsReverse = false;
-	this->EType = AnimationType::ONCE;
-	this->nFrameIndex = 0;
-	this->fTicks = 0;
-	this->fTicksPerFrame = nFrameRate / 60.0f;
+SpriteAnimator::SpriteAnimator(SpriteRenderer* pSpriteRenderer, std::vector<SDL_Texture*> vecTexture, Uint8 nFrameRate)
+	: AAnimator("SpriteAnimator")
+{
+	this->pSpriteRenderer = pSpriteRenderer;
+	this->strState = "default";
+	Animation* pAnimation = new Animation(strState, vecTexture, nFrameRate, AnimationType::YOYO);
+	this->vecAnims.push_back(pAnimation);
+	this->mapAnims[strState] = pAnimation;
+	this->mapAnims[strState]->play();
 }
 
 SpriteAnimator::~SpriteAnimator()
 {
-
+	for (int i = 0; i < this->vecAnims.size(); i++)
+	{
+		delete this->vecAnims[i];
+	}
 }
 
 void SpriteAnimator::perform()
 {
-    LOG_DEBUG("SpriteAnimator::perform() called, bIsPlaying={}", this->bIsPlaying);
+	if (mapAnims.contains(strState))
+	{
+		mapAnims[strState]->step(fDeltaTime);
 
-    if (this->vecTexture.empty()) {
-        LOG_ERROR("SpriteAnimator::perform() - no textures, animator stopped");
-        this->bIsPlaying = false;
-        return;
-    }
+		if (mapAnims[strState]->finished())
+		{
+			switch (mapAnims[strState]->getOnAnimFinished())
+			{
+			case OnAnimFinished::NONE:
+				mapAnims[strState]->pause();
+				break;
 
-    if (this->bIsPlaying)
-    {
-        this->fTicks += fDeltaTime;
-        if (this->fTicks >= this->fTicksPerFrame)
-        {
-            this->fTicks -= this->fTicksPerFrame;
+			case OnAnimFinished::STOP:
+				mapAnims[strState]->stop();
+				break;
 
-            if (!this->bIsReverse) this->nFrameIndex++;
-            else this->nFrameIndex--;
+			case OnAnimFinished::NEXT:
+				this->setNextState();
+				break;
 
-            switch (this->EType)
-            {
-            case AnimationType::ONCE:
-                if (this->nFrameIndex >= (int)this->vecTexture.size()) {
-                    LOG_DEBUG("SpriteAnimator: out of range index={} size={}", this->nFrameIndex, this->vecTexture.size());
-                    this->stop();
-                    return;
-                }
-                break;
+			case OnAnimFinished::FUNC:
+				this->onAnimationFinished();
+				break;
 
-            case AnimationType::LOOP:
-                if (!this->vecTexture.empty())
-                    this->nFrameIndex %= (int)this->vecTexture.size();
-                break;
+			case OnAnimFinished::DELETE:
+				GameObjectManager::getInstance()->deleteObject(this->pOwner);
+				break;
 
-            case AnimationType::PINGPONG:
-                if (!this->vecTexture.empty() &&
-                    (this->nFrameIndex == (int)this->vecTexture.size() - 1 || this->nFrameIndex == 0))
-                {
-                    this->bIsReverse = !this->bIsReverse;
-                }
-                break;
+			default:
+				break;
+			}
+		}
 
-            default:
-                break;
-            }
+		this->pSpriteRenderer->setTexture(mapAnims[strState]->getCurrentFrame());
+	}
+}
 
-            LOG_DEBUG("SpriteAnimator: setting frame index={} (size={})", this->nFrameIndex, this->vecTexture.size());
-            this->pSpriteRenderer->setTexture(this->vecTexture[this->nFrameIndex]);
-        }
-    }
+void SpriteAnimator::setNextState()
+{
+	mapAnims[strState]->stop();
+	std::string nextState = mapAnims[strState]->getNextState();
+	if (mapAnims.contains(nextState)) this->strState = mapAnims[strState]->getNextState();
+}
+
+void SpriteAnimator::onAnimationFinished()
+{
+	mapAnims[strState]->pause();
+	for (auto pListener : this->vecListener)
+	{
+		pListener->onAnimationFinished();
+	}
+}
+
+void SpriteAnimator::play(std::string strState)
+{
+	if (this->strState == strState ||
+		this->mapAnims.empty()) return;
+
+	if (strState.empty()) this->mapAnims[this->strState]->play();
+	else
+	{
+		this->strState = strState;
+		this->mapAnims[this->strState]->play();
+	}
+}
+
+void SpriteAnimator::pause()
+{
+	if (this->strState.empty() ||
+		this->mapAnims.empty()) return;
+
+	this->mapAnims[this->strState]->stop();
 }
 
 void SpriteAnimator::stop()
 {
-	this->bIsPlaying = false;
-	this->nFrameIndex = 0;
-	this->fTicks = 0;
+	if (this->strState.empty() ||
+		this->mapAnims.empty()) return;
+
+	this->mapAnims[this->strState]->stop();
 }
 
-void SpriteAnimator::play()
+void SpriteAnimator::addAnimation(Animation* pAnimation)
 {
-	if (this->bIsPlaying) this->stop();
-	this->bIsPlaying = true;
-    LOG_DEBUG("SpriteAnimator::play() called, animation started");
+	if (this->mapAnims.contains(pAnimation->getName())) return;
+
+	this->vecAnims.push_back(pAnimation);
+	this->mapAnims[pAnimation->getName()] = pAnimation;
 }
 
-void SpriteAnimator::setAnimationType(AnimationType EType)
+void SpriteAnimator::setAnimationState(std::string strState)
 {
-	this->EType = EType;
+	if (this->strState == strState || this->strState.empty()) return;
+	this->strState = strState;
 }
 
-AnimationType SpriteAnimator::getAnimationType() const
+void SpriteAnimator::addListener(IAnimatorListener* pListener)
 {
-	return this->EType;
+	this->vecListener.push_back(pListener);
+}
+
+void SpriteAnimator::removeListener(IAnimatorListener* pListener)
+{
+	int nIndex = -1;
+	for (int i = 0; i < this->vecListener.size() && nIndex == -1; i++)
+	{
+		if (this->vecListener[i] == pListener)
+			nIndex = i;
+	}
+
+	if (nIndex != -1) this->vecListener.erase(this->vecListener.begin() + nIndex);
+}
+
+Animation* SpriteAnimator::getCurrentAnimation()
+{
+	if (mapAnims.contains(strState))
+		return mapAnims[strState];
+
+	return NULL;
 }

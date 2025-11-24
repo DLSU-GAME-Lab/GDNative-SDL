@@ -18,19 +18,12 @@ AnimatedSprite::AnimatedSprite(
     this->nFrameRate = nFrameRate;
 }
 
-AnimatedSprite::~AnimatedSprite()
-{
-
-}
-
 void AnimatedSprite::initialize()
 {
-    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strSpriteName, this->fVecTranslate.x, this->fVecTranslate.y);
+    SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strSpriteName);
     auto vecSprite = TextureManager::getInstance()->getTexture(this->strSpriteName);
     SpriteAnimator* pSpriteAnimator = new SpriteAnimator(pSpriteRenderer, vecSprite, this->nFrameRate);
 
-    this->attachComponent((AComponent*)pSpriteRenderer);
-    this->attachComponent((AComponent*)pSpriteAnimator);
-    pSpriteAnimator->setAnimationType(AnimationType::PINGPONG);
-    pSpriteAnimator->play();
+    this->attachComponent(pSpriteRenderer);
+    this->attachComponent(pSpriteAnimator);
 }

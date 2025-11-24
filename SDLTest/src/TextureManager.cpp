@@ -1,144 +1,86 @@
+// ---------------------------------------------------------------------------
+// Responsibilities: load textures from disk, create cached textures, unload.
+// ---------------------------------------------------------------------------
+
 #include "TextureManager.h"
 #include "FontManager.h"
 #include <SDL3_image/SDL_image.h>
 #include "SDL3_ttf/SDL_ttf.h"
+#include "StringUtils.h"
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
+#include "RendererContext.h"
 
-#ifdef __ANDROID__
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/android_sink.h"
-#define LOG_DEBUG(...) spdlog::debug(__VA_ARGS__)
-#define LOG_ERROR(...) spdlog::error(__VA_ARGS__)
-#else
-// on windows/linux: just no-op or printf
-#include <cstdio>
-#define LOG_DEBUG(...) printf(__VA_ARGS__); printf("\n")
-#define LOG_ERROR(...) printf(__VA_ARGS__); printf("\n")
-#endif
-
-// load texture (handles android and desktop separately)
+// load: per-file cost dominated by I/O and decoding. Algorithmic container
+// insertions are O(1). As number of textures V increases, memory usage and
+// any global iterations over vecTexture scale with V.
 void TextureManager::load(std::string strFolderPath, std::string strName)
 {
-    SDL_Surface* surface = nullptr;
+    // O(1) setup + O(fileSize) I/O to load from disk.
+    // Texture creation cost is high but fixed per file.
+    std::string strPath;
+    auto token = StringUtils::split(strFolderPath, '/');
+    if (token[0] == "Assets") strPath = strFolderPath;
+    else strPath = "Assets/" + strFolderPath;
 
-#if defined(__ANDROID__)
-    // android: assets are packaged directly, no "Assets/" prefix
-    std::string basePath = strFolderPath;
-#else
-    // desktop: keep using "Assets/" folder
-    std::string basePath = "Assets/" + strFolderPath;
-#endif
+    // DEBUG: print what path is being loaded
+    std::cout << "[DEBUG] Attempting to load texture: " << strPath << std::endl;
 
-    LOG_DEBUG("[TextureManager] load() requested: '{}' -> name='{}'", basePath, strName);
-
-#if defined(__ANDROID__)
-    // try multiple path variants for case and extension
-    std::vector<std::string> tries;
-    tries.push_back(basePath);
-
-    auto extPos = basePath.find_last_of('.');
-    if (extPos != std::string::npos) {
-        std::string nameNoExt = basePath.substr(0, extPos);
-        std::string ext = basePath.substr(extPos);
-        std::string extLower = ext, extUpper = ext;
-        std::transform(extLower.begin(), extLower.end(), extLower.begin(), ::tolower);
-        std::transform(extUpper.begin(), extUpper.end(), extUpper.begin(), ::toupper);
-        if (extLower != ext) tries.push_back(nameNoExt + extLower);
-        if (extUpper != ext) tries.push_back(nameNoExt + extUpper);
-    } else {
-        tries.push_back(basePath + ".png");
-        tries.push_back(basePath + ".PNG");
-    }
-
-    // remove duplicate paths
-    std::vector<std::string> uniqueTries;
-    for (auto &p : tries) {
-        if (std::find(uniqueTries.begin(), uniqueTries.end(), p) == uniqueTries.end())
-            uniqueTries.push_back(p);
-    }
-
-    bool loaded = false;
-    for (auto &pathTry : uniqueTries) {
-        spdlog::debug("[TextureManager] trying '{}'", pathTry);
-
-        SDL_IOStream* file = SDL_IOFromFile(pathTry.c_str(), "rb");
-        if (!file) {
-            spdlog::debug("[TextureManager] SDL_IOFromFile failed '{}': {}", pathTry, SDL_GetError());
-            continue;
-        }
-
-        surface = IMG_Load_IO(file, true);
-        if (!surface) {
-            spdlog::debug("[TextureManager] IMG_Load_IO failed '{}': {}", pathTry, SDL_GetError());
-            continue;
-        }
-
-        spdlog::debug("[TextureManager] loaded '{}' surface={} w={} h={}", pathTry, (void*)surface, surface->w, surface->h);
-        loaded = true;
-        break;
-    }
-
-    if (!loaded) {
-        spdlog::error("[TextureManager] failed to load '{}'. put file in app/src/main/assets. path is case-sensitive.", basePath);
-        return;
-    }
-
-#else
-    // desktop: try exact and extension variants
-    std::vector<std::string> tries = { basePath };
-    auto extPos = basePath.find_last_of('.');
-    if (extPos == std::string::npos) {
-        tries.push_back(basePath + ".png");
-        tries.push_back(basePath + ".PNG");
-    } else {
-        std::string nameNoExt = basePath.substr(0, extPos);
-        std::string ext = basePath.substr(extPos);
-        std::string extLower = ext, extUpper = ext;
-        std::transform(extLower.begin(), extLower.end(), extLower.begin(), ::tolower);
-        std::transform(extUpper.begin(), extUpper.end(), extUpper.begin(), ::toupper);
-        if (extLower != ext) tries.push_back(nameNoExt + extLower);
-        if (extUpper != ext) tries.push_back(nameNoExt + extUpper);
-    }
-
-    for (auto &pathTry : tries) {
-        LOG_DEBUG("[TextureManager] trying '{}'", pathTry);
-        surface = IMG_Load(pathTry.c_str());
-        if (surface) {
-            LOG_DEBUG("[TextureManager] loaded '{}' surface={} w={} h={}", pathTry, (void*)surface, surface->w, surface->h);
-            break;
-        } else {
-            LOG_DEBUG("[TextureManager] IMG_Load failed '{}': {}", pathTry, SDL_GetError());
-        }
-    }
-
+    SDL_Surface* surface = IMG_Load(strPath.c_str());
     if (!surface) {
-        LOG_DEBUG("[TextureManager] failed to load '{}'", basePath);
+        std::cerr << "[ERROR] : Problem loading image file [" << strPath << "] "
+            << "Error: " << SDL_GetError() << std::endl;
         return;
     }
-#endif
 
-    // make texture from surface
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, surface);
     SDL_DestroySurface(surface);
 
     if (!pTexture) {
-        LOG_ERROR("[TextureManager] SDL_CreateTextureFromSurface failed '{}': {}", basePath, SDL_GetError());
+        std::cerr << "[ERROR] : Failed to create texture for [" << strPath << "] "
+            << "Error: " << SDL_GetError() << std::endl;
         return;
     }
 
-    LOG_DEBUG("[TextureManager] created texture ptr={} name='{}'", (void*)pTexture, strName);
+    // O(1): push_back into containers.
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }
 
-void TextureManager::loadFromText(std::string strName, std::string fontType, std::string textureText, SDL_Color textColor)
+// loadFromFolder: O(F) where F = number of files processed. Total wall-time
+// grows with sum of per-file I/O and decode costs.
+void TextureManager::loadFromFolder(std::string strPath, std::string strName)
 {
-    SDL_Surface* textSurface = TTF_RenderText_Blended(FontManager::getInstance()->getFont(fontType), textureText.c_str(), 0, textColor);
+    // O(F): loops through files in a folder, calling load() for each.
+    // F = number of files in folder.
+    
+    std::string directory = "Assets/" + strPath;
+    if (!std::filesystem::exists(directory.c_str()))
+    {
+        std::cerr << "[ERROR] : path [" << directory << "] " << "does no exist." << std::endl;
+        return;
+    }
+    
+    for (const auto& entry : std::filesystem::directory_iterator(directory))
+    {
+        if (std::filesystem::is_regular_file(entry.status()))
+        {
+            std::string path = entry.path().generic_string();
+            this->load(path, strName);
+        }
+    }
+}
+
+// loadFromText: O(1) algorithmically; TTF rendering cost is an expensive
+// constant that affects wall-time.
+void TextureManager::loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor)
+{
+    // O(1): creates texture from text; I/O and render cost from SDL_ttf.
+    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(FontManager::getInstance()->getFont(fontType, nFontSize), textureText.c_str(), 0, textColor, 0);
     if (textSurface == nullptr)
     {
-        std::cout<<"[ERROR]: Could not render text." << SDL_GetError() << std::endl;
+        std::cout << "[ERROR]: Could not render text." << SDL_GetError() << std::endl;
         return;
     }
     SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, textSurface);
@@ -151,21 +93,16 @@ void TextureManager::loadFromText(std::string strName, std::string fontType, std
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }
-//
-//void TextureManager::loadFromFolder(std::string strFolderPath, std::string strName)
-//{
-//    std::string strPath = "Assets/" + strFolderPath;
-//    for (const auto& entry : std::filesystem::directory_iterator(strPath))
-//    {
-//        std::string path = entry.path().generic_string();
-//        std::vector<std::string> tokens = StringUtils::split(path, '/');
-//        std::string assetName = StringUtils::split(tokens[tokens.size() - 1], '.')[0];
-//
-//    }
-//}
 
+// unload: current implementation destroys textures for a name and removes
+// them from a global vector. Worst-case complexity can be proportional to
+// the size of the global texture vector V times the number of textures T
+// being removed (O(V * T)) depending on implementation details of removal.
+// As V grows large, unload operations may become increasingly expensive.
 void TextureManager::unload(std::string strName)
 {
+    // O(T): destroys all textures associated with name.
+    // Erase + vector filtering also O(T) with small constants.
     // destroy each texture associated with this name
     for (SDL_Texture* tex : this->mapTexture[strName]) {
         SDL_DestroyTexture(tex);
@@ -183,11 +120,14 @@ void TextureManager::unload(std::string strName)
     );
 
     this->mapTexture[strName].clear();
-    std::cout << "Unloaded: " << strName << std::endl;
+    
 }
 
+// getTexture: returning copies of vectors is O(T) (copy cost). As T increases
+// this creates overhead for callers that only needed read access.
 std::vector<SDL_Texture*> TextureManager::getTexture(std::string strName, int nStart, int nEnd)
 {
+    // O(T): copies subset of textures if range given.
     if (mapTexture.find(strName) == mapTexture.end())
         return {};
 
@@ -204,9 +144,11 @@ std::vector<SDL_Texture*> TextureManager::getTexture(std::string strName, int nS
     return {};
 }
 
+// get: O(1) fetch of first texture pointer by name assuming map lookup is O(1).
 // get a single texture by name (first one in the list)
 SDL_Texture* TextureManager::get(const std::string& strName)
 {
+    // O(1): fetches first texture by key.
     if (mapTexture.find(strName) != mapTexture.end() && !mapTexture[strName].empty()) {
         return mapTexture[strName][0];
     }
@@ -217,6 +159,7 @@ SDL_Texture* TextureManager::get(const std::string& strName)
  *       SINGLETON-RELATED CONTENT       * 
  * * * * * * * * * * * * * * * * * * * * */
 TextureManager* TextureManager::P_SHARED_INSTANCE = NULL;
+
 
 void TextureManager::initialize(SDL_Renderer* pRenderer)
 {

@@ -3,34 +3,33 @@
 #include "Vector2D.h"
 
 #include <vector>
+#include <unordered_map>
+
+struct CellData
+{
+    Uint64 r;
+    Uint64 c;
+    AGameObject* obj;
+};
 
 class Grid : public AComponent
 {
-private:
-    struct CellData
-    {
-        Uint8 r;
-        Uint8 c;
-        Vector2D pos;
-        AGameObject* obj;
-        bool blocked;
-    };
+protected:
+    typedef std::vector<std::vector<CellData>> GridCells;
 
-    Uint8 nWidth;
-    Uint8 nHeight;
-    float nCellSize;
-    std::vector<CellData> vecCell;
+    float fWidth;
+    float fHeight;
+    GridCells gridCells;
 
 public:
-    Grid(std::string strName, Uint8 w, Uint8 h, float nCellSize);
-    void perform() override;
+    Grid(std::string strName, ComponentType EType, float fWidth = 1.0f, float fHeight = 1.0f);
 
-    std::vector<AGameObject*> getAdjacentObjects(AGameObject* pGameObject, bool bIncludeDiagonals = false);
+    virtual void onAttach() override;
+    virtual void perform() = 0;
 
-    void setBlockedCell(Uint8 r, Uint8 c, bool bBlocked);
-    bool setCellObject(Uint8 r, Uint8 c, AGameObject* pGameObject);
-
-    CellData getCellDataFromObject(AGameObject* pGameObject);
-    AGameObject* getCellObject(Uint8 r, Uint8 c);
+    bool setCellObject(Uint64 r, Uint64 c, AGameObject* pGameObject);
+    Vector2D getCellPosition(Uint64 r, Uint64 c);
+    AGameObject* getCellObject(Uint64 r, Uint64 c);
+    CellData* getCellFromObject(AGameObject* pObject);
 };
 

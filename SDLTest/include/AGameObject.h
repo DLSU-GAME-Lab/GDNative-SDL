@@ -1,7 +1,6 @@
 #pragma once
 
 #include "AComponent.h"
-#include "SpriteRenderer.h"
 #include "Vector2D.h"
 #include <vector>
 
@@ -10,7 +9,7 @@ class AGameObject
 protected:
     bool bEnabled;
     std::string strName;
-
+    
     AGameObject* pParent;
     std::vector<AGameObject*> vecChildren;
     std::vector<AComponent*> vecComponent;
@@ -23,7 +22,7 @@ protected:
 
 public:
     AGameObject(std::string strName);
-    virtual ~AGameObject() = default;
+    virtual ~AGameObject();
 
 public:
     virtual void initialize() = 0;
@@ -41,18 +40,33 @@ public:
     AComponent* findComponentByName(std::string strName);
     std::vector<AComponent*> getComponents(ComponentType EType);
     std::vector<AComponent*> getComponentsRecursively(ComponentType EType, bool bInclusive = true);
+    bool componentExists(std::string strName);
 
 public:
     bool getEnabled() const;
     void setEnabled(bool bEnabled);
     std::string getName() const;
+    void setName(std::string strName);
     AGameObject* getParent() const;
     void setParent(AGameObject* pParent);
     void setPos(Vector2D fVecTranslate);
+    void setLocalPos(Vector2D fVecTranslate);
     void setScale(Vector2D fVecScale);
+    void setLocalScale(Vector2D fVecScale);
     Vector2D getPos();
+    Vector2D getLocalPos();
     Vector2D getScale();
+    Vector2D getLocalScale();
     void setRot(float fRot);
+    void setLocalRot(float fRot);
     float getRot();
+    float getLocalRot();
+
     bool getIsScreenObject() const;
+    void setIsScreenObject(bool bIsScreenObject);
+    bool getFollowParent();
+    void setFollowParent(bool bFollowParent);
+    bool isGloballyEnabled() const;
+ 
+
 };

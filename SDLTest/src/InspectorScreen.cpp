@@ -1,35 +1,45 @@
 #include "InspectorScreen.h"
 #include "SceneManager.h"
 #include "GameObjectManager.h"
-#include "RenderSystem.h"
+#include "CameraManager.h"
 #include <cmath>
 
-void Editor::InspectorScreen::setSelectedObject(AGameObject* selectedObject)
+void InspectorScreen::setSelectedObject(AGameObject* selectedObject)
 {
     this->selectedObject = selectedObject;
 }
 
-AGameObject* Editor::InspectorScreen::getSelectedObject()
+AGameObject* InspectorScreen::getSelectedObject()
 {
     return this->selectedObject;
 }
 
-void Editor::InspectorScreen::setMousePos(Vector2D mousePos)
+void InspectorScreen::setMousePos(Vector2D mousePos)
 {
     this->mousePos = mousePos;
 }
 
-Editor::InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
+float InspectorScreen::getCamMoveSpeed() const
+{
+    return this->fCamMoveSpeed;
+}
+
+float InspectorScreen::getCamScaleSpeed() const
+{
+    return this->fCamScaleSpeed;
+}
+
+InspectorScreen::InspectorScreen() : AUIScreen("INSPECTOR_SCREEN")
 {
 	this->selectedObject = NULL;
 }
 
-Editor::InspectorScreen::~InspectorScreen()
+InspectorScreen::~InspectorScreen()
 {
 
 }
 
-void Editor::InspectorScreen::DrawUI()
+void InspectorScreen::DrawUI()
 {
 	ImGui::Begin("Inspector", NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_AlwaysAutoResize);
     const int scenes = SceneManager::getInstance()->getRegisteredSceneAmount();
@@ -44,13 +54,13 @@ void Editor::InspectorScreen::DrawUI()
         SceneManager::getInstance()->loadScene((SceneTag)sceneIndex);
     }
 
-    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Camera* cam = CameraManager::getInstance()->getCurrentCamera();
 
     Vector2D mouseWorldPos;
     mouseWorldPos.x = (this->mousePos.x + cam->getPos().x - cam->getHalfWidth()) * cam->getScale().x;
     mouseWorldPos.y = (-(this->mousePos.y - cam->getPos().y - cam->getHalfHeight())) * cam->getScale().y;
 
-    std::string mousePosText = "Mouse Position: (" + std::to_string((int)mousePos.x) + ", " + std::to_string((int)mousePos.y) + ")";
+    std::string mousePosText = "Mouse Screen Position: (" + std::to_string((int)mousePos.x) + ", " + std::to_string((int)mousePos.y) + ")";
     std::string mouseWorldPosText = "Mouse World Position: (" + std::to_string((int)mouseWorldPos.x) + ", " + std::to_string((int)mouseWorldPos.y) + ")";
     ImGui::Text(mousePosText.c_str());
     ImGui::Text(mouseWorldPosText.c_str());
@@ -67,43 +77,42 @@ void Editor::InspectorScreen::DrawUI()
     ImGui::End();
 }
 
-void Editor::InspectorScreen::showCamera(ImGuiChildFlags childFlags)
+void InspectorScreen::showCamera(ImGuiChildFlags childFlags)
 {
-    ImGui::BeginChild("Camera", ImVec2(0, 0), childFlags);
+    ImGui::BeginChild("Camera", ImVec2(320, 0), childFlags);
     ImGui::Text("Camera");
 
-    Camera* cam = RenderSystem::getInstance()->getCamera();
+    Camera* cam = CameraManager::getInstance()->getCurrentCamera();
     Vector2D pos = cam->getPos();
-    float rot = cam->getRot();
     Vector2D scale = cam->getScale();
+    float rot = cam->getRot();
 
     float scenePos[] = { pos.x, pos.y };
-    float sceneRot = rot;
     float sceneScale[] = { scale.x, scale.y };
+    float sceneRot = rot;
+
+    ImGui::DragFloat("Move Speed", &this->fCamMoveSpeed);
+    ImGui::DragFloat("Scale Speed", &this->fCamScaleSpeed);
     
-    
-    if (ImGui::InputFloat2("Position", scenePos) &&
-        ImGui::IsItemDeactivatedAfterEdit())
+    if (ImGui::DragFloat2("Position", scenePos))
     {
         cam->setPos(Vector2D(scenePos[0], scenePos[1]));
     }
 
-    //if (ImGui::InputFloat("Rotation", &sceneRot) &&
-    //    ImGui::IsItemDeactivatedAfterEdit())
-    //{
-    //    cam->setRot(sceneRot);
-    //}
+    if (ImGui::DragFloat2("Scale", sceneScale, 0.01f, 0.001f, 0.0f))
+    {
+        cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
+    }
 
-    //if (ImGui::InputFloat2("Scale", sceneScale) &&
-    //    ImGui::IsItemDeactivatedAfterEdit())
-    //{
-    //    cam->setScale(Vector2D(sceneScale[0], sceneScale[1]));
-    //}
+    if (ImGui::DragFloat("Rotation", &sceneRot))
+    {
+        cam->setRot(sceneRot);
+    }
 
     ImGui::EndChild();
 }
 
-void Editor::InspectorScreen::showTransform(ImGuiChildFlags childFlags)
+void InspectorScreen::showTransform(ImGuiChildFlags childFlags)
 {
     ImGui::BeginChild("Transform", ImVec2(0, 0), childFlags);
     if (this->selectedObject == NULL)
@@ -127,22 +136,19 @@ void Editor::InspectorScreen::showTransform(ImGuiChildFlags childFlags)
         float sceneRot = rot;
         float sceneScale[] = { scale.x, scale.y };
 
-        if (ImGui::InputFloat2("Position", scenePos) &&
-            ImGui::IsItemDeactivatedAfterEdit())
+        if (ImGui::DragFloat2("Position", scenePos))
         {
             this->selectedObject->setPos(Vector2D(scenePos[0], scenePos[1]));
         }
 
-        if (ImGui::InputFloat("Rotation", &sceneRot) &&
-            ImGui::IsItemDeactivatedAfterEdit())
-        {
-            this->selectedObject->setRot(sceneRot);
-        }
-
-        if (ImGui::InputFloat2("Scale", sceneScale) &&
-            ImGui::IsItemDeactivatedAfterEdit())
+        if (ImGui::DragFloat2("Scale", sceneScale, 0.01f, 0.0f, 0.0f))
         {
             this->selectedObject->setScale(Vector2D(sceneScale[0], sceneScale[1]));
+        }
+
+        if (ImGui::DragFloat("Rotation", &sceneRot))
+        {
+            this->selectedObject->setRot(sceneRot);
         }
     }
     ImGui::EndChild();

@@ -13,6 +13,7 @@ protected:
     ComponentType EType;
     std::string strName;
     float fDeltaTime;
+    bool bEnabled;
 
 public:
     AComponent(std::string strName, ComponentType EType);
@@ -23,11 +24,16 @@ public:
     void detachOwner();
 
 public:
+    virtual void onAttach() {};
+    virtual void drawWidget() {};
     virtual void perform() = 0;
 
 public:
     void setDeltaTime(float fDeltaTime);
-    AGameObject* getOwner();
+    float getDeltaTime() const;
+    void setEnabled(bool bEnabled);
+    bool getEnabled() const;
+    AGameObject* getOwner() const;
     ComponentType getType() const;
     std::string getName() const;
 };

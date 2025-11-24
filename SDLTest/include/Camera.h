@@ -14,8 +14,11 @@ public:
 	Camera();
 	~Camera();
 
-	Vector2D screenToWorldPoint(Vector2D screenPoint) const;
-	Vector2D worldToScreenPoint(Vector2D worldPoint) const;
+	Vector2D screenToWorldPoint(const Vector2D& screenPoint) const;
+	Vector2D worldToScreenPoint(const Vector2D& worldPoint) const;
+
+	SDL_FRect screenToWorldRect(const SDL_FRect& screenRect) const;
+	SDL_FRect worldToScreenRect(const SDL_FRect& worldRect) const;
 
 	Vector2D getWindowSize();
 	float getHalfWidth() const;

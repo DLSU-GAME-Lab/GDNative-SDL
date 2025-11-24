@@ -120,6 +120,7 @@ void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 
 }
 
+/*
 bool ButtonInput::contains() const
 {
 	if (!this->pSprite) return false;
@@ -129,3 +130,22 @@ bool ButtonInput::contains() const
 
 	return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }
+*/
+// call with no-arg: use the stored mousePos
+bool ButtonInput::contains() const
+{
+    return contains(this->mousePos);
+}
+
+// call with explicit point
+bool ButtonInput::contains(const Vector2D& pos) const
+{
+    if (!this->pSprite) return false;
+
+    SDL_FRect spriteRect = this->pSprite->getRect();
+    SDL_FRect pointRect = { pos.x, pos.y, 1, 1 };
+
+    return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
+}
+
+

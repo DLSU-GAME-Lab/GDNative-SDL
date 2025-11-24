@@ -1,5 +1,12 @@
 #pragma once
 
+// Cross-platform MetricsManager header
+// On Windows: keep original implementation (uses PDH, FILETIME, etc.)
+// On other platforms (Android): use a minimal fallback implementation
+// that provides the same public interface (FPS, timers, stubs for others).
+
+#if defined(_WIN32) || defined(_WIN64)
+
 #define NOMINMAX
 #include <windows.h>
 #include <psapi.h>
@@ -138,3 +145,100 @@ private:
     MetricsManager() {}
     ~MetricsManager() {}
 };
+
+#else // non-Windows: minimal cross-platform (Android-friendly) fallback
+
+#include <chrono>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <cfloat>
+#include <vector>
+#include <mutex>
+
+class MetricsManager {
+private:
+    static MetricsManager* P_SHARED_INSTANCE;
+
+    // FPS tracking
+    unsigned long frameCount = 0;
+    float fps = 0.0f;
+
+    // simple timing using chrono
+    std::chrono::steady_clock::time_point lastFrameTime;
+    std::chrono::steady_clock::time_point lastSampleTime;
+
+    // FPS stats
+    float avgFPS = 0.0f;
+    float minFPS = FLT_MAX;
+    float maxFPS = 0.0f;
+
+    const double fpsSmoothingAlpha = 0.12;
+
+    // minimal memory/cpu placeholders (platform-specific implementations can replace)
+    size_t memoryUsage = 0;
+    double cpuUsage = 0.0;
+    double gpuUsage = 0.0;
+
+    // Load/time tracking
+    double loadTimeSec = 0.0;
+    std::chrono::steady_clock::time_point loadStart;
+
+    // Input lag
+    double inputLagMs = 0.0;
+    long long inputTimestamp = 0;
+
+    // History buffers
+    static const int HISTORY_SIZE = 100;
+    float fpsHistory[HISTORY_SIZE] = {};
+    float cpuHistory[HISTORY_SIZE] = {};
+    int offset = 0;
+    int historyCount = 0;
+
+    // concurrency
+    std::mutex mtx;
+
+    // UI toggles
+    bool showFPS      = true;
+    bool showCPU      = true;
+    bool showMemory   = true;
+    bool showGPU      = true;
+    bool showInputLag = true;
+    bool showLoadTime = true;
+    bool showThreads  = true;
+
+public:
+    // Basic lifecycle & operations (lightweight)
+    void update();               // call every frame
+    void logMetrics();           // dump simple metrics to stdout
+    void drawGUI();              // optional, stub so imgui calls compile
+    void exportCSV(const std::string& filename = "metrics_export.csv");
+
+    // getters
+    float getFPS() const { return fps; }
+    double getCPUUsage() const { return cpuUsage; }
+    double getCPUUsagePerCore() const { return cpuUsage; }
+    size_t getMemoryUsage() const { return memoryUsage; }
+    double getGPUUsage() const { return gpuUsage; }
+    double getInputLag() const { return inputLagMs; }
+    double getLoadTime() const { return loadTimeSec; }
+
+    // load time helpers
+    void startLoadTimer();
+    void endLoadTimer();
+
+    // input lag helpers
+    void recordInputEvent();
+    void markInputHandled();
+
+    // singleton
+    static void initialize();
+    static void destroy();
+    static MetricsManager* getInstance();
+
+private:
+    MetricsManager();
+    ~MetricsManager();
+};
+
+#endif // _WIN32

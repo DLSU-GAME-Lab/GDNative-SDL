@@ -27,6 +27,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+# Tweeny (header-only)
+set(TWEENY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../SDLTest/tweeny/include")
+
 # Make sure we include ImGui headers and SDL include directories produced by top-level
 # The following variables (SDL3_INSTALL_DIR etc.) are defined in the top-level CMake
 # and are visible here because add_subdirectory(jni) is used.
@@ -36,6 +39,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${SDL3_INSTALL_DIR}/include
     ${SDL3_IMAGE_INSTALL_DIR}/include
     ${SDL_TTF_INSTALL_DIR}/include
+    ${TWEENY_INCLUDE_DIR}
 )
 
 # Link against the imported SDL (and image/ttf) targets directly.

@@ -37,6 +37,8 @@ private:
 	virtual void onMouseButtonDown(Uint8 mouseButton);
 	virtual void onMouseButtonUp(Uint8 mouseButton);
 
-	bool contains(const Vector2D& pos) const;
+	//bool contains(const Vector2D& pos) const;
+    bool contains() const;
+    bool contains(const Vector2D& pos) const;
 };
 

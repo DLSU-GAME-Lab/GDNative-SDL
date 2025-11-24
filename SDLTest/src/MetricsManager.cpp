@@ -1,7 +1,22 @@
+// MetricsManager.cpp
 #include "MetricsManager.h"
 #include "imgui.h"
+#include <iostream>
 
+#if !defined(_WIN32) && !defined(_WIN64)
+#include <chrono>
+#include <fstream>
+#include <iomanip>
+#include <algorithm>
+#include <mutex>
+#endif
+
+// single definition for the singleton pointer (applies to both branches)
 MetricsManager* MetricsManager::P_SHARED_INSTANCE = nullptr;
+
+#if defined(_WIN32) || defined(_WIN64)
+
+/* ---------------- Windows implementation (unchanged behaviour) ---------------- */
 
 static inline unsigned long long FileTimeToULL(const FILETIME& ft) {
     return (((unsigned long long)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;
@@ -436,3 +451,149 @@ void MetricsManager::markInputHandled() {
         inputTimestamp = 0;
     }
 }
+
+#else // non-Windows fallback implementation (Android)
+
+using namespace std::chrono;
+
+MetricsManager::MetricsManager() {
+    lastFrameTime = steady_clock::now();
+    lastSampleTime = lastFrameTime;
+    offset = 0;
+    historyCount = 0;
+}
+
+MetricsManager::~MetricsManager() {}
+
+void MetricsManager::initialize() {
+    if (!P_SHARED_INSTANCE) {
+        P_SHARED_INSTANCE = new MetricsManager();
+    }
+}
+
+void MetricsManager::destroy() {
+    if (P_SHARED_INSTANCE) {
+        delete P_SHARED_INSTANCE;
+        P_SHARED_INSTANCE = nullptr;
+    }
+}
+
+MetricsManager* MetricsManager::getInstance() {
+    if (!P_SHARED_INSTANCE) initialize();
+    return P_SHARED_INSTANCE;
+}
+
+void MetricsManager::startLoadTimer() {
+    loadStart = steady_clock::now();
+}
+
+void MetricsManager::endLoadTimer() {
+    auto now = steady_clock::now();
+    loadTimeSec = duration<double>(now - loadStart).count();
+}
+
+void MetricsManager::recordInputEvent() {
+    inputTimestamp = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
+}
+
+void MetricsManager::markInputHandled() {
+    long long nowMs = duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
+    inputLagMs = (nowMs > inputTimestamp) ? (nowMs - inputTimestamp) : 0;
+    inputTimestamp = 0;
+}
+
+void MetricsManager::update() {
+    auto now = steady_clock::now();
+    double dt = duration<double>(now - lastFrameTime).count();
+    lastFrameTime = now;
+
+    if (dt <= 0.0) dt = 1.0/1000.0;
+
+    ++frameCount;
+    float instFPS = static_cast<float>(1.0 / dt);
+    fps = static_cast<float>((fps * (1.0 - fpsSmoothingAlpha)) + (instFPS * fpsSmoothingAlpha));
+
+    // history
+    fpsHistory[offset] = fps;
+    cpuHistory[offset] = static_cast<float>(cpuUsage);
+    offset = (offset + 1) % HISTORY_SIZE;
+    if (historyCount < HISTORY_SIZE) ++historyCount;
+
+    // recompute avgFPS
+    float sum = 0.0f;
+    for (int i = 0; i < historyCount; ++i) sum += fpsHistory[i];
+    avgFPS = (historyCount > 0) ? (sum / historyCount) : fps;
+}
+
+void MetricsManager::logMetrics() {
+    std::cout << "[Metrics] FPS: " << std::fixed << std::setprecision(2) << fps
+              << " avg: " << avgFPS
+              << " min: " << minFPS
+              << " max: " << maxFPS
+              << " cpu: " << cpuUsage
+              << " mem: " << memoryUsage
+              << "\n";
+}
+
+void MetricsManager::drawGUI() {
+    ImGui::Begin("Performance Metrics");
+
+    ImGui::Checkbox("Show FPS", &showFPS);
+    ImGui::Checkbox("Show CPU", &showCPU);
+    ImGui::Checkbox("Show Memory", &showMemory);
+    ImGui::Checkbox("Show GPU", &showGPU);
+    ImGui::Checkbox("Show Input Lag", &showInputLag);
+    ImGui::Checkbox("Show Load Time", &showLoadTime);
+    ImGui::Checkbox("Show Threads (app-only)", &showThreads);
+
+    if (ImGui::BeginTabBar("MetricsTabs")) {
+        if (showFPS && ImGui::BeginTabItem("FPS")) {
+            ImGui::Text("FPS: %.1f", fps);
+            ImGui::Text("Avg FPS: %.1f", avgFPS);
+            ImGui::Text("Min FPS: %.1f", minFPS);
+            ImGui::Text("Max FPS: %.1f", maxFPS);
+            ImGui::Text("Frame time: %.2f ms", 1000.0f / (fps > 0.0f ? fps : 1.0f));
+            ImGui::PlotLines("FPS History", fpsHistory, HISTORY_SIZE, offset, nullptr, 0.0f, 240.0f, ImVec2(0, 80));
+            ImGui::EndTabItem();
+        }
+
+        if (showCPU && ImGui::BeginTabItem("CPU")) {
+            ImGui::Text("CPU Usage (total): %.2f %%", cpuUsage);
+            ImGui::PlotLines("CPU History", cpuHistory, HISTORY_SIZE, offset, nullptr, 0.0f, 100.0f, ImVec2(0, 80));
+            ImGui::EndTabItem();
+        }
+
+        if (showMemory && ImGui::BeginTabItem("Memory")) {
+            ImGui::Text("Memory Usage: %.2f MB", memoryUsage / 1024.0 / 1024.0);
+            ImGui::EndTabItem();
+        }
+
+        if (showInputLag && ImGui::BeginTabItem("Input Lag")) {
+            ImGui::Text("Last Input Lag: %.2f ms", inputLagMs);
+            ImGui::EndTabItem();
+        }
+
+        if (showLoadTime && ImGui::BeginTabItem("Load Time")) {
+            ImGui::Text("Last Load Time: %.2f s", loadTimeSec);
+            ImGui::EndTabItem();
+        }
+
+        ImGui::EndTabBar();
+    }
+
+    if (ImGui::Button("Export CSV")) exportCSV();
+
+    ImGui::End();
+}
+
+void MetricsManager::exportCSV(const std::string& filename) {
+    std::ofstream out(filename, std::ios::app);
+    if (out.is_open()) {
+        out << fps << "," << avgFPS << "," << minFPS << "," << maxFPS << ","
+            << cpuUsage << "," << (memoryUsage / 1024.0 / 1024.0) <<
+            "," << gpuUsage << "," << inputLagMs << "," << loadTimeSec << std::endl;
+        out.close();
+    }
+}
+
+#endif // platform split

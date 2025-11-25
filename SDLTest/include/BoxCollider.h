@@ -43,6 +43,6 @@ public:
     bool isCollidedBottom() const;
     bool isCollidedTop() const;
    
-    SDL_FRect getGlobalBounds();
+    SDL_FRect getGlobalBounds() override;
 };
 

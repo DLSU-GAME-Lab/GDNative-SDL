@@ -8,10 +8,13 @@
 #if defined(_WIN32) || defined(_WIN64)
 
 #define NOMINMAX
+#ifdef _WIN32
 #include <windows.h>
 #include <psapi.h>
 #include <pdh.h>
 #include <tlhelp32.h>
+#endif
+
 
 #include <string>
 #include <iostream>

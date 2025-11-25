@@ -15,7 +15,7 @@ private:
 public:
 	ExitMenu(std::string strName);
 	~ExitMenu();
-	void initialize();
+	void initialize() override;
 
 	// Inherited via EventListener
 	void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;

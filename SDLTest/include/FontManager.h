@@ -11,8 +11,8 @@ private:
 
 public:
     // use this
-    TTF_Font* getFont(const std::string& fontKey, int fontSize);
-    void loadFont(const std::string& fileName, const std::string& fontKey, int fontSize);
+    TTF_Font* getFont(const std::string fontKey, int fontSize);
+    void loadFont(const std::string fileName, const std::string fontKey, int fontSize);
     void unloadFontFamily(const std::string& fontKey);
     void unloadAllFonts();
     

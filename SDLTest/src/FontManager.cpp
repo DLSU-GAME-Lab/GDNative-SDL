@@ -1,6 +1,6 @@
 #include "FontManager.h"
 
-TTF_Font* FontManager::getFont(const std::string& fontKey, int fontSize)
+TTF_Font* FontManager::getFont(const std::string fontKey, int fontSize)
 {
     std::string fullKey = fontKey + "_" + std::to_string(fontSize);
     auto it = mapFonts.find(fullKey);
@@ -10,14 +10,15 @@ TTF_Font* FontManager::getFont(const std::string& fontKey, int fontSize)
     return nullptr;
 }
 
-void FontManager::loadFont(const std::string& fileName, const std::string& fontKey, int fontSize)
+void FontManager::loadFont(const std::string fileName, const std::string fontKey, int fontSize)
 {
-    std::string path = "Assets/Fonts/" + fileName;
+    //std::string path = "Assets/Fonts/" + fileName;
+    const std::string assetPath = fileName;
     std::string fullKey = fontKey + "_" + std::to_string(fontSize);
 
     if (mapFonts.contains(fullKey)) return;
 
-    TTF_Font* font = TTF_OpenFont(path.c_str(), fontSize);
+    TTF_Font* font = TTF_OpenFont(assetPath.c_str(), fontSize);
     if (!font) {
         std::cerr << "[ERROR] Failed to load font [" << fullKey << "]: " << SDL_GetError() << std::endl;
         return;

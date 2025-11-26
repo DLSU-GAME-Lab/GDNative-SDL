@@ -19,17 +19,14 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
 {
     // O(1) setup + O(fileSize) I/O to load from disk.
     // Texture creation cost is high but fixed per file.
-    std::string strPath;
-    auto token = StringUtils::split(strFolderPath, '/');
-    if (token[0] == "Assets") strPath = strFolderPath;
-    else strPath = "Assets/" + strFolderPath;
+    std::string assetPath = strFolderPath;
 
     // DEBUG: print what path is being loaded
-    std::cout << "[DEBUG] Attempting to load texture: " << strPath << std::endl;
+    std::cout << "[DEBUG] Attempting to load texture: " << assetPath << std::endl;
 
-    SDL_Surface* surface = IMG_Load(strPath.c_str());
+    SDL_Surface* surface = IMG_Load(assetPath.c_str());
     if (!surface) {
-        std::cerr << "[ERROR] : Problem loading image file [" << strPath << "] "
+        std::cerr << "[ERROR] : Problem loading image file [" << assetPath << "] "
             << "Error: " << SDL_GetError() << std::endl;
         return;
     }
@@ -38,7 +35,7 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
     SDL_DestroySurface(surface);
 
     if (!pTexture) {
-        std::cerr << "[ERROR] : Failed to create texture for [" << strPath << "] "
+        std::cerr << "[ERROR] : Failed to create texture for [" << assetPath << "] "
             << "Error: " << SDL_GetError() << std::endl;
         return;
     }
@@ -55,19 +52,19 @@ void TextureManager::loadFromFolder(std::string strPath, std::string strName)
     // O(F): loops through files in a folder, calling load() for each.
     // F = number of files in folder.
     
-    std::string directory = "Assets/" + strPath;
-    if (!std::filesystem::exists(directory.c_str()))
+    const std::string assetPath = strPath;
+    if (!std::filesystem::exists(assetPath.c_str()))
     {
-        std::cerr << "[ERROR] : path [" << directory << "] " << "does no exist." << std::endl;
+        std::cerr << "[ERROR] : path [" << assetPath << "] " << "does no exist." << std::endl;
         return;
     }
     
-    for (const auto& entry : std::filesystem::directory_iterator(directory))
+    for (const auto& entry : std::filesystem::directory_iterator(assetPath))
     {
         if (std::filesystem::is_regular_file(entry.status()))
         {
-            std::string path = entry.path().generic_string();
-            this->load(path, strName);
+            std::string filePath = entry.path().generic_string();
+            this->load(filePath, strName);
         }
     }
 }

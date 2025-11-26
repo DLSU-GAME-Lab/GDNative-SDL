@@ -147,22 +147,56 @@ void DialogueRenderer::drawWidget()
 
 void DialogueRenderer::loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor)
 {
-    // O(1): creates texture from text; I/O and render cost from SDL_ttf.
-    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(FontManager::getInstance()->getFont(fontType, nFontSize), textureText.c_str(), 0, textColor, 0);
-    if (textSurface == nullptr)
-    {
-        std::cout << "[ERROR]: Could not render text." << SDL_GetError() << std::endl;
+    TTF_Font* font = FontManager::getInstance()->getFont(fontType, nFontSize);
+    if (!font) {
+        const char* err = nullptr;
+#ifdef TTF_GetError
+        err = TTF_GetError();
+#else
+        err = SDL_GetError();
+#endif
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DialogueRenderer] font is null for %s size=%d. Error: %s",
+                     fontType.c_str(), nFontSize, err ? err : "unknown");
         return;
     }
-    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, textSurface);
-    SDL_DestroySurface(textSurface);
-    if (!pTexture) {
-        std::cerr << "[ERROR] : Failed to create texture for [" << strName << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+
+    if (textureText.empty()) {
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "[DialogueRenderer] empty text for %s", strName.c_str());
+        if (this->pTexture) { SDL_DestroyTexture(this->pTexture); this->pTexture = nullptr; }
         return;
     }
-    this->pTexture = pTexture;
-    float fw, fh;
+
+    int wrapWidth = 0; // pixel width for wrapping; 0 = no wrapping (only newline)
+    // note: signature requires length BEFORE color
+    SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font, textureText.c_str(), textureText.size(), textColor, wrapWidth);
+    if (!textSurface) {
+        const char* err = nullptr;
+#ifdef TTF_GetError
+        err = TTF_GetError();
+#else
+        err = SDL_GetError();
+#endif
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DialogueRenderer] TTF_Render failed: %s", err ? err : "unknown");
+        return;
+    }
+
+    // replace old texture if any
+    if (this->pTexture) {
+        SDL_DestroyTexture(this->pTexture);
+        this->pTexture = nullptr;
+    }
+
+    SDL_Texture* newTex = SDL_CreateTextureFromSurface(this->pRenderer, textSurface);
+    SDL_DestroySurface(textSurface); // use SDL_DestroySurface (SDL_FreeSurface alias is okay but caused macro confusion)
+
+    if (!newTex) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DialogueRenderer] CreateTextureFromSurface failed: %s", SDL_GetError());
+        return;
+    }
+
+    this->pTexture = newTex;
+
+    float fw = 0.0f, fh = 0.0f;
     if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
         this->texSize = Vector2D(fw, fh);
     }

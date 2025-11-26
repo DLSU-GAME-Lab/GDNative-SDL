@@ -1,13 +1,56 @@
 #include "AudioManager.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
+#include <cstdio>
 
 void AudioManager::load(std::string strPath, std::string strName)
 {
-    std::string path = "Assets/" + strPath;
+    // strPath should be relative to assets root (build.gradle(app). Do NOT prefix with "Assets/" (Case Sensitive).
+    // Example usage: load("Audio/myclip.wav", "myclip")
+    const std::string assetPath = strPath;
+
+    // Diagnostic logs
+    spdlog::info("[AudioManager] Attempting to load asset: '{}', name '{}'", assetPath, strName);
+
+    const char* base = SDL_GetBasePath();     // native app base (may be useful)
+    const char* pref = SDL_GetPrefPath("org.main", "babaylan_tales"); // user pref path
+    spdlog::info("[AudioManager] SDL_GetBasePath(): {}", base ? base : "<null>");
+    spdlog::info("[AudioManager] SDL_GetPrefPath(): {}", pref ? pref : "<null>");
+
+    // Quick check: try fopen() (works only if asset is an actual file on filesystem)
+    FILE* f = fopen(assetPath.c_str(), "rb");
+    if (f) {
+        fclose(f);
+        spdlog::info("[AudioManager] fopen succeeded for '{}', trying SDL_LoadWAV", assetPath);
+
+        Uint8* audioBuffer = nullptr;
+        Uint32 audioLength = 0;
+
+        // SDL3: SDL_LoadWAV returns bool (true on success)
+        bool ok = SDL_LoadWAV(assetPath.c_str(), &this->mSpec, &audioBuffer, &audioLength);
+        if (ok) {
+            AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
+            this->vecAudioClip.push_back(pAudioClip);
+            this->mapAudioClip[strName] = pAudioClip;
+            spdlog::info("[AudioManager] Loaded audio asset '{}' as '{}' ({} bytes)", assetPath, strName, audioLength);
+            return;
+        } else {
+            spdlog::error("[AudioManager] SDL_LoadWAV failed for '{}': {}", assetPath, SDL_GetError());
+            return;
+        }
+    } else {
+        spdlog::warn("[AudioManager] fopen failed for '{}'. Asset probably inside APK (not a regular file): {}",
+                     assetPath, strerror(errno));
+    }
+
+    // FALLBACK: asset inside APK — must use RWops / LoadWAV_RW or Android AssetManager.
+    spdlog::info("[AudioManager] Asset '{}' not accessible via fopen — use SDL_LoadWAV_RW with an SDL_RWops created from the APK asset.", assetPath);
+    
+    /*
     Uint8* audioBuffer = 0;
     Uint32 audioLength = 0;
-	std::cout << "[DEBUG] Loading Audio Clip from: " << path << std::endl;
-    if (SDL_LoadWAV(path.c_str(), &this->mSpec, &audioBuffer, &audioLength) != NULL)
+	std::cout << "[DEBUG] Loading Audio Clip from: " << assetPath << std::endl;
+    if (SDL_LoadWAV(assetPath.c_str(), &this->mSpec, &audioBuffer, &audioLength) != NULL)
     {
         AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
         this->vecAudioClip.push_back(pAudioClip);
@@ -15,9 +58,10 @@ void AudioManager::load(std::string strPath, std::string strName)
     }
     else
     {
-        std::cerr << "[ERROR] : Failed to create Audio Clip for [" << path << "] "
+        std::cerr << "[ERROR] : Failed to create Audio Clip for [" << assetPath << "] "
             << "Error: " << SDL_GetError() << std::endl;
     }
+     */
 }
 
 void AudioManager::unload(std::string strName)
@@ -47,21 +91,58 @@ AudioClip* AudioManager::getAudioClip(std::string strName)
 
 void AudioManager::play(AudioPlayer* pPlayer)
 {
-	this->vecPlaying.push_back(pPlayer);
-    if (!pPlayer->strKey.empty()) this->mapPlaying[pPlayer->strKey] = pPlayer;
-    SDL_AudioStream* pStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &mSpec, audioStreamCallback, pPlayer);
-	pPlayer->pStream = pStream;
-
-    if (!SDL_PutAudioStreamData(pPlayer->pStream, pPlayer->pClip->getBuffer(), pPlayer->pClip->getLength()))
-    {
-        std::cout << SDL_GetError() << std::endl;
+    if (!pPlayer) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[AudioManager] play called with null player");
+        return;
     }
 
-    if (pPlayer->ETag != AudioGroupTag::NONE)
-        SDL_SetAudioStreamGain(pPlayer->pStream, AudioManager::getInstance()->getVolume(pPlayer->ETag));
+    // Ensure the player actually has a clip
+    if (!pPlayer->pClip) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[AudioManager] play called but player has no clip (null).");
+        return;
+    }
 
-    if (SDL_ResumeAudioStreamDevice(pPlayer->pStream))
-	    std::cout << "[Audio Manager] LOG: Playing audio clip \"" << pPlayer->pClip->getName() << "\"" << std::endl;
+    // Ensure clip buffer exists
+    Uint8* buf = pPlayer->pClip->getBuffer();
+    Uint32 len = pPlayer->pClip->getLength();
+    if (!buf || len == 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[AudioManager] clip '%s' has empty buffer or zero length", pPlayer->pClip->getName().c_str());
+        return;
+    }
+
+    // Add to playing lists
+    this->vecPlaying.push_back(pPlayer);
+    if (!pPlayer->strKey.empty()) this->mapPlaying[pPlayer->strKey] = pPlayer;
+
+    // Open stream
+    SDL_AudioStream* pStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &mSpec, audioStreamCallback, pPlayer);
+    if (!pStream) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[AudioManager] SDL_OpenAudioDeviceStream failed: %s", SDL_GetError());
+        // remove from vecPlaying/mapPlaying since we couldn't start playback
+        this->vecPlaying.erase(std::remove(this->vecPlaying.begin(), this->vecPlaying.end(), pPlayer), this->vecPlaying.end());
+        if (!pPlayer->strKey.empty()) this->mapPlaying.erase(pPlayer->strKey);
+        return;
+    }
+    pPlayer->pStream = pStream;
+
+    // Queue data
+    int putResult = SDL_PutAudioStreamData(pPlayer->pStream, buf, len);
+    if (putResult != 0) {
+        // SDL_PutAudioStreamData return conventions may differ by SDL version; log robustly.
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[AudioManager] SDL_PutAudioStreamData returned %d; SDL_Error: %s", putResult, SDL_GetError());
+    }
+
+    // set gain if needed (guard pStream)
+    if (pPlayer->ETag != AudioGroupTag::NONE && pPlayer->pStream) {
+        SDL_SetAudioStreamGain(pPlayer->pStream, AudioManager::getInstance()->getVolume(pPlayer->ETag));
+    }
+
+    // resume stream (check return)
+    if (SDL_ResumeAudioStreamDevice(pPlayer->pStream) != 0) {
+        SDL_Log("[Audio Manager] LOG: Playing audio clip \"%s\"", pPlayer->pClip->getName().c_str());
+    } else {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[AudioManager] SDL_ResumeAudioStreamDevice returned error: %s", SDL_GetError());
+    }
 }
 
 void AudioManager::stop(std::string strKey)
@@ -74,13 +155,19 @@ void AudioManager::stop(std::string strKey)
 
 void AudioManager::stopAll()
 {
-    std::cout << "[Audio Manager] LOG: Stopping all audio streams" << std::endl;
-    for (int i = this->vecPlaying.size() - 1; i >= 0; i--)
+    SDL_Log("[Audio Manager] LOG: Stopping all audio streams");
+    for (int i = (int)this->vecPlaying.size() - 1; i >= 0; --i)
     {
-        this->vecPlaying[i]->bCleanUp = true;
-        SDL_DestroyAudioStream(this->vecPlaying[i]->pStream);
-        delete this->vecPlaying[i];
-	}
+        AudioPlayer* p = this->vecPlaying[i];
+        if (!p) continue;
+
+        p->bCleanUp = true;
+        if (p->pStream) {
+            SDL_DestroyAudioStream(p->pStream);
+            p->pStream = nullptr;
+        }
+        delete p;
+    }
     this->vecPlaying.clear();
     this->mapPlaying.clear();
 }
@@ -133,15 +220,27 @@ void AudioManager::update()
 
 	cleanUp();
 }
+
 void AudioManager::cleanUp()
 {
-    for (int i = this->vecToDestroy.size() - 1; i >= 0; i--)
+    for (int i = (int)this->vecToDestroy.size() - 1; i >= 0; --i)
     {
-        if (this->mapPlaying.contains(this->vecToDestroy[i]->strKey))
-            this->mapPlaying.erase(this->vecToDestroy[i]->strKey);
-		stopByData(this->vecToDestroy[i]);
-		SDL_DestroyAudioStream(this->vecToDestroy[i]->pStream);
-		delete this->vecToDestroy[i];
+        AudioPlayer* p = this->vecToDestroy[i];
+        if (!p) continue;
+
+        if (!p->strKey.empty() && this->mapPlaying.contains(p->strKey))
+            this->mapPlaying.erase(p->strKey);
+
+        stopByData(p); // remove from vecPlaying
+
+        if (p->pStream) {
+            SDL_DestroyAudioStream(p->pStream);
+            p->pStream = nullptr;
+        } else {
+            SDL_Log("[AudioManager] cleanUp: player had null pStream (clip=%s)", p->pClip ? p->pClip->getName().c_str() : "<no-clip>");
+        }
+
+        delete p;
     }
     this->vecToDestroy.clear();
 }

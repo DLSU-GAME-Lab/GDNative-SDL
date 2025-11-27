@@ -64,7 +64,7 @@ void LeftRoomScene::onUnloadObjects()
 
 void LeftRoomScene::loadFonts()
 {
-	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
+	FontManager::getInstance()->loadFont("Fonts/lazy.ttf", "LazyFont90", 90);
 }
 
 void LeftRoomScene::loadAnimatedTextures()

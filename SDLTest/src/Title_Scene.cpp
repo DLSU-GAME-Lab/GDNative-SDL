@@ -76,23 +76,9 @@ void Title_Scene::loadText()
 }
 void Title_Scene::loadAnimatedTextures()
 {
-    for (int i = 0; i < 6; i++)
-    {
-        std::string strPath = "animations/title_scene/player/Set" + std::to_string(i) + ".png";
-        TextureManager::getInstance()->load(strPath, "Player");
-    }
-
-    for (int i = 0; i < 2; i++)
-    {
-        std::string strPath = "animations/title_scene/fairy/Set" + std::to_string(i) + ".png";
-        TextureManager::getInstance()->load(strPath, "Fairy");
-    }
-
-    for (int i = 0; i < 7; i++)
-    {
-        std::string strPath = "animations/title_scene/librarian/Set" + std::to_string(i) + ".png";
-        TextureManager::getInstance()->load(strPath, "Librarian");
-    }
+    TextureManager::getInstance()->loadFromFolder("animations/title_scene/player", "Player");
+    TextureManager::getInstance()->loadFromFolder("animations/title_scene/fairy", "Fairy");
+    TextureManager::getInstance()->loadFromFolder("animations/title_scene/librarian", "Librarian");
 }
 
 void Title_Scene::loadSceneTextures()

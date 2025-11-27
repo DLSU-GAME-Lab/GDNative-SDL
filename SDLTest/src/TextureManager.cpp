@@ -19,15 +19,14 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
 {
     // O(1) setup + O(fileSize) I/O to load from disk.
     // Texture creation cost is high but fixed per file.
-    std::string assetPath = strFolderPath;
+    const std::string assetPath = strFolderPath;
 
     // DEBUG: print what path is being loaded
-    std::cout << "[DEBUG] Attempting to load texture: " << assetPath << std::endl;
+    SDL_Log("[TextureManager] Loading texture: %s", assetPath.c_str());
 
     SDL_Surface* surface = IMG_Load(assetPath.c_str());
     if (!surface) {
-        std::cerr << "[ERROR] : Problem loading image file [" << assetPath << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[TextureManager] Error loading from path: %s", assetPath.c_str());
         return;
     }
 
@@ -35,8 +34,8 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
     SDL_DestroySurface(surface);
 
     if (!pTexture) {
-        std::cerr << "[ERROR] : Failed to create texture for [" << assetPath << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+        const char* err = SDL_GetError();
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[TextureManager] Error: %s", err ? err : "unknown");
         return;
     }
 
@@ -51,19 +50,22 @@ void TextureManager::loadFromFolder(std::string strPath, std::string strName)
 {
     // O(F): loops through files in a folder, calling load() for each.
     // F = number of files in folder.
-    
+
     const std::string assetPath = strPath;
+    //SDL_Log("%s", std::filesystem::canonical("../../SDLTest/assets").c_str());
     if (!std::filesystem::exists(assetPath.c_str()))
     {
-        std::cerr << "[ERROR] : path [" << assetPath << "] " << "does no exist." << std::endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[TextureManager] Error: directory does not exist %s", assetPath.c_str());
         return;
     }
+    else SDL_Log("[TextureManager] Loading from directory: %s", assetPath.c_str());
     
     for (const auto& entry : std::filesystem::directory_iterator(assetPath))
     {
         if (std::filesystem::is_regular_file(entry.status()))
         {
             std::string filePath = entry.path().generic_string();
+            std::cout << filePath << std::endl;
             this->load(filePath, strName);
         }
     }

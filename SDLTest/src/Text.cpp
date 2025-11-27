@@ -31,6 +31,8 @@ void Text::setColor(SDL_Color color)
 void Text::initialize()
 {
 	std::string key = this->strFontName;
+    std::string filePath = "Fonts/";
+    filePath += this->strFontName;
 
 	size_t ttfPos = key.rfind(".ttf");
 	size_t otfPos = key.rfind(".otf");
@@ -44,7 +46,7 @@ void Text::initialize()
 		key = key.substr(0, otfPos);
 	}
 
-	FontManager::getInstance()->loadFont(this->strFontName, key,nFontSize);
+	FontManager::getInstance()->loadFont(filePath, key,nFontSize);
 	DialogueRenderer* pDialogueRenderer = new DialogueRenderer();
 	pDialogueRenderer->loadFromText(this->strName, key, this->nFontSize, this->strMessage, this->color);
 	this->attachComponent((AComponent*)pDialogueRenderer);

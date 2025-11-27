@@ -64,7 +64,7 @@ void RightRoomScene::onUnloadObjects()
 
 void RightRoomScene::loadFonts()
 {
-	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
+	FontManager::getInstance()->loadFont("Fonts/lazy.ttf", "LazyFont90", 90);
 }
 
 void RightRoomScene::loadAnimatedTextures() 

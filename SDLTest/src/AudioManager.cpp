@@ -8,48 +8,48 @@ void AudioManager::load(std::string strPath, std::string strName)
     // strPath should be relative to assets root (build.gradle(app). Do NOT prefix with "Assets/" (Case Sensitive).
     // Example usage: load("Audio/myclip.wav", "myclip")
     const std::string assetPath = strPath;
+    SDL_Log("%s", assetPath.c_str());
+//    // Diagnostic logs
+//    spdlog::info("[AudioManager] Attempting to load asset: '{}', name '{}'", assetPath, strName);
+//
+//    const char* base = SDL_GetBasePath();     // native app base (may be useful)
+//    const char* pref = SDL_GetPrefPath("org.main", "babaylan_tales"); // user pref path
+//    spdlog::info("[AudioManager] SDL_GetBasePath(): {}", base ? base : "<null>");
+//    spdlog::info("[AudioManager] SDL_GetPrefPath(): {}", pref ? pref : "<null>");
+//
+//    // Quick check: try fopen() (works only if asset is an actual file on filesystem)
+//    FILE* f = fopen(assetPath.c_str(), "rb");
+//    if (f) {
+//        fclose(f);
+//        spdlog::info("[AudioManager] fopen succeeded for '{}', trying SDL_LoadWAV", assetPath);
+//
+//        Uint8* audioBuffer = nullptr;
+//        Uint32 audioLength = 0;
+//
+//        // SDL3: SDL_LoadWAV returns bool (true on success)
+//        bool ok = SDL_LoadWAV(assetPath.c_str(), &this->mSpec, &audioBuffer, &audioLength);
+//        if (ok) {
+//            AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
+//            this->vecAudioClip.push_back(pAudioClip);
+//            this->mapAudioClip[strName] = pAudioClip;
+//            spdlog::info("[AudioManager] Loaded audio asset '{}' as '{}' ({} bytes)", assetPath, strName, audioLength);
+//            return;
+//        } else {
+//            spdlog::error("[AudioManager] SDL_LoadWAV failed for '{}': {}", assetPath, SDL_GetError());
+//            return;
+//        }
+//    } else {
+//        spdlog::warn("[AudioManager] fopen failed for '{}'. Asset probably inside APK (not a regular file): {}",
+//                     assetPath, strerror(errno));
+//    }
+//
+//    // FALLBACK: asset inside APK — must use RWops / LoadWAV_RW or Android AssetManager.
+//    spdlog::info("[AudioManager] Asset '{}' not accessible via fopen — use SDL_LoadWAV_RW with an SDL_RWops created from the APK asset.", assetPath);
+//
 
-    // Diagnostic logs
-    spdlog::info("[AudioManager] Attempting to load asset: '{}', name '{}'", assetPath, strName);
-
-    const char* base = SDL_GetBasePath();     // native app base (may be useful)
-    const char* pref = SDL_GetPrefPath("org.main", "babaylan_tales"); // user pref path
-    spdlog::info("[AudioManager] SDL_GetBasePath(): {}", base ? base : "<null>");
-    spdlog::info("[AudioManager] SDL_GetPrefPath(): {}", pref ? pref : "<null>");
-
-    // Quick check: try fopen() (works only if asset is an actual file on filesystem)
-    FILE* f = fopen(assetPath.c_str(), "rb");
-    if (f) {
-        fclose(f);
-        spdlog::info("[AudioManager] fopen succeeded for '{}', trying SDL_LoadWAV", assetPath);
-
-        Uint8* audioBuffer = nullptr;
-        Uint32 audioLength = 0;
-
-        // SDL3: SDL_LoadWAV returns bool (true on success)
-        bool ok = SDL_LoadWAV(assetPath.c_str(), &this->mSpec, &audioBuffer, &audioLength);
-        if (ok) {
-            AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
-            this->vecAudioClip.push_back(pAudioClip);
-            this->mapAudioClip[strName] = pAudioClip;
-            spdlog::info("[AudioManager] Loaded audio asset '{}' as '{}' ({} bytes)", assetPath, strName, audioLength);
-            return;
-        } else {
-            spdlog::error("[AudioManager] SDL_LoadWAV failed for '{}': {}", assetPath, SDL_GetError());
-            return;
-        }
-    } else {
-        spdlog::warn("[AudioManager] fopen failed for '{}'. Asset probably inside APK (not a regular file): {}",
-                     assetPath, strerror(errno));
-    }
-
-    // FALLBACK: asset inside APK — must use RWops / LoadWAV_RW or Android AssetManager.
-    spdlog::info("[AudioManager] Asset '{}' not accessible via fopen — use SDL_LoadWAV_RW with an SDL_RWops created from the APK asset.", assetPath);
-    
-    /*
-    Uint8* audioBuffer = 0;
+    Uint8* audioBuffer = nullptr;
     Uint32 audioLength = 0;
-	std::cout << "[DEBUG] Loading Audio Clip from: " << assetPath << std::endl;
+    SDL_Log("[DEBUG] Loading Audio Clip from: %s", assetPath.c_str());
     if (SDL_LoadWAV(assetPath.c_str(), &this->mSpec, &audioBuffer, &audioLength) != NULL)
     {
         AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
@@ -58,10 +58,9 @@ void AudioManager::load(std::string strPath, std::string strName)
     }
     else
     {
-        std::cerr << "[ERROR] : Failed to create Audio Clip for [" << assetPath << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[ERROR] : Failed to create Audio Clip for [%s]", assetPath.c_str());
     }
-     */
+
 }
 
 void AudioManager::unload(std::string strName)

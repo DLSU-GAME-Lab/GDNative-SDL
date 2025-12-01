@@ -23,11 +23,11 @@ EndScreen::~EndScreen()
 void EndScreen::initialize()
 {
 
-	this->pWinBanner = new Sprite("VictoryRibbon", "Victory_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
+	this->pWinBanner = new Sprite("VictoryRibbon", "Victory_Ribbon", Vector2D(0, 150), Vector2D(0.6f), 0.f, false);
 	this->pWinBanner->setEnabled(false);
 	this->attachChild(this->pWinBanner);
 
-	this->pLoseBanner = new Sprite("DefeatRibbon", "Defeat_Ribbon", Vector2D(0, 200), Vector2D(1, 1), 0.f, false);
+	this->pLoseBanner = new Sprite("DefeatRibbon", "Defeat_Ribbon", Vector2D(0, 150), Vector2D(0.6f), 0.f, false);
 	this->pLoseBanner->setEnabled(false);
 	this->attachChild(this->pLoseBanner);
 
@@ -41,13 +41,13 @@ void EndScreen::initialize()
 	pVictoryText->setMessage("Victory");
 	pVictoryText->setColor(SDL_Color(255, 223, 0, 255));
 	pWinBanner->attachChild(pVictoryText);
-	pVictoryText->setPos(Vector2D(0, 250));
+	pVictoryText->setPos(Vector2D(0, 170));
 
 	Text* pDefeatText = new Text("DefeatText", "CurseCasual.ttf", 90, 0, false);
 	pDefeatText->setMessage("Defeat");
 	pDefeatText->setColor(SDL_Color(255, 223, 0, 255));
 	pLoseBanner->attachChild(pDefeatText);
-	pDefeatText->setPos(Vector2D(0, 250));
+	pDefeatText->setPos(Vector2D(0, 170));
 
 	Text* pReturnText = new Text("ReturnText", "CurseCasual.ttf", 45, 0, false);
 	pReturnText->setMessage("Level Select");

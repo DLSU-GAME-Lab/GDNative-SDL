@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 Tracker::Tracker(std::string strName, std::string strImageName, GemType EGem, int nTargetDestroy):AGameObject(strName)
 {
+	this->setIsScreenObject(true);
     this->nTargetLeft = this->nTargetDestroy = nTargetDestroy;
     this->strImageName = strImageName;
     this->fVecTranslate = Vector2D(0, 0);
@@ -19,10 +20,10 @@ void Tracker::initialize()
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName);
     this->attachComponent((AComponent*)pSpriteRenderer);
 
-    Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 180, 0, false);
+    Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 200, 0, false);
     pCounterText->setMessage(std::to_string(this->nTargetLeft));
     this->attachChild(pCounterText);
-    pCounterText->setPos(Vector2D(-40, 0));
+    pCounterText->setLocalPos(Vector2D(60, 22));
     pCounterText->setScale(Vector2D(1));
 }
 

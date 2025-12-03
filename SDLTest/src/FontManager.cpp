@@ -1,4 +1,7 @@
 #include "FontManager.h"
+#include <fstream>
+#include <cstdio>
+#include "ManifestLoader.h"
 
 TTF_Font* FontManager::getFont(const std::string fontKey, int fontSize)
 {
@@ -12,22 +15,58 @@ TTF_Font* FontManager::getFont(const std::string fontKey, int fontSize)
 
 void FontManager::loadFont(const std::string fileName, const std::string fontKey, int fontSize)
 {
-    //std::string path = "Assets/Fonts/" + fileName;
     const std::string assetPath = fileName;
     std::string fullKey = fontKey + "_" + std::to_string(fontSize);
 
     if (mapFonts.contains(fullKey)) return;
 
-    TTF_Font* font = TTF_OpenFont(assetPath.c_str(), fontSize);
-    if (!font) {
-        std::cerr << "[ERROR] Failed to load font [" << fullKey << "]: " << SDL_GetError() << std::endl;
+    // Try to load raw bytes (works for APK assets)
+    size_t size = 0;
+    void* data = SDL_LoadFile(assetPath.c_str(), &size);
+    if (!data || size <= 0) {
+        std::cerr << "[ERROR] TTF: SDL_LoadFile failed for " << assetPath << " : " << SDL_GetError() << std::endl;
+        if (data) SDL_free(data);
         return;
     }
-    else
+
+    // Determine writable temporary directory
+    char* pref = SDL_GetPrefPath("org.main", "babaylan_tales");
+    std::string tmpDir = pref ? std::string(pref) : std::string("/data/local/tmp/");
+    if (pref) SDL_free(pref);
+
+    // Make a safe filename from assetPath
+    std::string safeName = assetPath;
+    for (char &c : safeName) if (c == '/' || c == '\\') c = '_';
+    std::string tmpPath = tmpDir + safeName;
+
+    // Write bytes to temp file
     {
-        std::cout << "[DEBUG] " << fullKey << " has been loaded" << std::endl;
+        std::ofstream ofs(tmpPath, std::ios::binary);
+        if (!ofs) {
+            std::cerr << "[ERROR] TTF: failed to open temp file " << tmpPath << " for writing\n";
+            SDL_free(data);
+            return;
+        }
+        ofs.write(static_cast<char*>(data), static_cast<std::streamsize>(size));
     }
+
+    SDL_free(data);
+
+    // Load font from temp file using TTF_OpenFont
+    TTF_Font* font = TTF_OpenFont(tmpPath.c_str(), fontSize);
+    if (!font) {
+        std::cerr << "[ERROR] Failed to load font [" << fullKey << "]: " << SDL_GetError() << std::endl;
+        // best-effort cleanup
+        std::remove(tmpPath.c_str());
+        return;
+    }
+
     mapFonts[fullKey] = font;
+
+    // remove temp file (best-effort)
+    std::remove(tmpPath.c_str());
+
+    std::cout << "[DEBUG] " << fullKey << " has been loaded\n";
 }
 
 void FontManager::unloadFontFamily(const std::string& fontKey)

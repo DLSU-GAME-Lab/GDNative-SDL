@@ -11,35 +11,77 @@
 #include <algorithm>
 #include <filesystem>
 #include "RendererContext.h"
+#include "ManifestLoader.h"
+#include <fstream>
+#include <cstdio>
 
-// load: per-file cost dominated by I/O and decoding. Algorithmic container
-// insertions are O(1). As number of textures V increases, memory usage and
-// any global iterations over vecTexture scale with V.
-void TextureManager::load(std::string strFolderPath, std::string strName)
+std::string fixAssetPathCase(const std::string& path, const std::vector<std::string>& manifest) {
+    // Check if exact path exists in manifest
+    for (const auto& entry : manifest) {
+        if (entry == path) return path;
+    }
+
+    // Try lowercase extension
+    std::string lowerPath = path;
+    size_t dotPos = lowerPath.rfind('.');
+    if (dotPos != std::string::npos) {
+        for (size_t i = dotPos + 1; i < lowerPath.length(); i++) {
+            lowerPath[i] = std::tolower(lowerPath[i]);
+        }
+        for (const auto& entry : manifest) {
+            if (entry == lowerPath) return lowerPath;
+        }
+    }
+
+    // Return original if not found
+    return path;
+}
+
+void TextureManager::load(std::string assetPath, std::string strName)
 {
-    // O(1) setup + O(fileSize) I/O to load from disk.
-    // Texture creation cost is high but fixed per file.
-    const std::string assetPath = strFolderPath;
+    SDL_Log("[TextureManager] Loading texture via asset: %s with key: %s",
+            assetPath.c_str(), strName.c_str());
 
-    // DEBUG: print what path is being loaded
-    SDL_Log("[TextureManager] Loading texture: %s", assetPath.c_str());
+    SDL_Texture* pTexture = nullptr;
 
+#ifdef __ANDROID__
+    // On Android, use SDL_LoadFile which works with APK assets
     SDL_Surface* surface = IMG_Load(assetPath.c_str());
     if (!surface) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[TextureManager] Error loading from path: %s", assetPath.c_str());
+        // Try with different case for extension
+        std::string altPath = assetPath;
+        size_t dotPos = altPath.rfind('.');
+        if (dotPos != std::string::npos) {
+            // Try lowercase extension
+            std::string lowerExt = altPath.substr(dotPos);
+            std::transform(lowerExt.begin(), lowerExt.end(), lowerExt.begin(), ::tolower);
+            altPath = altPath.substr(0, dotPos) + lowerExt;
+
+            surface = IMG_Load(altPath.c_str());
+            if (!surface) {
+                // Try uppercase extension
+                std::string upperExt = altPath.substr(dotPos);
+                std::transform(upperExt.begin(), upperExt.end(), upperExt.begin(), ::toupper);
+                altPath = altPath.substr(0, dotPos) + upperExt;
+                surface = IMG_Load(altPath.c_str());
+            }
+        }
+    }
+#else
+    // Desktop implementation
+    SDL_Surface* surface = IMG_Load(assetPath.c_str());
+#endif
+
+    if (surface) {
+        pTexture = SDL_CreateTextureFromSurface(this->pRenderer, surface);
+        SDL_DestroySurface(surface);
+        SDL_Log("[TextureManager] Successfully loaded: %s", assetPath.c_str());
+    } else {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                     "IMG_Load failed for %s: %s", assetPath.c_str(), SDL_GetError());
         return;
     }
 
-    SDL_Texture* pTexture = SDL_CreateTextureFromSurface(this->pRenderer, surface);
-    SDL_DestroySurface(surface);
-
-    if (!pTexture) {
-        const char* err = SDL_GetError();
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[TextureManager] Error: %s", err ? err : "unknown");
-        return;
-    }
-
-    // O(1): push_back into containers.
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
 }
@@ -48,27 +90,176 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
 // grows with sum of per-file I/O and decode costs.
 void TextureManager::loadFromFolder(std::string strPath, std::string strName)
 {
-    // O(F): loops through files in a folder, calling load() for each.
-    // F = number of files in folder.
+    SDL_Log("[TextureManager] Loading from folder: %s", strPath.c_str());
 
-    const std::string assetPath = strPath;
-    //SDL_Log("%s", std::filesystem::canonical("../../SDLTest/assets").c_str());
-    if (!std::filesystem::exists(assetPath.c_str()))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[TextureManager] Error: directory does not exist %s", assetPath.c_str());
-        return;
+    // Remove trailing slash if present
+    while (!strPath.empty() && strPath.back() == '/') {
+        strPath.pop_back();
     }
-    else SDL_Log("[TextureManager] Loading from directory: %s", assetPath.c_str());
-    
-    for (const auto& entry : std::filesystem::directory_iterator(assetPath))
-    {
-        if (std::filesystem::is_regular_file(entry.status()))
-        {
-            std::string filePath = entry.path().generic_string();
-            std::cout << filePath << std::endl;
+
+    bool loadedAny = false;
+
+    // Method 1: Try to use the manifest to discover files
+    auto manifest = readAssetManifest("asset_manifest.txt");
+    if (!manifest.empty()) {
+        SDL_Log("[TextureManager] Using manifest to discover files in: %s", strPath.c_str());
+
+        std::vector<std::pair<int, std::string>> numberedFiles; // Store (number, path) pairs
+
+        for (const auto& entry : manifest) {
+            // Check if entry is in the requested folder
+            std::string folderPrefix = strPath + "/";
+            if (entry.find(folderPrefix) == 0) {
+                // Extract filename
+                std::string filename = entry.substr(folderPrefix.length());
+
+                // Try to extract a number from the filename
+                int frameNumber = extractFrameNumber(filename);
+                if (frameNumber >= 0) {
+                    numberedFiles.emplace_back(frameNumber, entry);
+                    SDL_Log("[TextureManager] Found numbered file: %s (frame %d)", entry.c_str(), frameNumber);
+                }
+            }
+        }
+
+        // Sort by frame number
+        std::sort(numberedFiles.begin(), numberedFiles.end(),
+                  [](const std::pair<int, std::string>& a, const std::pair<int, std::string>& b) {
+                      return a.first < b.first;
+                  });
+
+        // Load in sorted order
+        for (const auto& [frameNum, filePath] : numberedFiles) {
             this->load(filePath, strName);
+            loadedAny = true;
         }
     }
+
+    // Method 2: If manifest didn't work, try pattern-based loading
+    if (!loadedAny) {
+        SDL_Log("[TextureManager] Trying pattern-based loading for: %s", strPath.c_str());
+
+        // Try common patterns
+        std::vector<std::string> patterns = {
+                "Set", "set", "Frame", "frame",
+                "SET", "FRAME",  // Uppercase variations
+                "img", "Img", "IMG",
+                "image", "Image", "IMAGE"
+        };
+
+        // Try loading up to 100 frames for each pattern
+        for (const auto& pattern : patterns) {
+            for (int i = 0; i < 100; i++) {
+                std::string pathUpper = strPath + "/" + pattern + std::to_string(i) + ".PNG";
+                std::string pathLower = strPath + "/" + pattern + std::to_string(i) + ".png";
+
+                if (tryLoadFile(pathUpper, strName) || tryLoadFile(pathLower, strName)) {
+                    loadedAny = true;
+                } else {
+                    // If we haven't found any files with this pattern after 10 attempts, break
+                    if (i > 10 && !loadedAny) {
+                        break;
+                    }
+                }
+            }
+
+            // If we found files with this pattern, don't try other patterns
+            if (loadedAny) {
+                SDL_Log("[TextureManager] Found files using pattern: %s", pattern.c_str());
+                break;
+            }
+        }
+    }
+
+    // Method 3: Try loading files with parentheses (e.g., "frame (01).PNG")
+    if (!loadedAny) {
+        SDL_Log("[TextureManager] Trying parenthesized pattern for: %s", strPath.c_str());
+
+        for (int i = 0; i < 100; i++) {
+            // Format with leading zeros
+            std::string number = (i < 10) ? "0" + std::to_string(i) : std::to_string(i);
+
+            std::string path1 = strPath + "/frame (" + number + ").PNG";
+            std::string path2 = strPath + "/frame (" + number + ").png";
+            std::string path3 = strPath + "/Frame (" + number + ").PNG";
+            std::string path4 = strPath + "/Frame (" + number + ").png";
+
+            if (tryLoadFile(path1) || tryLoadFile(path2) ||
+                tryLoadFile(path3) || tryLoadFile(path4)) {
+                loadedAny = true;
+            }
+        }
+    }
+
+    if (!loadedAny) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                     "[TextureManager] Could not load any files from: %s", strPath.c_str());
+    }
+}
+
+// Helper function to extract frame number from filename
+int TextureManager::extractFrameNumber(const std::string& filename) {
+    // Remove extension
+    size_t dotPos = filename.rfind('.');
+    std::string basename = (dotPos != std::string::npos) ? filename.substr(0, dotPos) : filename;
+
+    // Common patterns and their prefixes
+    static const std::vector<std::string> prefixes = {
+            "Set", "set", "Frame", "frame", "SET", "FRAME",
+            "img", "Img", "IMG", "image", "Image", "IMAGE"
+    };
+
+    // Try each prefix
+    for (const auto& prefix : prefixes) {
+        if (basename.find(prefix) == 0) {
+            std::string numberStr = basename.substr(prefix.length());
+
+            // Handle parenthesized numbers like "(01)"
+            if (!numberStr.empty() && numberStr[0] == ' ') {
+                numberStr = numberStr.substr(1); // Remove space
+            }
+            if (!numberStr.empty() && numberStr[0] == '(' && numberStr.back() == ')') {
+                numberStr = numberStr.substr(1, numberStr.length() - 2);
+            }
+
+            // Try to convert to number
+            try {
+                return std::stoi(numberStr);
+            } catch (...) {
+                // Not a valid number, try next prefix
+                continue;
+            }
+        }
+    }
+
+    return -1; // Not a numbered file
+}
+
+// Helper function to try loading a file
+bool TextureManager::tryLoadFile(const std::string& path, const std::string& name) {
+    size_t size = 0;
+    void* data = SDL_LoadFile(path.c_str(), &size);
+    if (data && size > 0) {
+        SDL_free(data);
+
+        // Extract actual name to use (either provided or extract from path)
+        std::string actualName = name;
+        if (actualName.empty()) {
+            // Extract name from last part of path
+            size_t lastSlash = path.find_last_of('/');
+            if (lastSlash != std::string::npos) {
+                std::string filename = path.substr(lastSlash + 1);
+                size_t dotPos = filename.rfind('.');
+                if (dotPos != std::string::npos) {
+                    actualName = filename.substr(0, dotPos);
+                }
+            }
+        }
+
+        this->load(path, actualName);
+        return true;
+    }
+    return false;
 }
 
 // loadFromText: O(1) algorithmically; TTF rendering cost is an expensive

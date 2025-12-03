@@ -57,7 +57,6 @@ private:
 public:
     static void initialize();
     static void destroy();
-
     static AudioManager* getInstance();
     /* * * * * * * * * * * * * * * * * * * * */
 };

@@ -13,7 +13,7 @@ private:
     SDL_Renderer* pRenderer = NULL;
 
 public:
-    void load(std::string strFilePath, std::string strName);
+    void load(std::string assetPath, std::string strName);
     void loadFromFolder(std::string strPath, std::string strName);
     void loadFromText(std::string strName, std::string fontType, int nFontSize, std::string textureText, SDL_Color textColor);
     //void loadFromFolder(std::string strFolderPath, std::string strName);
@@ -31,6 +31,10 @@ private:
     TextureManager() {};
     TextureManager(const TextureManager&) {};
     TextureManager& operator=(const TextureManager&) {};
+
+private:
+    int extractFrameNumber(const std::string& filename);
+    bool tryLoadFile(const std::string& path, const std::string& name = "");
 
 public:
     static void initialize(SDL_Renderer* pRenderer);

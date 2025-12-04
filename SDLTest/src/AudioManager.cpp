@@ -139,13 +139,17 @@ void AudioManager::stopAll()
 {
     SDL_Log("[Audio Manager] LOG: Stopping all audio streams");
 
-    // Clean up all players
+    // First, stop all playing audio
     for (auto& player : this->vecPlaying) {
         if (player) {
-            delete player;
+            player->bCleanUp = true;
         }
     }
 
+    // Then clean up in update()
+    this->update();
+
+    // Clear remaining references
     this->vecPlaying.clear();
     this->mapPlaying.clear();
     this->vecToDestroy.clear();

@@ -26,15 +26,10 @@ AGameObject::~AGameObject()
             delete this->vecComponent[i];
         }
     }
+    vecComponent.clear();
 
-    // Delete children
-    for (int i = 0; i < this->vecChildren.size(); i++)
-    {
-        if (this->vecChildren[i])
-        {
-            delete this->vecChildren[i];
-        }
-    }
+    // DO NOT delete children here - GameObjectManager handles them
+    // Just clear the vector so we don't have dangling pointers
     vecChildren.clear();
 }
 

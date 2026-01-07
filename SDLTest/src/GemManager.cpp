@@ -33,11 +33,14 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("gems/SP_Gem_Purple.png", "Purple");
     TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "Red");
     TextureManager::getInstance()->load("gems/SP_Gem_White.png", "White");
+    TextureManager::getInstance()->load("Box.png", "Crate");
+    TextureManager::getInstance()->load("Small_Bomb.png", "BombS");
 
 	AudioManager::getInstance()->load("sounds/SFX/Swap_SFX.wav", "Swap");
 	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_1.wav", "Match_1");
 	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_2.wav", "Match_2");
 	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_3.wav", "Match_3");
+	AudioManager::getInstance()->load("sounds/SFX/Bomb_SFX.wav", "Bomb_SFX");
 
 	AudioManager::getInstance()->load("sounds/SFX/Win_SFX.wav", "Win_SFX");
 	AudioManager::getInstance()->load("sounds/SFX/Win_Laugh.wav", "Win_Laugh");
@@ -53,11 +56,14 @@ void GemManager::unloadResources()
     TextureManager::getInstance()->unload("Purple");
     TextureManager::getInstance()->unload("Red");
     TextureManager::getInstance()->unload("White");
+    TextureManager::getInstance()->unload("Crate");
+    TextureManager::getInstance()->unload("BombS");
 
     AudioManager::getInstance()->unload("Swap");
     AudioManager::getInstance()->unload("Match_1");
     AudioManager::getInstance()->unload("Match_2");
     AudioManager::getInstance()->unload("Match_3");
+    AudioManager::getInstance()->unload("Bomb_SFX");
 
     AudioManager::getInstance()->unload("Win_SFX");
     AudioManager::getInstance()->unload("Win_Laugh");
@@ -68,7 +74,7 @@ void GemManager::unloadResources()
 // user selected a gem; handle selection, swapping, checking, and chain reactions
 void GemManager::setSelected(Gem* pGem)
 {
-    if (this->bAnimating) return;
+    if (this->bAnimating || (int)pGem->getType() > (int)GemType::BOMB) return;
 
     if (this->pSelected[0] == NULL)
     {
@@ -103,6 +109,11 @@ void GemManager::setSelected(Gem* pGem)
         // deselect if same gem clicked twice
         this->pSelected[0] = NULL;
     }
+}
+
+void GemManager::updateCrates(GemData gemData)
+{
+    
 }
 
 // swap only the object pointers in the two selected cells and update render positions
@@ -215,7 +226,9 @@ bool GemManager::checkMatches()
 
         for (int r = 0; r < (int)this->nHeight; ++r)
         {
-            if (this->data[r][c].blocked || this->data[r][c].gem == NULL)
+            if (this->data[r][c].blocked ||
+                this->data[r][c].gem == NULL ||
+                (int)this->data[r][c].gem->getType() > (int)GemType::PURPLE)
             {
                 // reset on gap or blocked cell
                 runType = GemType::WHITE;
@@ -267,6 +280,22 @@ bool GemManager::checkMatches()
 
     std::cout << "Checked for matches." << "\n";
     return bMatched;
+}
+
+bool GemManager::checkBombs()
+{
+    std::vector<Gem*> adjGems;
+    for (int i = 0; i < 2; i++)
+    {
+        if (pSelected[i]->gem->getType() == GemType::BOMB)
+        {
+            this->toRemove.push_back(pSelected[i]->gem);
+            adjGems = this->getAdjacentGems(*pSelected[i]);
+            this->toRemove.insert(toRemove.end(), adjGems.begin(), adjGems.end());
+            return true;
+        }
+    }
+    return false;
 }
 
 // gravity: drop gems down but never through blocked cells
@@ -347,6 +376,18 @@ void GemManager::printGridData()
             case GemType::PURPLE:
                 std::cout << " P |";
                 break;
+            case GemType::BOMB:
+                std::cout << " @ |";
+                break;
+            case GemType::CRATE_0:
+                std::cout << " 0 |";
+                break;
+            case GemType::CRATE_1:
+                std::cout << " 1 |";
+                break;
+            case GemType::CRATE_2:
+                std::cout << " 2 |";
+                break;
             }
         }
         std::cout << "\n  ";
@@ -355,10 +396,51 @@ void GemManager::printGridData()
     }
 }
 
+std::vector<Gem*> GemManager::getAdjacentGems(const GemData gemData)
+{
+    std::vector<Gem*> adjGems;
+    std::vector<Gem*> adjVert = this->getAdjacentVerticalGems(gemData);
+    std::vector<Gem*> adjHori = this->getAdjacentHorizontalGems(gemData);
+
+    adjGems = adjVert;
+    adjGems.insert(adjGems.end(), adjHori.begin(), adjHori.end());
+
+    return adjGems;
+}
+
+std::vector<Gem*> GemManager::getAdjacentVerticalGems(const GemData gemData)
+{
+    std::vector<Gem*> adjGems;
+    const int r = gemData.r;
+    const int c = gemData.c;
+
+    if (c > 0)
+        adjGems.push_back(data[r][c - 1].gem);
+
+    if (c < data[r].size() - 1)
+        adjGems.push_back(data[r][c + 1].gem);
+
+    return adjGems;
+}
+
+std::vector<Gem*> GemManager::getAdjacentHorizontalGems(const GemData gemData)
+{
+    std::vector<Gem*> adjGems;
+    const int r = gemData.r;
+    const int c = gemData.c;
+
+    if (r > 0)
+        adjGems.push_back(data[r - 1][c].gem);
+
+    if (r < data.size() - 1)
+        adjGems.push_back(data[r + 1][c].gem);
+
+    return adjGems;
+}
+
 void GemManager::spawnGems(float fScale)
 {
     this->fGemScale = fScale;
-    std::string gemColors[]{ "Yellow", "Blue", "White", "Green", "Purple", "Red" };
 
     for (int r = (int)this->data.size() - 1; r >= 0; --r)
     {
@@ -372,7 +454,18 @@ void GemManager::spawnGems(float fScale)
                 // keep rerolling until no 3-match on spawn
                 while (!valid)
                 {
-                    gemType = GemType(rand() % 6);
+                    int gemChance = rand() % 20;
+                    if (gemChance == 0)
+                    {
+                        int bombChance = rand() % 2;
+						if (bombChance == 0)
+                            gemType = GemType::BOMB;
+						else
+                            gemType = GemType::CRATE_2;
+					}
+                    else
+                        gemType = GemType(rand() % 6);
+
                     valid = true;
 
                     // check horizontal left neighbors
@@ -415,7 +508,9 @@ void GemManager::spawnGems(float fScale)
 
 void GemManager::updateBoard()
 {
-    if (this->checkMatches())
+	const bool hasBombs = this->checkBombs();
+	const bool hasMatches = this->checkMatches();
+    if (hasBombs || hasMatches)
     {
         EventBroadcaster::getInstance()->broadcast(EventKey::COUNTER_SUBTRACT);
         do
@@ -425,15 +520,30 @@ void GemManager::updateBoard()
                 if (pGem != NULL)
                 {
                     GemData* gemData = getDataFromGem(pGem);
-                    if (gemData != NULL) gemData->gem = NULL;
+                    if (gemData != NULL)
+                    {
+                        int typeNum = (int)pGem->getType();
+                        if (typeNum > (int)GemType::CRATE_0)
+                        {
+                            pGem->setType(GemType(typeNum - 1));
+                        }
+                        gemData->gem = NULL;
+                    }
                     GameObjectManager::getInstance()->deleteObject(pGem);
                 }
             }
             toRemove.clear();
 
-            std::string sfxName = "Match_";
-            sfxName += std::to_string((rand() % 3) + 1);
-            AudioManager::getInstance()->play(new AudioPlayer(sfxName, AudioGroupTag::SFX));
+            if (hasBombs)
+            {
+                AudioManager::getInstance()->play(new AudioPlayer("Bomb_SFX", AudioGroupTag::SFX));
+			}
+            else
+            {
+                std::string sfxName = "Match_";
+                sfxName += std::to_string((rand() % 3) + 1);
+                AudioManager::getInstance()->play(new AudioPlayer(sfxName, AudioGroupTag::SFX));
+            }
 
             this->cascadeDown();
             this->spawnGems(this->fGemScale);

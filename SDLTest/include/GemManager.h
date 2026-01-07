@@ -51,10 +51,15 @@ private:
     void setTween(GemData gemData, Vector2D startOffset, bool bounce = false);
 
     bool checkMatches();
-
+    bool checkBombs();
+    void updateCrates(GemData gemData);
     void moveGems();
     void cascadeDown();
     void printGridData();
+
+    std::vector<Gem*> getAdjacentGems(const GemData gemData);
+    std::vector<Gem*> getAdjacentVerticalGems(const GemData gemData);
+    std::vector<Gem*> getAdjacentHorizontalGems(const GemData gemData);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

@@ -7,5 +7,9 @@ enum class GemType
 	YELLOW,
 	GREEN,
 	BLUE,
-	PURPLE
+	PURPLE,
+	BOMB,
+	CRATE_0,
+	CRATE_1,
+	CRATE_2,
 };

@@ -17,8 +17,10 @@ Gem::~Gem()
 
 void Gem::initialize()
 {
-	const std::string gemColors[] { "White", "Red", "Yellow", "Green", "Blue", "Purple" };
-	SpriteRenderer* pRenderer = new SpriteRenderer(gemColors[(int)EType]);
+	const std::string textures[] { "White", "Red", "Yellow", "Green", "Blue", "Purple", "BombS", "Crate" };
+	int typeIndex = static_cast<int>(this->EType);
+	if (typeIndex > 7) typeIndex = 7;
+	SpriteRenderer* pRenderer = new SpriteRenderer(textures[typeIndex]);
 	this->attachComponent(pRenderer);
 
 	ButtonInput* pInput = new ButtonInput(pRenderer);
@@ -55,6 +57,11 @@ void Gem::setActive(bool bActive)
 GemType Gem::getType() const
 {
 	return this->EType;
+}
+
+void Gem::setType(GemType EType)
+{
+	this->EType = EType;
 }
 
 TweenAnimator* Gem::getTweenAnimator() const

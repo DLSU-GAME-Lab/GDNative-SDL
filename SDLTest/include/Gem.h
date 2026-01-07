@@ -20,6 +20,7 @@ public:
 	void setActive(bool bActive);
 
 	GemType getType() const;
+	void setType(GemType EType);
 	TweenAnimator* getTweenAnimator() const;
 };
 

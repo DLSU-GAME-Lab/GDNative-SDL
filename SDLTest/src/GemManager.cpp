@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include "EventBroadcaster.h"
 #include "AudioManager.h"
+#include "Sprite.h"
 void GemManager::onAttach()
 {
     for (Uint8 r = 0; r < this->nHeight; r++)
@@ -27,6 +28,7 @@ void GemManager::perform()
 
 void GemManager::loadResources()
 {
+    TextureManager::getInstance()->load("Square.png", "Selector");
     TextureManager::getInstance()->load("gems/SP_Gem_Yellow.png", "Yellow");
     TextureManager::getInstance()->load("gems/SP_Gem_Blue.png", "Blue");
     TextureManager::getInstance()->load("gems/SP_Gem_Green.png", "Green");
@@ -50,6 +52,7 @@ void GemManager::loadResources()
 
 void GemManager::unloadResources()
 {
+    TextureManager::getInstance()->unload("Selector");
     TextureManager::getInstance()->unload("Yellow");
     TextureManager::getInstance()->unload("Blue");
     TextureManager::getInstance()->unload("Green");
@@ -80,6 +83,8 @@ void GemManager::setSelected(Gem* pGem)
     {
         // first selection
         this->pSelected[0] = this->getDataFromGem(pGem);
+		this->pSelector->setEnabled(true);
+		this->pSelector->setLocalPos(pGem->getPos());
         return;
     }
 
@@ -103,11 +108,18 @@ void GemManager::setSelected(Gem* pGem)
             this->printGridData();
             this->bAnimating = true;
         }
+        else
+        {
+            this->pSelected[0] = NULL;
+            this->pSelected[1] = NULL;
+        }
+        this->pSelector->setEnabled(false);
     }
     else
     {
         // deselect if same gem clicked twice
         this->pSelected[0] = NULL;
+        this->pSelector->setEnabled(false);
     }
 }
 
@@ -301,6 +313,48 @@ bool GemManager::checkBombs()
 // gravity: drop gems down but never through blocked cells
 void GemManager::cascadeDown()
 {
+
+	//// iterate top-to-bottom so gems fall into lowest available cells first
+ //   for (int r = 0; r < this->data.size() - 1; r++)
+ //   {
+ //       for (int c = 0; c < this->data[r].size(); c++)
+ //       {
+ //           if (this->data[r][c].blocked ||
+ //               this->data[r][c].gem == NULL ||
+ //               (int)this->data[r][c].gem->getType() > (int)GemType::BOMB)
+ //               continue;
+
+ //           int indexBelow = r + 1;
+ //           int cOffset = c;
+
+ //           if (this->data[indexBelow][cOffset].blocked ||
+ //               this->data[indexBelow][cOffset].gem != NULL)
+ //           {
+ //               bool leftBlocked = cOffset > 0 &&
+ //                   (this->data[indexBelow][cOffset - 1].blocked ||
+ //                   this->data[indexBelow][cOffset - 1].gem != NULL);
+
+ //               bool rightBlocked = cOffset < this->data[r].size() - 1 &&
+ //                   (this->data[indexBelow][cOffset + 1].blocked ||
+ //                   this->data[indexBelow][cOffset + 1].gem != NULL);
+
+ //               if (!leftBlocked && !rightBlocked)
+ //               {
+	//				cOffset += bool(rand() % 2) ? -1 : 1;
+ //               }
+ //               else if (!leftBlocked) cOffset -= 1;
+ //               else if (!rightBlocked) cOffset += 1;
+ //               else continue; // both sides blocked; cannot move
+ //           }
+
+	//		if (cOffset < 0 || cOffset >= this->data[r].size()) continue;
+ //           // move object pointer up and update its world position
+ //           this->data[indexBelow][cOffset].gem = this->data[r][c].gem;
+ //           this->setTween(this->data[r][c], Vector2D(0.0f), true);
+ //           this->data[r][c].gem = NULL;
+ //       }
+ //   }
+
     // iterate bottom-to-top so we move lower empty cells first
     for (int r = (int)this->data.size() - 1; r >= 0; --r)
     {
@@ -615,6 +669,10 @@ GemManager::GemManager(Uint8 w, Uint8 h, float fGemSize) : AComponent("GemManage
     this->fGemScale = 1.0f;
     this->bAnimating = false;
     this->nGemNum = 0;
+    this->pSelector = new Sprite("Selector", "Selector", Vector2D(0.0f), Vector2D(0.12f));
+	this->pSelector->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(this->pSelector);
+	//this->pSelector->setEnabled(false);
 }
 
 void GemManager::initialize(Uint8 w, Uint8 h, float fGemSize, Vector2D offset)

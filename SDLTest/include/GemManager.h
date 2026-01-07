@@ -28,6 +28,8 @@ private:
     std::vector<Gem*> toRemove;
     Uint64 nGemNum;
 
+    AGameObject* pSelector;
+
 public:
     void onAttach() override;
     void perform() override;

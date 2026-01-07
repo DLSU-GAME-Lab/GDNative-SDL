@@ -42,7 +42,7 @@ void Title_Scene::onLoadObjects()
     Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
 
-    Sprite* pLogo = new Sprite("Title_Logo", "Title_Logo",Vector2D(0, 250), Vector2D(0.35f), 0.0f, false);
+    Sprite* pLogo = new Sprite("Title_Logo", "Title_Logo",Vector2D(0, 150), Vector2D(0.35f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pLogo);
 
     Sprite* pYellow = new Sprite("Yellow", "Yellow", Vector2D(-270, 300), Vector2D(0.25f), -45, false);
@@ -63,7 +63,7 @@ void Title_Scene::onLoadObjects()
     Sprite* pGreen = new Sprite("Green", "Green", Vector2D(250, 270), Vector2D(0.25f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pGreen);
 
-    Sprite* pLevelSelect = new Sprite("Level_Select", "Button_Container", Vector2D(0, -210), Vector2D(3.25f, 1.6f), 0.0f, false);
+    Sprite* pLevelSelect = new Sprite("Level_Select", "Button_Container", Vector2D(0, -290), Vector2D(3.25f, 3.25f), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelSelect);
 
 

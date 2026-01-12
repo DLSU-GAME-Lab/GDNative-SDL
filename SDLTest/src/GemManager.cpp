@@ -4,9 +4,11 @@
 #include "TextureManager.h"
 #include <ctime>
 #include <cstdlib>
+#include <algorithm>
 #include "EventBroadcaster.h"
 #include "AudioManager.h"
 #include "Sprite.h"
+
 void GemManager::onAttach()
 {
     for (Uint8 r = 0; r < this->nHeight; r++)
@@ -43,6 +45,7 @@ void GemManager::loadResources()
 	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_2.wav", "Match_2");
 	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_3.wav", "Match_3");
 	AudioManager::getInstance()->load("sounds/SFX/Bomb_SFX.wav", "Bomb_SFX");
+	AudioManager::getInstance()->load("sounds/SFX/Box_Break.wav", "Break_SFX");
 
 	AudioManager::getInstance()->load("sounds/SFX/Win_SFX.wav", "Win_SFX");
 	AudioManager::getInstance()->load("sounds/SFX/Win_Laugh.wav", "Win_Laugh");
@@ -67,6 +70,7 @@ void GemManager::unloadResources()
     AudioManager::getInstance()->unload("Match_2");
     AudioManager::getInstance()->unload("Match_3");
     AudioManager::getInstance()->unload("Bomb_SFX");
+    AudioManager::getInstance()->unload("Break_SFX");
 
     AudioManager::getInstance()->unload("Win_SFX");
     AudioManager::getInstance()->unload("Win_Laugh");
@@ -123,11 +127,6 @@ void GemManager::setSelected(Gem* pGem)
     }
 }
 
-void GemManager::updateCrates(GemData gemData)
-{
-    
-}
-
 // swap only the object pointers in the two selected cells and update render positions
 // - do not swap entire CellData (r/c) so it remains consistent
 void GemManager::moveGems()
@@ -137,7 +136,9 @@ void GemManager::moveGems()
 
     // swap object pointers in the cells
     this->pSelected[0]->gem = objB;
+    this->pSelected[0]->gem->setGridPosition(this->pSelected[0]->r, this->pSelected[0]->c);
     this->pSelected[1]->gem = objA;
+    this->pSelected[1]->gem->setGridPosition(this->pSelected[1]->r, this->pSelected[1]->c);
 
     this->setTween(*this->pSelected[0], Vector2D(0.0f));
     this->setTween(*this->pSelected[1], Vector2D(0.0f));
@@ -196,14 +197,10 @@ bool GemManager::checkMatches()
                 if (count == 3)
                 {
                     // mark the three in the run (current and previous two)
-                    toRemove.push_back(this->data[r][c].gem);
-                    toRemove.push_back(this->data[r][c - 1].gem);
-                    toRemove.push_back(this->data[r][c - 2].gem);
+                    this->markForRemoval(this->data[r][c].gem);
+                    this->markForRemoval(this->data[r][c - 1].gem);
+                    this->markForRemoval(this->data[r][c - 2].gem);
 
-                    // clear pointers in grid immediately so cascade won't see them
-                    this->data[r][c].gem = NULL;
-                    this->data[r][c - 1].gem = NULL;
-                    this->data[r][c - 2].gem = NULL;
                     bMatched = true;
                     mapParameter["GemType"] = static_cast<void*>(&currentType);
                     mapParameter["RemovedNumber"] = static_cast<void*>(&count);
@@ -213,8 +210,7 @@ bool GemManager::checkMatches()
                 else if (count > 3)
                 {
                     // longer run; add current one
-                    toRemove.push_back(this->data[r][c].gem);
-                    this->data[r][c].gem = NULL;
+                    this->markForRemoval(this->data[r][c].gem);
                     mapParameter["GemType"] = static_cast<void*>(&currentType);
                     mapParameter["RemovedNumber"] = static_cast<void*>(&count);
                     std::cout << count << std::endl;
@@ -260,13 +256,13 @@ bool GemManager::checkMatches()
                 ++count;
                 if (count == 3)
                 {
-                    toRemove.push_back(this->data[r][c].gem);
-                    toRemove.push_back(this->data[r - 1][c].gem);
-                    toRemove.push_back(this->data[r - 2][c].gem);
+                    this->markForRemoval(this->data[r][c].gem);
+                    this->markForRemoval(this->data[r - 1][c].gem);
+                    this->markForRemoval(this->data[r - 2][c].gem);
 
-                    this->data[r][c].gem = NULL;
-                    this->data[r - 1][c].gem = NULL;
-                    this->data[r - 2][c].gem = NULL;
+                    //this->data[r][c].gem = NULL;
+                    //this->data[r - 1][c].gem = NULL;
+                    //this->data[r - 2][c].gem = NULL;
                     bMatched = true;
                     mapParameter["GemType"] = static_cast<void*>(&currentType);
                     mapParameter["RemovedNumber"] = static_cast<void*>(&count);
@@ -274,8 +270,8 @@ bool GemManager::checkMatches()
                 }
                 else if (count > 3)
                 {
-                    toRemove.push_back(this->data[r][c].gem);
-                    this->data[r][c].gem = NULL;
+                    this->markForRemoval(this->data[r][c].gem);
+                    //this->data[r][c].gem = NULL;
                     mapParameter["GemType"] = static_cast<void*>(&currentType);
                     mapParameter["RemovedNumber"] = static_cast<void*>(&count);
                     std::cout << count << std::endl;
@@ -301,13 +297,27 @@ bool GemManager::checkBombs()
     {
         if (pSelected[i]->gem->getType() == GemType::BOMB)
         {
-            this->toRemove.push_back(pSelected[i]->gem);
+            this->markForRemoval(pSelected[i]->gem);
             adjGems = this->getAdjacentGems(*pSelected[i]);
-            this->toRemove.insert(toRemove.end(), adjGems.begin(), adjGems.end());
+            for (auto pGem : adjGems)
+            {
+                if (pGem == NULL)
+                    continue;
+
+                this->markForRemoval(pGem);
+			}
             return true;
         }
     }
     return false;
+}
+
+void GemManager::markForRemoval(Gem* pGem)
+{
+    if (std::find(this->toRemove.begin(), this->toRemove.end(), pGem) != this->toRemove.end())
+        return;
+
+    this->toRemove.push_back(pGem);
 }
 
 // gravity: drop gems down but never through blocked cells
@@ -373,7 +383,13 @@ void GemManager::cascadeDown()
                         indexAbove = -1;
                         break;
                     }
-                    if (this->data[indexAbove][c].gem != NULL) break;
+                    if (this->data[indexAbove][c].gem != NULL) 
+                    {
+                        if ((int)this->data[indexAbove][c].gem->getType() >= (int)GemType::CRATE_0)
+                            indexAbove = -1;
+                        
+                        break;
+                    }
                     --indexAbove;
                 }
 
@@ -381,6 +397,7 @@ void GemManager::cascadeDown()
                 {
                     // move object pointer down and update its world position
                     this->data[r][c].gem = this->data[indexAbove][c].gem;
+                    this->data[r][c].gem->setGridPosition(r, c);
                     this->setTween(this->data[r][c], Vector2D(0.0f), true);
                     this->data[indexAbove][c].gem = NULL;
                 }
@@ -551,6 +568,7 @@ void GemManager::spawnGems(float fScale)
 
                 pGem->setPos(this->getGemDataPosition(this->data[0][c]));
                 pGem->setScale(Vector2D(this->fGemScale));
+                pGem->setGridPosition(r, c);
                 GameObjectManager::getInstance()->addObject(pGem);
 
                 this->setTween(this->data[r][c], Vector2D(0.0f, this->fGemSize), true);
@@ -576,10 +594,27 @@ void GemManager::updateBoard()
                     GemData* gemData = getDataFromGem(pGem);
                     if (gemData != NULL)
                     {
-                        int typeNum = (int)pGem->getType();
-                        if (typeNum > (int)GemType::CRATE_0)
+                        // Checks for crates around the gems being removed
+						std::vector<Gem*> pAdjGems = this->getAdjacentGems(*gemData);
+                        for (auto pAdjGem : pAdjGems)
                         {
-                            pGem->setType(GemType(typeNum - 1));
+                            if (pAdjGem != NULL)
+                            {
+                                int typeNum = (int)pAdjGem->getType();
+                                if (typeNum > (int)GemType::CRATE_0)
+                                {
+                                    pAdjGem->setType(GemType(typeNum - 1));
+                                    AudioManager::getInstance()->play(new AudioPlayer("Break_SFX", AudioGroupTag::SFX));
+									std::cout << "Crate downgraded to type " << (typeNum - 1) << "\n";
+                                }
+                                else if (pAdjGem->getType() == GemType::CRATE_0)
+                                {
+									GemData* adjGemData = getDataFromGem(pAdjGem);
+                                    adjGemData->gem = NULL;
+                                    AudioManager::getInstance()->play(new AudioPlayer("Break_SFX", AudioGroupTag::SFX));
+                                    GameObjectManager::getInstance()->deleteObject(pAdjGem);
+                                }
+                            }
                         }
                         gemData->gem = NULL;
                     }
@@ -646,13 +681,9 @@ Vector2D GemManager::getGemDataPosition(GemData gemData)
 
 GemData* GemManager::getDataFromGem(Gem* pGem)
 {
-    for (Uint8 r = 0; r < this->nHeight; r++)
-    {
-        for (Uint8 c = 0; c < this->nWidth; c++)
-        {
-            if (this->data[r][c].gem == pGem) return &this->data[r][c];
-        }
-    }
+    if (pGem->getRow() < this->data.size() &&
+        pGem->getCol() < this->data[pGem->getRow()].size())
+        return &this->data[pGem->getRow()][pGem->getCol()];
 
     return NULL;
 }
@@ -672,7 +703,6 @@ GemManager::GemManager(Uint8 w, Uint8 h, float fGemSize) : AComponent("GemManage
     this->pSelector = new Sprite("Selector", "Selector", Vector2D(0.0f), Vector2D(0.12f));
 	this->pSelector->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(this->pSelector);
-	//this->pSelector->setEnabled(false);
 }
 
 void GemManager::initialize(Uint8 w, Uint8 h, float fGemSize, Vector2D offset)

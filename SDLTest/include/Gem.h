@@ -11,6 +11,9 @@ private:
 	TweenAnimator* pTween;
 	bool bActive;
 
+	Uint8 r;
+	Uint8 c;
+
 public:
 	Gem(std::string strName, GemType EType);
 	~Gem();
@@ -21,6 +24,9 @@ public:
 
 	GemType getType() const;
 	void setType(GemType EType);
+	Uint8 getRow() const;
+	Uint8 getCol() const;
+	void setGridPosition(Uint8 r, Uint8 c);
 	TweenAnimator* getTweenAnimator() const;
 };
 

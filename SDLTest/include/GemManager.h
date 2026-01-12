@@ -54,7 +54,7 @@ private:
 
     bool checkMatches();
     bool checkBombs();
-    void updateCrates(GemData gemData);
+    void markForRemoval(Gem* pGem);
     void moveGems();
     void cascadeDown();
     void printGridData();

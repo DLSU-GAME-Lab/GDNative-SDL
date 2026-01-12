@@ -64,6 +64,7 @@ void GameObjectManager::addObject(AGameObject* pGameObject)
 // linear search or causes shifting.
 void GameObjectManager::deleteObject(AGameObject* pGameObject)
 {
+    if (pGameObject == NULL) return;
     std::string strName = pGameObject->getName();
     int nIndex = -1;
 

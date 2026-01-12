@@ -8,6 +8,8 @@ Gem::Gem(std::string strName, GemType EType) : AGameObject(strName)
 	this->EType = EType;
 	this->pTween = NULL;
 	this->bActive = false;
+	this->r = 0;
+	this->c = 0;
 }
 
 Gem::~Gem()
@@ -62,6 +64,22 @@ GemType Gem::getType() const
 void Gem::setType(GemType EType)
 {
 	this->EType = EType;
+}
+
+Uint8 Gem::getRow() const
+{
+	return this->r;
+}
+
+Uint8 Gem::getCol() const
+{
+	return this->c;
+}
+
+void Gem::setGridPosition(Uint8 r, Uint8 c)
+{
+	this->r = r;
+	this->c = c;
 }
 
 TweenAnimator* Gem::getTweenAnimator() const

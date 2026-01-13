@@ -38,7 +38,7 @@ void Level_2_Scene::onLoadObjects()
 
 	this->loadGUI();
 
-	GemManager::initialize(10, 8, 60.0f, Vector2D(30.0f, -54.0f));
+	GemManager::initialize(10, 8, 60.0f, 0.2f, Vector2D(30.0f, -54.0f));
 
 	std::vector<Uint8> r0Cols = { 4, 5 };
 	std::vector<Uint8> r0r6Cols = { 0, 1, 8, 9 };
@@ -52,7 +52,14 @@ void Level_2_Scene::onLoadObjects()
 	GemManager::getInstance()->setBlocked(6, r0r6Cols, true);
 	GemManager::getInstance()->setBlocked(7, r7Cols, true);
 
-	GemManager::getInstance()->spawnGems(0.2f);
+	GemManager::getInstance()->setSpawnBombsAuto(true);
+	GemManager::getInstance()->placeGem(GemType::CRATE_2, 4, 1);
+	GemManager::getInstance()->placeGem(GemType::CRATE_2, 5, 2);
+	GemManager::getInstance()->placeGem(GemType::CRATE_2, 4, 3);
+	GemManager::getInstance()->placeGem(GemType::CRATE_2, 4, 6);
+	GemManager::getInstance()->placeGem(GemType::CRATE_2, 5, 7);
+	GemManager::getInstance()->placeGem(GemType::CRATE_2, 4, 8);
+	GemManager::getInstance()->spawnGems();
 }
 
 void Level_2_Scene::onUnloadResources()

@@ -509,29 +509,44 @@ std::vector<Gem*> GemManager::getAdjacentHorizontalGems(const GemData gemData)
     return adjGems;
 }
 
-void GemManager::spawnGems(float fScale)
+void GemManager::placeGem(GemType EType, Uint8 r, Uint8 c)
 {
-    this->fGemScale = fScale;
+    Gem* pGem = new Gem("gem_" + std::to_string(this->nGemNum), EType);
+    this->nGemNum++;
+    this->data[r][c].gem = pGem;
 
+    pGem->setPos(this->getGemDataPosition(this->data[0][c]));
+    pGem->setScale(Vector2D(this->fGemScale));
+    pGem->setGridPosition(r, c);
+    GameObjectManager::getInstance()->addObject(pGem);
+
+    this->setTween(this->data[r][c], Vector2D(0.0f, this->fGemSize), true);
+}
+
+void GemManager::spawnGems()
+{
     for (int r = (int)this->data.size() - 1; r >= 0; --r)
     {
         for (int c = 0; c < (int)this->data[r].size(); ++c)
         {
             if (!this->data[r][c].blocked && this->data[r][c].gem == NULL)
             {
-                GemType gemType;
+                GemType gemType = GemType::WHITE;
                 bool valid = false;
 
                 // keep rerolling until no 3-match on spawn
                 while (!valid)
                 {
-                    int gemChance = rand() % 20;
-                    if (gemChance == 0)
+                    int randChance = rand() % 40;
+                    if ((this->bSpawnCratesAuto ||
+                        this->bSpawnBombsAuto) &&
+                        randChance < 2)
                     {
-                        int bombChance = rand() % 2;
-						if (bombChance == 0)
+						if (this->bSpawnBombsAuto &&
+                            randChance == 0)
                             gemType = GemType::BOMB;
-						else
+						else if (this->bSpawnCratesAuto &&
+                            randChance == 1)
                             gemType = GemType::CRATE_2;
 					}
                     else
@@ -562,16 +577,7 @@ void GemManager::spawnGems(float fScale)
                 }
 
                 // safe to spawn gem now
-                Gem* pGem = new Gem("gem_" + std::to_string(this->nGemNum), gemType);
-                this->nGemNum++;
-                this->data[r][c].gem = pGem;
-
-                pGem->setPos(this->getGemDataPosition(this->data[0][c]));
-                pGem->setScale(Vector2D(this->fGemScale));
-                pGem->setGridPosition(r, c);
-                GameObjectManager::getInstance()->addObject(pGem);
-
-                this->setTween(this->data[r][c], Vector2D(0.0f, this->fGemSize), true);
+				this->placeGem(gemType, r, c);
                 //pause after each row
             }
         }
@@ -635,7 +641,7 @@ void GemManager::updateBoard()
             }
 
             this->cascadeDown();
-            this->spawnGems(this->fGemScale);
+            this->spawnGems();
 
         } while (this->checkMatches());
         AGameObject* pHolder = GameObjectManager::getInstance()->findObjectByName("EndScreen");
@@ -669,6 +675,16 @@ void GemManager::setBlocked(Uint8 r, const std::vector<Uint8>&cols, bool bBlocke
     }
 }
 
+void GemManager::setSpawnCratesAuto(bool bSpawnCratesAuto)
+{
+    this->bSpawnCratesAuto = bSpawnCratesAuto;
+}
+
+void GemManager::setSpawnBombsAuto(bool bSpawnBombsAuto)
+{
+    this->bSpawnBombsAuto = bSpawnBombsAuto;
+}
+
 Vector2D GemManager::getGemDataPosition(GemData gemData)
 {
     Vector2D cellSize = Vector2D(this->fGemSize);
@@ -690,27 +706,29 @@ GemData* GemManager::getDataFromGem(Gem* pGem)
 
 GemManager* GemManager::P_SHARED_INSTANCE = NULL;
 
-GemManager::GemManager(Uint8 w, Uint8 h, float fGemSize) : AComponent("GemManager", ComponentType::SCRIPT)
+GemManager::GemManager(Uint8 w, Uint8 h, float fGemSize, float fGemScale) : AComponent("GemManager", ComponentType::SCRIPT)
 {
     this->nWidth = w;
     this->nHeight = h;
     this->fGemSize = fGemSize;
     this->pSelected[0] = NULL;
     this->pSelected[1] = NULL;
-    this->fGemScale = 1.0f;
+    this->fGemScale = fGemScale;
     this->bAnimating = false;
     this->nGemNum = 0;
+    this->bSpawnCratesAuto = false;
+    this->bSpawnBombsAuto = false;
     this->pSelector = new Sprite("Selector", "Selector", Vector2D(0.0f), Vector2D(0.12f));
 	this->pSelector->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(this->pSelector);
 }
 
-void GemManager::initialize(Uint8 w, Uint8 h, float fGemSize, Vector2D offset)
+void GemManager::initialize(Uint8 w, Uint8 h, float fGemSize, float fGemScale, Vector2D offset)
 {
     srand((unsigned)time(nullptr)); // seed once
     EmptyObject* pManagerObject = new EmptyObject("GemManager");
     pManagerObject->setPos(offset);
-    P_SHARED_INSTANCE = new GemManager(w, h, fGemSize);
+    P_SHARED_INSTANCE = new GemManager(w, h, fGemSize, fGemScale);
     pManagerObject->attachComponent(P_SHARED_INSTANCE);
     GameObjectManager::getInstance()->addObject(pManagerObject);
 }

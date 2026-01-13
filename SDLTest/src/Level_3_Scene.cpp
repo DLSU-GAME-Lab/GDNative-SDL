@@ -36,7 +36,7 @@ void Level_3_Scene::onLoadObjects()
 
 	this->loadGUI();
 
-	GemManager::initialize(12, 14, 45.0f, Vector2D(23.0f, -46.0f));
+	GemManager::initialize(12, 14, 45.0f, 0.15f, Vector2D(23.0f, -46.0f));
 
 	std::vector< std::vector<Uint8>> rowBlocks;
 
@@ -60,7 +60,8 @@ void Level_3_Scene::onLoadObjects()
 		GemManager::getInstance()->setBlocked(i, rowBlocks[i], true);
 	}
 
-	GemManager::getInstance()->spawnGems(0.15f);
+	GemManager::getInstance()->setSpawnBombsAuto(true);
+	GemManager::getInstance()->spawnGems();
 }
 
 void Level_3_Scene::onUnloadResources()

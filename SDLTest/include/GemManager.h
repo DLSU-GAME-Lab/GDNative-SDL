@@ -30,6 +30,9 @@ private:
 
     AGameObject* pSelector;
 
+    bool bSpawnCratesAuto;
+    bool bSpawnBombsAuto;
+
 public:
     void onAttach() override;
     void perform() override;
@@ -39,12 +42,16 @@ public:
 
     void setSelected(Gem* pGem);
     
-    void spawnGems(float fScale);
+    void placeGem(GemType EType, Uint8 r, Uint8 c);
+    void spawnGems();
     void updateBoard();
     void finishAnimation();
 
     void setBlocked(Uint8 r, Uint8 c, bool bBlocked);
     void setBlocked(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked);
+
+	void setSpawnCratesAuto(bool bSpawnCratesAuto);
+	void setSpawnBombsAuto(bool bSpawnBombsAuto);
 
 private:
     Vector2D getGemDataPosition(GemData gemData);
@@ -70,12 +77,12 @@ private:
     static GemManager* P_SHARED_INSTANCE;
 
 private:
-    GemManager(Uint8 w, Uint8 h, float fCellSize);
+    GemManager(Uint8 w, Uint8 h, float fCellSize, float fGemScale);
     GemManager(const GemManager&);
     GemManager& operator = (const GemManager&) {};
 
 public:
-    static void initialize(Uint8 w, Uint8 h, float fCellSize, Vector2D offset);
+    static void initialize(Uint8 w, Uint8 h, float fCellSize, float fGemScale, Vector2D offset);
     static void destroy();
 
     static GemManager* getInstance();

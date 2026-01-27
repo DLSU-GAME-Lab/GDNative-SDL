@@ -22,6 +22,13 @@ public:
 	bool getJumped() const;
 	bool getInteracted() const;
 
+    void setVirtualMovement(const Vector2D& v);
+    void setVirtualJump(bool pressed);
+
+    // virtual (touch) input
+    Vector2D virtualMovement = Vector2D::Zero();
+    bool virtualJump = false;
+
 private:
 	void onKeyDown(SDL_Keycode key);
 	void onKeyUp(SDL_Keycode key);

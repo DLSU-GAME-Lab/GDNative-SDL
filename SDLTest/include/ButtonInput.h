@@ -30,6 +30,8 @@ public:
 	void setRightClick(bool bRightClick);
 	bool isLeftClick();
 	void setLeftClick(bool bLeftClick);
+    bool contains() const;
+    bool contains(const Vector2D& pos) const;
 
 
 private:
@@ -38,7 +40,5 @@ private:
 	virtual void onMouseButtonUp(Uint8 mouseButton);
 
 	//bool contains(const Vector2D& pos) const;
-    bool contains() const;
-    bool contains(const Vector2D& pos) const;
 };
 

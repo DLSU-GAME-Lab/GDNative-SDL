@@ -10,7 +10,7 @@ GUIButton::GUIButton(std::string strName, std::string strSpriteName, bool bFlipX
 
 void GUIButton::initialize()
 {
-	//this->bIsScreenObject = true;
+    //this->setIsScreenObject(true);
 	SpriteRenderer* pRenderer = new SpriteRenderer(this->strSpriteName);
 	ButtonInput* pInput = new ButtonInput(pRenderer);
 

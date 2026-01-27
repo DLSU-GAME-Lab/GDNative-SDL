@@ -20,6 +20,8 @@
 #include "AudioManager.h"
 #include "InventoryGUI.h"
 #include "FontManager.h"
+#include "JumpButtonController.h"
+#include "VirtualJoystick.h"
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
 
@@ -570,6 +572,56 @@ void PlatformerLevel1Scene::onLoadObjects()
 	this->addPickupDialogue(pPickupGUI,pInventoryGUI);
 
 	AudioManager::getInstance()->play(new AudioPlayer("Jungle", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
+
+    // -- Jump Button --
+    GUIButton* pJumpBtn = new GUIButton("JumpBtn", "Square");
+    pJumpBtn->setIsScreenObject(true);
+    pJumpBtn->setPos(Vector2D(1750, 900));
+    pJumpBtn->setScale(Vector2D(0.2f));
+
+    // add to manager (this calls pJumpBtn->initialize() which creates the SpriteRenderer & ButtonInput)
+    GameObjectManager::getInstance()->addObject(pJumpBtn);
+
+    // now fetch the actual SpriteRenderer and ButtonInput created by initialize()
+    SpriteRenderer* pJumpSR = (SpriteRenderer*)pJumpBtn->findComponentByName("SpriteRenderer");
+    if (pJumpSR) {
+        pJumpSR->setColor({ 80, 200, 120, 220 }); // tint so visible
+    }
+
+    // try to find existing ButtonInput (created in initialize)
+    ButtonInput* pExistingBtnInput = (ButtonInput*)pJumpBtn->findComponentByName("ButtonInput");
+    if (!pExistingBtnInput) {
+        // fallback: create a proper ButtonInput using the renderer we just got
+        pExistingBtnInput = new ButtonInput(pJumpSR);
+        pJumpBtn->attachComponent(pExistingBtnInput);
+    }
+
+    // attach controller AFTER we know real ButtonInput is present
+    pJumpBtn->attachComponent(new JumpButtonController());
+
+    // -- Virtual Joystick --
+    Sprite* pJoyBase = new Sprite("VirtualJoystickBase", "Square", Vector2D(200.0f, 900.0f), Vector2D(0.6f));
+    pJoyBase->setIsScreenObject(true);
+    pJoyBase->setScale(Vector2D(0.6f));
+
+    // create joystick component BEFORE adding object so it's present during initialize
+    VirtualJoystick* pVJ = new VirtualJoystick(150.0f);
+    pJoyBase->attachComponent(pVJ);
+
+    // create the thumb child before addObject so the VJ can find it immediately if needed
+    Sprite* pJoyThumb = new Sprite("VirtualJoystickThumb", "Square", Vector2D(0.0f, 0.0f), Vector2D(0.15f));
+    pJoyThumb->setIsScreenObject(true);
+    pJoyBase->attachChild(pJoyThumb);
+
+    // now add object (initialize will run, owner assigned to components, child exists)
+    GameObjectManager::getInstance()->addObject(pJoyBase);
+
+    // tint base & thumb so visible
+    SpriteRenderer* pJoyBaseSR = (SpriteRenderer*)pJoyBase->findComponentByName("SpriteRenderer");
+    if (pJoyBaseSR) pJoyBaseSR->setColor({ 120, 120, 255, 120 });
+
+    SpriteRenderer* pJoyThumbSR = (SpriteRenderer*)pJoyThumb->findComponentByName("SpriteRenderer");
+    if (pJoyThumbSR) pJoyThumbSR->setColor({ 255, 200, 80, 220 });
 }
 
 void PlatformerLevel1Scene::onUnloadResources()

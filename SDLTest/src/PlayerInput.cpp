@@ -39,7 +39,7 @@ Vector2D PlayerInput::getMovement() const
 
 bool PlayerInput::getJumped() const
 {
-	return this->bJumped;
+    return this->bJumped || this->virtualJump;
 }
 
 bool PlayerInput::getInteracted() const
@@ -115,14 +115,21 @@ void PlayerInput::onKeyUp(SDL_Keycode key)
 
 void PlayerInput::updateValues()
 {
-	if (this->bHoldingLeft && this->bHoldingRight) this->movement.x = 0.0f;
-	else if (this->bHoldingLeft) this->movement.x = -1.0f;
-	else if (this->bHoldingRight) this->movement.x = 1.0f;
-	else this->movement.x = 0.0f;
+    float keyX = 0.0f;
+    if (bHoldingLeft && !bHoldingRight) keyX = -1.0f;
+    else if (bHoldingRight && !bHoldingLeft) keyX = 1.0f;
 
-	//if (this->bHoldingDown && this->bHoldingUp) this->movement.y = 0.0f;
-	//else if (this->bHoldingDown) this->movement.y = -1.0f;
-	//else if (this->bHoldingUp) this->movement.y = 1.0f;
-	//else this->movement.y = 0.0f;
+    // joystick overrides keyboard when active
+    this->movement.x = (virtualMovement.x != 0.0f) ? virtualMovement.x : keyX;
+}
 
+void PlayerInput::setVirtualMovement(const Vector2D& v)
+{
+    this->virtualMovement = v;
+    this->updateValues();
+}
+
+void PlayerInput::setVirtualJump(bool pressed)
+{
+    this->virtualJump = pressed;
 }

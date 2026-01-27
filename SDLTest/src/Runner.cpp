@@ -29,6 +29,9 @@
 #include "imgui.h" 
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
+#include <android/log.h>
+#include <iostream>
+#include <streambuf>
 
 // scenes
 #include "LobbyScene.h"
@@ -46,12 +49,28 @@
 // increasing sizes of G/R/M at runtime if more content is created.
 Runner::Runner()
 {
-	if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_AUDIO) == 0)
+    class AndroidLogBuf : public std::streambuf {
+    protected:
+        int overflow(int c) override {
+            if (c == '\n') {
+                __android_log_write(ANDROID_LOG_INFO, "STDOUT", buffer.c_str());
+                buffer.clear();
+            } else {
+                buffer += (char)c;
+            }
+            return c;
+        }
+    private:
+        std::string buffer;
+    };
+
+    static AndroidLogBuf androidLogBuf;
+    std::cout.rdbuf(&androidLogBuf);
+
+    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_AUDIO) == 0)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
 	}
-
-	
 
 	std::cout << "|===========================================|\n";
 	std::cout << "|----------| SDL VERSION: " <<
@@ -60,6 +79,7 @@ Runner::Runner()
 		SDL_MICRO_VERSION << " |----------|\n";
 	std::cout << "|===========================================|\n";
 
+    // --- window / renderer creation ---
 	int screenWidth, screenHeight;
 	SDL_DisplayID dispID = SDL_GetPrimaryDisplay();
 	SDL_DisplayMode dispMode = *SDL_GetDesktopDisplayMode(dispID);
@@ -74,17 +94,30 @@ Runner::Runner()
 	float scaleY = (float)screenHeight / gameHeight;
 	float scale = (std::min)(scaleX, scaleY);
 
-	int windowHeight = gameHeight * scale;
-	int windowWidth = gameWidth * scale;
+    int windowWidth = (int)(gameWidth * scale);
+    int windowHeight = (int)(gameHeight * scale);
 
-	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), gameWidth, gameHeight, SDL_WINDOW_RESIZABLE);
+    pWindow = SDL_CreateWindow(
+            strWindowTitle.c_str(),
+            windowWidth,
+            windowHeight,
+            SDL_WINDOW_RESIZABLE
+    );
 
-	this->pRenderer = SDL_CreateRenderer(this->pWindow, NULL);
-	if (this->pRenderer == NULL)
-	{
-		printf("ERROR");
-	}
-	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    pRenderer = SDL_CreateRenderer(pWindow, NULL);
+    if (!pRenderer) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                     "Failed to create renderer: %s",
+                     SDL_GetError());
+    }
+
+    SDL_SetRenderLogicalPresentation(
+            pRenderer,
+            (int)gameWidth,
+            (int)gameHeight,
+            SDL_LOGICAL_PRESENTATION_LETTERBOX
+    );
+
 
 	//initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;

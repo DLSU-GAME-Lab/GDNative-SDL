@@ -4,6 +4,7 @@
 #include "AAnimator.h"
 #include "Settings.h"
 #include <iostream>
+#include "RendererContext.h"
 
 AGameObject::AGameObject(std::string strName)
 {
@@ -33,15 +34,22 @@ AGameObject::~AGameObject()
     vecChildren.clear();
 }
 
-void AGameObject::processInput(SDL_Event* eEvent)
-{
+void AGameObject::processInput(SDL_Event* eEvent) {
+    if (!eEvent) return;
+
+    // Get all INPUT components on this object and its children
     auto vecInput = this->getComponentsRecursively(ComponentType::INPUT);
+
     for (AComponent* pComponent : vecInput)
     {
-        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
+        AGameObject* pOwner = pComponent->getOwner();
         if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
-        
-        AGeneralInput* input = (AGeneralInput*)pComponent;
+
+        // Safe downcast (components should be AGeneralInput-derived)
+        AGeneralInput* input = static_cast<AGeneralInput*>(pComponent);
+        if (!input) continue;
+
+        // Pass the original (window) event — AGeneralInput::setEvent will convert
         input->setEvent(eEvent);
         input->perform();
     }

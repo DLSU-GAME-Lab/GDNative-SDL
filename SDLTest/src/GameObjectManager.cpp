@@ -131,13 +131,12 @@ void GameObjectManager::cleanUpDeletedObjects()
 // affect behavior as G grows
 AGameObject* GameObjectManager::findObjectByName(std::string strName)
 {
-    if(this->mapGameObject[strName] != NULL)
-        return this->mapGameObject[strName];
+    auto it = mapGameObject.find(strName);
+    if (it != mapGameObject.end() && it->second != nullptr)
+        return it->second;
 
-    else {
-        std::cout << "[ERROR] : Object [" << strName << "] NOT found." << std::endl;
-        return NULL;
-    }
+    std::cout << "[ERROR] : Object [" << strName << "] NOT found." << std::endl;
+    return nullptr;
 }
 
 void GameObjectManager::setObjectName(std::string strName, std::string strNewName)

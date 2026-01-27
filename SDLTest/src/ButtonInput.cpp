@@ -18,25 +18,52 @@ ButtonInput::~ButtonInput()
 
 void ButtonInput::perform()
 {
-	if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
-		this->onMouseHovered(Vector2D(eEvent->motion.x, eEvent->motion.y));
+    if (!eEvent) {
+        std::cout << "[ButtonInput] NO eEvent set on component\n";
+    } else {
+        std::cout << "[ButtonInput] eEvent type=" << eEvent->type
+                  << " logical=(" << this->logicalX << "," << this->logicalY << ")\n";
+    }
 
-	if (this->contains())
-	{
-		switch (eEvent->type)
-		{
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-			this->onMouseButtonDown(eEvent->button.button);
-			break;
+    // Hover: mouse or finger motion -> use logical coords (AGeneralInput stores them)
+    if (eEvent->type == SDL_EVENT_MOUSE_MOTION || eEvent->type == SDL_EVENT_FINGER_MOTION)
+    {
+        this->onMouseHovered(Vector2D(this->logicalX, this->logicalY));
+    }
 
-		case SDL_EVENT_MOUSE_BUTTON_UP:
-			this->onMouseButtonUp(eEvent->button.button);
-			break;
+    // Use logical coords converted by AGeneralInput
+    // (AGeneralInput::setEvent sets logicalX/logicalY)
+    this->mousePos = Vector2D(this->logicalX, this->logicalY);
+    // hover handling (will set dragging if holding)
+    this->onMouseHovered(this->mousePos);
 
-		default:
-			break;
-		}
-	}
+    // For click/press we accept both mouse and finger events
+    if (this->contains())
+    {
+        switch (eEvent->type)
+        {
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                this->onMouseButtonDown(eEvent->button.button);
+                break;
+
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+                this->onMouseButtonUp(eEvent->button.button);
+                break;
+
+            case SDL_EVENT_FINGER_DOWN:
+                // treat as left mouse down
+                this->onMouseButtonDown(SDL_BUTTON_LEFT);
+                break;
+
+            case SDL_EVENT_FINGER_UP:
+                // treat as left mouse up
+                this->onMouseButtonUp(SDL_BUTTON_LEFT);
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 
 Vector2D ButtonInput::getMousePos() const
@@ -145,7 +172,13 @@ bool ButtonInput::contains(const Vector2D& pos) const
     SDL_FRect spriteRect = this->pSprite->getRect();
     SDL_FRect pointRect = { pos.x, pos.y, 1, 1 };
 
-    return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
+    bool intersect = SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
+
+    // debug: enable temporarily to inspect values
+    std::cout << "[ButtonInput] mousePos=(" << pos.x << "," << pos.y << ") spriteRect=(x="
+    << spriteRect.x << ",y=" << spriteRect.y << ",w=" << spriteRect.w << ",h=" << spriteRect.h << ") -> " << intersect << std::endl;
+
+    return intersect;
 }
 
 

@@ -12,7 +12,7 @@ int game_main(int argc, char* argv[])
 
 #if defined(__ANDROID__)
 // on Android, SDLActivity looks for SDL_main
-extern "C" int SDL_main(int argc, char* argv[])
+extern "C" __attribute__((visibility("default"))) int SDL_main(int argc, char* argv[])
 {
     return game_main(argc, argv);
 }

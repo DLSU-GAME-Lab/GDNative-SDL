@@ -2,9 +2,11 @@
 #define SYSTEMS_EVENT_BROADCASTER_HPP
 
 #include "EventListener.h"
-#include "unordered_map"
 #include "EnumEventKey.h"
-#include "string"
+
+#include <unordered_map>
+#include <vector>
+#include <string>
 
 
 class EventBroadcaster {

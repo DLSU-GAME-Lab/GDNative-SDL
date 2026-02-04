@@ -3,6 +3,55 @@ plugins {
 }
 
 android {
+    // Generate asset_manifest.txt from external assets folder (Groovy / Gradle)
+    def externalAssetsDir = file("${projectDir}/../../SDLTest/assets")
+    def generatedManifest = file("${projectDir}/../../SDLTest/assets/asset_manifest.txt")
+
+    tasks.register("generateAssetManifest") {
+        // tell Gradle this task produces the manifest file (helps incremental build)
+        outputs.file(generatedManifest)
+
+        doLast {
+            if (!externalAssetsDir.exists()) {
+                println "generateAssetManifest: external assets directory not found: ${externalAssetsDir}"
+                return
+            }
+            generatedManifest.parentFile.mkdirs()
+            generatedManifest.withWriter('UTF-8') { writer ->
+                externalAssetsDir.eachFileRecurse { f ->
+                    if (f.isFile()) {
+                        def rel = externalAssetsDir.toPath().relativize(f.toPath()).toString().replace('\\','/')
+                        writer.println(rel)
+                    }
+                }
+            }
+            println "Generated asset manifest: ${generatedManifest}"
+        }
+    }
+
+    tasks.register("copyAssetsToMain") {
+        dependsOn("generateAssetManifest")
+        doLast {
+            // Copy all assets from SDLTest/assets to src/main/assets
+            def externalAssets = file("${projectDir}/../../SDLTest/assets")
+            def mainAssets = file("${projectDir}/src/main/assets")
+
+            if (externalAssets.exists()) {
+                delete mainAssets  // Clear existing
+                copy {
+                    from externalAssets
+                    into mainAssets
+                }
+                println "Copied assets from ${externalAssets} to ${mainAssets}"
+            }
+        }
+    }
+
+    // Make preBuild depend on copyAssetsToMain
+    tasks.named("preBuild") {
+        dependsOn("copyAssetsToMain")
+    }
+
     namespace "org.main.babaylan_tales"
     compileSdkVersion 35
 
@@ -45,14 +94,27 @@ android {
                 .dependsOn("externalNativeBuild${variant.name.capitalize()}")
     }
 
-    if (!project.hasProperty('EXCLUDE_NATIVE_LIBS')) {
-        sourceSets {
-            main {
+    sourceSets {
+        main {
+            // Primary assets directory - your external SDLTest/assets
+            assets.srcDirs = ["${projectDir}/../../SDLTest/assets"]
+
+            // Optional: If you want to include any local assets too
+            // assets.srcDirs += ["src/main/assets"]
+
+            // Only add jniLibs conditionally
+            if (!project.hasProperty('EXCLUDE_NATIVE_LIBS')) {
                 jniLibs.srcDirs += [
                         "${projectDir}/app/build/intermediates/merged_jni_libs/debug/out"
                 ]
-                assets.srcDirs = ["${projectDir}/../../SDLTest/assets"]
             }
+        }
+    }
+
+    // Ensure asset_manifest.txt is generated BEFORE mergeAssets
+    applicationVariants.all { variant ->
+        variant.mergeAssetsProvider.configure {
+            dependsOn("generateAssetManifest")
         }
     }
 

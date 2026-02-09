@@ -30,8 +30,9 @@ Vector2D Camera::worldToScreenPoint(const Vector2D& worldPoint) const
 	Vector2D screenPoint = (worldPoint - this->position) / this->scale;
 	float radians = MathUtils::toRadians(this->rotation);
 
-	screenPoint.x = screenPoint.x + this->getHalfWidth();
-	screenPoint.y = -screenPoint.y + this->getHalfHeight();
+    // Convert to logical screen coordinates (0,0 is top-left)
+    screenPoint.x = screenPoint.x + this->getHalfWidth();
+    screenPoint.y = -screenPoint.y + this->getHalfHeight();
 	// TODO: fix rotations
 	//screenPoint.x = (screenPoint.x * std::cosf(radians)) - (screenPoint.y * std::sinf(radians));
 	//screenPoint.y = (screenPoint.y * std::sinf(radians)) + (screenPoint.x * std::cosf(radians));

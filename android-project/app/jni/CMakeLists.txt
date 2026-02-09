@@ -22,6 +22,17 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         ${SOURCES}
 )
 
+# Force the output name to "main" so the produced library is libmain.so
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME "main")
+
+# Copy the produced .so into the Gradle merged_jni folder so Gradle can package it
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+        ${MERGED_JNI_OUT}/$<TARGET_FILE_NAME:${CMAKE_PROJECT_NAME}>
+    COMMENT "Copying $<TARGET_FILE:${CMAKE_PROJECT_NAME}> -> ${MERGED_JNI_OUT}"
+)
+
 # Expose your local include dir
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include

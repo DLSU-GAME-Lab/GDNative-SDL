@@ -5,12 +5,13 @@ Camera* CameraManager::getCurrentCamera() const
     return this->pCamera;
 }
 
-void CameraManager::setWindowSize(SDL_Window* pWindow)
+// Set window size using width/height (logical size)
+void CameraManager::setWindowSize(float width, float height)
 {
-
-    int w, h;
-    SDL_GetWindowSizeInPixels(pWindow, &w, &h);
-    this->pCamera->setWindowSize(Vector2D(w, h));
+    this->windowSize = Vector2D(width, height);
+    if (this->pCamera) {
+        this->pCamera->setWindowSize(this->windowSize);
+    }
 }
 
 Vector2D CameraManager::getWindowSize() const

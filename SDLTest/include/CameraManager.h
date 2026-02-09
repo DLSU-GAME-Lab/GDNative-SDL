@@ -6,11 +6,14 @@ class CameraManager
 private:
     Camera* pCamera = nullptr;
     Vector2D windowSize;
+    SDL_Renderer* pRenderer = nullptr;
 
 public:
     Camera* getCurrentCamera() const;
-    void setWindowSize(SDL_Window* pWindow);
+    void setWindowSize(float width, float height);
+    //void setWindowSize(SDL_Window* pWindow);
     Vector2D getWindowSize() const;
+    void setRenderer(SDL_Renderer* renderer) { pRenderer = renderer; }
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

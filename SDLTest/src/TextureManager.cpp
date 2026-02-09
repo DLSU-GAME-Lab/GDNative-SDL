@@ -11,26 +11,43 @@
 #include <algorithm>
 #include <filesystem>
 #include "RendererContext.h"
+#include "ManifestLoader.h"
 
 // load: per-file cost dominated by I/O and decoding. Algorithmic container
 // insertions are O(1). As number of textures V increases, memory usage and
 // any global iterations over vecTexture scale with V.
 void TextureManager::load(std::string strFolderPath, std::string strName)
 {
-    // O(1) setup + O(fileSize) I/O to load from disk.
-    // Texture creation cost is high but fixed per file.
-    std::string strPath;
-    auto token = StringUtils::split(strFolderPath, '/');
-    if (token[0] == "Assets") strPath = strFolderPath;
-    else strPath = "Assets/" + strFolderPath;
+    std::string strPath = strFolderPath;
+    if (strPath.rfind("Assets/", 0) == 0) {
+        strPath = strPath.substr(strlen("Assets/"));
+    }
 
-    // DEBUG: print what path is being loaded
     std::cout << "[DEBUG] Attempting to load texture: " << strPath << std::endl;
 
-    SDL_Surface* surface = IMG_Load(strPath.c_str());
+    SDL_Surface* surface = nullptr;
+
+#ifdef __ANDROID__
+    SDL_IOStream* io = SDL_IOFromFile(strPath.c_str(), "rb");
+    if (!io) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_IOFromFile failed for '%s' : %s", strPath.c_str(), SDL_GetError());
+    } else {
+        surface = IMG_Load_IO(io, true); // closeio = true -> SDL will close io for us
+        if (!surface) {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load_IO failed for '%s' : %s", strPath.c_str(), SDL_GetError());
+        }
+    }
+#else
+    // Desktop fallback: load directly from filesystem
+    surface = IMG_Load(strPath.c_str());
     if (!surface) {
-        std::cerr << "[ERROR] : Problem loading image file [" << strPath << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load failed for '%s' : %s", strPath.c_str(), IMG_GetError());
+    }
+#endif
+
+    if (!surface) {
+        std::cerr << "[ERROR] Problem loading image file [" << strPath << "] "
+                  << "Error: " << SDL_GetError() << std::endl;
         return;
     }
 
@@ -39,37 +56,61 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
 
     if (!pTexture) {
         std::cerr << "[ERROR] : Failed to create texture for [" << strPath << "] "
-            << "Error: " << SDL_GetError() << std::endl;
+                  << "Error: " << SDL_GetError() << std::endl;
         return;
     }
 
-    // O(1): push_back into containers.
+    // store texture
     this->mapTexture[strName].push_back(pTexture);
     this->vecTexture.push_back(pTexture);
+
+    SDL_Log("Loaded texture '%s' as '%s'", strPath.c_str(), strName.c_str());
 }
 
 // loadFromFolder: O(F) where F = number of files processed. Total wall-time
 // grows with sum of per-file I/O and decode costs.
 void TextureManager::loadFromFolder(std::string strPath, std::string strName)
 {
-    // O(F): loops through files in a folder, calling load() for each.
-    // F = number of files in folder.
-    
-    std::string directory = "Assets/" + strPath;
-    if (!std::filesystem::exists(directory.c_str()))
-    {
-        std::cerr << "[ERROR] : path [" << directory << "] " << "does no exist." << std::endl;
+#ifdef __ANDROID__
+    // read asset_manifest.txt (generated at build time) and load
+    // every asset that starts with the requested folder prefix.
+    std::string manifestFile = "asset_manifest.txt";
+    auto entries = readAssetManifest(manifestFile);
+    if (entries.empty()) {
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "loadFromFolder: empty manifest '%s'", manifestFile.c_str());
         return;
     }
-    
-    for (const auto& entry : std::filesystem::directory_iterator(directory))
-    {
-        if (std::filesystem::is_regular_file(entry.status()))
-        {
+
+    // normalize query prefix: may be "sprites/" or "Assets/sprites/"
+    std::string prefix = strPath;
+    if (prefix.rfind("Assets/", 0) == 0) prefix = prefix.substr(strlen("Assets/"));
+    if (prefix.size() && prefix.back() != '/') prefix.push_back('/');
+
+    for (const auto& e : entries) {
+        if (e.rfind(prefix, 0) == 0) {
+            // entry starts with prefix -> load it
+            this->load(e, strName); // e is asset-relative like "title_screen_pngs/Sprite_bg.png"
+        }
+    }
+#else
+    // Desktop: treat strPath as a real filesystem directory
+    std::string directory = strPath;
+    if (directory.rfind("Assets/", 0) == 0) {
+        directory = directory.substr(strlen("Assets/"));
+    }
+    // If caller passed relative path, prefix with Assets/ like original behaviour
+    std::string folder = "Assets/" + directory;
+    if (!std::filesystem::exists(folder)) {
+        std::cerr << "[ERROR] : path [" << folder << "] does not exist." << std::endl;
+        return;
+    }
+    for (const auto& entry : std::filesystem::directory_iterator(folder)) {
+        if (std::filesystem::is_regular_file(entry.status())) {
             std::string path = entry.path().generic_string();
             this->load(path, strName);
         }
     }
+#endif
 }
 
 // loadFromText: O(1) algorithmically; TTF rendering cost is an expensive

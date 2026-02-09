@@ -1,23 +1,28 @@
 #include "AudioManager.h"
 #include <iostream>
 
+
 void AudioManager::load(std::string strPath, std::string strName)
 {
-    std::string path = "Assets/" + strPath;
-    Uint8* audioBuffer = 0;
+    Uint8* audioBuffer = nullptr;
     Uint32 audioLength = 0;
-	std::cout << "[DEBUG] Loading Audio Clip from: " << path << std::endl;
-    if (SDL_LoadWAV(path.c_str(), &this->mSpec, &audioBuffer, &audioLength) != NULL)
-    {
-        AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
-        this->vecAudioClip.push_back(pAudioClip);
-        this->mapAudioClip[strName] = pAudioClip;
+    SDL_AudioSpec spec{};
+
+    std::cout << "[DEBUG] Loading Audio Clip from: " << strPath << std::endl;
+
+    // returns bool (true = success)
+    if (!SDL_LoadWAV(strPath.c_str(), &spec, &audioBuffer, &audioLength)) {
+        std::cerr << "[ERROR] SDL_LoadWAV failed for [" << strPath
+                  << "]: " << SDL_GetError() << std::endl;
+        return;
     }
-    else
-    {
-        std::cerr << "[ERROR] : Failed to create Audio Clip for [" << path << "] "
-            << "Error: " << SDL_GetError() << std::endl;
-    }
+
+    AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
+    this->vecAudioClip.push_back(pAudioClip);
+    this->mapAudioClip[strName] = pAudioClip;
+
+    std::cout << "[DEBUG] Loaded audio '" << strName
+              << "' size=" << audioLength << " bytes" << std::endl;
 }
 
 void AudioManager::unload(std::string strName)
@@ -47,21 +52,42 @@ AudioClip* AudioManager::getAudioClip(std::string strName)
 
 void AudioManager::play(AudioPlayer* pPlayer)
 {
-	this->vecPlaying.push_back(pPlayer);
-    if (!pPlayer->strKey.empty()) this->mapPlaying[pPlayer->strKey] = pPlayer;
-    SDL_AudioStream* pStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &mSpec, audioStreamCallback, pPlayer);
-	pPlayer->pStream = pStream;
+    if (!pPlayer) {
+        std::cerr << "[AudioManager] play() called with null player" << std::endl;
+        return;
+    }
+    if (!pPlayer->pClip) {
+        std::cerr << "[AudioManager] play() player has null clip (key=" << pPlayer->strKey << ")" << std::endl;
+        return;
+    }
 
-    if (!SDL_PutAudioStreamData(pPlayer->pStream, pPlayer->pClip->getBuffer(), pPlayer->pClip->getLength()))
-    {
-        std::cout << SDL_GetError() << std::endl;
+    // local snapshot to avoid race with unload
+    const Uint8* clipBuf = pPlayer->pClip->getBuffer();
+    const Uint32  clipLen = pPlayer->pClip->getLength();
+    if (!clipBuf || clipLen == 0) {
+        std::cerr << "[AudioManager] play() clip buffer empty for '" << pPlayer->pClip->getName() << "'" << std::endl;
+        return;
+    }
+
+    this->vecPlaying.push_back(pPlayer);
+    if (!pPlayer->strKey.empty()) this->mapPlaying[pPlayer->strKey] = pPlayer;
+
+    SDL_AudioStream* pStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &mSpec, audioStreamCallback, pPlayer);
+    pPlayer->pStream = pStream;
+    if (!pPlayer->pStream) {
+        std::cerr << "[AudioManager] SDL_OpenAudioDeviceStream failed: " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    if (!SDL_PutAudioStreamData(pPlayer->pStream, clipBuf, clipLen)) {
+        std::cerr << "[AudioManager] SDL_PutAudioStreamData failed: " << SDL_GetError() << std::endl;
     }
 
     if (pPlayer->ETag != AudioGroupTag::NONE)
         SDL_SetAudioStreamGain(pPlayer->pStream, AudioManager::getInstance()->getVolume(pPlayer->ETag));
 
     if (SDL_ResumeAudioStreamDevice(pPlayer->pStream))
-	    std::cout << "[Audio Manager] LOG: Playing audio clip \"" << pPlayer->pClip->getName() << "\"" << std::endl;
+        std::cout << "[Audio Manager] LOG: Playing audio clip \"" << pPlayer->pClip->getName() << "\"" << std::endl;
 }
 
 void AudioManager::stop(std::string strKey)

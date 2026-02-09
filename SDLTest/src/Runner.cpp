@@ -52,8 +52,6 @@ Runner::Runner()
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_Init failed (%s)", SDL_GetError());
 	}
 
-
-
 	std::cout << "|===========================================|\n";
 	std::cout << "|----------| SDL VERSION: " <<
 		SDL_MAJOR_VERSION << "." <<
@@ -72,28 +70,74 @@ Runner::Runner()
 	float scaleY = (float)screenHeight / gameHeight;
 	float scale = (std::min)(scaleX, scaleY);
 
-	int windowHeight = gameHeight * scale;
-	int windowWidth = gameWidth * scale;
+	int windowHeight = gameHeight;
+	int windowWidth = gameWidth;
 
-	pWindow = SDL_CreateWindow(strWindowTitle.c_str(), gameWidth, gameHeight, SDL_WINDOW_RESIZABLE);
+    // SDL3 on Android typically runs in fullscreen
+    Uint32 windowFlags = SDL_WINDOW_RESIZABLE;
 
-	this->pRenderer = SDL_CreateRenderer(this->pWindow, NULL);
-	if (this->pRenderer == NULL)
-	{
-		printf("ERROR");
-	}
-	SDL_SetRenderLogicalPresentation(this->pRenderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX);
+#ifdef __ANDROID__
+    windowFlags |= SDL_WINDOW_FULLSCREEN;
+    windowWidth = 0;  // Let SDL choose appropriate size
+    windowHeight = 0; // Let SDL choose appropriate size
+#endif
 
-	//initialize systems
+    // --- Create Window ---
+    pWindow = SDL_CreateWindow(
+            strWindowTitle.c_str(),
+            windowWidth,
+            windowHeight,
+            windowFlags
+    );
+
+    if (!pWindow) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                     "SDL_CreateWindow failed: %s", SDL_GetError());
+    } else {
+        SDL_Log("Window created: %dx%d", gameWidth, gameHeight);
+    }
+
+    // --- Create Renderer ---
+    pRenderer = SDL_CreateRenderer(pWindow, NULL);
+    if (!pRenderer) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                     "SDL_CreateRenderer failed: %s", SDL_GetError());
+    } else {
+        SDL_Log("Renderer created successfully");
+    }
+
+    // --- Get actual window size (important for Android) ---
+    int actualWidth, actualHeight;
+    SDL_GetWindowSize(pWindow, &actualWidth, &actualHeight);
+    SDL_Log("Actual window size: %dx%d", actualWidth, actualHeight);
+
+    // --- Logical presentation ---
+    if (!SDL_SetRenderLogicalPresentation(
+            pRenderer,
+            gameWidth,
+            gameHeight,
+            SDL_LOGICAL_PRESENTATION_LETTERBOX))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                     "SDL_SetRenderLogicalPresentation failed: %s",
+                     SDL_GetError());
+    } else {
+        SDL_Log("Logical presentation set: %dx%d -> %dx%d",
+                gameWidth, gameHeight, actualWidth, actualHeight);
+    }
+
+    //initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	CameraManager::initialize();
 	RendererContext::initialize(this->pRenderer);
-	// setWindowSize likely O(1) or O(#render targets)
-	CameraManager::getInstance()->setWindowSize(this->pWindow);
-	SceneTransitionManager::initialize();
+
+    // Use logical size
+    CameraManager::getInstance()->setWindowSize(gameWidth, gameHeight);
+
+    SceneTransitionManager::initialize();
 	FontManager::initialize();
 	AudioManager::initialize();
 	UIManager::initialize(this->pWindow, this->pRenderer);
@@ -183,7 +227,7 @@ void Runner::run()
 
 			case SDL_EVENT_WINDOW_RESIZED:
 				// setWindowSize likely O(1) or O(#render targets)
-				CameraManager::getInstance()->setWindowSize(this->pWindow);
+				//CameraManager::getInstance()->setWindowSize(this->pWindow);
 				break;
 
 			default:
@@ -271,7 +315,7 @@ void Runner::update(float fDeltaTime)
 // can dominate wall-clock time (expensive constants) especially as R grows.
 void Runner::render()
 {
-	// pick a clear color once (optional)
+    // pick a clear color once (optional)
 	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
 	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255); // O(1)
 	SDL_RenderClear(pRenderer); // O(1)

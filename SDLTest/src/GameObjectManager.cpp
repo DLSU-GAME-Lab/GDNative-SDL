@@ -97,13 +97,33 @@ void GameObjectManager::deleteObjectByName(std::string strName)
 // Scaling note: large G during teardown can produce long blocking spikes.
 void GameObjectManager::deleteAllObjects()
 {
-    // Iterate once: erase from map and delete each pointer.
-    for (int i = 0; i < this->vecGameObject.size(); i++)
-        delete this->vecGameObject[i];
+    if (this->vecGameObject.empty())
+    {
+        std::cout << "[GameObjectManager] No objects to delete.\n";
+        return;
+    }
 
-    // Clear containers, O(1) operations relative to content
+    // Collect root objects (objects without parents)
+    std::vector<AGameObject*> rootObjects;
+    for (AGameObject* obj : this->vecGameObject)
+    {
+        if (obj && obj->getParent() == nullptr)
+        {
+            rootObjects.push_back(obj);
+        }
+    }
+
+    // Delete only root objects, their destructors handle children
+    for (AGameObject* obj : rootObjects)
+    {
+        delete obj;
+    }
+
+    // Clear containers
     this->vecGameObject.clear();
     this->mapGameObject.clear();
+
+    std::cout << "[GameObjectManager] All objects deleted.\n";
 }
 
 void GameObjectManager::cleanUpDeletedObjects()

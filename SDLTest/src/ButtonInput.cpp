@@ -1,14 +1,34 @@
 #include "ButtonInput.h"
 #include "CameraManager.h"
 
+bool ButtonInput::contains(Vector2D inputPos) const
+{
+    if (!this->pSprite) return false;
+
+    SDL_FRect spriteRect = this->pSprite->getRect();
+    SDL_FRect pointRect = { inputPos.x, inputPos.y, 1, 1 };
+
+    return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
+}
+
+bool ButtonInput::contains() const
+{
+    if (!this->pSprite) return false;
+
+    SDL_FRect spriteRect = this->pSprite->getRect();
+    SDL_FRect pointRect = { this->mousePos.x, this->mousePos.y, 1, 1 };
+
+    return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
+}
+
 ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 {
-	this->pSprite = pSprite;
-	this->bHolding = false;
-	this->bDragging = false;
-	this->bClicked = false;
-	this->bRightClick = false;
-	this->bLefttClick = false;
+    this->pSprite = pSprite;
+    this->bHolding = false;
+    this->bDragging = false;
+    this->bClicked = false;
+    this->bRightClick = false;
+    this->bLefttClick = false;
 }
 
 ButtonInput::~ButtonInput()
@@ -23,25 +43,71 @@ void ButtonInput::onAttach()
 
 void ButtonInput::perform()
 {
-	if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
-		this->onMouseHovered(Vector2D(eEvent->motion.x, eEvent->motion.y));
+    Vector2D inputPos;
+    bool hasInput = false;
+    Uint8 button = SDL_BUTTON_LEFT; // default for touch
 
-	if (this->contains())
-	{
-		switch (eEvent->type)
-		{
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-			this->onMouseButtonDown(eEvent->button.button);
-			break;
+    // Handle mouse events (for desktop testing)
+    if (eEvent->type == SDL_EVENT_MOUSE_MOTION)
+    {
+        inputPos = Vector2D(eEvent->motion.x, eEvent->motion.y);
+        hasInput = true;
+        this->onMouseHovered(inputPos);
+    }
+    else if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+             eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP)
+    {
+        inputPos = Vector2D(eEvent->button.x, eEvent->button.y);
+        button = eEvent->button.button;
+        hasInput = true;
+    }
+        // Handle touch events (for Android)
+    else if (eEvent->type == SDL_EVENT_FINGER_MOTION)
+    {
+        // Convert normalized coordinates (0.0-1.0) to logical coordinates
+        Vector2D windowSize = CameraManager::getInstance()->getWindowSize();
+        inputPos = Vector2D(
+                eEvent->tfinger.x * windowSize.x,
+                eEvent->tfinger.y * windowSize.y
+        );
+        hasInput = true;
+        this->onMouseHovered(inputPos);
+    }
+    else if (eEvent->type == SDL_EVENT_FINGER_DOWN ||
+             eEvent->type == SDL_EVENT_FINGER_UP)
+    {
+        // Convert normalized coordinates (0.0-1.0) to logical coordinates
+        Vector2D windowSize = CameraManager::getInstance()->getWindowSize();
+        inputPos = Vector2D(
+                eEvent->tfinger.x * windowSize.x,
+                eEvent->tfinger.y * windowSize.y
+        );
+        hasInput = true;
+    }
 
-		case SDL_EVENT_MOUSE_BUTTON_UP:
-			this->onMouseButtonUp(eEvent->button.button);
-			break;
+    if (!hasInput) return;
 
-		default:
-			break;
-		}
-	}
+    // Update mouse position for hover
+    if (eEvent->type == SDL_EVENT_MOUSE_MOTION ||
+        eEvent->type == SDL_EVENT_FINGER_MOTION)
+    {
+        this->onMouseHovered(inputPos);
+    }
+
+    // Handle button/touch down and up if position is within bounds
+    if (this->contains(inputPos))
+    {
+        if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN ||
+            eEvent->type == SDL_EVENT_FINGER_DOWN)
+        {
+            this->onMouseButtonDown(button);
+        }
+        else if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP ||
+                 eEvent->type == SDL_EVENT_FINGER_UP)
+        {
+            this->onMouseButtonUp(button);
+        }
+    }
 }
 
 Vector2D ButtonInput::getMousePos() const
@@ -123,14 +189,4 @@ void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 		this->bLefttClick = true;
 	}
 
-}
-
-bool ButtonInput::contains() const
-{
-	if (!this->pSprite) return false;
-
-	SDL_FRect spriteRect = this->pSprite->getRect();
-	SDL_FRect pointRect = { this->mousePos.x, this->mousePos.y, 1, 1 };
-
-	return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }

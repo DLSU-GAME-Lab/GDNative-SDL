@@ -15,7 +15,8 @@ AGameObject(strName)
 
 Text::~Text()
 {
-	AGameObject::~AGameObject();
+	//Base class destructor is called automatically, don't call it explicitly
+    //If need custom cleanup, do it here, but DON'T call AGameObject::~AGameObject()
 }
 
 void Text::setMessage(const std::string& strMessage)

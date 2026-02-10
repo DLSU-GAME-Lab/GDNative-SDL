@@ -39,5 +39,6 @@ private:
 	virtual void onMouseButtonUp(Uint8 mouseButton);
 
 	bool contains() const;
+    bool contains(Vector2D inputPos) const;
 };
 

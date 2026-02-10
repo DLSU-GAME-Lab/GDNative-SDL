@@ -247,6 +247,13 @@ void Runner::run()
 			{
 				MetricsManager::getInstance()->recordInputEvent();
 			}
+
+            if (e.type == SDL_EVENT_FINGER_DOWN || e.type == SDL_EVENT_FINGER_UP ||
+                e.type == SDL_EVENT_FINGER_MOTION)
+            {
+                SDL_Log("Touch event: type=%d, x=%.2f, y=%.2f",
+                        e.type, e.tfinger.x, e.tfinger.y);
+            }
 		}
 
 		// ---------- TIMING ----------

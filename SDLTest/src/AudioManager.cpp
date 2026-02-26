@@ -8,6 +8,14 @@ void AudioManager::load(std::string strPath, std::string strName)
     Uint32 audioLength = 0;
     SDL_AudioSpec spec{};
 
+    #ifdef __ANDROID__
+    if (strPath.rfind("Assets/", 0) == 0)
+        strPath = strPath.substr(strlen("Assets/"));
+#else
+    if (strPath.rfind("Assets/", 0) != 0)
+        strPath = "Assets/" + strPath;
+#endif
+
     std::cout << "[DEBUG] Loading Audio Clip from: " << strPath << std::endl;
 
     // returns bool (true = success)

@@ -19,13 +19,17 @@
 void TextureManager::load(std::string strFolderPath, std::string strName)
 {
     std::string strPath = strFolderPath;
-    if (strPath.rfind("Assets/", 0) == 0) {
-        strPath = strPath.substr(strlen("Assets/"));
-    }
-
-    std::cout << "[DEBUG] Attempting to load texture: " << strPath << std::endl;
-
     SDL_Surface* surface = nullptr;
+
+#ifdef __ANDROID__
+    // Android: strip Assets/ prefix for asset manager
+    if (strPath.rfind("Assets/", 0) == 0)
+        strPath = strPath.substr(strlen("Assets/"));
+#else
+    // Desktop: ensure Assets/ prefix is present
+    if (strPath.rfind("Assets/", 0) != 0)
+        strPath = "Assets/" + strPath;
+#endif
 
 #ifdef __ANDROID__
     SDL_IOStream* io = SDL_IOFromFile(strPath.c_str(), "rb");
@@ -41,7 +45,7 @@ void TextureManager::load(std::string strFolderPath, std::string strName)
     // Desktop fallback: load directly from filesystem
     surface = IMG_Load(strPath.c_str());
     if (!surface) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load failed for '%s' : %s", strPath.c_str(), IMG_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Load failed for '%s' : %s", strPath.c_str(), SDL_GetError());
     }
 #endif
 

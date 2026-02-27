@@ -70,7 +70,7 @@ android {
             cmake {
                 cppFlags "-Wall -std=c++17 -D__ANDROID_USE_LIBCXX=1"
                 arguments "-DANDROID_STL=c++_shared",
-                        "-DANDROID_USE_LEGACY_TOOLCHAIN_FILE=OFF"
+                        "-DANDROID_USE_LEGACY_TOOLCHAIN_FILE=ON"
             }
         }
     }
@@ -110,6 +110,9 @@ android {
             }
         }
     }
+    lint {
+        abortOnError false
+    }
 
     // Ensure asset_manifest.txt is generated BEFORE mergeAssets
     applicationVariants.all { variant ->
@@ -118,9 +121,6 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-    }
 }
 
 dependencies {

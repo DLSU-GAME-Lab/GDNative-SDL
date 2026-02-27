@@ -5,9 +5,16 @@
 #include <ctime>
 #include <cstdlib>
 #include <algorithm>
+
 #include "EventBroadcaster.h"
 #include "AudioManager.h"
 #include "Sprite.h"
+
+#include "GUIUtils.h"
+#include "GUIButton.h"
+#include "SceneSwitcher.h"
+#include "TurnCounter.h"
+#include "Background.h"
 
 void GemManager::onAttach()
 {
@@ -30,6 +37,25 @@ void GemManager::perform()
 
 void GemManager::loadResources()
 {
+    TextureManager::getInstance()->load("title_screen_pngs/Sprite_bg.png", "Level_Background");
+    TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "UI_Container");
+    TextureManager::getInstance()->load("title_screen_pngs/UI_mermaid.png", "UI_Mermaid");
+    TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
+    TextureManager::getInstance()->load("Menu/Sprite_UI_setupicon.png", "Settings");
+    TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
+    TextureManager::getInstance()->load("Menu/Sprite_UI_Booster.png", "UI_Booster");
+    TextureManager::getInstance()->load("Menu/Sprite_UI_Avatar_frame.png", "Avatar_Frame");
+    TextureManager::getInstance()->load("Menu/UI_Panel.png", "UI_Panel");
+    TextureManager::getInstance()->load("Menu/Sprite_ribbon_victory.png", "Victory_Ribbon");
+    TextureManager::getInstance()->load("Menu/Sprite_ribbon_defeat.png", "Defeat_Ribbon");
+    TextureManager::getInstance()->load("Menu/Sprite_Button_green.png", "Green_Button");
+    TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
+    TextureManager::getInstance()->load("Sprite_Bubble_Small.png", "Bubble");
+    TextureManager::getInstance()->load("Color_Target.png", "Color_Target");
+    TextureManager::getInstance()->load("Eliminate_Hori.png", "Eliminate_Hori");
+    TextureManager::getInstance()->load("Eliminate_Vert.png", "Eliminate_Vert");
+    TextureManager::getInstance()->load("Small_Bomb.png", "BombS");
+
     TextureManager::getInstance()->load("Square.png", "Selector");
     TextureManager::getInstance()->load("gems/SP_Gem_Yellow.png", "Yellow");
     TextureManager::getInstance()->load("gems/SP_Gem_Blue.png", "Blue");
@@ -38,7 +64,6 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "Red");
     TextureManager::getInstance()->load("gems/SP_Gem_White.png", "White");
     TextureManager::getInstance()->load("Box.png", "Crate");
-    TextureManager::getInstance()->load("Small_Bomb.png", "BombS");
 
 	AudioManager::getInstance()->load("sounds/SFX/Swap_SFX.wav", "Swap");
 	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_1.wav", "Match_1");
@@ -55,6 +80,23 @@ void GemManager::loadResources()
 
 void GemManager::unloadResources()
 {
+    TextureManager::getInstance()->unload("Level_Background");
+    TextureManager::getInstance()->unload("Lower_UI_Container");
+    TextureManager::getInstance()->unload("UI_Mermaid");
+    TextureManager::getInstance()->unload("Settings");
+    TextureManager::getInstance()->unload("Avatar_Frame");
+    TextureManager::getInstance()->unload("UI_Panel");
+    TextureManager::getInstance()->unload("UI_Booster");
+    TextureManager::getInstance()->unload("Design_BG");
+    TextureManager::getInstance()->unload("Level_Container");
+    TextureManager::getInstance()->unload("Level_Container_Extra");
+    TextureManager::getInstance()->unload("Top_UI_Container");
+    TextureManager::getInstance()->unload("Victory_Ribbon");
+    TextureManager::getInstance()->unload("Defeat_Ribbon");
+    TextureManager::getInstance()->unload("Green_Button");
+    TextureManager::getInstance()->unload("Bubble");
+    TextureManager::getInstance()->unload("BombS");
+
     TextureManager::getInstance()->unload("Selector");
     TextureManager::getInstance()->unload("Yellow");
     TextureManager::getInstance()->unload("Blue");
@@ -63,7 +105,6 @@ void GemManager::unloadResources()
     TextureManager::getInstance()->unload("Red");
     TextureManager::getInstance()->unload("White");
     TextureManager::getInstance()->unload("Crate");
-    TextureManager::getInstance()->unload("BombS");
 
     AudioManager::getInstance()->unload("Swap");
     AudioManager::getInstance()->unload("Match_1");
@@ -76,6 +117,74 @@ void GemManager::unloadResources()
     AudioManager::getInstance()->unload("Win_Laugh");
     AudioManager::getInstance()->unload("Lose_SFX");
     AudioManager::getInstance()->unload("Lose_Laugh");
+}
+
+void GemManager::loadGUI()
+{
+    Sprite* pLowerUIContainer = new Sprite("Lower_UI_Container", "UI_Container", Vector2D(0, 0), Vector2D(10, 2), 0.0f, false);
+    GUIUtils::setGUIBotCenter(pLowerUIContainer, Vector2D(-20));
+    GameObjectManager::getInstance()->addObject(pLowerUIContainer);
+
+	std::vector<Vector2D> boosterPositions;
+
+    for (int i = 0; i < 4; i++)
+    {
+        Sprite* pBooster = new Sprite("Booster_" + std::to_string(i), "UI_Booster", Vector2D(0, 0), Vector2D(0.7f), 0.0f, false);
+		boosterPositions.push_back(Vector2D(80 + (i * 130), -70));
+        GUIUtils::setGUIBotLeft(pBooster, boosterPositions[i]);
+        GameObjectManager::getInstance()->addObject(pBooster);
+    }
+
+	const Vector2D posOffset(-6, -2);
+    Sprite* pBombPowerup = new Sprite("Bomb_Powerup", "BombS", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
+    GUIUtils::setGUIBotLeft(pBombPowerup, boosterPositions[0] + posOffset);
+    GameObjectManager::getInstance()->addObject(pBombPowerup);
+
+    Sprite* pVertPowerup = new Sprite("Vert_Powerup", "Eliminate_Vert", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
+    GUIUtils::setGUIBotLeft(pVertPowerup, boosterPositions[1] + posOffset);
+    GameObjectManager::getInstance()->addObject(pVertPowerup);
+
+    Sprite* pHoriPowerup = new Sprite("Hori_Powerup", "Eliminate_Hori", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
+    GUIUtils::setGUIBotLeft(pHoriPowerup, boosterPositions[2] + posOffset);
+    GameObjectManager::getInstance()->addObject(pHoriPowerup);
+
+    Sprite* pColorPowerup = new Sprite("Color_Powerup", "Color_Target", Vector2D(0, 0), Vector2D(0.35f), 0.0f, false);
+    GUIUtils::setGUIBotLeft(pColorPowerup, boosterPositions[3] + posOffset);
+    GameObjectManager::getInstance()->addObject(pColorPowerup);
+
+    GUIButton* pSettings = new GUIButton("Settings", "Settings");
+    GUIUtils::setGUIBotRight(pSettings, Vector2D(-40, -90));
+    pSettings->setScale(Vector2D(.5f, .5f));
+    GameObjectManager::getInstance()->addObject(pSettings);
+    SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
+    pSettings->attachComponent(pTitleSwitcher);
+
+    Sprite* pUpperUIContainer = new Sprite("Upper_UI_Container", "Top_UI_Container", Vector2D(0, 0), Vector2D(100, 1.25f), 0.0f, false);
+    GUIUtils::setGUITopCenter(pUpperUIContainer, Vector2D(0, 40));
+    GameObjectManager::getInstance()->addObject(pUpperUIContainer);
+
+    Sprite* pUIContainerExtra = new Sprite("Level_Container_Extra", "Level_Container_Extra", Vector2D(0, 0), Vector2D(0.8f, 1), 0.0f, false);
+    GUIUtils::setGUITopCenter(pUIContainerExtra, Vector2D(0, 40));
+    GameObjectManager::getInstance()->addObject(pUIContainerExtra);
+
+    Sprite* pUIAvatarFrame = new Sprite("Avatar_Frame", "Avatar_Frame", Vector2D(0.0f), Vector2D(0.7f), 0.0f, false);
+    GUIUtils::setGUITopCenter(pUIAvatarFrame, Vector2D(0, 120));
+    GameObjectManager::getInstance()->addObject(pUIAvatarFrame);
+
+    Sprite* pUIMermaid = new Sprite("UI_Mermaid", "UI_Mermaid", Vector2D(0.0f), Vector2D(0.5f), 0.0f, false);
+    GUIUtils::setGUITopCenter(pUIMermaid, Vector2D(0, 120));
+    GameObjectManager::getInstance()->addObject(pUIMermaid);
+
+    Sprite* pUIGemsPanel = new Sprite("Gems_Panel", "UI_Panel", Vector2D(0.0f), Vector2D(1.2f), 0.0f, false);
+    GUIUtils::setGUITopLeft(pUIGemsPanel, Vector2D(100, 80));
+    GameObjectManager::getInstance()->addObject(pUIGemsPanel);
+
+    Sprite* pUIMovesPanel = new Sprite("Moves_Panel", "UI_Panel", Vector2D(0.0f), Vector2D(1.2f), 0.0f, false);
+    GUIUtils::setGUITopRight(pUIMovesPanel, Vector2D(-100, 80));
+    GameObjectManager::getInstance()->addObject(pUIMovesPanel);
+
+    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(220, 475), Vector2D(1, 1));
+    GameObjectManager::getInstance()->addObject(pTurnCount);
 }
 
 // user selected a gem; handle selection, swapping, checking, and chain reactions

@@ -38,7 +38,7 @@ void Title_Scene::onLoadObjects()
     Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(70.f, 1.17f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 
-    BubbleManager::initialize(50);
+    BubbleManager::initialize(100);
 
     Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
     GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);

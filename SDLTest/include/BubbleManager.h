@@ -14,8 +14,8 @@ private:
     const Uint16 nSpawnCount = 3;
     const float fMinSpawnDelay = 0.5f;
     const float fMaxSpawnDelay = 3.0f;
-    const float fMinScale = 0.5f;
-    const float fMaxScale = 1.0f;
+    const float fMinScale = 0.2f;
+    const float fMaxScale = 0.5f;
     float fTicks;
 
 public:

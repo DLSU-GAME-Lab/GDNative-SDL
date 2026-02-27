@@ -39,6 +39,7 @@ public:
 
     static void loadResources();
     static void unloadResources();
+    static void loadGUI();
 
     void setSelected(Gem* pGem);
     

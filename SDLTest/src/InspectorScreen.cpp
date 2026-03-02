@@ -46,7 +46,7 @@ void InspectorScreen::DrawUI()
     int sceneIndex = (int)SceneManager::getInstance()->getLoadedSceneTag();
 
     std::string scenesText = "Scenes registered: " + std::to_string(scenes);
-    ImGui::Text(scenesText.c_str());
+    ImGui::Text("%s", scenesText.c_str());
     if (ImGui::InputInt("Scene Index", &sceneIndex))
     {
         selectedObject = NULL;
@@ -62,8 +62,8 @@ void InspectorScreen::DrawUI()
 
     std::string mousePosText = "Mouse Screen Position: (" + std::to_string((int)mousePos.x) + ", " + std::to_string((int)mousePos.y) + ")";
     std::string mouseWorldPosText = "Mouse World Position: (" + std::to_string((int)mouseWorldPos.x) + ", " + std::to_string((int)mouseWorldPos.y) + ")";
-    ImGui::Text(mousePosText.c_str());
-    ImGui::Text(mouseWorldPosText.c_str());
+    ImGui::Text("%s", mousePosText.c_str());
+    ImGui::Text("%s", mouseWorldPosText.c_str());
 
     ImGuiChildFlags childFlags =
         ImGuiChildFlags_Borders |
@@ -127,7 +127,7 @@ void InspectorScreen::showTransform(ImGuiChildFlags childFlags)
         else
             objectText = "Game Object: " + this->selectedObject->getName();
 
-        ImGui::Text(objectText.c_str());
+        ImGui::Text("%s", objectText.c_str());
         Vector2D pos = this->selectedObject->getPos();
         float rot = this->selectedObject->getRot();
         Vector2D scale = this->selectedObject->getScale();

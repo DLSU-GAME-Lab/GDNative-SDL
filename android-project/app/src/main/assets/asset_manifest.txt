@@ -32,6 +32,7 @@ Menu/Sprite_UI_setupicon.png
 Menu/Sprite_UI_TopBar_BG_2.png
 Menu/Sprite_UI_TopBar_BG_round.png
 Menu/Texture_CursorHand.png
+Menu/UI_Panel.png
 Rope.png
 Rope_1.png
 SemiTransparentBlackBackground.PNG
@@ -52,7 +53,9 @@ Sprite_Bubble_Big.png
 Sprite_Bubble_Small.png
 Square.png
 title_screen_pngs/Background_Objects.png
+title_screen_pngs/mermaid.png
 title_screen_pngs/Sprite_bg.png
 title_screen_pngs/Sprite_GemHunterMatch_Logo.png
 title_screen_pngs/Sprite_LevelEntry_Bg.png
 title_screen_pngs/Sprite_Window.png
+title_screen_pngs/UI_mermaid.png

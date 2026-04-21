@@ -106,6 +106,28 @@ Runner::Runner()
         SDL_Log("Renderer created successfully");
     }
 
+	// --- Create GPU Device ---
+	pGPUDevice = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
+	if (!pGPUDevice)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+			"SDL_GPUDevice failed: %s", SDL_GetError());
+	}
+	else
+	{
+		SDL_Log("GPU Device created successfully");
+	}
+
+	if (SDL_ClaimWindowForGPUDevice(pGPUDevice,pWindow) == false)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+			"SDL_ClaimWindowForGPUDevice failed: %s", SDL_GetError());
+	}
+	else
+	{
+		SDL_Log("Window claimed for GPU Device successfully");
+	}
+
     // --- Get actual window size (important for Android) ---
     int actualWidth, actualHeight;
     SDL_GetWindowSize(pWindow, &actualWidth, &actualHeight);
@@ -132,7 +154,7 @@ Runner::Runner()
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	CameraManager::initialize();
-	RendererContext::initialize(this->pRenderer);
+	RendererContext::initialize(this->pRenderer, this->pGPUDevice);
 
     // Use logical size
     CameraManager::getInstance()->setWindowSize(gameWidth, gameHeight);
@@ -170,6 +192,7 @@ Runner::~Runner()
 	MetricsManager::destroy();
 	RendererContext::destroy();
 
+	SDL_DestroyGPUDevice(this->pGPUDevice);
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
 }

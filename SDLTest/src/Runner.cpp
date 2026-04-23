@@ -147,12 +147,6 @@ Runner::Runner()
                      "SDL_SetRenderLogicalPresentation failed: %s",
                      SDL_GetError());
     } else {
-        SDL_Log("Logical presentation set: %dx%d -> %dx%d",
-                gameWidth, gameHeight, actualWidth, actualHeight);
-		SDL_Rect viewport;
-		SDL_GetRenderViewport(pRenderer, &viewport);
-		SDL_Log("Viewport: x=%.1f y=%.1f w=%.1f h=%.1f",
-			viewport.x, viewport.y, viewport.w, viewport.h);
 
 		int actualPixelW, actualPixelH;
 		SDL_GetWindowSizeInPixels(pWindow, &actualPixelW, &actualPixelH);
@@ -160,11 +154,9 @@ Runner::Runner()
 		CameraManager::getInstance()->setActualWindowSize(actualPixelW, actualPixelH);	
     }
 	SDL_FRect letterboxRect;
-	SDL_Log("Check");
+
 	SDL_GetRenderLogicalPresentationRect(pRenderer, &letterboxRect);
-	SDL_Log("Check");
 	CameraManager::getInstance()->setLetterboxRect(letterboxRect.x, letterboxRect.y, letterboxRect.w, letterboxRect.h);
-	SDL_Log("Check");
 
     //initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;
@@ -173,8 +165,6 @@ Runner::Runner()
 	TextureManager::initialize(this->pRenderer);
 	
 	RendererContext::initialize(this->pRenderer, this->pGPUDevice);
-
-
     SceneTransitionManager::initialize();
 	FontManager::initialize();
 	AudioManager::initialize();

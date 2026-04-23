@@ -66,23 +66,49 @@ void ButtonInput::perform()
     {
         // Convert normalized coordinates (0.0-1.0) to logical coordinates
         Vector2D windowSize = CameraManager::getInstance()->getWindowSize();
-        inputPos = Vector2D(
-                eEvent->tfinger.x * windowSize.x,
-                eEvent->tfinger.y * windowSize.y
-        );
+        Vector2D offset = CameraManager::getInstance()->getLetterboxOffset();
+        Vector2D size = CameraManager::getInstance()->getLetterboxScale();
+        Vector2D physical = CameraManager::getInstance()->getActualWindowSize();
+
+        float physX = eEvent->tfinger.x * physical.x;
+        float physY = eEvent->tfinger.y * physical.y;
+
+        float logicalX = (physX - offset.x) / size.x * windowSize.x;
+        float logicalY = (physY - offset.y) / size.y * windowSize.y;
+
+        inputPos = Vector2D(logicalX, logicalY);
         hasInput = true;
         this->onMouseHovered(inputPos);
+                SDL_Log("Contains check - finger:(%.1f,%.1f) rect:(%.1f,%.1f,%.1f,%.1f)",
+            inputPos.x, inputPos.y,
+            this->pSprite->getRect().x,
+            this->pSprite->getRect().y,
+            this->pSprite->getRect().w,
+            this->pSprite->getRect().h);
     }
     else if (eEvent->type == SDL_EVENT_FINGER_DOWN ||
              eEvent->type == SDL_EVENT_FINGER_UP)
     {
         // Convert normalized coordinates (0.0-1.0) to logical coordinates
         Vector2D windowSize = CameraManager::getInstance()->getWindowSize();
-        inputPos = Vector2D(
-                eEvent->tfinger.x * windowSize.x,
-                eEvent->tfinger.y * windowSize.y
-        );
+        Vector2D offset = CameraManager::getInstance()->getLetterboxOffset();
+        Vector2D size = CameraManager::getInstance()->getLetterboxScale();
+        Vector2D physical = CameraManager::getInstance()->getActualWindowSize();
+
+        float physX = eEvent->tfinger.x * physical.x;
+        float physY = eEvent->tfinger.y * physical.y;
+
+        float logicalX = (physX - offset.x) / size.x * windowSize.x;
+        float logicalY = (physY - offset.y) / size.y * windowSize.y;
+
+        inputPos = Vector2D(logicalX, logicalY);
         hasInput = true;
+        SDL_Log("Contains check - finger:(%.1f,%.1f) rect:(%.1f,%.1f,%.1f,%.1f)",
+            inputPos.x, inputPos.y,
+            this->pSprite->getRect().x,
+            this->pSprite->getRect().y,
+            this->pSprite->getRect().w,
+            this->pSprite->getRect().h);
     }
 
     if (!hasInput) return;

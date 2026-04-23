@@ -75,7 +75,9 @@ Runner::Runner()
 
     // SDL3 on Android typically runs in fullscreen
     Uint32 windowFlags = SDL_WINDOW_RESIZABLE;
-
+	CameraManager::initialize();
+	// Use logical size
+	CameraManager::getInstance()->setWindowSize(gameWidth, gameHeight);
 #ifdef __ANDROID__
     windowFlags |= SDL_WINDOW_FULLSCREEN;
     windowWidth = 0;  // Let SDL choose appropriate size
@@ -105,7 +107,7 @@ Runner::Runner()
     } else {
         SDL_Log("Renderer created successfully");
     }
-
+#ifndef __ANDROID__
 	// --- Create GPU Device ---
 	pGPUDevice = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
 	if (!pGPUDevice)
@@ -118,7 +120,7 @@ Runner::Runner()
 		SDL_Log("GPU Device created successfully");
 	}
 
-	if (SDL_ClaimWindowForGPUDevice(pGPUDevice,pWindow) == false)
+	if (SDL_ClaimWindowForGPUDevice(pGPUDevice, pWindow) == false)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
 			"SDL_ClaimWindowForGPUDevice failed: %s", SDL_GetError());
@@ -127,6 +129,7 @@ Runner::Runner()
 	{
 		SDL_Log("Window claimed for GPU Device successfully");
 	}
+#endif // !__ANDROID__	
 
     // --- Get actual window size (important for Android) ---
     int actualWidth, actualHeight;
@@ -146,18 +149,31 @@ Runner::Runner()
     } else {
         SDL_Log("Logical presentation set: %dx%d -> %dx%d",
                 gameWidth, gameHeight, actualWidth, actualHeight);
+		SDL_Rect viewport;
+		SDL_GetRenderViewport(pRenderer, &viewport);
+		SDL_Log("Viewport: x=%.1f y=%.1f w=%.1f h=%.1f",
+			viewport.x, viewport.y, viewport.w, viewport.h);
+
+		int actualPixelW, actualPixelH;
+		SDL_GetWindowSizeInPixels(pWindow, &actualPixelW, &actualPixelH);
+		SDL_Log("Actual pixel size: %d x %d", actualPixelW, actualPixelH);
+		CameraManager::getInstance()->setActualWindowSize(actualPixelW, actualPixelH);	
     }
+	SDL_FRect letterboxRect;
+	SDL_Log("Check");
+	SDL_GetRenderLogicalPresentationRect(pRenderer, &letterboxRect);
+	SDL_Log("Check");
+	CameraManager::getInstance()->setLetterboxRect(letterboxRect.x, letterboxRect.y, letterboxRect.w, letterboxRect.h);
+	SDL_Log("Check");
 
     //initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
-	CameraManager::initialize();
+	
 	RendererContext::initialize(this->pRenderer, this->pGPUDevice);
 
-    // Use logical size
-    CameraManager::getInstance()->setWindowSize(gameWidth, gameHeight);
 
     SceneTransitionManager::initialize();
 	FontManager::initialize();

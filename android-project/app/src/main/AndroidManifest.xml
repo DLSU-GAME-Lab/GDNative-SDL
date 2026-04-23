@@ -6,7 +6,7 @@
         android:required="true" />
 
     <application
-        android:label="Babaylan Tales"
+        android:label="Gem Hunter"
         android:hasCode="true"
         android:allowBackup="true">
 
@@ -15,7 +15,7 @@
             android:label="Babaylan Tales"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             android:exported="true">
 
             <intent-filter>

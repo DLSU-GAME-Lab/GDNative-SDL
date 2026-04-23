@@ -19,6 +19,32 @@ Vector2D CameraManager::getWindowSize() const
     return this->windowSize;
 }
 
+void CameraManager::setLetterboxRect(float x, float y, float w, float h)
+{
+    this->letterboxOffset = Vector2D(x, y);
+    this->letterboxScale = Vector2D(w, h);
+}
+
+Vector2D CameraManager::getLetterboxOffset() const
+{
+    return this->letterboxOffset;
+}
+
+Vector2D CameraManager::getLetterboxScale() const
+{
+    return this->letterboxScale;
+}
+
+void CameraManager::setActualWindowSize(int x, int y)
+{
+	this->actualWindowSize = Vector2D(x, y);
+}
+
+Vector2D CameraManager::getActualWindowSize() const
+{
+    return this->actualWindowSize;
+}
+
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */

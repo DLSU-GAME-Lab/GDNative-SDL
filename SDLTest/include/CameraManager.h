@@ -7,6 +7,9 @@ private:
     Camera* pCamera = nullptr;
     Vector2D windowSize;
     SDL_Renderer* pRenderer = nullptr;
+	Vector2D letterboxOffset;
+	Vector2D letterboxScale;
+	Vector2D actualWindowSize;
 
 public:
     Camera* getCurrentCamera() const;
@@ -14,6 +17,11 @@ public:
     //void setWindowSize(SDL_Window* pWindow);
     Vector2D getWindowSize() const;
     void setRenderer(SDL_Renderer* renderer) { pRenderer = renderer; }
+    void setLetterboxRect(float x, float y, float w, float h);
+    Vector2D getLetterboxOffset() const;
+    Vector2D getLetterboxScale() const;
+    void setActualWindowSize(int x, int y);
+    Vector2D getActualWindowSize() const;
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

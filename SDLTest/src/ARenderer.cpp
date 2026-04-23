@@ -6,6 +6,11 @@ ARenderer::ARenderer(const std::string& strName) : AComponent(strName, Component
 	this->pRenderer = NULL;
 }
 
+SDL_Renderer* ARenderer::getSDLRenderer()
+{
+	return this->pRenderer;
+}
+
 void ARenderer::setSDLRenderer(SDL_Renderer* pRenderer)
 {
 	this->pRenderer = pRenderer;

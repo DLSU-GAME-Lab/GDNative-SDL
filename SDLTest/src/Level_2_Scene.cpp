@@ -83,25 +83,25 @@ void Level_2_Scene::loadGUI()
 
 	Tracker* pRedTracker = new Tracker("Red_Tracker", "Red", GemType::RED, 8);
 	GameObjectManager::getInstance()->addObject(pRedTracker);
-	GUIUtils::setGUITopLeft(pRedTracker, Vector2D(104, 4));
+	GUIUtils::setGUITopLeft(pRedTracker, Vector2D(110, 25));
 	pRedTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pRedTracker);
 
 	Tracker* pBlueTracker = new Tracker("Blue_Tracker", "Blue", GemType::BLUE, 8);
 	GameObjectManager::getInstance()->addObject(pBlueTracker);
-	GUIUtils::setGUITopLeft(pBlueTracker, Vector2D(4, 4));
+	GUIUtils::setGUITopLeft(pBlueTracker, Vector2D(20, 25));
 	pBlueTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pBlueTracker);
 
 	Tracker* pPurpleTracker = new Tracker("Purple_Tracker", "Purple", GemType::PURPLE, 8);
 	GameObjectManager::getInstance()->addObject(pPurpleTracker);
-	GUIUtils::setGUITopLeft(pPurpleTracker, Vector2D(104, 54));
+	GUIUtils::setGUITopLeft(pPurpleTracker, Vector2D(110, 75));
 	pPurpleTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pPurpleTracker);
 
 	Tracker* pWhiteTracker = new Tracker("White_Tracker", "White", GemType::WHITE, 8);
 	GameObjectManager::getInstance()->addObject(pWhiteTracker);
-	GUIUtils::setGUITopLeft(pWhiteTracker, Vector2D(4, 54));
+	GUIUtils::setGUITopLeft(pWhiteTracker, Vector2D(20, 75));
 	pWhiteTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pWhiteTracker);
 

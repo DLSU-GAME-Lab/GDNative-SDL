@@ -183,7 +183,7 @@ void GemManager::loadGUI()
     GUIUtils::setGUITopRight(pUIMovesPanel, Vector2D(-100, 80));
     GameObjectManager::getInstance()->addObject(pUIMovesPanel);
 
-    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(220, 475), Vector2D(1, 1));
+    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(210, 450), Vector2D(1, 1));
     GameObjectManager::getInstance()->addObject(pTurnCount);
 }
 

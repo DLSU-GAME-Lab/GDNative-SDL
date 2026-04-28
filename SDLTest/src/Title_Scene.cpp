@@ -9,6 +9,8 @@
 #include "AnimatedSprite.h"
 #include "SceneSwitcher.h"
 #include "AudioManager.h"
+#include "Text.h"
+#include "Settings.h"
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
 {
@@ -78,6 +80,12 @@ void Title_Scene::onLoadObjects()
     SceneSwitcher* pLevelOneSwitcher = new SceneSwitcher(SceneTag::LEVEL_1_SCENE);
     pLevelOne->attachComponent(pLevelOneSwitcher);
 
+	Text* pLevelOneText = new Text("Level_1_Text","CurseCasual.ttf",75);
+    pLevelOneText->setMessage("1");
+    pLevelOneText->setColor(colorWhite);
+    pLevelOne->attachChild(pLevelOneText);
+    pLevelOneText->setLocalPos(Vector2D(0, 10));
+
     GUIButton* pLevelTwo = new GUIButton("Level_2_Button", "Level_Button");
     pLevelTwo->setPos(Vector2D(0, -220));
     pLevelTwo->setScale(Vector2D(0.7f));
@@ -85,13 +93,25 @@ void Title_Scene::onLoadObjects()
     SceneSwitcher* pLevelTwoSwitcher = new SceneSwitcher(SceneTag::LEVEL_2_SCENE);
     pLevelTwo->attachComponent(pLevelTwoSwitcher);
 
+    Text* pLevelTwoText = new Text("Level_2_Text", "CurseCasual.ttf", 75);
+    pLevelTwoText->setMessage("2");
+    pLevelTwoText->setColor(colorWhite);
+    pLevelTwo->attachChild(pLevelTwoText);
+    pLevelTwoText->setLocalPos(Vector2D(0, 10));
+
     GUIButton* pLevelThree = new GUIButton("Level_3_Button", "Level_Button");
     pLevelThree->setPos(Vector2D(120, -220));
     pLevelThree->setScale(Vector2D(0.7f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelThree);
     SceneSwitcher* pLevelThreeSwitcher = new SceneSwitcher(SceneTag::LEVEL_3_SCENE);
     pLevelThree->attachComponent(pLevelThreeSwitcher);
-    
+
+    Text* pLevelThreeText = new Text("Level_3_Text", "CurseCasual.ttf", 75);
+    pLevelThreeText->setMessage("3");
+    pLevelThreeText->setColor(colorWhite);
+    pLevelThree->attachChild(pLevelThreeText);
+    pLevelThreeText->setLocalPos(Vector2D(0, 10));
+
     if (!AudioManager::getInstance()->isPlaying("BGM"))
 	    AudioManager::getInstance()->play(new AudioPlayer("Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
@@ -111,6 +131,7 @@ void Title_Scene::onUnloadResources()
     TextureManager::getInstance()->unload("Level_Button");
     TextureManager::getInstance()->unload("Design_BG");
     TextureManager::getInstance()->unload("Bubble");
+    FontManager::getInstance()->unloadAllFonts();
 }
 
 void Title_Scene::onUnloadObjects()

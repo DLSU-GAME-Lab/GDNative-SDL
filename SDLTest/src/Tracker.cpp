@@ -1,6 +1,7 @@
 #include "Tracker.h"
 #include "GameObjectManager.h"
 #include "TextureManager.h"
+#include "Settings.h"
 Tracker::Tracker(std::string strName, std::string strImageName, GemType EGem, int nTargetDestroy):AGameObject(strName)
 {
 	this->setIsScreenObject(true);
@@ -22,9 +23,11 @@ void Tracker::initialize()
 
     Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 200, 0, false);
     pCounterText->setMessage(std::to_string(this->nTargetLeft));
+    pCounterText->setColor(colorWhite);
     this->attachChild(pCounterText);
     pCounterText->setLocalPos(Vector2D(60, 22));
     pCounterText->setScale(Vector2D(1));
+
 }
 
 void Tracker::updateScore(int nSubtractValue)

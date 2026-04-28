@@ -2,6 +2,7 @@
 #include "GameObjectManager.h"
 #include "EndScreen.h"
 #include "AudioManager.h"
+#include "Settings.h"
 TurnCounter::TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, Vector2D fVecScale):AGameObject(strName)
 {
 	this->nTurnsLeft = nTurnsLeft;
@@ -48,10 +49,12 @@ void TurnCounter::initialize()
 {
 	Text* pTitleText = new Text(this->strName + "Text", "CurseCasual.ttf", 35, 0, false);
 	pTitleText->setMessage("Turns Left: ");
+	pTitleText->setColor(colorWhite);
 	this->attachChild(pTitleText);
 	pTitleText->setPos(this->fVecPos + Vector2D(0, 30));
 
-	Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 35, 0, false);;
+	Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 35, 0, false);
+	pCounterText->setColor(colorWhite);
 	pCounterText->setMessage(std::to_string(this->nTurnsLeft));
 	this->attachChild(pCounterText);
 	pCounterText->setPos(this->fVecPos);

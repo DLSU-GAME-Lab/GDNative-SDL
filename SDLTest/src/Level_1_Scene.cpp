@@ -55,6 +55,7 @@ void Level_1_Scene::onLoadObjects()
 void Level_1_Scene::onUnloadResources()
 {
 	GemManager::unloadResources();
+	FontManager::getInstance()->unloadAllFonts();
 }
 
 void Level_1_Scene::onUnloadObjects()

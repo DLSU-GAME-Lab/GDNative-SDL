@@ -204,9 +204,6 @@
     <ClCompile Include="src\UIManager.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\SequenceGameManager.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="src\ACollider.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
@@ -273,19 +270,9 @@
     <ClCompile Include="src\AudioPlayer.cpp">
       <Filter>Singleton\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\AInteractable.cpp">
-      <Filter>Component\Script\Interactable</Filter>
-    </ClCompile>
-    <ClCompile Include="src\StoryWindow.cpp">
-      <Filter>GameObject\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="src\Sprite.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="src\ObjectiveIntro.cpp">
-      <Filter>GameObject\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\InventoryGUI.cpp" />
     <ClCompile Include="src\Level_1_Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
@@ -324,6 +311,9 @@
     </ClCompile>
     <ClCompile Include="src\EndScreen.cpp">
       <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StoreManager.cpp">
+      <Filter>Singleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -504,9 +494,6 @@
     <ClInclude Include="include\EditorMode.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\SequenceGameManager.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="include\ACollider.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
@@ -594,9 +581,6 @@
     <ClInclude Include="include\Sprite.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="include\InventoryGUI.h">
-      <Filter>GameObject\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="include\Level_3_Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -641,6 +625,9 @@
     </ClInclude>
     <ClInclude Include="include\EndScreen.h">
       <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StoreManager.h">
+      <Filter>Singleton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

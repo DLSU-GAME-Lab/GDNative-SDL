@@ -1,7 +1,10 @@
 #include "TrackerManager.h"
 #include "GameObjectManager.h"
 #include "AudioManager.h"
+#include "StoreManager.h"
 TrackerManager* TrackerManager::P_SHARED_INSTANCE = NULL;
+
+
 
 TrackerManager::TrackerManager(std::string strName, AGameObject* pOwner) :AComponent(strName, ComponentType::SCRIPT)
 {
@@ -16,6 +19,7 @@ TrackerManager* TrackerManager::getInstance()
 {
 	return P_SHARED_INSTANCE;
 }
+
 void TrackerManager::initialize(std::string strName, AGameObject* pOwner)
 {
 	P_SHARED_INSTANCE = new TrackerManager(strName, pOwner);

@@ -7,6 +7,7 @@
 #include "TurnCounter.h"
 #include "EndScreen.h"
 #include "BubbleManager.h"
+#include "StoreManager.h"
 #include "GUIUtils.h"
 
 Level_3_Scene::Level_3_Scene():AScene(SceneTag::LEVEL_3_SCENE)
@@ -23,6 +24,7 @@ void Level_3_Scene::onLoadResources()
 void Level_3_Scene::onLoadObjects()
 { 
 	this->loadEmptyObjects();
+	StoreManager::initialize();
 
 	Background* pBackground = new Background("Level_Background", "Level_Background", Vector2D(125.f, 1.17f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
@@ -68,12 +70,14 @@ void Level_3_Scene::onLoadObjects()
 void Level_3_Scene::onUnloadResources()
 {
 	GemManager::unloadResources();
+	StoreManager::getInstance()->unloadStoreItems();
 	FontManager::getInstance()->unloadAllFonts();
 }
 
 void Level_3_Scene::onUnloadObjects()
 {
 	TrackerManager::destroy();
+	StoreManager::destroy();
 	AScene::onUnloadObjects();
 }
 void Level_3_Scene::loadEmptyObjects()

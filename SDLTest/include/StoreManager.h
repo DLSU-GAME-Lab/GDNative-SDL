@@ -1,5 +1,5 @@
 #pragma once
-#include "vector"
+#include "unordered_map"
 #include "string"
 class StoreManager
 {
@@ -8,16 +8,21 @@ public:
     {
         int nPrice;
         std::string strName;
+		std::string strTextureKey;
     };
 private:
     int nCoins;
-    std::vector<StoreItem> storeItems;
+    std::unordered_map<std::string,StoreItem> storeItems;
 
 public:
     bool purchaseItem(std::string itemID);
+	void addStoreItem(std::string itemID, int nPrice, std::string strTextureKey);
+	void unloadStoreItems();
     int getCoins() const;
     void addCoins(int amount);
 	void subtractCoins(int amount);
+	//for testing purposes only, prints all store items to console
+    void printStoreItems();
 
 /* * * * * * * * * * * * * * * * * * * * *
 *       SINGLETON-RELATED CONTENT       *

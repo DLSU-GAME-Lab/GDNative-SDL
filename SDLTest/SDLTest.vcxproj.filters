@@ -315,6 +315,9 @@
     <ClCompile Include="src\StoreManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
+    <ClCompile Include="src\StoreGUI.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -628,6 +631,9 @@
     </ClInclude>
     <ClInclude Include="include\StoreManager.h">
       <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StoreGUI.h">
+      <Filter>GameObject\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

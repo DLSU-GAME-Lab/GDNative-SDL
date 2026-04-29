@@ -10,6 +10,20 @@ bool StoreManager::purchaseItem(std::string itemID)
     
 }
 
+void StoreManager::addStoreItem(std::string itemID, int nPrice, std::string strTextureKey)
+{
+    StoreItem newItem;
+    newItem.nPrice = nPrice;
+	newItem.strName = itemID;
+    newItem.strTextureKey = strTextureKey;
+    this->storeItems[itemID] = newItem;
+}
+
+void StoreManager::unloadStoreItems()
+{
+	this->storeItems.clear();
+}
+
 int StoreManager::getCoins() const
 {
     return this->nCoins;
@@ -23,6 +37,17 @@ void StoreManager::addCoins(int amount)
 void StoreManager::subtractCoins(int amount)
 {
 	this->nCoins -= amount;
+}
+void StoreManager::printStoreItems()
+{
+    for (const auto& pair : this->storeItems)
+    {
+        printf("ID: %s | Name: %s | Price: %d | Texture: %s\n",
+            pair.first.c_str(),
+            pair.second.strName.c_str(),
+            pair.second.nPrice,
+            pair.second.strTextureKey.c_str());
+    }
 }
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
@@ -38,6 +63,7 @@ void StoreManager::initialize()
 
 void StoreManager::destroy()
 {
+	P_SHARED_INSTANCE->unloadStoreItems();
     if (P_SHARED_INSTANCE)
     {
         delete P_SHARED_INSTANCE;

@@ -3,6 +3,7 @@
 #include "GemManager.h"
 #include "BubbleManager.h"
 #include "TrackerManager.h"
+#include "StoreManager.h"
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "Tracker.h"
@@ -23,6 +24,7 @@ void Level_1_Scene::onLoadResources()
 void Level_1_Scene::onLoadObjects()
 {
 	this->loadEmptyObjects();
+	StoreManager::initialize();
 
 	Background* pBackground = new Background("Level_Background", "Level_Background", Vector2D(125.f, 1.17f));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
@@ -55,12 +57,15 @@ void Level_1_Scene::onLoadObjects()
 void Level_1_Scene::onUnloadResources()
 {
 	GemManager::unloadResources();
+	
 	FontManager::getInstance()->unloadAllFonts();
 }
 
 void Level_1_Scene::onUnloadObjects()
 {
 	TrackerManager::destroy();
+	StoreManager::getInstance()->unloadStoreItems();
+	StoreManager::destroy();
 	AScene::onUnloadObjects();
 
 }
@@ -73,8 +78,11 @@ void Level_1_Scene::loadEmptyObjects()
 
 void Level_1_Scene::loadGUI()
 {
-	GemManager::loadGUI();
 
+
+	GemManager::loadGUI();
+	StoreManager::getInstance()->addStoreItem("Coins x100", 0, "BombS");
+	StoreManager::getInstance()->printStoreItems();
 	Tracker* pRedTracker = new Tracker("Red_Tracker", "Red", GemType::RED, 8);
 	GameObjectManager::getInstance()->addObject(pRedTracker);
 	GUIUtils::setGUITopLeft(pRedTracker, Vector2D(110, 25));

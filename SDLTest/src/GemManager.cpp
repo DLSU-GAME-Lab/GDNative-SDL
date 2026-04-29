@@ -8,6 +8,7 @@
 
 #include "EventBroadcaster.h"
 #include "AudioManager.h"
+#include "StoreManager.h"
 #include "Sprite.h"
 
 #include "GUIUtils.h"
@@ -139,18 +140,24 @@ void GemManager::loadGUI()
     Sprite* pBombPowerup = new Sprite("Bomb_Powerup", "BombS", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pBombPowerup, boosterPositions[0] + posOffset);
     GameObjectManager::getInstance()->addObject(pBombPowerup);
+    StoreManager::getInstance()->addStoreItem("Bomb_Powerup",50,"BombS");
 
     Sprite* pVertPowerup = new Sprite("Vert_Powerup", "Eliminate_Vert", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pVertPowerup, boosterPositions[1] + posOffset);
     GameObjectManager::getInstance()->addObject(pVertPowerup);
+    StoreManager::getInstance()->addStoreItem("Vert_Powerup", 50, "Eliminate_Vert");
+
 
     Sprite* pHoriPowerup = new Sprite("Hori_Powerup", "Eliminate_Hori", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pHoriPowerup, boosterPositions[2] + posOffset);
     GameObjectManager::getInstance()->addObject(pHoriPowerup);
+    StoreManager::getInstance()->addStoreItem("Hori_Powerup", 50, "Eliminate_Hori");
 
     Sprite* pColorPowerup = new Sprite("Color_Powerup", "Color_Target", Vector2D(0, 0), Vector2D(0.35f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pColorPowerup, boosterPositions[3] + posOffset);
     GameObjectManager::getInstance()->addObject(pColorPowerup);
+    StoreManager::getInstance()->addStoreItem("Color_Powerup", 50, "Color_Target");
+
 
     GUIButton* pSettings = new GUIButton("Settings", "Settings");
     GUIUtils::setGUIBotRight(pSettings, Vector2D(-40, -90));

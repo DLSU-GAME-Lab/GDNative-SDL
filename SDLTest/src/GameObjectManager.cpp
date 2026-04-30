@@ -96,7 +96,6 @@ void GameObjectManager::deleteAllObjects()
 
 void GameObjectManager::cleanUpDeletedObjects()
 {
-    // Make a copy of the deletion list
 // Make a copy of the deletion list
     std::vector<AGameObject*> objectsToDelete;
     objectsToDelete.swap(vecPendingDeletion);

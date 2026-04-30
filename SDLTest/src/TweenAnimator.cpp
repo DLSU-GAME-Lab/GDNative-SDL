@@ -6,6 +6,7 @@ TweenAnimator::TweenAnimator() : AAnimator("TweenAnimator")
 	this->EType = AnimationType::ONCE;
 	this->bIsPlaying = false;
 	this->bIsReverse = false;
+	this->bLocal = false;
 }
 
 TweenAnimator::~TweenAnimator()
@@ -21,7 +22,8 @@ void TweenAnimator::perform()
 		if (!this->tweenPos.isFinished())
 		{
 			std::array<float, 2> pos = this->tweenPos.step(ms);
-			this->pOwner->setPos(Vector2D(pos[0], pos[1]));
+			if (this->bLocal) this->pOwner->setLocalPos(Vector2D(pos[0], pos[1]));
+			else this->pOwner->setPos(Vector2D(pos[0], pos[1]));
 		}
 
 		if (this->tweenPos.isFinished())
@@ -46,14 +48,16 @@ void TweenAnimator::perform()
 					this->bIsReverse = false;
 					this->tweenPos.forward();
 					std::array<float, 2> pos = this->tweenPos.seek(0.0f);
-					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
+					if (this->bLocal) this->pOwner->setLocalPos(Vector2D(pos[0], pos[1]));
+					else this->pOwner->setPos(Vector2D(pos[0], pos[1]));
 				}
 				else
 				{
 					this->bIsReverse = true;
 					this->tweenPos.backward();
 					std::array<float, 2> pos = this->tweenPos.seek(0.99f);
-					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
+					if (this->bLocal) this->pOwner->setLocalPos(Vector2D(pos[0], pos[1]));
+					else this->pOwner->setPos(Vector2D(pos[0], pos[1]));
 				}
 				break;
 
@@ -71,7 +75,8 @@ void TweenAnimator::perform()
 					this->bIsReverse = true;
 					this->tweenPos.backward();
 					std::array<float, 2> pos = this->tweenPos.seek(0.99f);
-					this->pOwner->setPos(Vector2D(pos[0], pos[1]));
+					if (this->bLocal) this->pOwner->setLocalPos(Vector2D(pos[0], pos[1]));
+					else this->pOwner->setPos(Vector2D(pos[0], pos[1]));
 				}
 				break;
 
@@ -184,6 +189,11 @@ void TweenAnimator::setTweenScale(const Tween2D& tweenScale)
 void TweenAnimator::setTweenRot(const Tween & tweenRot)
 {
 	this->tweenRot = tweenRot;
+}
+
+void TweenAnimator::setLocal(bool bLocal)
+{
+	this->bLocal = bLocal;
 }
 
 template<typename... Ts>

@@ -15,7 +15,7 @@ Scroller::~Scroller()
 void Scroller::perform()
 {
 	ButtonInput* pInput = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
-	DialogueRenderer* pTextRenderer = (DialogueRenderer*)this->pScrollableText->findComponentByName("DialogueRenderer");
+	TextRenderer* pTextRenderer = (TextRenderer*)this->pScrollableText->findComponentByName("TextRenderer");
 	
     if (pInput->getDragging())
     {

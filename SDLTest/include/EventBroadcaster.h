@@ -37,6 +37,8 @@ class EventBroadcaster {
         EventBroadcaster& operator = (const EventBroadcaster&);
 
     public:
+        static void initialize();
+        static void destroy();
         static EventBroadcaster* getInstance();
     /* * * * * * * * * * * * * * * * * * * * */
 };

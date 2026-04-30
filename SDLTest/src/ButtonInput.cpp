@@ -8,7 +8,7 @@ ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
 	this->bDragging = false;
 	this->bClicked = false;
 	this->bRightClick = false;
-	this->bLefttClick = false;
+	this->bLeftClick = false;
 }
 
 ButtonInput::~ButtonInput()
@@ -110,12 +110,12 @@ void ButtonInput::setRightClick(bool bRightClick)
 
 bool ButtonInput::isLeftClick()
 {
-	return this->bLefttClick;
+	return this->bLeftClick;
 }
 
 void ButtonInput::setLeftClick(bool bLeftClick)
 {
-	this->bLefttClick = bLeftClick;
+	this->bLeftClick = bLeftClick;
 }
 
 void ButtonInput::onMouseHovered(Vector2D mousePos)
@@ -142,7 +142,7 @@ void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 	}
 	else if (mouseButton == SDL_BUTTON_LEFT)
 	{
-		this->bLefttClick = true;
+		this->bLeftClick = true;
 	}
 
 }

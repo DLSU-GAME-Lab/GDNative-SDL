@@ -20,27 +20,27 @@ void PauseScreen::initialize()
 	pTransBGR->setColor({ 250, 227, 150, 127 });
 
 	Text* pPauseText = new Text("PauseText", "JainiPurva-Regular.ttf", 120, -15);
+	pTransBack->attachChild(pPauseText);
 	pPauseText->setIsScreenObject(true);
 	pPauseText->setMessage("Paused");
-	pTransBack->attachChild(pPauseText);
 	pPauseText->setPos(Vector2D(550, 200));
 	pPauseText->setScale(Vector2D(1, 1));
 	pPauseText->setColor(SDL_Color(165, 42, 42, 255));
 
 	TextureManager::getInstance()->load("GUI/button5.png", "BrownButton");
 	GUIButton* pResume = new GUIButton("ResumeButton", "BrownButton", false);
+	pTransBack->attachChild(pResume);
 	pResume->setIsScreenObject(true);
 	GUIToggle* pToggle = new GUIToggle(EventKey::PAUSE_SCREEN);
 	pResume->attachComponent(pToggle);
-	pTransBack->attachChild(pResume);
 	pResume->setRot(-17.5);
 	pResume->setScale(Vector2D(.15, .15));
 	pResume->setPos(Vector2D(500, 350));
 
 	Text* pResumeText = new Text("ResumeText", "JainiPurva-Regular.ttf", 45, -15);
+	pResume->attachChild(pResumeText);
 	pResumeText->setIsScreenObject(true);
 	pResumeText->setMessage("Resume");
-	pResume->attachChild(pResumeText);
 	pResumeText->setRot(-17.5);
 	pResumeText->setPos(Vector2D(500, 350));
 	pResumeText->setScale(Vector2D(1, 1));
@@ -57,9 +57,9 @@ void PauseScreen::initialize()
 	pQuit->setPos(Vector2D(500, 550));
 
 	Text* pQuitText = new Text("QuitText", "JainiPurva-Regular.ttf", 45, -15);
+	pQuit->attachChild(pQuitText);
 	pQuitText->setIsScreenObject(true);
 	pQuitText->setMessage("Quit Stage");
-	pQuit->attachChild(pQuitText);
 	pQuitText->setRot(-17);
 	pQuitText->setPos(Vector2D(500, 550));
 	pQuitText->setScale(Vector2D(1, 1));
@@ -102,7 +102,7 @@ void PauseScreen::onEventTrigger(std::unordered_map<std::string, void*> mapParam
 		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
 		pAnimator->getCurrentAnimation()->stop();
 		pAnimator->getCurrentAnimation()->play();
-
+		
 	
 	}
 	else if (pTransBack->getEnabled() && bFromToggle)

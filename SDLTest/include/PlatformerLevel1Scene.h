@@ -12,8 +12,6 @@ public:
     ~PlatformerLevel1Scene();
 
 public:
-    void addPickupDialogue(PlatformerPickupGUI* pPickupGUI, InventoryGUI* pInvenGUI);
-public:
     virtual void onLoadResources() override;
     virtual void onLoadObjects() override;
     virtual void onUnloadResources() override;

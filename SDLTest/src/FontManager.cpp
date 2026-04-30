@@ -9,13 +9,17 @@ TTF_Font* FontManager::getFont(const std::string fontKey, int fontSize)
     auto it = mapFonts.find(fullKey);
     if (it != mapFonts.end()) return it->second;
 
-    std::cerr << "[ERROR] Font [" << fullKey << "] not found.\n";
+    SDL_LogError(
+            SDL_LOG_CATEGORY_APPLICATION,
+            "[ERROR] Font [%s] not found.",
+            fullKey.c_str()
+            );
     return nullptr;
 }
 
 void FontManager::loadFont(const std::string fileName, const std::string fontKey, int fontSize)
 {
-    const std::string assetPath = fileName;
+    const std::string assetPath = "Fonts/" + fileName;
     std::string fullKey = fontKey + "_" + std::to_string(fontSize);
 
     if (mapFonts.contains(fullKey)) return;
@@ -24,7 +28,12 @@ void FontManager::loadFont(const std::string fileName, const std::string fontKey
     size_t size = 0;
     void* data = SDL_LoadFile(assetPath.c_str(), &size);
     if (!data || size <= 0) {
-        std::cerr << "[ERROR] TTF: SDL_LoadFile failed for " << assetPath << " : " << SDL_GetError() << std::endl;
+        SDL_LogError(
+                SDL_LOG_CATEGORY_APPLICATION,
+                "[ERROR] TTF: SDL_LoadFile failed for %s : %s ",
+                assetPath.c_str(),
+                SDL_GetError()
+                );
         if (data) SDL_free(data);
         return;
     }
@@ -55,7 +64,12 @@ void FontManager::loadFont(const std::string fileName, const std::string fontKey
     // Load font from temp file using TTF_OpenFont
     TTF_Font* font = TTF_OpenFont(tmpPath.c_str(), fontSize);
     if (!font) {
-        std::cerr << "[ERROR] Failed to load font [" << fullKey << "]: " << SDL_GetError() << std::endl;
+        SDL_LogError(
+                SDL_LOG_CATEGORY_APPLICATION,
+                "[ERROR] Failed to load font [%s] : %s",
+                fullKey.c_str(),
+                SDL_GetError()
+        );
         // best-effort cleanup
         std::remove(tmpPath.c_str());
         return;
@@ -66,7 +80,7 @@ void FontManager::loadFont(const std::string fileName, const std::string fontKey
     // remove temp file (best-effort)
     std::remove(tmpPath.c_str());
 
-    std::cout << "[DEBUG] " << fullKey << " has been loaded\n";
+    SDL_Log("[DEBUG] %s has been loaded", fullKey.c_str());
 }
 
 void FontManager::unloadFontFamily(const std::string& fontKey)

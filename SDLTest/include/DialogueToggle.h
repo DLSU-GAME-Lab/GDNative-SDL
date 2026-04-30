@@ -1,13 +1,14 @@
 #pragma once
-#include "DialogueBox.h"
+#include "DialogueScreen.h"
 #include "AComponent.h"
 class DialogueToggle:public AComponent
 {
 private:
 	int nCounter;
 	EventKey EKey;
+	unsigned int nDialogueKey;
 public:
-	DialogueToggle(EventKey EKey);
+	DialogueToggle(unsigned int nDialogueKey);
 	~DialogueToggle();
 	// Inherited via AComponent
 	void perform() override;

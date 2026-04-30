@@ -10,7 +10,7 @@ GUIButton::GUIButton(std::string strName, std::string strSpriteName, bool bFlipX
 
 void GUIButton::initialize()
 {
-    //this->setIsScreenObject(true);
+	//this->bIsScreenObject = true;
 	SpriteRenderer* pRenderer = new SpriteRenderer(this->strSpriteName);
 	ButtonInput* pInput = new ButtonInput(pRenderer);
 
@@ -20,4 +20,11 @@ void GUIButton::initialize()
 	}
 	this->attachComponent(pRenderer);
 	this->attachComponent(pInput);
+}
+
+void GUIButton::setColor(SDL_Color color)
+{
+	SpriteRenderer* pRenderer = (SpriteRenderer*)this->findComponentByName("SpriteRenderer");
+	if (pRenderer) pRenderer->setColor(color);
+
 }

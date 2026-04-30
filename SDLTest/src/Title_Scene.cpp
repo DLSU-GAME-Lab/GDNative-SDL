@@ -76,9 +76,23 @@ void Title_Scene::loadText()
 }
 void Title_Scene::loadAnimatedTextures()
 {
-    TextureManager::getInstance()->loadFromFolder("animations/title_scene/player", "Player");
-    TextureManager::getInstance()->loadFromFolder("animations/title_scene/fairy", "Fairy");
-    TextureManager::getInstance()->loadFromFolder("animations/title_scene/librarian", "Librarian");
+    for (int i = 0; i < 6; i++)
+    {
+        std::string strPath = "animations/title_scene/player/Set" + std::to_string(i) + ".png";
+        TextureManager::getInstance()->load(strPath, "Player");
+    }
+
+    for (int i = 0; i < 2; i++)
+    {
+        std::string strPath = "animations/title_scene/fairy/Set" + std::to_string(i) + ".png";
+        TextureManager::getInstance()->load(strPath, "Fairy");
+    }
+
+    for (int i = 0; i < 7; i++)
+    {
+        std::string strPath = "animations/title_scene/librarian/Set" + std::to_string(i) + ".png";
+        TextureManager::getInstance()->load(strPath, "Librarian");
+    }
 }
 
 void Title_Scene::loadSceneTextures()
@@ -101,8 +115,8 @@ void Title_Scene::createButtons()
     GameObjectManager::getInstance()->addObject(pStartButton);
 
     Text* pStartText = new Text("Start_Text", "Maragsa.otf", 90, 0.f, false);
-    pStartText->setMessage("Start Game");
     pStartButton->attachChild(pStartText);
+    pStartText->setMessage("Start Game");
     pStartText->setScale(Vector2D(1,1));
     pStartButton->setPos(Vector2D(-580, -150));
 

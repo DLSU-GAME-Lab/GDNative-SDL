@@ -3,14 +3,15 @@
 #include "IAnimatorListener.h"
 #include "AGameObject.h"
 #include "AnimatedSprite.h"
-
 #include "Sprite.h"
+#include "CollectableGemDataAsset.h"
+
 class PlatformerPickupGUI:public AGameObject, EventListener,IAnimatorListener
 {
 private:
+	CollectableGemDataAsset* pDataAsset;
 	EventKey EKey;
 	bool bIsListenerEnabled;
-	std::unordered_map <std::string, std::vector<std::string>> mapickupDialogue;
 public: 
 	PlatformerPickupGUI(std::string strName);
 	~PlatformerPickupGUI();

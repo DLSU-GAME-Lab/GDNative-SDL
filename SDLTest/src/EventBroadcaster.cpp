@@ -32,8 +32,11 @@ void EventBroadcaster::unregisterAllListeners() {
 
 void EventBroadcaster::broadcast(EventKey EKey, std::unordered_map<std::string, void*> mapParameter) {
     for(int i = 0; i < this->mapListener[EKey].size(); i++) {
+        std::cout << this->mapListener[EKey][i]->getListenerOwnerName() << std::endl;
         if(this->mapListener[EKey][i]->isListenerEnabled())
+        {
             this->mapListener[EKey][i]->onEventTrigger(mapParameter);
+        }
     }
 }
 
@@ -88,10 +91,16 @@ EventBroadcaster* EventBroadcaster::P_SHARED_INSTANCE = NULL;
 EventBroadcaster::EventBroadcaster() {}
 EventBroadcaster::EventBroadcaster(const EventBroadcaster&) {}
 
+void EventBroadcaster::initialize() {
+    
+    P_SHARED_INSTANCE = new EventBroadcaster();
+  
+}
+void EventBroadcaster::destroy()
+{
+    delete P_SHARED_INSTANCE;
+}
 EventBroadcaster* EventBroadcaster::getInstance() {
-    if(P_SHARED_INSTANCE == NULL)
-        P_SHARED_INSTANCE = new EventBroadcaster();
-
     return P_SHARED_INSTANCE;
 }
 /* * * * * * * * * * * * * * * * * * * * */

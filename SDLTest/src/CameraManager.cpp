@@ -1,5 +1,4 @@
 #include "CameraManager.h"
-#include "Settings.h"
 
 Camera* CameraManager::getCurrentCamera() const
 {
@@ -8,10 +7,10 @@ Camera* CameraManager::getCurrentCamera() const
 
 void CameraManager::setWindowSize(SDL_Window* pWindow)
 {
-    this->windowSize = Vector2D(gameWidth, gameHeight);
-    if (this->pCamera) {
-        this->pCamera->setWindowSize(this->windowSize);
-    }
+
+    int w, h;
+    SDL_GetWindowSizeInPixels(pWindow, &w, &h);
+    this->pCamera->setWindowSize(Vector2D(w, h));
 }
 
 Vector2D CameraManager::getWindowSize() const
@@ -28,10 +27,6 @@ void CameraManager::initialize()
 {
     P_SHARED_INSTANCE = new CameraManager();
     P_SHARED_INSTANCE->pCamera = new Camera();
-
-    // set initial logical window size so getHalfWidth/getHalfHeight are correct immediately
-    P_SHARED_INSTANCE->windowSize = Vector2D(gameWidth, gameHeight);
-    P_SHARED_INSTANCE->pCamera->setWindowSize(P_SHARED_INSTANCE->windowSize);
 }
 
 void CameraManager::destroy()

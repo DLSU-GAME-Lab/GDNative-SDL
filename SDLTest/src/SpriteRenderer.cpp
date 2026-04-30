@@ -190,11 +190,6 @@ void SpriteRenderer::setPivot(Vector2D pivot)
     this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
 }
 
-void SpriteRenderer::setColor(SDL_Color color)
-{
-    this->mColor = color;
-}
-
 //Set crop based on percentage (0.0f - 1.0f)
 void SpriteRenderer::setCropRect(SDL_FRect mCropRect)
 {
@@ -205,11 +200,6 @@ void SpriteRenderer::setCropRect(SDL_FRect mCropRect)
 SDL_Texture* SpriteRenderer::getTexture()
 {
     return this->pTexture;
-}
-
-SDL_Color SpriteRenderer::getColor() const
-{
-    return this->mColor;
 }
 
 SDL_FRect SpriteRenderer::getRect() const

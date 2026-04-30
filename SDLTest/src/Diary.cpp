@@ -22,16 +22,16 @@ void Diary::initialize()
 	EventBroadcaster::getInstance()->registerListener(this);
 
 	this->pTitleText = new Text("Title_Text", "JainiPurva-Regular.ttf", 90, 0, false);
+	this->attachChild(this->pTitleText);
 	this->pTitleText->setMessage(this->vecPageTitles[0]);
 	this->pTitleText->setPos(Vector2D(0, 400));
 	this->pTitleText->setScale(Vector2D(1, 1));
-	this->attachChild(this->pTitleText);
 
 	this->pStartingText = new Text("Title_Text", "JainiPurva-Regular.ttf", 45, 0, false);
+	this->attachChild(this->pStartingText);
 	this->pStartingText->setMessage(this->vecStartTexts[0]);
 	this->pStartingText->setPos(Vector2D(-60, 250));
 	this->pStartingText->setScale(Vector2D(1, 1));
-	this->attachChild(this->pStartingText);
 }
 
 
@@ -64,8 +64,8 @@ void Diary::progressPage()
 	{
 		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->dCurrentPage++;
-		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
-		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
+		this->pTitleText->setMessage(this->vecPageTitles[this->dCurrentPage]);
+		this->pStartingText->setMessage(this->vecStartTexts[this->dCurrentPage]);
 		this->vecPages[dCurrentPage]->setEnabled(true);
 	}
 	else
@@ -73,8 +73,8 @@ void Diary::progressPage()
 		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->vecPages[0]->setEnabled(true);
 		this->dCurrentPage = 0;
-		this->pTitleText->modifyText(this->vecPageTitles[0]);
-		this->pStartingText->modifyText(this->vecStartTexts[0]);
+		this->pTitleText->setMessage(this->vecPageTitles[0]);
+		this->pStartingText->setMessage(this->vecStartTexts[0]);
 	}
 }
 
@@ -84,8 +84,8 @@ void Diary::regressPage()
 	{
 		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->dCurrentPage--;
-		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
-		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
+		this->pTitleText->setMessage(this->vecPageTitles[this->dCurrentPage]);
+		this->pStartingText->setMessage(this->vecStartTexts[this->dCurrentPage]);
 		this->vecPages[dCurrentPage]->setEnabled(true);
 
 	}
@@ -94,8 +94,8 @@ void Diary::regressPage()
 		this->vecPages[dCurrentPage]->setEnabled(false);
 		this->vecPages[this->vecPages.size() - 1]->setEnabled(true);
 		this->dCurrentPage = this->vecPages.size()-1;
-		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
-		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
+		this->pTitleText->setMessage(this->vecPageTitles[this->dCurrentPage]);
+		this->pStartingText->setMessage(this->vecStartTexts[this->dCurrentPage]);
 	}
 }
 
@@ -122,8 +122,8 @@ void Diary::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 	{
 		this->setEnabled(true);
 		this->resetPages();
-		this->pStartingText->modifyText(this->vecStartTexts[this->dCurrentPage]);
-		this->pTitleText->modifyText(this->vecPageTitles[this->dCurrentPage]);
+		this->pStartingText->setMessage(this->vecStartTexts[this->dCurrentPage]);
+		this->pTitleText->setMessage(this->vecPageTitles[this->dCurrentPage]);
 		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
 	}
 	else if (this->bEnabled && bFromToggle)

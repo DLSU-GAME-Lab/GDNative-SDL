@@ -2,6 +2,7 @@
 #include "SpriteRenderer.h"
 #include "ButtonInput.h"
 #include "TokenController.h"
+#include "GemInputToken.h"
 
 PuzzleToken::PuzzleToken(std::string strName, Vector2D position, Vector2D scale) : AGameObject(strName)
 {
@@ -33,6 +34,8 @@ void PuzzleToken::setSlot(int nSlot)
 {
 	this->nSlot = nSlot;
 }
+
+
 
 bool PuzzleToken::getDropped() const
 {

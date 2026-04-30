@@ -6,12 +6,14 @@
 #include "GUIToggle.h"
 #include "ButtonInput.h"
 #include "Text.h"
+#include "DataAssetManager.h"
+
 PlatformerPickupGUI::PlatformerPickupGUI(std::string strName):AGameObject(strName)
 {
+	this->pDataAsset = (CollectableGemDataAsset*)DataAssetManager::getInstance()->getDataAsset("CollectableGemDataAsset");
 	this->EKey = EventKey::ITEM_PICKUP;
 	this->bIsListenerEnabled = true;
 	this->bIsScreenObject = true;
-	this->mapickupDialogue = {};
 }
 
 PlatformerPickupGUI::~PlatformerPickupGUI()
@@ -44,16 +46,17 @@ void PlatformerPickupGUI::initialize()
 	pGem->setPos(Vector2D(1250, 600));
 
 	Text* pTitle = new Text("Title", "JainiPurva-Regular.ttf",45, 0, false);
-	pTitle->setMessage("Character");
 	pTitle->setIsScreenObject(true);
 	pGem->attachChild(pTitle);
+	pTitle->setMessage("Character");
 	pTitle->setPos(Vector2D(1250, 450));
 	pTitle->setScale(Vector2D(1, 1));
 
 	Text* pText = new Text("Text", "JainiPurva-Regular.ttf", 30, 0, false);
-	pText->setMessage("The Young Moth is the Main \n Character");
+	std::string message = this->pDataAsset->getGemText("Gem_Red");
 	pText->setIsScreenObject(true);
 	pGem->attachChild(pText);
+	pText->setMessage(message);
 	pText->setPos(Vector2D(1250, 550));
 	pText->setScale(Vector2D(1, 1));
 
@@ -97,8 +100,8 @@ void PlatformerPickupGUI::onEventTrigger(std::unordered_map<std::string, void*> 
 		if (mapParameter.find("GemName") != mapParameter.end())
 		{
 			std::string strGemName = *static_cast<std::string*>(mapParameter["GemName"]);
-			pTitle->modifyText(this->mapickupDialogue[strGemName][0]);
-			pText->modifyText(this->mapickupDialogue[strGemName][1]);
+			pTitle->setMessage(this->pDataAsset->getGemTitle(strGemName));
+			pText->setMessage(this->pDataAsset->getGemTextBreak(strGemName));
 			this->changeGem(strGemName+"_Inventory");
 		}
 
@@ -134,13 +137,6 @@ std::string PlatformerPickupGUI::getListenerOwnerName()
 {
 	return this->strName;
 }
-
-void PlatformerPickupGUI::addPickupDialogue(std::string strKey, std::string strDialogue)
-{
-	this->mapickupDialogue[strKey].push_back(strDialogue);
-}
-
-
 
 void PlatformerPickupGUI::onAnimationFinished()
 {

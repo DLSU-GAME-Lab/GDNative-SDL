@@ -10,5 +10,6 @@ public:
 	GUIButton(std::string strName, std::string strSpriteName, bool bFlipX = false);
 
 	void initialize() override;
+	void setColor(SDL_Color color);
 };
 

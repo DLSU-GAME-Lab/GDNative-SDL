@@ -47,10 +47,7 @@ void PlayerController::perform()
 			this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
 			AudioManager::getInstance()->play(new AudioPlayer("Jump", AudioGroupTag::SFX));
 			AudioManager::getInstance()->play(new AudioPlayer("Land", AudioGroupTag::SFX));
-
-            // consume virtual jump so it only fires once
-            this->pInput->setVirtualJump(false);
-        }
+		}
 
 		if (this->pInput->getMovement() != Vector2D::Zero())
 		{

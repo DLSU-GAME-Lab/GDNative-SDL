@@ -17,30 +17,30 @@ DialogueBox::~DialogueBox()
 
 void DialogueBox::initialize()
 {
-    Background* pTransBack = new Background("TransparentBG", "Square", Vector2D(5.f));
-    this->attachChild(pTransBack);
-    SpriteRenderer* pTransBGR = (SpriteRenderer*)pTransBack->findComponentByName("SpriteRenderer");
-    pTransBGR->setColor({ 0, 0, 0, 127 });
-    ButtonInput* pBackgroundInput = new ButtonInput(pTransBGR);
-    pTransBack->attachComponent(pBackgroundInput);
-
-
-    this->pDialogueBox = new Sprite("DialogueBox", "Square", Vector2D(0, 0), Vector2D(1, 1), 0, false);
-    this->pDialogueBox->setIsScreenObject(true);
-    this->pDialogueBox->setScale(Vector2D(3, .5));
-    this->attachChild(this->pDialogueBox);
-    this->vecDialogue.push_back("Anything on Your Mind ?");
-    this->pDialogueText = new Text("Speaker", "JainiPurva-Regular.ttf", 90, 0, false);
-    this->pDialogueText->setIsScreenObject(true);
-    this->pDialogueText->setMessage("PlaceHolder");
-    this->pDialogueText->setPos(Vector2D(0,0));
-    this->pDialogueText->setScale(Vector2D(1,1));
-    this->pDialogueText->setColor(SDL_Color(0, 0, 0, 255));
-    this->pDialogueBox->attachChild(this->pDialogueText);
-    this->pDialogueBox->setPos(Vector2D(950, 900));
-
-    DialogueToggle* pDiaTog = new DialogueToggle(EventKey::DIALOGUE_SCREEN);
-    pTransBack->attachComponent(pDiaTog);
+//    Background* pTransBack = new Background("TransparentBG", "Square", Vector2D(5.f));
+//    this->attachChild(pTransBack);
+//    SpriteRenderer* pTransBGR = (SpriteRenderer*)pTransBack->findComponentByName("SpriteRenderer");
+//    pTransBGR->setColor({ 0, 0, 0, 127 });
+//    ButtonInput* pBackgroundInput = new ButtonInput(pTransBGR);
+//    pTransBack->attachComponent(pBackgroundInput);
+//
+//
+//    this->pDialogueBox = new Sprite("DialogueBox", "Square", Vector2D(0, 0), Vector2D(1, 1), 0, false);
+//    this->pDialogueBox->setIsScreenObject(true);
+//    this->pDialogueBox->setScale(Vector2D(3, .5));
+//    this->attachChild(this->pDialogueBox);
+//    this->vecDialogue.push_back("Anything on Your Mind ?");
+//    this->pDialogueText = new Text("Speaker", "JainiPurva-Regular.ttf", 90, 0, false);
+//    this->pDialogueText->setIsScreenObject(true);
+//    this->pDialogueText->setMessage("PlaceHolder");
+//    this->pDialogueText->setPos(Vector2D(0,0));
+//    this->pDialogueText->setScale(Vector2D(1,1));
+//    this->pDialogueText->setColor(SDL_Color(0, 0, 0, 255));
+//    this->pDialogueBox->attachChild(this->pDialogueText);
+//    this->pDialogueBox->setPos(Vector2D(950, 900));
+//
+//    DialogueToggle* pDiaTog = new DialogueToggle(EventKey::DIALOGUE_SCREEN);
+//    pTransBack->attachComponent(pDiaTog);
 
     EventBroadcaster::getInstance()->registerListener(this);
 }
@@ -56,7 +56,7 @@ void DialogueBox::onEventTrigger(std::unordered_map<std::string, void*> mapParam
     }
     if (!this->bEnabled)
     {
-        this->pDialogueText->modifyText(this->vecDialogue[this->nCounter]);
+        //this->pDialogueText->modifyText(this->vecDialogue[this->nCounter]);
         this->setEnabled(true);
         EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
     }
@@ -70,7 +70,7 @@ void DialogueBox::onEventTrigger(std::unordered_map<std::string, void*> mapParam
             EventBroadcaster::getInstance()->enableAllListeners();
             this->nCounter = 0;
         }
-        this->pDialogueText->modifyText(this->vecDialogue[this->nCounter]);
+        //this->pDialogueText->modifyText(this->vecDialogue[this->nCounter]);
 
     }
 }

@@ -15,11 +15,11 @@ public:
     virtual void onLoadObjects() override;
     virtual void onUnloadResources() override;
     virtual void onUnloadObjects() override;
-public:
+private:
     void loadFonts();
     void loadAnimatedTextures();
     void loadSceneTextures();
-    void createButtons();
+    void loadDialogueTextures();
     void createScene();
     void createExitMenu();
     void createDiary();

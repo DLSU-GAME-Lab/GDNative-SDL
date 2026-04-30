@@ -5,13 +5,17 @@
 #include "IAnimatorListener.h"
 #include "Sprite.h"
 #include "Player.h"
+#include "GUIButton.h"
+#include "CollectableGemDataAsset.h"
+
 class InventoryGUI:public AGameObject, EventListener,IAnimatorListener
 {
 private:
+	CollectableGemDataAsset* pDataAsset;
 	EventKey EKey;
 	bool bListenerEnabled;
-	std::unordered_map <std::string, std::vector<std::string>> mapInventoryDialogue;
 	Player* pPlayer;
+	std::vector<GUIButton*> vecGems;
 public:
 	InventoryGUI(std::string strName);
 	~InventoryGUI();
@@ -27,7 +31,8 @@ public:
 	void setListenerEnabled(bool bListenerEnabled) override;
 	void addPickupDialogue(std::string strKey, std::string strDialogue);
 	std::string getListenerOwnerName() override;
-
+	void adjustFlag(std::string key, bool bFlag);
+	std::unordered_map <std::string, bool> getFlags();
 	// Inherited via IAnimatorListener
 	void onAnimationFinished() override;
 };

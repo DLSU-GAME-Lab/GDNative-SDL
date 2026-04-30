@@ -74,16 +74,16 @@ void ObjectiveManager::perform()
     // Objective button still lazy-found each frame (it's expected and cheap)
     if (!pObjectiveButton)  pObjectiveButton = GameObjectManager::getInstance()->findObjectByName("Objective_Button");
 
+    //// debug heartbeat
+    //static int dbgFrame = 0;
 
-    // debug heartbeat
-    static int dbgFrame = 0;
-    if (++dbgFrame % 60 == 0) {
-        std::cout << "[ObjectiveManager] perform (isPathFinding=" << (isPathFinding ? "true" : "false")
-            << ", elapsed=" << elapsed << ")\n";
-        if (pArrow)
-            std::cout << "  Arrow enabled=" << (pArrow->getEnabled() ? "true" : "false")
-            << " pos=(" << pArrow->getPos().x << "," << pArrow->getPos().y << ")\n";
-    }
+    //if (++dbgFrame % 60 == 0) {
+    //    std::cout << "[ObjectiveManager] perform (isPathFinding=" << (isPathFinding ? "true" : "false")
+    //        << ", elapsed=" << elapsed << ")\n";
+    //    if (pArrow)
+    //        std::cout << "  Arrow enabled=" << (pArrow->getEnabled() ? "true" : "false")
+    //        << " pos=(" << pArrow->getPos().x << "," << pArrow->getPos().y << ")\n";
+    //}
 
     // UI visibility: keep optional panel disabled when no gems
     auto gems = collectActiveGems();
@@ -193,10 +193,10 @@ void ObjectiveManager::startArrowPathfinding(const Vector2D& target)
 {
     if (!pArrow || !pPlayer) return;
 
-    std::cout << "[ObjectiveManager] startArrowPathfinding: target=("
-        << target.x << "," << target.y << "), playerPos=("
-        << (pPlayer ? std::to_string(pPlayer->getPos().x) + "," + std::to_string(pPlayer->getPos().y) : "NULL")
-        << "), duration=" << duration << "\n";
+    //std::cout << "[ObjectiveManager] startArrowPathfinding: target=("
+    //    << target.x << "," << target.y << "), playerPos=("
+    //    << (pPlayer ? std::to_string(pPlayer->getPos().x) + "," + std::to_string(pPlayer->getPos().y) : "NULL")
+    //    << "), duration=" << duration << "\n";
 
     targetPos = target;
     startPos = pPlayer->getPos();
@@ -316,8 +316,8 @@ void ObjectiveManager::onEventTrigger(std::unordered_map<std::string, void*> map
     if (!pStr) return;
     std::string sender = *pStr;
 
-    std::cout << "[ObjectiveManager] Event received from: " << sender
-        << " (isPathFinding=" << (isPathFinding ? "true" : "false") << ")\n";
+    //std::cout << "[ObjectiveManager] Event received from: " << sender
+    //    << " (isPathFinding=" << (isPathFinding ? "true" : "false") << ")\n";
 
     // If the Objective button was toggled via GUIToggle, start the same action
     // as a direct ButtonInput click: prefer finding gems, otherwise find door.

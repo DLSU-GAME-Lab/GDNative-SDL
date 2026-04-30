@@ -19,8 +19,8 @@ void ExitMenu::initialize()
 	this->attachChild(pExitBG);
 	Text* pExitText = new Text("Exit_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pExitText->setIsScreenObject(true);
-	pExitText->setMessage("Go Back to Title \n Screen ?");
 	pExitBG->attachChild(pExitText);
+	pExitText->setMessage("Go Back to Title \n Screen ?");
 	pExitText->setPos(Vector2D(950, 450));
 	pExitText->setScale(Vector2D(1, 1));
 
@@ -37,8 +37,8 @@ void ExitMenu::initialize()
 	Text* pDeclineText = new Text("Decline_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pDeclineText->setIsScreenObject(true);
 
-	pDeclineText->setMessage("No");
 	pDecline->attachChild(pDeclineText);
+	pDeclineText->setMessage("No");
 	pDeclineText->setScale(Vector2D(.75, .75));
 	pDecline->setPos(Vector2D(750, 800));
 
@@ -55,8 +55,8 @@ void ExitMenu::initialize()
 	Text* pAcceptText = new Text("Accept_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
 	pAcceptText->setIsScreenObject(true);
 
-	pAcceptText->setMessage("Yes");
 	pAccept->attachChild(pAcceptText);
+	pAcceptText->setMessage("Yes");
 	pAcceptText->setScale(Vector2D(.75, .75));
 	pAccept->setPos(Vector2D(1250, 800));
 

@@ -26,6 +26,8 @@ public:
 
 public:
     virtual void initialize() = 0;
+    virtual void onEnable() {};
+    virtual void onDisable() {};
     virtual void processInput(SDL_Event* eEvent);
     virtual void update(float fDeltaTime);
     virtual void draw(SDL_Renderer* pRenderer);
@@ -34,6 +36,8 @@ public:
     void attachChild(AGameObject* pChild);
     void detachChild(AGameObject* pChild);
     AGameObject* findChildByName(std::string strName);
+	std::vector<AGameObject*> getChildren();
+	std::vector<AGameObject*> getChildrenRecursively();
 
     void attachComponent(AComponent* pComponent);
     void detachComponent(AComponent* pComponent);

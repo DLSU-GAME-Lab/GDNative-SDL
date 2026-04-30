@@ -5,10 +5,13 @@ StoryWindow::StoryWindow(std::string strName):AGameObject(strName)
 	this->EKey = EventKey::STORY_SCREEN;
 	this->bListenerEnabled = true;
 	this->bIsScreenObject = true;
+	this->pMessage = NULL;
+	this->pTitle = NULL;
 }
 
 StoryWindow::~StoryWindow()
 {
+	this->pMessage = NULL;
 }
 
 void StoryWindow::initialize()
@@ -26,36 +29,32 @@ void StoryWindow::initialize()
 	ButtonInput* pInput = new ButtonInput(pParentBGR);
 	pParentBG->attachComponent(pInput);
 
-	Text* pTitle = new Text("TitleText", "JainiPurva-Regular.ttf", 90, 0, false);
-	pTitle->setIsScreenObject(true);
-	pTitle->setMessage("Story");
-	pTitle->setPos(Vector2D(1000, 100));
-	this->attachChild(pTitle);
-	pTitle->setScale(Vector2D(1, 1));
-	pTitle->setPos(Vector2D(1000, 100));
+	this->pTitle = new Text("TitleText", "JainiPurva-Regular.ttf", 90, 0, false);
+	this->attachChild(this->pTitle);
+	this->pTitle->setIsScreenObject(true);
+	this->pTitle->setPos(Vector2D(1000, 100));
+	this->pTitle->setScale(Vector2D(1, 1));
+	this->pTitle->setPos(Vector2D(1000, 100));
 
 	Text* pLineBreak = new Text("LineBreak", "JainiPurva-Regular.ttf", 90, 0, false);
+	this->attachChild(pLineBreak);
 	pLineBreak->setIsScreenObject(true);
 	pLineBreak->setMessage("----------------------------------------");
-	this->attachChild(pLineBreak);
 	pLineBreak->setPos(Vector2D(1000, 150));
 	pLineBreak->setScale(Vector2D(1, 1));
+	
+	this->pMessage = new Text("Message", "JainiPurva-Regular.ttf", 45, 0, false);
+	pParentBG->attachChild(this->pMessage);
+	this->pMessage->setIsScreenObject(true);
+	this->pMessage->setPos(Vector2D(0, 0));
+	this->pMessage->setScale(Vector2D(1, 1));
 
-	std::string strMessage = "The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues.\n The 20 meter pacer test will begin in 30 seconds.Line up at the start.The running speed starts slowly but gets faster\n each minute after you hear this signal bodeboop.A sing lap should be completed every time you hear this sound.ding\n Remember to run in a straight line and run as long as possible.The second time you fail to complete a lap before the sound,\nyour test is over.The test will begin on the word start.On your mark.Get ready! Start.ding?\n";
-
-	Text* pMessage = new Text("Message", "JainiPurva-Regular.ttf", 45, 0, false);
-	pMessage->setIsScreenObject(true);
-	pMessage->setMessage(strMessage + "\n" + strMessage + "\n" + strMessage + "\n"+ strMessage);
-	pParentBG->attachChild(pMessage);
-	pMessage->setPos(Vector2D(0, 0));
-	pMessage->setScale(Vector2D(1, 1));
-
-	DialogueRenderer* pRenderer = ((DialogueRenderer*)pMessage->findComponentByName("DialogueRenderer"));
+	TextRenderer* pRenderer = ((TextRenderer*)this->pMessage->findComponentByName("TextRenderer"));
 	pRenderer->setCropEnabled(true);
 	pRenderer->setPivot(Vector2D(0, 0));
 	pRenderer->setViewHeight(pParentBGR->getRect().h);
 
-	Scroller* pScroller = new Scroller("StoryScroller", pMessage);
+	Scroller* pScroller = new Scroller("StoryScroller", this->pMessage);
 	pParentBG->attachComponent(pScroller);
 	pScroller->setVert(true);
 
@@ -67,9 +66,9 @@ void StoryWindow::initialize()
 	pButton->setScale(Vector2D(.15, .15));
 
 	Text* pDeclineText = new Text("Decline_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
+	pButton->attachChild(pDeclineText);
 	pDeclineText->setIsScreenObject(true);
 	pDeclineText->setMessage("Close");
-	pButton->attachChild(pDeclineText);
 	pButton->setPos(Vector2D(1000, 950));
 	pDeclineText->setScale(Vector2D(.75, .75));
 
@@ -77,6 +76,16 @@ void StoryWindow::initialize()
 	
 	EventBroadcaster::getInstance()->registerListener(this);
 
+}
+
+Text* StoryWindow::getStoryText()
+{
+	return this->pMessage;
+}
+
+Text* StoryWindow::getTitleText()
+{
+	return this->pTitle;
 }
 
 void StoryWindow::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)

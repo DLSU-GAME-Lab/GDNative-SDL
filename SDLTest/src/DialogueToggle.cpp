@@ -1,9 +1,12 @@
 #include "DialogueToggle.h"
+#include "ButtonInput.h"
+#include "EventBroadcaster.h"
 
-DialogueToggle::DialogueToggle(EventKey EKey):AComponent("DialogueToggle",ComponentType::SCRIPT)
+DialogueToggle::DialogueToggle(unsigned int nDialogueKey):AComponent("DialogueToggle",ComponentType::SCRIPT)
 {
 	this->nCounter = 0;
-	this->EKey = EKey;
+	this->EKey = EventKey::DIALOGUE_SCREEN;
+	this->nDialogueKey = nDialogueKey;
 }
 
 DialogueToggle::~DialogueToggle()
@@ -17,8 +20,7 @@ void DialogueToggle::perform()
 	{
 		pInput->setClicked(false);
 		std::unordered_map <std::string, void*> mapParam;
-		std::string strName = this->getName();
-		mapParam["Sender"] = static_cast<void*>(&strName);
+		mapParam["DialogueToggle"] = static_cast<void*>(&this->nDialogueKey);
 		EventBroadcaster::getInstance()->broadcast(this->EKey, mapParam);
 	}
 }

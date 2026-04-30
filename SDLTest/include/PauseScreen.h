@@ -20,7 +20,7 @@ private:
 public:
 	PauseScreen(std::string strName);
 	~PauseScreen();
-	void initialize() override;
+	void initialize();
 
 	// Inherited via EventListener
 	void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;

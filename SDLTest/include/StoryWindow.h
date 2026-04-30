@@ -13,13 +13,16 @@ class StoryWindow: public AGameObject, EventListener
 private:
 	EventKey EKey;
 	bool bListenerEnabled;
+	Text* pTitle;
+	Text* pMessage;
 public:
 	StoryWindow(std::string strName);
 	~StoryWindow();
 
 	// Inherited via AGameObject
 	void initialize() override;
-
+	Text* getStoryText();
+	Text* getTitleText();
 	// Inherited via EventListener
 	void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;
 	EventKey getKey() override;

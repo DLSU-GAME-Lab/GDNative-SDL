@@ -4,7 +4,6 @@
 #include "AAnimator.h"
 #include "Settings.h"
 #include <iostream>
-#include "RendererContext.h"
 
 AGameObject::AGameObject(std::string strName)
 {
@@ -19,6 +18,7 @@ AGameObject::AGameObject(std::string strName)
 
 AGameObject::~AGameObject()
 {
+    SDL_Log("Deleting object [%s] with address %p", this->strName.c_str(), this);
     // Delete components
     for (int i = 0; i < this->vecComponent.size(); i++)
     {
@@ -27,29 +27,27 @@ AGameObject::~AGameObject()
             delete this->vecComponent[i];
         }
     }
-    vecComponent.clear();
 
-    // DO NOT delete children here - GameObjectManager handles them
-    // Just clear the vector so we don't have dangling pointers
+    // Delete children
+    for (int i = 0; i < this->vecChildren.size(); i++)
+    {
+        if (this->vecChildren[i])
+        {
+            delete this->vecChildren[i];
+        }
+    }
     vecChildren.clear();
 }
 
-void AGameObject::processInput(SDL_Event* eEvent) {
-    if (!eEvent) return;
-
-    // Get all INPUT components on this object and its children
+void AGameObject::processInput(SDL_Event* eEvent)
+{
     auto vecInput = this->getComponentsRecursively(ComponentType::INPUT);
-
     for (AComponent* pComponent : vecInput)
     {
-        AGameObject* pOwner = pComponent->getOwner();
+        AGameObject* pOwner = pComponent->getOwner(); // Assuming each component knows its owner
         if (!pOwner || !pOwner->isGloballyEnabled() || !pComponent->getEnabled()) continue;
-
-        // Safe downcast (components should be AGeneralInput-derived)
-        AGeneralInput* input = static_cast<AGeneralInput*>(pComponent);
-        if (!input) continue;
-
-        // Pass the original (window) event — AGeneralInput::setEvent will convert
+        
+        AGeneralInput* input = (AGeneralInput*)pComponent;
         input->setEvent(eEvent);
         input->perform();
     }
@@ -151,6 +149,22 @@ AGameObject* AGameObject::findChildByName(std::string strName)
     }
 }
 
+std::vector<AGameObject*> AGameObject::getChildren()
+{
+	return this->vecChildren;
+}
+
+std::vector<AGameObject*> AGameObject::getChildrenRecursively()
+{
+	std::vector<AGameObject*> vecFound = this->vecChildren;
+    for (AGameObject* pChild : this->vecChildren)
+    {
+        std::vector<AGameObject*> childChildren = pChild->getChildrenRecursively();
+        vecFound.insert(vecFound.end(), childChildren.begin(), childChildren.end());
+	}
+	return vecFound;
+}
+
 void AGameObject::attachComponent(AComponent* pComponent)
 {
     this->vecComponent.push_back(pComponent);
@@ -235,6 +249,16 @@ bool AGameObject::getEnabled() const
 void AGameObject::setEnabled(bool bEnabled)
 {
     this->bEnabled = bEnabled;
+    if (bEnabled)
+    {
+        this->onEnable();
+		std::cout << "[" << this->strName << "] enabled." << std::endl;
+    }
+    else
+    {
+        this->onDisable();
+		std::cout << "[" << this->strName << "] disabled." << std::endl;
+    }
 }
 
 std::string AGameObject::getName() const

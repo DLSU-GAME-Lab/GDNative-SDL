@@ -1,6 +1,6 @@
 #pragma once
 #include "AGameObject.h"
-#include "DialogueRenderer.h"
+#include "TextRenderer.h"
 class Text:public AGameObject
 {
 private:
@@ -13,8 +13,9 @@ public:
 	~Text() override;
 
 	void setMessage(const std::string& strMessage);
+	std::string getMessage();
 	void setColor(SDL_Color color);
+	void setPivot(Vector2D fVecPivot);
 	void initialize() override;
-	void modifyText(std::string strNewText);
 };
 

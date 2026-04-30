@@ -37,11 +37,11 @@ android {
             def mainAssets = file("${projectDir}/src/main/assets")
 
             if (externalAssets.exists()) {
-                delete mainAssets  // Clear existing
-                copy {
-                    from externalAssets
-                    into mainAssets
-                }
+//                delete(mainAssets)  // Clear existing
+//                project.copy {
+//                    from externalAssets
+//                    into mainAssets
+//                }
                 println "Copied assets from ${externalAssets} to ${mainAssets}"
             }
         }

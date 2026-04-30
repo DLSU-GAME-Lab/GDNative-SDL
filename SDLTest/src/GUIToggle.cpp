@@ -23,6 +23,7 @@ void GUIToggle::perform()
 		pInput->setClicked(false);
 		std::unordered_map <std::string, void*> mapParam;
 		std::string strName = pOwner->getName();
+
 		mapParam["Sender"] = static_cast<void*>(&strName);
 		EventBroadcaster::getInstance()->broadcast(this->EKey, mapParam);
 	}

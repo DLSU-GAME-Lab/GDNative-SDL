@@ -96,33 +96,18 @@ void GameObjectManager::deleteAllObjects()
 
 void GameObjectManager::cleanUpDeletedObjects()
 {
-    // Make a copy of the deletion list
-    std::vector<AGameObject*> objectsToDelete;
-    objectsToDelete.swap(vecPendingDeletion);
-
-    for (AGameObject* pObject : objectsToDelete) {
-        // Skip if already null
-        if (!pObject) continue;
-
-        // Get name before deletion
-        std::string name = pObject->getName();
-
-        // Remove from vector
-        auto vecIt = std::find(vecGameObject.begin(), vecGameObject.end(), pObject);
-        if (vecIt != vecGameObject.end()) {
-            vecGameObject.erase(vecIt);
+    for (AGameObject* pObject : vecPendingDeletion) {
+        auto it = std::find(vecGameObject.begin(), vecGameObject.end(), pObject);
+        if (it != vecGameObject.end()) {
+            vecGameObject.erase(it);
         }
 
-        // Remove from map
-        auto mapIt = mapGameObject.find(name);
-        if (mapIt != mapGameObject.end()) {
-            mapGameObject.erase(mapIt);
-        }
-
-        // Delete object
-        delete pObject;
-        pObject = nullptr;
+        mapGameObject.erase(pObject->getName());
+        //delete pObject;
     }
+
+    vecPendingDeletion.clear();
+
 }
 
 // findObjectByName: map lookup
@@ -131,12 +116,13 @@ void GameObjectManager::cleanUpDeletedObjects()
 // affect behavior as G grows
 AGameObject* GameObjectManager::findObjectByName(std::string strName)
 {
-    auto it = mapGameObject.find(strName);
-    if (it != mapGameObject.end() && it->second != nullptr)
-        return it->second;
+    if(this->mapGameObject[strName] != NULL)
+        return this->mapGameObject[strName];
 
-    std::cout << "[ERROR] : Object [" << strName << "] NOT found." << std::endl;
-    return nullptr;
+    else {
+        std::cout << "[ERROR] : Object [" << strName << "] NOT found." << std::endl;
+        return NULL;
+    }
 }
 
 void GameObjectManager::setObjectName(std::string strName, std::string strNewName)

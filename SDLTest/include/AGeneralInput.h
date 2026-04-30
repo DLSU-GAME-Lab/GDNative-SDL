@@ -6,8 +6,6 @@ class AGeneralInput : public AComponent
 {
 protected:
 	SDL_Event* eEvent;
-    float logicalX = 0.0f;
-    float logicalY = 0.0f;
 
 public:
 	AGeneralInput(std::string strName);
@@ -16,5 +14,7 @@ public:
 	virtual void perform() = 0;
 
 	void setEvent(SDL_Event* eEvent);
+
+
 };
 

@@ -19,10 +19,10 @@ void PuzzleHint::initialize()
 	this->attachChild(pSprite);
 
 	this->pText = new Text("TextHint", "Maragsa.otf", 90);
-	this->pText->setMessage("Place Holder");
 	pText->setPos(Vector2D(0, 50));
 	pText->setScale(Vector2D(.75, .75));
 	this->attachChild(this->pText);
+	this->pText->setMessage("Place Holder");
 
 	GUIButton* pButton = new GUIButton("CloseButton", "Close_Button");
 	GUIToggle* pToggle = new GUIToggle(EventKey::RIGHT_CLICK);
@@ -33,45 +33,47 @@ void PuzzleHint::initialize()
 
 
 	Text* pDeclineText = new Text("Decline_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
-	pDeclineText->setMessage("Close");
 	pDeclineText->setPos(Vector2D(0, -300));
 	pDeclineText->setScale(Vector2D(.75, .75));
 	this->attachChild(pDeclineText);
+	pDeclineText->setMessage("Close");
 
 	EventBroadcaster::getInstance()->registerListener(this);
 }
 void PuzzleHint::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {
 	bool bFromToggle = false;
+	// checks if the sender is the button that closes it.
 	if (mapParameter.find("Sender") != mapParameter.end())
 	{
 		std::string senderType = *static_cast<std::string*>(mapParameter["Sender"]);
 		bFromToggle = (senderType == "CloseButton");
 		std::cout << senderType << std::endl;
 	}
-
+	// if object not enabled enable it based on name
 	if(!this->bEnabled)
 	{
 		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
 		std::string strName = *static_cast<std::string*>(mapParameter["TokenName"]);
 		if (strName == "Token_Horns")
 		{
-			this->pText->modifyText(" \"Bathala planted tall bamboo trees so that\n Bakunawawould not be able to swallow the\n moon so easily. Theses bamboo trees looked\nlike stains or dark spots on the surface of the\n moon from afar.\"");
+			this->pText->setMessage(" \"Bathala planted tall bamboo trees so that\n Bakunawawould not be able to swallow the\n moon so easily. Theses bamboo trees looked\nlike stains or dark spots on the surface of the\n moon from afar.\"");
 			this->setEnabled(true);
 		}
 		else if (strName == "Token_Claws")
 		{
-			this->pText->modifyText(" \"Bakunawa sprung from the pitch-black \n ocean and boted towards the sky he opened \n his mouth wide as he could around one of\n the moons and with one powerful swoop,\n swallowed it whole. As he did so a huge wave\n of earthquakes shook the ancient land of\n the Philippines.\"");
+			this->pText->setMessage(" \"Bakunawa sprung from the pitch-black \n ocean and boted towards the sky he opened \n his mouth wide as he could around one of\n the moons and with one powerful swoop,\n swallowed it whole. As he did so a huge wave\n of earthquakes shook the ancient land of\n the Philippines.\"");
 			this->setEnabled(true);
 
 
 		}
 		else if (strName == "Token_Eyes")
 		{
-			this->pText->modifyText(" \"The ancient Filipinos ran to the ocean while\n banging their pots and pans and shouted\n together, \"Return our moon\". Bakunawa was\n so startled by the loud sudden noise that it \n spat out the seventh moon.\"");
+			this->pText->setMessage(" \"The ancient Filipinos ran to the ocean while\n banging their pots and pans and shouted\n together, \"Return our moon\". Bakunawa was\n so startled by the loud sudden noise that it \n spat out the seventh moon.\"");
 			this->setEnabled(true);
 		}
 	}
+	//do not change this handles the closing if separated any object that throws the event will close it
 	else if(this->bEnabled && bFromToggle)
 	{
 		this->setEnabled(false);

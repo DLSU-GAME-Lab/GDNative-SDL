@@ -11,6 +11,8 @@ AGameObject(strName)
 	this->nFontSize = nFontSize;
 	this->strFontName = strFontName;
 	this->fRot = fRot;
+
+    SDL_Log("Created Text with font: %s %d", strFontName.c_str(), nFontSize);
 }
 
 Text::~Text()
@@ -21,18 +23,7 @@ Text::~Text()
 void Text::setMessage(const std::string& strMessage)
 {
 	this->strMessage = strMessage;
-}
-
-void Text::setColor(SDL_Color color)
-{
-	this->color = color;
-}
-
-void Text::initialize()
-{
 	std::string key = this->strFontName;
-    std::string filePath = "Fonts/";
-    filePath += this->strFontName;
 
 	size_t ttfPos = key.rfind(".ttf");
 	size_t otfPos = key.rfind(".otf");
@@ -46,28 +37,37 @@ void Text::initialize()
 		key = key.substr(0, otfPos);
 	}
 
-	FontManager::getInstance()->loadFont(filePath, key,nFontSize);
-	DialogueRenderer* pDialogueRenderer = new DialogueRenderer();
-	pDialogueRenderer->loadFromText(this->strName, key, this->nFontSize, this->strMessage, this->color);
-	this->attachComponent((AComponent*)pDialogueRenderer);
+	FontManager::getInstance()->loadFont(this->strFontName, key, nFontSize);
+	TextRenderer* pRenderer = (TextRenderer*)this->findComponentByName("TextRenderer");
+	pRenderer->resetText();
+	pRenderer->loadFromText(key, this->nFontSize, this->strMessage, this->color);
 }
 
-void Text::modifyText(std::string strNewText)
+std::string Text::getMessage()
 {
-		std::string key = this->strFontName;
+	return this->strMessage;
+}
 
-		size_t ttfPos = key.rfind(".ttf");
-		size_t otfPos = key.rfind(".otf");
+void Text::setColor(SDL_Color color)
+{
+	this->color = color;
+	if (TextRenderer* pRenderer = (TextRenderer*)this->findComponentByName("TextRenderer"))
+	{
+		pRenderer->setColor(color);
+	}
+}
 
-		if (ttfPos != std::string::npos && ttfPos == key.length() - 4)
-		{
-			key = key.substr(0, ttfPos);
-		}
-		else if (otfPos != std::string::npos && otfPos == key.length() - 4)
-		{
-			key = key.substr(0, otfPos);
-		}
-	DialogueRenderer* pRenderer = (DialogueRenderer*)this->findComponentByName("DialogueRenderer");
-	pRenderer->resetText();
-	pRenderer->loadFromText(this->strName, key, this->nFontSize, strNewText, this->color);
+void Text::setPivot(Vector2D fVecPivot)
+{
+	TextRenderer* pRenderer = (TextRenderer*)this->findComponentByName("TextRenderer");
+	if (pRenderer)
+	{
+		pRenderer->setPivot(fVecPivot);
+	}
+}
+
+void Text::initialize()
+{
+	TextRenderer* pTextRenderer = new TextRenderer();
+	this->attachComponent((AComponent*)pTextRenderer);
 }

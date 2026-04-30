@@ -64,7 +64,7 @@ void RightRoomScene::onUnloadObjects()
 
 void RightRoomScene::loadFonts()
 {
-	FontManager::getInstance()->loadFont("Fonts/lazy.ttf", "LazyFont90", 90);
+	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
 }
 
 void RightRoomScene::loadAnimatedTextures() 
@@ -75,12 +75,9 @@ void RightRoomScene::loadAnimatedTextures()
 
 void RightRoomScene::loadSceneTextures()
 {
-	std::string strPath = "right_room/forest_lobby.png";
-	TextureManager::getInstance()->load(strPath, "Forest_Area");
-	strPath = "right_room/book5.png";
-	TextureManager::getInstance()->load(strPath, "Book_Yellow");
-	strPath = "right_room/red_dragon.png";
-	TextureManager::getInstance()->load(strPath, "Red_Dragon");
+	TextureManager::getInstance()->load("right_room/forest_lobby.png", "Forest_Area");
+	TextureManager::getInstance()->load("right_room/book5.png", "Book_Yellow");
+	TextureManager::getInstance()->load("right_room/red_dragon.png", "Red_Dragon");
 	TextureManager::getInstance()->load("GUI/button.png", "Button");
 	TextureManager::getInstance()->load("GUI/back.png", "Back");
 	TextureManager::getInstance()->load("GUI/tablet.png", "Return_Dialogue_Holder");

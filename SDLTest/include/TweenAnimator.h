@@ -12,6 +12,7 @@ private:
 	Tween2D tweenPos;
 	Tween2D tweenScale;
 	Tween tweenRot;
+	bool bLocal;
 
 public:
 	TweenAnimator();
@@ -27,6 +28,7 @@ public:
 	void setTweenPos(const Tween2D& tweenPos);
 	void setTweenScale(const Tween2D& tweenScale);
 	void setTweenRot(const Tween& tweenRot);
+	void setLocal(bool bLocal);
 
 private:
 	template<typename... Ts>

@@ -63,6 +63,6 @@ void JumpButtonController::perform()
         return;
     }
 
-    this->playerInput->setVirtualJump(true);
+    //this->playerInput->setVirtualJump(true);
     btn->setClicked(false); // consume click
 }

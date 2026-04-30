@@ -33,14 +33,18 @@ void Editor::EditorModule::processEditorInput(const SDL_Event* eEvent)
             this->bIsHolding = true;
 
             std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-            for (auto obj : vecObject)
+            for (auto parent : vecObject)
             {
-                if (contains(obj, this->mousePos))
+				std::vector<AGameObject*> vecObjectTree = parent->getChildrenRecursively();
+				vecObjectTree.push_back(parent);
+                for (auto obj : vecObjectTree)
                 {
-                    inspector->setSelectedObject(obj);
-                    this->offsetPos = this->getMouseWorldPos() - obj->getPos();
+                    if (contains(obj, this->mousePos))
+                    {
+                        inspector->setSelectedObject(obj);
+                        this->offsetPos = this->getMouseWorldPos() - obj->getPos();
+                    }
                 }
-                
             }
         }
         else if (eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP)
@@ -121,20 +125,27 @@ void Editor::EditorModule::drawEditor(SDL_Renderer* pRenderer)
     //SDL_RenderLine(pRenderer, 0, 540, 1920, 540);
 
     std::vector<AGameObject*> vecObject = GameObjectManager::getInstance()->getAllObjects();
-    for (auto obj : vecObject)
+    for (auto parent : vecObject)
     {
-        SDL_FRect mDestRect {};
-        mDestRect.w = this->fTexW;
-        mDestRect.h = this->fTexH;
+		std::vector<AGameObject*> vecObjectTree = parent->getChildrenRecursively();
+        for (auto obj : vecObjectTree)
+        {
+            if (obj->getEnabled())
+            {
+                SDL_FRect mDestRect{};
+                mDestRect.w = this->fTexW;
+                mDestRect.h = this->fTexH;
 
-        Vector2D screenPos;
-        if (obj->getIsScreenObject()) screenPos = obj->getPos();
-        else screenPos = pCam->worldToScreenPoint(obj->getPos());
+                Vector2D screenPos;
+                if (obj->getIsScreenObject()) screenPos = obj->getPos();
+                else screenPos = pCam->worldToScreenPoint(obj->getPos());
 
-        mDestRect.x = screenPos.x - (mDestRect.w * 0.5f);
-        mDestRect.y = screenPos.y - (mDestRect.h * 0.5f);
+                mDestRect.x = screenPos.x - (mDestRect.w * 0.5f);
+                mDestRect.y = screenPos.y - (mDestRect.h * 0.5f);
 
-        SDL_RenderTexture(pRenderer, this->pWidget, NULL, &mDestRect);
+                SDL_RenderTexture(pRenderer, this->pWidget, NULL, &mDestRect);
+            }
+		}
     }
 
     MetricsManager::getInstance()->drawGUI();

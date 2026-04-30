@@ -2,7 +2,7 @@
 #include "GameObjectManager.h"
 #include "EmptyObject.h"
 #include "PuzzleToken.h"
-
+#include "EventBroadcaster.h"
 void SequenceGameManager::perform()
 {
     // Checks for dropped tokens (occurs when the token had been clicked and dragged).
@@ -49,6 +49,13 @@ void SequenceGameManager::removeToken(PuzzleToken* pToken)
     }
 }
 
+void SequenceGameManager::setCombination(std::string strFirst, std::string strSecond, std::string strThird)
+{
+    this->mapCombi[3] = strFirst;
+    this->mapCombi[4] = strSecond;
+    this->mapCombi[5] = strThird;
+}
+
 // Check the token's slot by getting the nearest slot position.
 int SequenceGameManager::getSlotIndex(PuzzleToken* pToken)
 {
@@ -73,6 +80,44 @@ void SequenceGameManager::assignTokenSlot(PuzzleToken* pToken, int nSlot)
     pToken->setSlot(nSlot);
     pToken->setPos(this->vecPosition[nSlot]);
     this->vecTokenHolder[nSlot] = pToken;
+    this->checkToken(nSlot,pToken->getName());
+    this->checkCombination();
+}
+
+void SequenceGameManager::checkToken(int nSlot, std::string strTokenName)
+{
+    if(nSlot > 2)
+    {
+        if (this->mapCombi[nSlot] == strTokenName)
+        {
+            this->vecCombinationCheck[nSlot - 3] = true;
+        }
+        else
+        {
+            this->vecCombinationCheck[nSlot - 3] = false;
+        }
+    }
+}
+
+void SequenceGameManager::checkCombination()
+{
+    bool bEndCheck = true;
+    for (bool bCheck : this->vecCombinationCheck)
+    {
+        if (!bCheck)
+        {
+            bEndCheck = false;
+            break;
+        }
+    }
+    if (bEndCheck)
+    {
+        for (PuzzleToken* pToken : this->vecToken)
+        {
+            pToken->setEnabled(false);
+        }
+        EventBroadcaster::getInstance()->broadcast(EventKey::END_LEVEL);
+    }
 }
 
 SequenceGameManager* SequenceGameManager::P_SHARED_INSTANCE = NULL;
@@ -86,9 +131,17 @@ SequenceGameManager::SequenceGameManager() : AComponent("SequenceGameManager", C
 
     // Final token positions
     this->vecPosition.push_back(Vector2D(-380.0f, 27.0f));
+    this->mapCombi[this->vecPosition.size() - 1];
     this->vecPosition.push_back(Vector2D(0.0f, 27.0f));
+    this->mapCombi[this->vecPosition.size() - 1];
     this->vecPosition.push_back(Vector2D(380.0f, 27.0f));
-
+    this->mapCombi[this->vecPosition.size() - 1];
+    for (auto& entry : mapCombi) {
+        std::cout << entry.first << std::endl;
+    }
+    this->vecCombinationCheck.push_back(false);
+    this->vecCombinationCheck.push_back(false);
+    this->vecCombinationCheck.push_back(false);
     // Holds the tokens; used for position swapping by matching indices with vecPosition
     for (int i = 0; i < this->vecPosition.size(); i++)
         this->vecTokenHolder.push_back(NULL);

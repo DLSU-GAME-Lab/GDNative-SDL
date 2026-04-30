@@ -6,5 +6,7 @@ public:
 	Gate(std::string strName);
 
 	void initialize() override;
+
+	void gateOpen();
 };
 

@@ -64,7 +64,7 @@ void LeftRoomScene::onUnloadObjects()
 
 void LeftRoomScene::loadFonts()
 {
-	FontManager::getInstance()->loadFont("Fonts/lazy.ttf", "LazyFont90", 90);
+	FontManager::getInstance()->loadFont("lazy.ttf", "LazyFont90", 90);
 }
 
 void LeftRoomScene::loadAnimatedTextures()
@@ -75,10 +75,8 @@ void LeftRoomScene::loadAnimatedTextures()
 
 void LeftRoomScene::loadSceneTextures()
 {
-	std::string strPath = "left_room/Ruin-background_alt.png";
-	TextureManager::getInstance()->load(strPath, "Ruins");
-	strPath = "left_room/pedestal.png";
-	TextureManager::getInstance()->load(strPath, "Pedestal");
+	TextureManager::getInstance()->load("left_room/Ruin-background_alt.png", "Ruins");
+	TextureManager::getInstance()->load("left_room/pedestal.png", "Pedestal");
 	TextureManager::getInstance()->load("left_room/statue_carabao.png", "Level_1_Platformer");
 	TextureManager::getInstance()->load("GUI/button.png", "Button");
 	TextureManager::getInstance()->load("GUI/back.png", "Back");

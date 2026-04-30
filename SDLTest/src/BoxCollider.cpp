@@ -23,6 +23,7 @@ void BoxCollider::drawWidget()
 {
 	Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
 	SDL_FRect tempRect = this->getGlobalBounds();
+	AGameObject* owner = this->getOwner();
 
 	if (!pOwner->getIsScreenObject()) tempRect = pCam->worldToScreenRect(tempRect);
 	SDL_SetRenderDrawBlendMode(RendererContext::getInstance()->getRenderer(), SDL_BLENDMODE_BLEND);

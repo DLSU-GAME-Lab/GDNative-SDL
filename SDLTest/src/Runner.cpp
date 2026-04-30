@@ -23,6 +23,8 @@
 #include "SceneTransitionManager.h" 
 #include "FontManager.h"
 #include "AudioManager.h"
+#include "DataAssetManager.h"
+#include "EventBroadcaster.h"
 
 // metrics
 #include "MetricsManager.h"
@@ -118,7 +120,6 @@ Runner::Runner()
             SDL_LOGICAL_PRESENTATION_LETTERBOX
     );
 
-
 	//initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;
 	GameObjectManager::initialize();
@@ -131,6 +132,8 @@ Runner::Runner()
 	SceneTransitionManager::initialize();
 	FontManager::initialize();
 	AudioManager::initialize();
+	DataAssetManager::initialize();
+	EventBroadcaster::initialize();
 	UIManager::initialize(this->pWindow, this->pRenderer);
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
@@ -151,6 +154,7 @@ Runner::~Runner()
 #if EDITOR_MODE
 	Editor::EditorModule::destroy();
 #endif
+	DataAssetManager::destroy();
 	AudioManager::destroy();
 	UIManager::destroy();
 	TextureManager::destroy();
@@ -160,7 +164,7 @@ Runner::~Runner()
 	SceneTransitionManager::destroy();
 	MetricsManager::destroy();
 	RendererContext::destroy();
-
+	EventBroadcaster::destroy();
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
 }

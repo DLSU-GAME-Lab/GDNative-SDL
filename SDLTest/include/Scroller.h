@@ -2,7 +2,7 @@
 #include "AComponent.h"
 #include "ButtonInput.h"
 #include "Text.h"
-#include "DialogueRenderer.h"
+#include "TextRenderer.h"
 class Scroller:public AComponent
 {
 	private:

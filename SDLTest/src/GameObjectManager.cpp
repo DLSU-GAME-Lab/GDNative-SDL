@@ -96,19 +96,39 @@ void GameObjectManager::deleteAllObjects()
 
 void GameObjectManager::cleanUpDeletedObjects()
 {
-    for (AGameObject* pObject : vecPendingDeletion) {
-        auto it = std::find(vecGameObject.begin(), vecGameObject.end(), pObject);
-        if (it != vecGameObject.end()) {
-            vecGameObject.erase(it);
+    // Make a copy of the deletion list
+// Make a copy of the deletion list
+    std::vector<AGameObject*> objectsToDelete;
+    objectsToDelete.swap(vecPendingDeletion);
+
+    for (AGameObject* pObject : objectsToDelete) {
+        // Skip if already null
+        if (!pObject) continue;
+
+        // Get name before deletion
+        std::string name = pObject->getName();
+
+        // Remove from vector
+        auto vecIt = std::find(vecGameObject.begin(), vecGameObject.end(), pObject);
+        if (vecIt != vecGameObject.end()) {
+            vecGameObject.erase(vecIt);
+        }
+        // Remove from map
+        auto mapIt = mapGameObject.find(name);
+        if (mapIt != mapGameObject.end()) {
+            mapGameObject.erase(mapIt);
         }
 
-        mapGameObject.erase(pObject->getName());
-        //delete pObject;
+        // Delete object
+        delete pObject;
+        pObject = nullptr;
     }
-
-    vecPendingDeletion.clear();
-
 }
+    
+
+
+
+
 
 // findObjectByName: map lookup
 // Complexity: average-case O(1) (unordered_map) or O(log G) (ordered map).

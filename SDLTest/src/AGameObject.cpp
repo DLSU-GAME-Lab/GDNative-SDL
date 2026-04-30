@@ -28,14 +28,7 @@ AGameObject::~AGameObject()
         }
     }
 
-    // Delete children
-    for (int i = 0; i < this->vecChildren.size(); i++)
-    {
-        if (this->vecChildren[i])
-        {
-            delete this->vecChildren[i];
-        }
-    }
+   
     vecChildren.clear();
 }
 

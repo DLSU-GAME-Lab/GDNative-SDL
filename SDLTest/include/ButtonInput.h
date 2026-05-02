@@ -13,8 +13,6 @@ private:
 	bool bClicked;
 	bool bRightClick;
 	bool bLeftClick;
-    float logicalX;
-    float logicalY;
 
 public:
 	ButtonInput(SpriteRenderer* pSprite);

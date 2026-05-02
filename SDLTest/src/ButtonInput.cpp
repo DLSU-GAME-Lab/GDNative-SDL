@@ -21,8 +21,9 @@ void ButtonInput::perform()
     if (!eEvent) {
         std::cout << "[ButtonInput] NO eEvent set on component\n";
     } else {
-        std::cout << "[ButtonInput] eEvent type=" << eEvent->type
-                  << " logical=(" << this->logicalX << "," << this->logicalY << ")\n";
+        //std::cout << "[ButtonInput] eEvent type=" << eEvent->type
+        //          << " logical=(" << this->logicalX << "," << this->logicalY << ")\n";
+        //SDL_Log("[ButtonInput] eEvent type=%d logical=(%f, %f)", eEvent->type, this->logicalX, this->logicalY);
     }
 
     // Hover: mouse or finger motion -> use logical coords (AGeneralInput stores them)
@@ -136,6 +137,7 @@ void ButtonInput::onMouseButtonUp(Uint8 mouseButton)
 	this->bHolding = false;
 	this->bDragging = false;
 	this->bClicked = true;
+
 	if (mouseButton == SDL_BUTTON_RIGHT)
 	{
 		this->bRightClick = true;
@@ -175,8 +177,8 @@ bool ButtonInput::contains(const Vector2D& pos) const
     bool intersect = SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 
     // debug: enable temporarily to inspect values
-    std::cout << "[ButtonInput] mousePos=(" << pos.x << "," << pos.y << ") spriteRect=(x="
-    << spriteRect.x << ",y=" << spriteRect.y << ",w=" << spriteRect.w << ",h=" << spriteRect.h << ") -> " << intersect << std::endl;
+    //std::cout << "[ButtonInput] mousePos=(" << pos.x << "," << pos.y << ") spriteRect=(x="
+    //<< spriteRect.x << ",y=" << spriteRect.y << ",w=" << spriteRect.w << ",h=" << spriteRect.h << ") -> " << intersect << std::endl;
 
     return intersect;
 }

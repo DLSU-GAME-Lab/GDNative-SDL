@@ -136,6 +136,7 @@
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\AudioPlayer.cpp" />
     <ClCompile Include="src\Gate.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
     <ClCompile Include="src\InventoryGUI.cpp" />
     <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
@@ -289,6 +290,7 @@
     <ClInclude Include="include\GUIToggle.h" />
     <ClInclude Include="include\GUIUtils.h" />
     <ClInclude Include="include\IAnimatorListener.h" />
+    <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\InteractabeGate.h" />
     <ClInclude Include="include\InventoryGUI.h" />

@@ -9,6 +9,10 @@
 #include "EditorModule.h"
 #endif
 
+#if defined(__ANDROID__)
+#include <android/log.h>
+#endif
+
 #include "Runner.h"
 #include "algorithm"
 
@@ -16,6 +20,7 @@
 #include "CameraManager.h"
 #include "GameObjectManager.h"
 #include "SceneManager.h"
+#include "InputManager.h"
 #include "AGameObject.h"
 #include "EnumSceneTag.h"
 #include "Settings.h"
@@ -31,7 +36,6 @@
 #include "imgui.h" 
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_sdlrenderer3.h"
-#include <android/log.h>
 #include <iostream>
 #include <streambuf>
 
@@ -51,6 +55,7 @@
 // increasing sizes of G/R/M at runtime if more content is created.
 Runner::Runner()
 {
+#if defined(__ANDROID__)
     class AndroidLogBuf : public std::streambuf {
     protected:
         int overflow(int c) override {
@@ -68,6 +73,7 @@ Runner::Runner()
 
     static AndroidLogBuf androidLogBuf;
     std::cout.rdbuf(&androidLogBuf);
+#endif
 
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_AUDIO) == 0)
 	{
@@ -124,6 +130,7 @@ Runner::Runner()
 	std::cout << "[Runner] Initializing systems..." << std::endl;
 	GameObjectManager::initialize();
 	SceneManager::initialize();
+	InputManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	CameraManager::initialize();
 	RendererContext::initialize(this->pRenderer);
@@ -159,6 +166,7 @@ Runner::~Runner()
 	UIManager::destroy();
 	TextureManager::destroy();
 	CameraManager::destroy();
+	InputManager::destroy();
 	SceneManager::destroy();
 	GameObjectManager::destroy();
 	SceneTransitionManager::destroy();
@@ -285,6 +293,7 @@ void Runner::run()
 // - If called for each event, event-processing cost per frame scales as O(E*G).
 void Runner::processEvents(SDL_Event* eEvent)
 {
+	InputManager::getInstance()->processEvents(eEvent);
 	GameObjectManager::getInstance()->processInput(eEvent);
 }
 

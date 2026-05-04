@@ -1,9 +1,12 @@
 #include "AudioManager.h"
 #include <iostream>
-#include <spdlog/spdlog.h>
 #include <cstdio>
 #include <fstream>
 #include "ManifestLoader.h"
+
+#if defined(__ANDROID__)
+#include <spdlog/spdlog.h>
+#endif
 
 // Helper function to log SDL errors
 void logSDLError(const char* context) {

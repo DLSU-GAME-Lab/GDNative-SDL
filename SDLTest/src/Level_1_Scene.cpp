@@ -10,6 +10,7 @@
 #include "TurnCounter.h"
 #include "EndScreen.h"
 #include "GUIUtils.h"
+#include "StoreGUI.h"
 Level_1_Scene::Level_1_Scene():AScene(SceneTag::LEVEL_1_SCENE)
 {
 }
@@ -37,7 +38,6 @@ void Level_1_Scene::onLoadObjects()
 	GUIUtils::setGUIMidCenter(pLevelContainer, Vector2D(0, 40));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLevelContainer);
 
-	this->loadGUI();
 
 	GemManager::initialize(9, 10, 60.0f, 0.2f, Vector2D(30.0f, -74.0f));
 	std::vector<Uint8> r0Cols = { 0, 8 };
@@ -51,7 +51,11 @@ void Level_1_Scene::onLoadObjects()
 	GemManager::getInstance()->placeGem(GemType::CRATE_2, 4, 7);
 	GemManager::getInstance()->spawnGems();
 
+	this->loadGUI();
 
+	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
+	pStoreGUI->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pStoreGUI);
 }
 
 void Level_1_Scene::onUnloadResources()
@@ -110,5 +114,7 @@ void Level_1_Scene::loadGUI()
 	EndScreen* pEndScreen = new EndScreen("EndScreen");
 	pEndScreen->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pEndScreen);
+
+
 
 }

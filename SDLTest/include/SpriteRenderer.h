@@ -19,6 +19,8 @@ private:
     Vector2D texSize;
     Vector2D crop;
     Vector2D pivot;
+    bool  bNineSlice;
+    int   nBorder;
 
 public:
     SpriteRenderer(const std::string& strTexName, SDL_Color color = { 255, 255, 255, 255 });
@@ -41,7 +43,7 @@ public:
     void setPivot(Vector2D pivot);
     void setColor(SDL_Color color);
     void setCropRect(SDL_FRect mCropRect);
-
+    void setNineSlice(bool bEnabled, int nBorder);
     // getters
     SDL_Texture* getTexture();
     SDL_Color getColor() const;

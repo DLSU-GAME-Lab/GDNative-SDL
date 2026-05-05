@@ -54,7 +54,7 @@ void EndScreen::initialize()
 	pReturnText->setColor(SDL_Color(255, 255, 255, 255));
 	pReturn->attachChild(pReturnText);
 	EventBroadcaster::getInstance()->registerListener(this);
-	pDefeatText->setPos(Vector2D(0, -100));
+	pReturnText->setPos(Vector2D(0, -100));
 
 
 }

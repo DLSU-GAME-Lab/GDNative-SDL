@@ -20,7 +20,8 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Color color)
     this->texSize = Vector2D(0.0f, 0.0f);
     this->pivot = Vector2D(0.5f, 0.5f);
     this->mColor = color;
-
+    this->bNineSlice = false;
+	this->nBorder = 0;
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
     if (!textures.empty()) {
@@ -125,10 +126,39 @@ void SpriteRenderer::perform() {
             SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
             SDL_SetTextureAlphaMod(pTexture, mColor.a);
 
-            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
-            else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
-            else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
-            else SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
+            if (bNineSlice)
+            {
+                int b = nBorder;
+                float tw = texSize.x, th = texSize.y;
+                float W = mDestRect.w, H = mDestRect.h;
+                float x = mDestRect.x, y = mDestRect.y;
+
+                float srcX[3] = { 0,        (float)b,      tw - b };
+                float srcY[3] = { 0,        (float)b,      th - b };
+                float srcW[3] = { (float)b, tw - 2.0f * b, (float)b };
+                float srcH[3] = { (float)b, th - 2.0f * b, (float)b };
+
+                float dstX[3] = { x,        x + b,         x + W - b };
+                float dstY[3] = { y,        y + b,          y + H - b };
+                float dstW[3] = { (float)b, W - 2.0f * b,  (float)b };
+                float dstH[3] = { (float)b, H - 2.0f * b,  (float)b };
+
+                for (int row = 0; row < 3; row++)
+                    for (int col = 0; col < 3; col++)
+                    {
+                        SDL_FRect src = { srcX[col], srcY[row], srcW[col], srcH[row] };
+                        SDL_FRect dst = { dstX[col], dstY[row], dstW[col], dstH[row] };
+                        SDL_RenderTexture(pRenderer, pTexture, &src, &dst);
+                    }
+            }
+            else
+            {
+                // your existing flip/rotate logic unchanged
+                if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
+                else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
+                else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
+                else SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
+            }
         }
 
         // additional log
@@ -199,6 +229,12 @@ void SpriteRenderer::setColor(SDL_Color color)
 void SpriteRenderer::setCropRect(SDL_FRect mCropRect)
 {
     this->mCropRect = mCropRect;
+}
+
+void SpriteRenderer::setNineSlice(bool bEnabled, int nBorder)
+{
+    this->bNineSlice = bEnabled;
+	this->nBorder = nBorder;
 }
 
 

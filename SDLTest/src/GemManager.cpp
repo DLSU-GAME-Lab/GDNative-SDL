@@ -18,7 +18,7 @@
 #include "Background.h"
 
 #include "GUIToggle.h"
-#include "StoreGUI.h"
+
 void GemManager::onAttach()
 {
     for (Uint8 r = 0; r < this->nHeight; r++)
@@ -170,10 +170,6 @@ void GemManager::loadGUI()
     //SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
     //pSettings->attachComponent(pTitleSwitcher);
 
-	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
-	pStoreGUI->setEnabled(false);
-	GameObjectManager::getInstance()->addObject(pStoreGUI);
-
     Sprite* pUpperUIContainer = new Sprite("Upper_UI_Container", "Top_UI_Container", Vector2D(0, 0), Vector2D(100, 1.25f), 0.0f, false);
     GUIUtils::setGUITopCenter(pUpperUIContainer, Vector2D(0, 40));
     GameObjectManager::getInstance()->addObject(pUpperUIContainer);
@@ -200,6 +196,7 @@ void GemManager::loadGUI()
 
     TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(210, 450), Vector2D(1, 1));
     GameObjectManager::getInstance()->addObject(pTurnCount);
+
 }
 
 // user selected a gem; handle selection, swapping, checking, and chain reactions

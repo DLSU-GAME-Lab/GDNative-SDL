@@ -11,8 +11,6 @@ AGameObject(strName)
 	this->nFontSize = nFontSize;
 	this->strFontName = strFontName;
 	this->fRot = fRot;
-
-    SDL_Log("Created Text with font: %s %d", strFontName.c_str(), nFontSize);
 }
 
 Text::~Text()

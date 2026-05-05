@@ -12,18 +12,13 @@ static PlayerInput* findPlayerInputSafe()
     GameObjectManager* gm = GameObjectManager::getInstance();
     if (!gm) return nullptr;
 
-    std::vector<AGameObject*>& objs = gm->getAllObjects();
-    for (AGameObject* obj : objs)
+    AGameObject* pPlayer = GameObjectManager::getInstance()->findObjectByName("Player");
+    if (pPlayer != nullptr)
     {
-        if (!obj) continue;
-        if (obj->getName() == "Player")
-        {
-            // use findComponentByName (returns AComponent*) then dynamic_cast
-            AComponent* comp = obj->findComponentByName("PlayerInput");
-            if (!comp) continue;
-            PlayerInput* input = dynamic_cast<PlayerInput*>(comp);
-            if (input) return input;
-        }
+        // use findComponentByName (returns AComponent*) then dynamic_cast
+        AComponent* comp = pPlayer->findComponentByName("PlayerInput");
+        PlayerInput* input = dynamic_cast<PlayerInput*>(comp);
+        if (input) return input;
     }
     return nullptr;
 }
@@ -47,22 +42,13 @@ void JumpButtonController::onAttach()
 // perform() is called each frame / per event; only search once if not found
 void JumpButtonController::perform()
 {
-    // lazy-resolve if not found yet
-    if (!this->playerInput)
-    {
-        this->playerInput = findPlayerInputSafe();
-    }
-
     auto btn = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
-    if (!btn || !btn->getClicked()) return;
+    if (!btn) return;
 
-    if (!this->playerInput)
+    if (this->playerInput)
     {
-        // no player yet; ignore click (safe: no redundant map insertions)
-        btn->setClicked(false); // consume so it doesn't retrigger repeatedly
-        return;
+        this->playerInput->setVirtualJump(btn->getClicked());
     }
 
-    //this->playerInput->setVirtualJump(true);
     btn->setClicked(false); // consume click
 }

@@ -37,6 +37,16 @@ VirtualJoystick::VirtualJoystick(float radius)
 
 void VirtualJoystick::onAttach()
 {
+    // reset thumb local pos to zero if exists
+    if (auto child = this->pOwner->findChildByName("VirtualJoystickThumb"))
+    {
+        pThumb = dynamic_cast<Sprite*>(child);
+        if (pThumb) {
+            pThumb->setLocalPos(Vector2D(0.0f, 0.0f));
+            SDL_Log("Joystick Thumb Assigned");
+        }
+    }
+
     // try to resolve player input early
     playerInput = findPlayerInputSafe();
 }
@@ -71,13 +81,7 @@ void VirtualJoystick::perform()
     {
         active = false;
         if (playerInput) playerInput->setVirtualMovement(Vector2D::Zero());
-
-        // reset thumb local pos to zero if exists
-        if (auto child = this->pOwner->findChildByName("VirtualJoystickThumb"))
-        {
-            Sprite* thumb = dynamic_cast<Sprite*>(child);
-            if (thumb) thumb->setLocalPos(Vector2D(0.0f, 0.0f));
-        }
+        if (pThumb) pThumb->setLocalPos(Vector2D(0.0f, 0.0f));
         return;
     }
 
@@ -94,16 +98,6 @@ void VirtualJoystick::updateFromTouch(const Vector2D& pos)
     Vector2D delta = pos - center;
 
     float len = std::sqrt(delta.x * delta.x + delta.y * delta.y);
-    if (len < 5.0f)
-    {
-        if (playerInput) playerInput->setVirtualMovement(Vector2D::Zero());
-        if (auto child = this->pOwner->findChildByName("VirtualJoystickThumb"))
-        {
-            Sprite* thumb = dynamic_cast<Sprite*>(child);
-            if (thumb) thumb->setLocalPos(Vector2D(0.0f, 0.0f));
-        }
-        return;
-    }
 
     float clampedLen = std::min(len, radius);
     // normalized direction, safe divide
@@ -118,12 +112,6 @@ void VirtualJoystick::updateFromTouch(const Vector2D& pos)
     if (playerInput) playerInput->setVirtualMovement(virt);
 
     // update thumb visual (local position inside joystick)
-    if (auto child = this->pOwner->findChildByName("VirtualJoystickThumb"))
-    {
-        Sprite* thumb = dynamic_cast<Sprite*>(child);
-        if (thumb)
-        {
-            thumb->setLocalPos(Vector2D(dir.x * (clampedLen * 0.6f), dir.y * (clampedLen * 0.6f)));
-        }
-    }
+    if (pThumb) pThumb->setLocalPos(Vector2D(dir.x * (clampedLen * 0.6f), dir.y * (clampedLen * 0.6f)));
+    else SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Joystick Thumb not found.");
 }

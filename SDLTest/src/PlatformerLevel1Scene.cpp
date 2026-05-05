@@ -26,6 +26,8 @@
 #include "LevelEndGUI.h"
 #include "CollectableGemDataAsset.h"
 #include "GemInputManager.h"
+#include "JumpButtonController.h"
+#include "VirtualJoystick.h"
 
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
@@ -550,7 +552,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pObjectiveManagerObj);
 	pObjectiveManager->initialize();	// start pathfinding
 
-	std::string strMessage = "One night, the whole family had gone to bed early—except for my mother and me. \n\n I don’t know why, but the two of us stayed up, sitting quietly together.\n\nThe candles were already put out using a curved tin blower. The room was dim, lit only by a coconut oil lamp.\n\nThat night, my mother was teaching me how to read a book called El Amigo de los Niños.\nShe grew impatient because I was reading poorly. She also scolded me for drawing silly pictures in the book.\n\nThen she said, “Just listen, ” and began to read aloud herself. \n\nI got tired of listening to words I didn’t understand.I turned my eyes to the little flame instead.\nIt danced cheerfully.Some small moths were flying around it in circles. \n\nI happened to yawn. My mother saw that I was losing interest, so she stopped reading. \n\n“I’ll read you a very nice story now, ” she said. \n\n“You must listen.” \n\nI opened my eyes wide.This sounded new and exciting. She began reading a fable about an old moth and a young moth,\n translating it into Tagalog as she read.\n\nFrom the very first sentence, I was interested. \nI stared at the lamp and watched the moths flying around it.\n\nThe story was like this: \n\nA mother moth once warned her daughter not to go near a flame.The light may look beautiful and inviting,\nbut it was dangerous. It could burn anyone who got too close.\n\nThe mother moth said she herself had once flown too near the flame and barely escaped.She had half - burned her wings. \n\n\nThe young moth promised to obey. But soon, she began to wonder,\n\n “Why is my mother trying to scare me ? Why should I close my eyes to such pretty light ? ”\n\n“Old people are always afraid of everything!What harm can it do\n me if I go near—just carefully ? I’ll have such a good story to tell if I look closer.”\n\nSo she flew around the flame.At first, it felt pleasantly warm.That gave her more courage, so she flew closer and closer.\n\nBut then she got too near.Dazzled by the light, she fell into the flame and died.\n\nAs my mother tucked me into bed, she said :\n\n“Don’t be like the young moth.Don’t disobey, or you may get hurt the same way.”\n\nI don’t remember if I answered her.But the story opened my eyes.\n\nI never saw moths the same way again.They were no longer just small insects.Now I believed they could talk.\nThey could warn and give advice—just like my mother.\n\nThe flame also looked different to me.It seemed more beautiful.It glowed brighter and felt more magical.\nI finally understood why moths flew around the light.";
+	std::string strMessage = "One night, the whole family had gone to bed earlyï¿½except for my mother and me. \n\n I donï¿½t know why, but the two of us stayed up, sitting quietly together.\n\nThe candles were already put out using a curved tin blower. The room was dim, lit only by a coconut oil lamp.\n\nThat night, my mother was teaching me how to read a book called El Amigo de los Niï¿½os.\nShe grew impatient because I was reading poorly. She also scolded me for drawing silly pictures in the book.\n\nThen she said, ï¿½Just listen, ï¿½ and began to read aloud herself. \n\nI got tired of listening to words I didnï¿½t understand.I turned my eyes to the little flame instead.\nIt danced cheerfully.Some small moths were flying around it in circles. \n\nI happened to yawn. My mother saw that I was losing interest, so she stopped reading. \n\nï¿½Iï¿½ll read you a very nice story now, ï¿½ she said. \n\nï¿½You must listen.ï¿½ \n\nI opened my eyes wide.This sounded new and exciting. She began reading a fable about an old moth and a young moth,\n translating it into Tagalog as she read.\n\nFrom the very first sentence, I was interested. \nI stared at the lamp and watched the moths flying around it.\n\nThe story was like this: \n\nA mother moth once warned her daughter not to go near a flame.The light may look beautiful and inviting,\nbut it was dangerous. It could burn anyone who got too close.\n\nThe mother moth said she herself had once flown too near the flame and barely escaped.She had half - burned her wings. \n\n\nThe young moth promised to obey. But soon, she began to wonder,\n\n ï¿½Why is my mother trying to scare me ? Why should I close my eyes to such pretty light ? ï¿½\n\nï¿½Old people are always afraid of everything!What harm can it do\n me if I go nearï¿½just carefully ? Iï¿½ll have such a good story to tell if I look closer.ï¿½\n\nSo she flew around the flame.At first, it felt pleasantly warm.That gave her more courage, so she flew closer and closer.\n\nBut then she got too near.Dazzled by the light, she fell into the flame and died.\n\nAs my mother tucked me into bed, she said :\n\nï¿½Donï¿½t be like the young moth.Donï¿½t disobey, or you may get hurt the same way.ï¿½\n\nI donï¿½t remember if I answered her.But the story opened my eyes.\n\nI never saw moths the same way again.They were no longer just small insects.Now I believed they could talk.\nThey could warn and give adviceï¿½just like my mother.\n\nThe flame also looked different to me.It seemed more beautiful.It glowed brighter and felt more magical.\nI finally understood why moths flew around the light.";
 
 	StoryWindow* pStoryWindow = new StoryWindow("Platformer1StoryWindow");
 	pStoryWindow->setPos(Vector2D(0, 0));
@@ -573,6 +575,57 @@ void PlatformerLevel1Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject(pGemInputScreen);
 
 	AudioManager::getInstance()->play(new AudioPlayer("Jungle", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
+
+    // -- Jump Button --
+    GUIButton* pJumpBtn = new GUIButton("JumpBtn", "Square");
+    pJumpBtn->setIsScreenObject(true);
+    pJumpBtn->setPos(Vector2D(1750, 900));
+    pJumpBtn->setScale(Vector2D(0.2f));
+
+    // add to manager (this calls pJumpBtn->initialize() which creates the SpriteRenderer & ButtonInput)
+    GameObjectManager::getInstance()->addObject(pJumpBtn);
+
+    // now fetch the actual SpriteRenderer and ButtonInput created by initialize()
+    SpriteRenderer* pJumpSR = (SpriteRenderer*)pJumpBtn->findComponentByName("SpriteRenderer");
+    if (pJumpSR) {
+        pJumpSR->setColor({ 80, 200, 120, 220 }); // tint so visible
+    }
+
+    // try to find existing ButtonInput (created in initialize)
+    ButtonInput* pExistingBtnInput = (ButtonInput*)pJumpBtn->findComponentByName("ButtonInput");
+    if (!pExistingBtnInput) {
+        // fallback: create a proper ButtonInput using the renderer we just got
+        pExistingBtnInput = new ButtonInput(pJumpSR);
+        pJumpBtn->attachComponent(pExistingBtnInput);
+    }
+
+    // attach controller AFTER we know real ButtonInput is present
+    pJumpBtn->attachComponent(new JumpButtonController());
+
+    // -- Virtual Joystick --
+    Sprite* pJoyBase = new Sprite("VirtualJoystickBase", "Square", Vector2D(200.0f, 900.0f), Vector2D(0.6f));
+    pJoyBase->setIsScreenObject(true);
+    pJoyBase->setScale(Vector2D(0.6f));
+
+    // create the thumb child before addObject so the VJ can find it immediately if needed
+    Sprite* pJoyThumb = new Sprite("VirtualJoystickThumb", "Square", Vector2D(0.0f, 0.0f), Vector2D(0.15f));
+    pJoyThumb->setIsScreenObject(true);
+    pJoyBase->attachChild(pJoyThumb);
+
+    // now add object (initialize will run, owner assigned to components, child exists)
+    GameObjectManager::getInstance()->addObject(pJoyBase);
+
+    // tint base & thumb so visible
+    SpriteRenderer* pJoyBaseSR = (SpriteRenderer*)pJoyBase->findComponentByName("SpriteRenderer");
+    if (pJoyBaseSR) pJoyBaseSR->setColor({ 120, 120, 255, 120 });
+
+    SpriteRenderer* pJoyThumbSR = (SpriteRenderer*)pJoyThumb->findComponentByName("SpriteRenderer");
+    if (pJoyThumbSR) pJoyThumbSR->setColor({ 255, 200, 80, 220 });
+
+	// create joystick component BEFORE adding object so it's present during initialize
+	VirtualJoystick* pVJ = new VirtualJoystick(150.0f);
+	pJoyBase->attachComponent(pVJ);
+
 }
 
 void PlatformerLevel1Scene::onUnloadResources()

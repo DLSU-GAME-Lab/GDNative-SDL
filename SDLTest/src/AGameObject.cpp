@@ -18,7 +18,6 @@ AGameObject::AGameObject(std::string strName)
 
 AGameObject::~AGameObject()
 {
-    SDL_Log("Deleting object [%s] with address %p", this->strName.c_str(), this);
     // Delete components
     for (int i = 0; i < this->vecComponent.size(); i++)
     {
@@ -27,7 +26,6 @@ AGameObject::~AGameObject()
             delete this->vecComponent[i];
         }
     }
-
    
     vecChildren.clear();
 }

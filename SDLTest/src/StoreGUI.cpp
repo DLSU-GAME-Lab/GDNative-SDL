@@ -16,9 +16,9 @@ StoreGUI::~StoreGUI()
 
 void StoreGUI::initialize()
 {
-	Sprite* pLowerUIContainer = new Sprite("Lower_UI_Container", "UI_Container", Vector2D(0, 0), Vector2D(10, 2), 0.0f, false);
-	GUIUtils::setGUIMidCenter(pLowerUIContainer, Vector2D(-20));
-	GameObjectManager::getInstance()->addObject(pLowerUIContainer);
+	Sprite* pStoreContainer = new Sprite("Store_Container", "UI_Container", Vector2D(0, 0), Vector2D(1, 1), 0.0f, false);
+	GUIUtils::setGUIMidCenter(pStoreContainer, Vector2D(-20));
+	this->attachChild(pStoreContainer);
 
 	EventBroadcaster::getInstance()->registerListener(this);
 
@@ -26,10 +26,9 @@ void StoreGUI::initialize()
 
 void StoreGUI::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {
-	if(this->bListenerEnabled)
-	{
-		this->bEnabled = !this->bEnabled;
-	}
+	std::cout << "Catch" << std::endl;
+	this->bEnabled = true;
+	
 }
 
 EventKey StoreGUI::getKey()

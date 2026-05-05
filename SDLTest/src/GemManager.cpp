@@ -17,6 +17,7 @@
 #include "TurnCounter.h"
 #include "Background.h"
 
+#include "GUIToggle.h"
 #include "StoreGUI.h"
 void GemManager::onAttach()
 {
@@ -163,9 +164,15 @@ void GemManager::loadGUI()
     GUIButton* pSettings = new GUIButton("Settings", "Settings");
     GUIUtils::setGUIBotRight(pSettings, Vector2D(-40, -90));
     pSettings->setScale(Vector2D(.5f, .5f));
+	GUIToggle* pShopToggle = new GUIToggle(EventKey::SHOP_TOGGLE);
+    pSettings->attachComponent(pShopToggle);
     GameObjectManager::getInstance()->addObject(pSettings);
-    SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
-    pSettings->attachComponent(pTitleSwitcher);
+    //SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
+    //pSettings->attachComponent(pTitleSwitcher);
+
+	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
+	pStoreGUI->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pStoreGUI);
 
     Sprite* pUpperUIContainer = new Sprite("Upper_UI_Container", "Top_UI_Container", Vector2D(0, 0), Vector2D(100, 1.25f), 0.0f, false);
     GUIUtils::setGUITopCenter(pUpperUIContainer, Vector2D(0, 40));
@@ -191,7 +198,7 @@ void GemManager::loadGUI()
     GUIUtils::setGUITopRight(pUIMovesPanel, Vector2D(-100, 80));
     GameObjectManager::getInstance()->addObject(pUIMovesPanel);
 
-    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 2, Vector2D(210, 450), Vector2D(1, 1));
+    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(210, 450), Vector2D(1, 1));
     GameObjectManager::getInstance()->addObject(pTurnCount);
 }
 

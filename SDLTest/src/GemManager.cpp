@@ -17,6 +17,7 @@
 #include "TurnCounter.h"
 #include "Background.h"
 
+#include "StoreGUI.h"
 void GemManager::onAttach()
 {
     for (Uint8 r = 0; r < this->nHeight; r++)
@@ -44,7 +45,7 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
     TextureManager::getInstance()->load("Menu/Sprite_UI_setupicon.png", "Settings");
     TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
-    TextureManager::getInstance()->load("Menu/Sprite_UI_Booster.png", "UI_Booster");
+    TextureManager::getInstance()->load("Menu/Sprite_UI_booster.png", "UI_Booster");
     TextureManager::getInstance()->load("Menu/Sprite_UI_Avatar_frame.png", "Avatar_Frame");
     TextureManager::getInstance()->load("Menu/UI_Panel.png", "UI_Panel");
     TextureManager::getInstance()->load("Menu/Sprite_ribbon_victory.png", "Victory_Ribbon");
@@ -190,7 +191,7 @@ void GemManager::loadGUI()
     GUIUtils::setGUITopRight(pUIMovesPanel, Vector2D(-100, 80));
     GameObjectManager::getInstance()->addObject(pUIMovesPanel);
 
-    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(210, 450), Vector2D(1, 1));
+    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 2, Vector2D(210, 450), Vector2D(1, 1));
     GameObjectManager::getInstance()->addObject(pTurnCount);
 }
 

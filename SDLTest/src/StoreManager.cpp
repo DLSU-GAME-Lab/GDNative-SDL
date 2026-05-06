@@ -76,4 +76,22 @@ StoreManager* StoreManager::getInstance()
 {
     return P_SHARED_INSTANCE;
 }
+void StoreManager::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
+{
+}
+EventKey StoreManager::getKey()
+{
+    return EventKey();
+}
+bool StoreManager::isListenerEnabled()
+{
+    return false;
+}
+void StoreManager::setListenerEnabled(bool bListenerEnabled)
+{
+}
+std::string StoreManager::getListenerOwnerName()
+{
+    return std::string();
+}
 /* * * * * * * * * * * * * * * * * * * * */

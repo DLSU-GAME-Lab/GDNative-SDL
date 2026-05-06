@@ -9,7 +9,7 @@
 #include "BubbleManager.h"
 #include "StoreManager.h"
 #include "GUIUtils.h"
-
+#include "StoreGUI.h"
 Level_2_Scene::Level_2_Scene():AScene(SceneTag::LEVEL_2_SCENE)
 {
 }
@@ -61,18 +61,22 @@ void Level_2_Scene::onLoadObjects()
 	GemManager::getInstance()->placeGem(GemType::CRATE_2, 5, 7);
 	GemManager::getInstance()->placeGem(GemType::CRATE_2, 4, 8);
 	GemManager::getInstance()->spawnGems();
+
+	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
+	pStoreGUI->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pStoreGUI);
 }
 
 void Level_2_Scene::onUnloadResources()
 {
 	GemManager::unloadResources();
-	StoreManager::getInstance()->unloadStoreItems();
 	FontManager::getInstance()->unloadAllFonts();
 }
 
 void Level_2_Scene::onUnloadObjects()
 {
 	TrackerManager::destroy();
+	StoreManager::getInstance()->unloadStoreItems();
 	StoreManager::destroy();
 	AScene::onUnloadObjects();
 }

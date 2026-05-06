@@ -59,6 +59,17 @@ void EventBroadcaster::enableListener(std::string strName)
     }
 }
 
+void EventBroadcaster::disableListener(std::string strName)
+{
+    for (EventListener* pListener : this->vecListener)
+    {
+        if (pListener->getListenerOwnerName() == strName)
+        {
+            pListener->setListenerEnabled(true);
+        }
+    }
+}
+
 void EventBroadcaster::enableAllListeners()
 {
     for (EventListener* pListener : this->vecListener)

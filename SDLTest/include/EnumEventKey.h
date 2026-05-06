@@ -6,6 +6,7 @@ enum class EventKey : int {
     COUNTER_SUBTRACT,
     GAME_END,
     SHOP_TOGGLE,
+	SHOP_PURCHASE,
 };
 
 #endif

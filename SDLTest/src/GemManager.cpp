@@ -44,6 +44,7 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("title_screen_pngs/Sprite_Window.png", "UI_Container");
     TextureManager::getInstance()->load("title_screen_pngs/UI_mermaid.png", "UI_Mermaid");
     TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_2.png", "Top_UI_Container");
+    TextureManager::getInstance()->load("Menu/Sprite_Close.png", "Close_Button");
     TextureManager::getInstance()->load("Menu/Sprite_UI_setupicon.png", "Settings");
     TextureManager::getInstance()->load("Menu/Sprite_UI_TopBar_BG_round.png", "Level_Container_Extra");
     TextureManager::getInstance()->load("Menu/Sprite_UI_booster.png", "UI_Booster");
@@ -58,6 +59,7 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("Eliminate_Hori.png", "Eliminate_Hori");
     TextureManager::getInstance()->load("Eliminate_Vert.png", "Eliminate_Vert");
     TextureManager::getInstance()->load("Small_Bomb.png", "BombS");
+
 
     TextureManager::getInstance()->load("Square.png", "Selector");
     TextureManager::getInstance()->load("gems/SP_Gem_Yellow.png", "Yellow");
@@ -94,6 +96,7 @@ void GemManager::unloadResources()
     TextureManager::getInstance()->unload("Level_Container");
     TextureManager::getInstance()->unload("Level_Container_Extra");
     TextureManager::getInstance()->unload("Top_UI_Container");
+    TextureManager::getInstance()->unload("Close_Button");
     TextureManager::getInstance()->unload("Victory_Ribbon");
     TextureManager::getInstance()->unload("Defeat_Ribbon");
     TextureManager::getInstance()->unload("Green_Button");

@@ -1,7 +1,8 @@
 #pragma once
 #include "unordered_map"
 #include "string"
-class StoreManager
+#include "EventListener.h"
+class StoreManager :public EventListener
 {
 public:
     struct StoreItem
@@ -12,6 +13,7 @@ public:
     };
 private:
     int nCoins;
+	EventKey EKey;  
     std::unordered_map<std::string,StoreItem> storeItems;
 
 public:
@@ -40,6 +42,13 @@ public:
     static void destroy();
 
     static StoreManager* getInstance();
+
+    // Inherited via EventListener
+    void onEventTrigger(std::unordered_map<std::string, void*> mapParameter) override;
+    EventKey getKey() override;
+    bool isListenerEnabled() override;
+    void setListenerEnabled(bool bListenerEnabled) override;
+    std::string getListenerOwnerName() override;
     /* * * * * * * * * * * * * * * * * * * * */
 };
 

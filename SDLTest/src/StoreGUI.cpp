@@ -3,6 +3,8 @@
 #include "Sprite.h"
 #include "GUIUtils.h"
 #include "EventBroadcaster.h"
+#include "GUIButton.h"
+#include "GUIToggle.h"
 StoreGUI::StoreGUI(std::string strName):AGameObject(strName)
 {
 	this->bEnabled = true;
@@ -21,8 +23,21 @@ void StoreGUI::initialize()
 	this->attachChild(pStoreContainer);
 	SpriteRenderer* pRenderer = (SpriteRenderer*)pStoreContainer->findComponentByName("SpriteRenderer");
 	pRenderer->setNineSlice(true, 42);
-	pStoreContainer->setPos(Vector2D(0, 0));
-	pStoreContainer->setLocalScale(Vector2D(2, 2));
+	pStoreContainer->setPos(Vector2D(0, -50));
+	pStoreContainer->setLocalScale(Vector2D(3, 6));
+
+	GUIButton* pCloseButton = new GUIButton("CloseButton", "Close_Button");
+	GUIToggle* pShopCloseToggle = new GUIToggle(EventKey::SHOP_TOGGLE);
+	pCloseButton->attachComponent(pShopCloseToggle);
+	pStoreContainer->attachChild(pCloseButton);
+	pCloseButton->setPos(Vector2D(265, 380));
+	pCloseButton->setScale(Vector2D(.5, .5));
+
+	Text* pTitleText = new Text("Store Title", "CurseCasual.ttf", 75, 0, false);
+	pTitleText->setMessage("Shop");
+	pStoreContainer->attachChild(pTitleText);
+	pTitleText->setLocalPos(Vector2D(0, 390));
+	pTitleText->setScale(Vector2D(1, 1));
 
 	EventBroadcaster::getInstance()->registerListener(this);
 
@@ -30,17 +45,16 @@ void StoreGUI::initialize()
 
 void StoreGUI::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {
-	if(this->getEnabled())
+	std::string name = *static_cast<std::string*>(mapParameter["Sender"]);
+
+	if(this->getEnabled() && name == "CloseButton")
 	{
-		std::cout << "Catch" << std::endl;
 		this->setEnabled(false);
-		std::cout << this->getEnabled() << std::endl;
 	}
 	else
 	{
-		std::cout << "Catch" << std::endl;
 		this->setEnabled(true);
-		std::cout << this->getEnabled() << std::endl;
+		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
 	}
 
 }

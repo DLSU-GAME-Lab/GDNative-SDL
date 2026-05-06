@@ -9,6 +9,7 @@
 #include "BubbleManager.h"
 #include "StoreManager.h"
 #include "GUIUtils.h"
+#include "StoreGUI.h"
 
 Level_3_Scene::Level_3_Scene():AScene(SceneTag::LEVEL_3_SCENE)
 {
@@ -65,18 +66,22 @@ void Level_3_Scene::onLoadObjects()
 
 	GemManager::getInstance()->setSpawnBombsAuto(true);
 	GemManager::getInstance()->spawnGems();
+
+	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
+	pStoreGUI->setEnabled(false);
+	GameObjectManager::getInstance()->addObject(pStoreGUI);
 }
 
 void Level_3_Scene::onUnloadResources()
 {
 	GemManager::unloadResources();
-	StoreManager::getInstance()->unloadStoreItems();
 	FontManager::getInstance()->unloadAllFonts();
 }
 
 void Level_3_Scene::onUnloadObjects()
 {
 	TrackerManager::destroy();
+	StoreManager::getInstance()->unloadStoreItems();
 	StoreManager::destroy();
 	AScene::onUnloadObjects();
 }

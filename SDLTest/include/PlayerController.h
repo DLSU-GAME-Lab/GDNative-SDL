@@ -26,6 +26,9 @@ public:
 	void onCollisionContinue(ACollider* pCollider) override;
 	void onCollisionExit(ACollider* pCollider) override;
 
+	void Move(Vector2D fVecDirection, float fMoveSpeed);
+	void Jump(float fJumpForce);
+
 	void setMoveSpeed(float fMoveSpeed);
 	void setJumpForce(float fJumpForce);
 };

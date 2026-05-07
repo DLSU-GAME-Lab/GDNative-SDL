@@ -3,6 +3,7 @@
 #include "AInteractable.h"
 #include "AudioManager.h"
 
+// TODO: Update Player controller to use new input system
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
 	: AComponent("PlayerController", ComponentType::SCRIPT)
 {
@@ -27,6 +28,7 @@ void PlayerController::onAttach()
 	this->pQMark = this->pOwner->findChildByName("Q_Mark");
 }
 
+// TODO: Remove the pRigidBody calls and make this purely for animation updates
 void PlayerController::perform()
 {
 	if (this->pInput == NULL || this->pSprite == NULL) return;
@@ -84,6 +86,23 @@ void PlayerController::onCollisionExit(ACollider * pCollider)
 	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
 		this->pQMark->setEnabled(false);
+	}
+}
+
+void PlayerController::Move(Vector2D fVecDirection, float fMoveSpeed)
+{
+	this->pRigidBody->setVelocity(fVecDirection * fMoveSpeed * this->fDeltaTime);
+}
+
+void PlayerController::Jump(float fJumpForce)
+{
+	if (this->pRigidBody->getGrounded())
+	{
+		this->pRigidBody->addForce(Vector2D(0.0f, fJumpForce), true);
+		this->pAnimator->play("jump");
+
+		AudioManager::getInstance()->play(new AudioPlayer("Jump", AudioGroupTag::SFX));
+		AudioManager::getInstance()->play(new AudioPlayer("Land", AudioGroupTag::SFX));
 	}
 }
 

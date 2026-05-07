@@ -104,6 +104,10 @@ void PlatformerLevel1Scene::onLoadResources()
 	TextureManager::getInstance()->load("GUI/tablet_bottom.png", "tablet_bottom");
 	TextureManager::getInstance()->load("GUI/Circle.png", "Circle");
 	TextureManager::getInstance()->load("GUI/title_button.png", "Exit");
+    TextureManager::getInstance()->load("GUI/interact button.png", "interact_button");
+    TextureManager::getInstance()->load("GUI/jump button.png", "jump_button");
+    TextureManager::getInstance()->load("GUI/joystick_outer.png", "joystick_base");
+    TextureManager::getInstance()->load("GUI/joystick_inner.png", "joystick");
 
 	//AudioManager::getInstance()->load("Audio/error.wav", "error");
 	//AudioManager::getInstance()->load("Audio/TheFatRat - Unity.wav", "Unity");
@@ -121,7 +125,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	PhysicsSystem::initialize();
 	GemInputManager::initialize();
-	
+
 	for (int i = 0; i < 3; i++)
 	{
 		std::string name = "Trees_BG_" + std::to_string(i);
@@ -514,7 +518,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	// attach TextRenderer to label and load text
 	Text* pObjLabel = new Text("ObjectiveLabelText", "JainiPurva-Regular.ttf", 30, 0.f, false);
-	
+
 	// Attach label as child of the GUI button so it moves with it
 	pObjectiveButton->attachChild(pObjLabel);
 	pObjLabel->setMessage("Objective: Find gems");
@@ -536,7 +540,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	// register it so it draws and receives input
 	GameObjectManager::getInstance()->addObject(pObjectiveButton);
-	
+
 	// ---------- ARROW creation ----------
 	Sprite* pArrow = new Sprite("Arrow", "Arrow", Vector2D(1077.777f, 463.686f), 1.0f);
 	pArrow->setScale(Vector2D(.8f));
@@ -577,50 +581,44 @@ void PlatformerLevel1Scene::onLoadObjects()
 	AudioManager::getInstance()->play(new AudioPlayer("Jungle", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 
     // -- Jump Button --
-    GUIButton* pJumpBtn = new GUIButton("JumpBtn", "Square");
+    GUIButton* pJumpBtn = new GUIButton("JumpBtn", "jump_button");
     pJumpBtn->setIsScreenObject(true);
     pJumpBtn->setPos(Vector2D(1750, 900));
-    pJumpBtn->setScale(Vector2D(0.2f));
-
-    // add to manager (this calls pJumpBtn->initialize() which creates the SpriteRenderer & ButtonInput)
+    pJumpBtn->setScale(Vector2D(.15f));
     GameObjectManager::getInstance()->addObject(pJumpBtn);
 
     // now fetch the actual SpriteRenderer and ButtonInput created by initialize()
     SpriteRenderer* pJumpSR = (SpriteRenderer*)pJumpBtn->findComponentByName("SpriteRenderer");
-    if (pJumpSR) {
-        pJumpSR->setColor({ 80, 200, 120, 220 }); // tint so visible
-    }
 
     // try to find existing ButtonInput (created in initialize)
-    ButtonInput* pExistingBtnInput = (ButtonInput*)pJumpBtn->findComponentByName("ButtonInput");
-    if (!pExistingBtnInput) {
+    ButtonInput* pJumpInput = (ButtonInput*)pJumpBtn->findComponentByName("ButtonInput");
+    if (!pJumpInput) {
         // fallback: create a proper ButtonInput using the renderer we just got
-        pExistingBtnInput = new ButtonInput(pJumpSR);
-        pJumpBtn->attachComponent(pExistingBtnInput);
+        pJumpInput = new ButtonInput(pJumpSR);
+        pJumpBtn->attachComponent(pJumpInput);
     }
 
     // attach controller AFTER we know real ButtonInput is present
     pJumpBtn->attachComponent(new JumpButtonController());
 
+    // -- Interact Button --
+    GUIButton* pInteractBtn = new GUIButton("InteractBtn", "interact_button");
+    pInteractBtn->setIsScreenObject(true);
+    pInteractBtn->setPos(Vector2D(1550, 900));
+    pInteractBtn->setScale(Vector2D(.15f));
+    GameObjectManager::getInstance()->addObject(pInteractBtn);
+
     // -- Virtual Joystick --
-    Sprite* pJoyBase = new Sprite("VirtualJoystickBase", "Square", Vector2D(200.0f, 900.0f), Vector2D(0.6f));
+    Sprite* pJoyBase = new Sprite("VirtualJoystickBase", "joystick_base", Vector2D(200.0f, 900.0f), Vector2D(0.25f));
     pJoyBase->setIsScreenObject(true);
-    pJoyBase->setScale(Vector2D(0.6f));
 
     // create the thumb child before addObject so the VJ can find it immediately if needed
-    Sprite* pJoyThumb = new Sprite("VirtualJoystickThumb", "Square", Vector2D(0.0f, 0.0f), Vector2D(0.15f));
+    Sprite* pJoyThumb = new Sprite("VirtualJoystickThumb", "joystick", Vector2D(0.0f, 0.0f), Vector2D(0.5f));
     pJoyThumb->setIsScreenObject(true);
     pJoyBase->attachChild(pJoyThumb);
 
     // now add object (initialize will run, owner assigned to components, child exists)
     GameObjectManager::getInstance()->addObject(pJoyBase);
-
-    // tint base & thumb so visible
-    SpriteRenderer* pJoyBaseSR = (SpriteRenderer*)pJoyBase->findComponentByName("SpriteRenderer");
-    if (pJoyBaseSR) pJoyBaseSR->setColor({ 120, 120, 255, 120 });
-
-    SpriteRenderer* pJoyThumbSR = (SpriteRenderer*)pJoyThumb->findComponentByName("SpriteRenderer");
-    if (pJoyThumbSR) pJoyThumbSR->setColor({ 255, 200, 80, 220 });
 
 	// create joystick component BEFORE adding object so it's present during initialize
 	VirtualJoystick* pVJ = new VirtualJoystick(150.0f);
@@ -689,6 +687,10 @@ void PlatformerLevel1Scene::onUnloadResources()
 	TextureManager::getInstance()->unload("scrollview");
 	TextureManager::getInstance()->unload("Circle");
 	TextureManager::getInstance()->unload("Exit");
+    TextureManager::getInstance()->unload("interact_button");
+    TextureManager::getInstance()->unload("jump_button");
+    TextureManager::getInstance()->unload("joystick_base");
+    TextureManager::getInstance()->unload("joystick");
 
 	//AudioManager::getInstance()->unload("error");
 	//AudioManager::getInstance()->unload("Unity");

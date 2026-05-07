@@ -380,6 +380,9 @@
     <ClCompile Include="src\InputManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
+    <ClCompile Include="src\PlayerManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -740,6 +743,9 @@
     </ClInclude>
     <ClInclude Include="include\InputManager.h">
       <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PlayerManager.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

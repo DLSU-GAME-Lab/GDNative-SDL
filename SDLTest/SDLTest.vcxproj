@@ -192,6 +192,7 @@
     <ClCompile Include="src\PlatformerPickupGUI.cpp" />
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
+    <ClCompile Include="src\PlayerManager.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -313,6 +314,7 @@
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />
+    <ClInclude Include="include\PlayerManager.h" />
     <ClInclude Include="include\PuzzleHint.h" />
     <ClInclude Include="include\PuzzleLevel1Scene.h" />
     <ClInclude Include="include\PuzzleToken.h" />

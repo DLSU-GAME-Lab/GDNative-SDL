@@ -318,6 +318,9 @@
     <ClCompile Include="src\StoreGUI.cpp">
       <Filter>GameObject\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="src\StoreItem.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -633,6 +636,9 @@
       <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\StoreGUI.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StoreItem.h">
       <Filter>GameObject\GUI</Filter>
     </ClInclude>
   </ItemGroup>

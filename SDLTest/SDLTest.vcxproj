@@ -198,6 +198,7 @@
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
     <ClCompile Include="src\StoreGUI.cpp" />
+    <ClCompile Include="src\StoreItem.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
     <ClInclude Include="include\StoreGUI.h" />
+    <ClInclude Include="include\StoreItem.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
     <ClInclude Include="include\TextureManager.h" />

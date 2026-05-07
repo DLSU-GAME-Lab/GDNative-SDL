@@ -15,6 +15,8 @@ private:
     int nCoins;
 	EventKey EKey;  
     std::unordered_map<std::string,StoreItem> storeItems;
+    bool bListenerEnabled;
+
 
 public:
     bool purchaseItem(std::string itemID);
@@ -33,7 +35,7 @@ private:
     static StoreManager* P_SHARED_INSTANCE;
 
 private:
-    StoreManager() {};
+    StoreManager();
     StoreManager(const StoreManager&) {};
     StoreManager& operator = (const StoreManager&) {};
 

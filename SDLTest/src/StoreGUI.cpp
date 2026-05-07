@@ -5,6 +5,7 @@
 #include "EventBroadcaster.h"
 #include "GUIButton.h"
 #include "GUIToggle.h"
+#include "StoreItem.h"
 StoreGUI::StoreGUI(std::string strName):AGameObject(strName)
 {
 	this->bEnabled = true;
@@ -39,6 +40,8 @@ void StoreGUI::initialize()
 	pTitleText->setLocalPos(Vector2D(0, 390));
 	pTitleText->setScale(Vector2D(1, 1));
 
+	StoreItem* pItem1 = new StoreItem("Coins", 0, Vector2D(0,240));
+	pStoreContainer->attachChild(pItem1);
 	EventBroadcaster::getInstance()->registerListener(this);
 
 }
@@ -50,11 +53,15 @@ void StoreGUI::onEventTrigger(std::unordered_map<std::string, void*> mapParamete
 	if(this->getEnabled() && name == "CloseButton")
 	{
 		this->setEnabled(false);
+		EventBroadcaster::getInstance()->enableAllListeners();
+
 	}
 	else
 	{
 		this->setEnabled(true);
 		EventBroadcaster::getInstance()->disableOtherListenerExcept(this);
+		EventBroadcaster::getInstance()->enableListener("StoreManager");
+
 	}
 
 }

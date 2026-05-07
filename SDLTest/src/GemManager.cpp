@@ -50,9 +50,11 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("Menu/Sprite_UI_booster.png", "UI_Booster");
     TextureManager::getInstance()->load("Menu/Sprite_UI_Avatar_frame.png", "Avatar_Frame");
     TextureManager::getInstance()->load("Menu/UI_Panel.png", "UI_Panel");
+    TextureManager::getInstance()->load("Menu/Sprite_coin_icon.png", "Coin");
     TextureManager::getInstance()->load("Menu/Sprite_ribbon_victory.png", "Victory_Ribbon");
     TextureManager::getInstance()->load("Menu/Sprite_ribbon_defeat.png", "Defeat_Ribbon");
     TextureManager::getInstance()->load("Menu/Sprite_Button_green.png", "Green_Button");
+    TextureManager::getInstance()->load("Menu/Sprite_Button_Blue.png", "Blue_Button");
     TextureManager::getInstance()->load("title_screen_pngs/Background_Objects.png", "Design_BG");
     TextureManager::getInstance()->load("Sprite_Bubble_Small.png", "Bubble");
     TextureManager::getInstance()->load("Color_Target.png", "Color_Target");
@@ -100,6 +102,7 @@ void GemManager::unloadResources()
     TextureManager::getInstance()->unload("Victory_Ribbon");
     TextureManager::getInstance()->unload("Defeat_Ribbon");
     TextureManager::getInstance()->unload("Green_Button");
+    TextureManager::getInstance()->unload("Blue_Button");
     TextureManager::getInstance()->unload("Bubble");
     TextureManager::getInstance()->unload("BombS");
 
@@ -111,6 +114,7 @@ void GemManager::unloadResources()
     TextureManager::getInstance()->unload("Red");
     TextureManager::getInstance()->unload("White");
     TextureManager::getInstance()->unload("Crate");
+    TextureManager::getInstance()->unload("Coin");
 
     AudioManager::getInstance()->unload("Swap");
     AudioManager::getInstance()->unload("Match_1");

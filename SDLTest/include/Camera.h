@@ -9,6 +9,7 @@ private:
 	float rotation;
 	Vector2D scale;
 	Vector2D windowSize;
+	Vector2D windowScale;
 
 public:
 	Camera();
@@ -32,5 +33,8 @@ public:
 	void setPos(Vector2D position);
 	void setRot(float rotation);
 	void setScale(Vector2D scale);
+	void setWindowSizeScaled(Vector2D scale);
+	Vector2D getWindowOffset() const;
+	Vector2D getWindowSizeScaled() const;
 };
 

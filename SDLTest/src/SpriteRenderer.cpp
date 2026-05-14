@@ -7,7 +7,7 @@
 #include "TextureManager.h"
 #include "AGameObject.h"
 #include "Settings.h"
-
+#include "ShimmerEffect.h"
 // Constructor: texture lookup may be O(T) where T is number of
 // textures stored under a name (small in typical cases). Overall O(1) prep.
 SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Color color)
@@ -21,6 +21,7 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Color color)
     this->pivot = Vector2D(0.5f, 0.5f);
     this->mColor = color;
     this->bNineSlice = false;
+    this->bShimmer = false;
 	this->nBorder = 0;
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
@@ -159,6 +160,29 @@ void SpriteRenderer::perform() {
                 else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
                 else SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
             }
+            if (bShimmer) {
+                ShimmerEffect* pShimmer = (ShimmerEffect*)getOwner()->findComponentByName("ShimmerEffect");
+                if (pShimmer) {
+                    float phase = pShimmer->getPhase();
+                    float stripeCenter = mDestRect.x + phase * (mDestRect.w + 30.0f) - 15.0f;
+                    float halfW = mDestRect.w * 0.18f;
+
+                    SDL_SetRenderDrawBlendMode(pRenderer, SDL_BLENDMODE_BLEND);
+
+                    for (float sx = stripeCenter - halfW; sx <= stripeCenter + halfW; sx += 1.0f) {
+                        if (sx < mDestRect.x || sx > mDestRect.x + mDestRect.w) continue;
+
+                        float dist = SDL_fabsf(sx - stripeCenter) / halfW;
+                        float falloff = 1.0f - dist * dist;
+                        Uint8 alpha = (Uint8)(falloff * 160);
+
+                        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, alpha);
+                        SDL_RenderLine(pRenderer,
+                            sx, mDestRect.y + 2,
+                            sx, mDestRect.y + mDestRect.h - 2);
+                    }
+                }
+            }
         }
 
         // additional log
@@ -235,6 +259,11 @@ void SpriteRenderer::setNineSlice(bool bEnabled, int nBorder)
 {
     this->bNineSlice = bEnabled;
 	this->nBorder = nBorder;
+}
+
+void SpriteRenderer::setShimmer(bool bEnabled)
+{
+	this->bShimmer = bEnabled;
 }
 
 

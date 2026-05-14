@@ -5,14 +5,28 @@ bool StoreManager::purchaseItem(std::string itemID)
 {
     if (itemID == "Coins")
     {
-		// For testing purposes only, purchasing coins will give player 100 coins for free
         this->addCoins(100);
         return true;
     }
-    else
+
+    auto it = this->storeItems.find(itemID);
+    if (it == this->storeItems.end())
     {
-		return false;
+        std::cout << "[StoreManager] Item not found: " << itemID << std::endl;
+        return false;
     }
+
+    StoreItem& item = it->second;
+
+    if (this->nCoins < item.nPrice)
+    {
+        std::cout << "[StoreManager] Not enough coins to purchase: " << item.strName << std::endl;
+        return false;
+    }
+
+    this->nCoins -= item.nPrice;
+    std::cout << "[StoreManager] Purchased: " << item.strName << std::endl;
+    return true;
     
 }
 
@@ -94,6 +108,7 @@ void StoreManager::onEventTrigger(std::unordered_map<std::string, void*> mapPara
 {
     std::cout << "Coins: " << this->getCoins() << "\n";
     std::string itemID = *static_cast<std::string*>(mapParameter["Sender"]);
+
 	this->purchaseItem(itemID);
 	std::cout << "Coins: " << this->getCoins() << "\n";
 }

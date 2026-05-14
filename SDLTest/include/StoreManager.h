@@ -2,6 +2,8 @@
 #include "unordered_map"
 #include "string"
 #include "EventListener.h"
+#include "GUIButton.h"
+#include "StoreItem.h"
 class StoreManager :public EventListener
 {
 public:
@@ -13,8 +15,9 @@ public:
     };
 private:
     int nCoins;
-	EventKey EKey;  
-    std::unordered_map<std::string,StoreItem> storeItems;
+	EventKey EKey;
+    std::unordered_map<std::string, StoreItem> storeItems;
+    std::unordered_map<std::string, GUIButton*> pGUIButtons;
     bool bListenerEnabled;
 
 

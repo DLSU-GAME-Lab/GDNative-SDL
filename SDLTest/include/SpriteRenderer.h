@@ -21,6 +21,7 @@ private:
     Vector2D pivot;
     bool  bNineSlice;
     int   nBorder;
+    bool  bShimmer;
 
 public:
     SpriteRenderer(const std::string& strTexName, SDL_Color color = { 255, 255, 255, 255 });
@@ -44,6 +45,7 @@ public:
     void setColor(SDL_Color color);
     void setCropRect(SDL_FRect mCropRect);
     void setNineSlice(bool bEnabled, int nBorder);
+    void setShimmer(bool bEnabled);
     // getters
     SDL_Texture* getTexture();
     SDL_Color getColor() const;

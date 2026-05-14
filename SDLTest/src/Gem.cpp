@@ -2,7 +2,7 @@
 #include "GemSwapper.h"
 #include "TweenAnimator.h"
 #include "GemManager.h"
-
+#include "ShimmerEffect.h"
 Gem::Gem(std::string strName, GemType EType) : AGameObject(strName)
 {
 	this->EType = EType;
@@ -34,6 +34,11 @@ void Gem::initialize()
 	this->pTween = new TweenAnimator();
 	this->pTween->addListener(this);
 	this->attachComponent(pTween);
+
+	float offset = (rand() % 100) / 100.0f;
+	ShimmerEffect* pShimmerEffect = new ShimmerEffect(.45f,5, offset);
+	this->attachComponent(pShimmerEffect);
+	pRenderer->setShimmer(true);
 }
 
 void Gem::onAnimationFinished()

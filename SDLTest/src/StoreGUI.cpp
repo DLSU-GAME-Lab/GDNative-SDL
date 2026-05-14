@@ -6,6 +6,7 @@
 #include "GUIButton.h"
 #include "GUIToggle.h"
 #include "StoreItem.h"
+#include "StoreManager.h"
 StoreGUI::StoreGUI(std::string strName):AGameObject(strName)
 {
 	this->bEnabled = true;
@@ -40,7 +41,8 @@ void StoreGUI::initialize()
 	pTitleText->setLocalPos(Vector2D(0, 390));
 	pTitleText->setScale(Vector2D(1, 1));
 
-	StoreItem* pItem1 = new StoreItem("Coins", 0, Vector2D(0,240));
+	StoreManager::getInstance()->addStoreItem("Coins", 0, "Coin");
+	StoreItem* pItem1 = new StoreItem("Coins", 0, Vector2D(0,240), "Coin");
 	pStoreContainer->attachChild(pItem1);
 	EventBroadcaster::getInstance()->registerListener(this);
 

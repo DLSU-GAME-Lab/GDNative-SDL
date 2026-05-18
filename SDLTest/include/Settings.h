@@ -1,6 +1,6 @@
 #pragma once
 #include "SDL3/SDL.h"
-static bool showWidgets = false;
+static bool showWidgets = true;
 static float gameHeight = 1080;
 static float gameWidth = 1920;
 static int gameFPS = 60;

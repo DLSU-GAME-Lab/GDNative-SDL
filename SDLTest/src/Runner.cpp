@@ -109,7 +109,7 @@ Runner::Runner()
             strWindowTitle.c_str(),
             windowWidth,
             windowHeight,
-            SDL_WINDOW_RESIZABLE
+            SDL_WINDOW_FULLSCREEN
     );
 
     pRenderer = SDL_CreateRenderer(pWindow, NULL);
@@ -136,7 +136,8 @@ Runner::Runner()
 	RendererContext::initialize(this->pRenderer);
 	// setWindowSize likely O(1) or O(#render targets)
 	CameraManager::getInstance()->setWindowSize(this->pWindow);
-	SceneTransitionManager::initialize();
+    CameraManager::getInstance()->setWindowScale(scaleX, scaleY);
+    SceneTransitionManager::initialize();
 	FontManager::initialize();
 	AudioManager::initialize();
 	DataAssetManager::initialize();

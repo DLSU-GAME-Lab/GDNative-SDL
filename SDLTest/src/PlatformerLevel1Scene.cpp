@@ -28,6 +28,7 @@
 #include "GemInputManager.h"
 #include "JumpButtonController.h"
 #include "VirtualJoystick.h"
+#include "PlayerManager.h"
 
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
@@ -124,7 +125,9 @@ void PlatformerLevel1Scene::onLoadObjects()
 	CameraManager::getInstance()->getCurrentCamera()->setPos(Vector2D(1350, 700));
 
 	PhysicsSystem::initialize();
+    PlayerManager::initialize();
 	GemInputManager::initialize();
+
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -171,6 +174,7 @@ void PlatformerLevel1Scene::onLoadObjects()
 
 	Player* pPlayer = new Player(Vector2D(1050, 450), Vector2D(0.6f, 0.6f), 0.f);
 	GameObjectManager::getInstance()->addObject(pPlayer);
+    PlayerManager::getInstance()->setPlayer(pPlayer);
 
 	std::vector<SDL_Texture*> tile;
 	tile.push_back(TextureManager::getInstance()->get("Grass_Tile_TL"));	//0

@@ -17,9 +17,10 @@ Camera::~Camera()
 Vector2D Camera::screenToWorldPoint(const Vector2D& screenPoint) const
 {
 	Vector2D worldPoint;
+    Vector2D windowOffset = getWindowOffset();
 
-	worldPoint.x = ((screenPoint.x - this->getHalfWidth()) * this->scale.x) + this->position.x;
-	worldPoint.y = (-(screenPoint.y - this->getHalfHeight()) * this->scale.y) + this->position.y;
+	worldPoint.x = ((screenPoint.x - this->getHalfWidth()) * this->scale.x) + this->position.x - windowOffset.x;
+	worldPoint.y = (-(screenPoint.y - this->getHalfHeight()) * this->scale.y) + this->position.y - windowOffset.y;
 	// TODO: fix rotations
 
 	return worldPoint;
@@ -27,7 +28,7 @@ Vector2D Camera::screenToWorldPoint(const Vector2D& screenPoint) const
 
 Vector2D Camera::worldToScreenPoint(const Vector2D& worldPoint) const
 {
-	Vector2D screenPoint = (worldPoint - this->position) / this->scale;
+	Vector2D screenPoint = (worldPoint + getWindowOffset() - this->position) / this->scale;
 	float radians = MathUtils::toRadians(this->rotation);
 
 	screenPoint.x = screenPoint.x + this->getHalfWidth();
@@ -65,9 +66,24 @@ SDL_FRect Camera::worldToScreenRect(const SDL_FRect& worldRect) const
 	return screenRect;
 }
 
-Vector2D Camera::getWindowSize()
+Vector2D Camera::getWindowSize() const
 {
 	return this->windowSize;
+}
+
+Vector2D Camera::getWindowScale() const
+{
+    return this->windowScale;
+}
+
+Vector2D Camera::getWindowSizeScaled() const
+{
+    return this->windowSize * this->windowScale;
+}
+
+Vector2D Camera::getWindowOffset() const
+{
+    return (windowSize - getWindowSizeScaled()) * 0.5f;
 }
 
 float Camera::getHalfWidth() const
@@ -98,6 +114,11 @@ Vector2D Camera::getScale()
 void Camera::setWindowSize(Vector2D windowSize)
 {
 	this->windowSize = windowSize;
+}
+
+void Camera::setWindowScale(Vector2D windowScale)
+{
+    this->windowScale = windowScale;
 }
 
 void Camera::setPos(Vector2D position)

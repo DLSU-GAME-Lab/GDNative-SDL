@@ -68,6 +68,7 @@ void TextRenderer::perform()
     {
         this->dAngle = -owner->getRot();
 
+        Vector2D windowOffset = CameraManager::getInstance()->getWindowOffset();
         Vector2D scale = owner->getScale();
         Vector2D size = this->texSize * scale;
         Vector2D pos = owner->getPos();

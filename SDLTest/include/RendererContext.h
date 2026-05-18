@@ -1,12 +1,14 @@
 #pragma once
 #include <SDL3/SDL.h>
+#include "Vector2D.h"
 
 class RendererContext
 {
-private: 
+private:
     SDL_Renderer* pRenderer;
 public:
     SDL_Renderer* getRenderer();
+    Vector2D getRenderScale() const;
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */

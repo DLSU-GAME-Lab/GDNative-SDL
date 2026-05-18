@@ -2,6 +2,7 @@
 #include "AGameObject.h"
 #include "AInteractable.h"
 #include "AudioManager.h"
+#include "InputManager.h"
 
 // TODO: Update Player controller to use new input system
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
@@ -33,31 +34,35 @@ void PlayerController::perform()
 {
 	if (this->pInput == NULL || this->pSprite == NULL) return;
 
-	this->pRigidBody->setVelocity(this->pInput->getMovement() * this->fMoveSpeed * this->fDeltaTime);
+    if (bMoving)
+    {
+        this->bMoving = false;
+        this->pRigidBody->setVelocity(Vector2D(fMoveDirection, 0.0f) * this->fMoveSpeed * this->fDeltaTime);
+        this->pSprite->setFlipX(fMoveDirection < 0.0f);
+        if (this->pRigidBody->getGrounded()) this->pAnimator->play("run");
+    }
+    else if (this->pRigidBody->getGrounded())
+    {
+        this->pAnimator->play("idle");
+    }
 
-	if (this->pInput->getMovement() != Vector2D::Zero())
-	{
-		this->pSprite->setFlipX(this->pInput->getMovement().x < 0.0f);
-	}
-	
-	std::string animName = this->pAnimator->getCurrentAnimation()->getName();
-	if (this->pRigidBody->getGrounded())
-	{
-		if (this->pInput->getJumped())
-		{
-			this->pAnimator->play("jump");
-			this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
-			AudioManager::getInstance()->play(new AudioPlayer("Jump", AudioGroupTag::SFX));
-			AudioManager::getInstance()->play(new AudioPlayer("Land", AudioGroupTag::SFX));
-		}
+    if (bJumped)
+    {
+        this->bJumped = false;
+        if (this->pRigidBody->getGrounded())
+        {
+            this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
+            this->pAnimator->play("jump");
 
-		if (this->pInput->getMovement() != Vector2D::Zero())
-		{
-			this->pAnimator->play("run");
-		}
-		else this->pAnimator->setAnimationState("idle");
-	}
-	else this->pAnimator->play("fall");
+            AudioManager::getInstance()->play(new AudioPlayer("Jump", AudioGroupTag::SFX));
+            AudioManager::getInstance()->play(new AudioPlayer("Land", AudioGroupTag::SFX));
+        }
+    }
+
+    if (!this->pRigidBody->getGrounded() && this->pAnimator->getCurrentAnimation()->getName() != "idle")
+    {
+        this->pAnimator->play("fall");
+    }
 }
 
 void PlayerController::onCollisionEnter(ACollider* pCollider)
@@ -89,21 +94,15 @@ void PlayerController::onCollisionExit(ACollider * pCollider)
 	}
 }
 
-void PlayerController::Move(Vector2D fVecDirection, float fMoveSpeed)
+void PlayerController::Move(float direction)
 {
-	this->pRigidBody->setVelocity(fVecDirection * fMoveSpeed * this->fDeltaTime);
+	this->bMoving = true;
+    this->fMoveDirection = direction;
 }
 
-void PlayerController::Jump(float fJumpForce)
+void PlayerController::Jump()
 {
-	if (this->pRigidBody->getGrounded())
-	{
-		this->pRigidBody->addForce(Vector2D(0.0f, fJumpForce), true);
-		this->pAnimator->play("jump");
-
-		AudioManager::getInstance()->play(new AudioPlayer("Jump", AudioGroupTag::SFX));
-		AudioManager::getInstance()->play(new AudioPlayer("Land", AudioGroupTag::SFX));
-	}
+	this->bJumped = true;
 }
 
 void PlayerController::setMoveSpeed(float fMoveSpeed)

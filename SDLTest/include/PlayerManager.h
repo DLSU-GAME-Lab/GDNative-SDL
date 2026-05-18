@@ -1,15 +1,21 @@
 #pragma once
 #include "AComponent.h"
 #include "Player.h"
+#include "PlayerController.h"
 
 class PlayerManager : public AComponent
 {
 private:
 	Player* pPlayer;
+    PlayerController* pController;
+
+    float fJumpForce = 100.0f;
+    float fMoveSpeed = 100.0f;
 
 public:
-    virtual void perform() override {};
+    void perform() override;
 	void setPlayer(Player* pPlayer);
+    PlayerController* getPlayerController() const;
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

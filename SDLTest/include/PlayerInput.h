@@ -33,6 +33,6 @@ private:
 	void onKeyDown(SDL_Keycode key);
 	void onKeyUp(SDL_Keycode key);
 
-	void updateValues();
+	void updateValues(bool virtualControls = false);
 };
 

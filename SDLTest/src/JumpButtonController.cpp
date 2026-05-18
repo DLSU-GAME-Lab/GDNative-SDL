@@ -1,5 +1,7 @@
 #include "JumpButtonController.h"
 #include "GameObjectManager.h"
+#include "InputManager.h"
+#include "PlayerManager.h"
 #include "ButtonInput.h"
 #include "AGameObject.h"
 #include <vector>
@@ -37,18 +39,22 @@ void JumpButtonController::onAttach()
         // store in owner component's userdata (or a static) — keep simple: store on this instance if header has member
         this->playerInput = p;
     }
+
+    this->pRenderer = (SpriteRenderer*)this->pOwner->findComponentByName("SpriteRenderer");
 }
 
 // perform() is called each frame / per event; only search once if not found
 void JumpButtonController::perform()
 {
-    auto btn = (ButtonInput*)pOwner->findComponentByName("ButtonInput");
-    if (!btn) return;
+    Uint64 fingerId = 0;
+    float x, y = 0.0f;
+    bool isAnyFingerInRect = InputManager::getInstance()->isAnyFingerInRect(this->pRenderer->getRect(), fingerId);
 
-    if (this->playerInput)
+    if (isAnyFingerInRect && !bJumped)
     {
-        this->playerInput->setVirtualJump(btn->getClicked());
+        this->bJumped = true;
+        PlayerManager::getInstance()->getPlayerController()->Jump();
+        SDL_Log("Virtual Jumped");
     }
-
-    btn->setClicked(false); // consume click
+    else if (!isAnyFingerInRect && bJumped) this->bJumped = false;
 }

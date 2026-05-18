@@ -5,6 +5,7 @@
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
+#include "RendererContext.h"
 #include "AGameObject.h"
 #include "Settings.h"
 
@@ -78,7 +79,7 @@ void SpriteRenderer::initialize() {
 
 }
 
-// Destructor: deregisters from RenderSystem — deregistration cost is O(S).
+// Destructor: deregisters from RenderSystem ï¿½ deregistration cost is O(S).
 SpriteRenderer::~SpriteRenderer() {
     // O(R): deregistration scans list in RenderSystem.
     // unregister when destroyed

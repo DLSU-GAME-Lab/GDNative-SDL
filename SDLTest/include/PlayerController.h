@@ -15,6 +15,10 @@ private:
 	float fMoveSpeed;
 	float fJumpForce;
 
+    float fMoveDirection = 0.0f;
+    bool bMoving = false;
+    bool bJumped = false;
+
 public:
 	PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody);
 	~PlayerController();
@@ -26,8 +30,8 @@ public:
 	void onCollisionContinue(ACollider* pCollider) override;
 	void onCollisionExit(ACollider* pCollider) override;
 
-	void Move(Vector2D fVecDirection, float fMoveSpeed);
-	void Jump(float fJumpForce);
+	void Move(float direction);
+	void Jump();
 
 	void setMoveSpeed(float fMoveSpeed);
 	void setJumpForce(float fJumpForce);

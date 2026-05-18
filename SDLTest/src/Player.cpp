@@ -55,7 +55,7 @@ void Player::initialize()
 
     PlayerController* pPlayerController = new PlayerController(pPlayerInput, pSpriteRenderer, pSpriteAnimator, pRB);
     pPlayerController->setMoveSpeed(300.0f);
-    pPlayerController->setJumpForce(600.f);
+    pPlayerController->setJumpForce(150.f);
     this->attachComponent(pPlayerController);
 
     CameraController* pCamComtroller = new CameraController();

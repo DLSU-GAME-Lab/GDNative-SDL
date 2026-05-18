@@ -1,9 +1,11 @@
 #include "VirtualJoystick.h"
 #include "GameObjectManager.h"
+#include "PlayerManager.h"
 #include "PlayerInput.h"
 #include "AGameObject.h"
 #include "ButtonInput.h"
 #include "Sprite.h"
+#include "InputManager.h"
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -31,7 +33,7 @@ static PlayerInput* findPlayerInputSafe()
 }
 
 VirtualJoystick::VirtualJoystick(float radius)
-        : AGeneralInput("VirtualJoystick"), radius(radius), active(false), playerInput(nullptr)
+        : AComponent("VirtualJoystick", ComponentType::SCRIPT), radius(radius), active(false), playerInput(nullptr)
 {
 }
 
@@ -46,6 +48,8 @@ void VirtualJoystick::onAttach()
             SDL_Log("Joystick Thumb Assigned");
         }
     }
+
+    this->pBase = (SpriteRenderer*)this->pOwner->findComponentByName("SpriteRenderer");
 
     // try to resolve player input early
     playerInput = findPlayerInputSafe();
@@ -67,35 +71,34 @@ void VirtualJoystick::perform()
 
     center = this->pOwner->getPos();
 
-    // DOWN: set active only if touch/mouse is inside radius (use logical coords)
-    if (eEvent && (eEvent->type == SDL_EVENT_FINGER_DOWN || eEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN))
-    {
-        Vector2D pos(this->logicalX, this->logicalY);
-        Vector2D d = pos - center;
-        float dist = std::sqrt(d.x * d.x + d.y * d.y);
-        if (dist <= radius) active = true;
-    }
+    Uint64 fingerId = 0;
+    float x, y = 0.0f;
+    bool isAnyFingerInRect = InputManager::getInstance()->isAnyFingerInRect(this->pBase->getRect(), fingerId);
+    bool getFingerPosition = InputManager::getInstance()->getFingerPosition(fingerId, x, y);
 
-    // UP: release and reset movement + thumb
-    if (eEvent && (eEvent->type == SDL_EVENT_FINGER_UP || eEvent->type == SDL_EVENT_MOUSE_BUTTON_UP))
+    if (isAnyFingerInRect) active = true;
+    else if (!InputManager::getInstance()->hasActiveTouches() && active)
     {
         active = false;
-        if (playerInput) playerInput->setVirtualMovement(Vector2D::Zero());
-        if (pThumb) pThumb->setLocalPos(Vector2D(0.0f, 0.0f));
-        return;
+        reset = true;
     }
 
-    // motion: update only if active
-    if (active && eEvent && (eEvent->type == SDL_EVENT_FINGER_MOTION || eEvent->type == SDL_EVENT_MOUSE_MOTION))
+    if (active)
     {
-        Vector2D pos(this->logicalX, this->logicalY);
+        Vector2D pos = Vector2D(x, y);
         updateFromTouch(pos);
+    }
+    else if (reset)
+    {
+        reset = false;
+        resetTouch();
     }
 }
 
 void VirtualJoystick::updateFromTouch(const Vector2D& pos)
 {
     Vector2D delta = pos - center;
+    //SDL_Log("Pos: (%.2f, %.2f), center: (%.2f, %.2f)", pos.x, pos.y, center.x, center.y);
 
     float len = std::sqrt(delta.x * delta.x + delta.y * delta.y);
 
@@ -109,9 +112,14 @@ void VirtualJoystick::updateFromTouch(const Vector2D& pos)
     virt.y = 0.0f;
     virt.x = std::clamp(virt.x, -1.0f, 1.0f);
 
-    if (playerInput) playerInput->setVirtualMovement(virt);
-
+    PlayerManager::getInstance()->getPlayerController()->Move(virt.x);
     // update thumb visual (local position inside joystick)
     if (pThumb) pThumb->setLocalPos(Vector2D(dir.x * (clampedLen * 0.6f), dir.y * (clampedLen * 0.6f)));
     else SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Joystick Thumb not found.");
+}
+
+void VirtualJoystick::resetTouch()
+{
+    updateFromTouch(this->pOwner->getPos());
+    if (pThumb) pThumb->setLocalPos(Vector2D(0.0f, 0.0f));
 }

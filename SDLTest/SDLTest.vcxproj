@@ -181,6 +181,7 @@
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
+    <ClCompile Include="src\ShaderPipeline.cpp" />
     <ClCompile Include="src\ShimmerEffect.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -294,6 +295,7 @@
     <ClInclude Include="include\SceneTransitionManager.h" />
     <ClInclude Include="include\Scroller.h" />
     <ClInclude Include="include\Settings.h" />
+    <ClInclude Include="include\ShaderPipeline.h" />
     <ClInclude Include="include\ShimmerEffect.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />

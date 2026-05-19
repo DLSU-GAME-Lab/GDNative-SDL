@@ -73,6 +73,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{41bf71c3-e6bd-44e8-8c2c-38423a17a160}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -324,6 +327,7 @@
     <ClCompile Include="src\ShimmerEffect.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShaderPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -647,6 +651,7 @@
     <ClInclude Include="include\ShimmerEffect.h">
       <Filter>Component\Script</Filter>
     </ClInclude>
+    <ClInclude Include="include\ShaderPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

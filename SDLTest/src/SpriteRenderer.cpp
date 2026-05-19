@@ -118,25 +118,17 @@ void SpriteRenderer::perform() {
         this->dAngle += pCam->getRot();
     }
 
-    if (this->inCameraView(mDestRect))
+    if (pCam->isInView(mDestRect))
     {
-        // GPU draw call: theoretical O(1), but expensive constant cost.
-        if (pTexture)
-        {
-            SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
-            SDL_SetTextureAlphaMod(pTexture, mColor.a);
-
-            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
-            else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
-            else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
-            else SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
-        }
-
-        // additional log
-        else if (SDL_RenderTexture(pRenderer, pTexture, &srcRect, &mDestRect) < 0)
-        {
-            SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
-        }
+        RendererContext::getInstance()->draw(
+            this->pTexture,
+            this->mColor,
+            &srcRect,
+            &mDestRect,
+            this->dAngle,
+            this->flipX,
+            this->flipY
+        );
     }
 }
 

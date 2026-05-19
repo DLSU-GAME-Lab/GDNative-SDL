@@ -1,4 +1,5 @@
 #include "DialogueRenderer.h"
+#include "RendererContext.h"
 
 DialogueRenderer::DialogueRenderer():ARenderer("DialogueRenderer")
 {
@@ -115,29 +116,17 @@ void DialogueRenderer::perform()
         }
     }
 
-    if (this->inCameraView(mDestRect))
+    if (pCam->isInView(mDestRect))
     {
-        // GPU draw call: theoretical O(1), but expensive constant cost.
-        if (pTexture)
-        {
-            SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
-            SDL_SetTextureAlphaMod(pTexture, mColor.a);
-            SDL_FRect* pSrcRect = NULL;
-            if (srcRect.w != 0 && srcRect.h != 0)
-            {
-                pSrcRect = &srcRect;
-            }
-            if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
-            else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
-            else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
-            else SDL_RenderTextureRotated(pRenderer, pTexture, pSrcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
-        }
-
-        // additional log
-        else if (SDL_RenderTexture(pRenderer, pTexture, nullptr, &mDestRect) < 0)
-        {
-            SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
-        }
+        RendererContext::getInstance()->draw(
+            this->pTexture,
+            this->mColor,
+            &srcRect,
+            &mDestRect,
+            this->dAngle,
+            this->flipX,
+            this->flipY
+        );
     }
 }
 void DialogueRenderer::drawWidget()

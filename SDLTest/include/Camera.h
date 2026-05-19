@@ -15,6 +15,7 @@ public:
 	Camera();
 	~Camera();
 
+	bool isInView(const SDL_FRect& worldRect) const;
 	Vector2D screenToWorldPoint(const Vector2D& screenPoint) const;
 	Vector2D worldToScreenPoint(const Vector2D& worldPoint) const;
 

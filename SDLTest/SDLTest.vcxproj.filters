@@ -383,6 +383,9 @@
     <ClCompile Include="src\PlayerManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="src\Light2D.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -746,6 +749,9 @@
     </ClInclude>
     <ClInclude Include="include\PlayerManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Light2D.h">
+      <Filter>Component\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

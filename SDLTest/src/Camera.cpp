@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "AGameObject.h"
 #include "MathUtils.h"
+#include "Settings.h"
 
 Camera::Camera()
 {
@@ -12,6 +13,13 @@ Camera::Camera()
 Camera::~Camera()
 {
 
+}
+
+bool Camera::isInView(const SDL_FRect& worldRect) const
+{
+	SDL_FRect camView = { 0, 0, gameWidth, gameHeight };
+
+	return SDL_HasRectIntersectionFloat(&camView, &worldRect);
 }
 
 Vector2D Camera::screenToWorldPoint(const Vector2D& screenPoint) const

@@ -139,6 +139,7 @@
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
     <ClCompile Include="src\InventoryGUI.cpp" />
+    <ClCompile Include="src\Light2D.cpp" />
     <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
@@ -296,6 +297,7 @@
     <ClInclude Include="include\InteractabeGate.h" />
     <ClInclude Include="include\InventoryGUI.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
+    <ClInclude Include="include\Light2D.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\ObjectiveButton_Controller.h" />
     <ClInclude Include="include\ObjectiveIntro.h" />

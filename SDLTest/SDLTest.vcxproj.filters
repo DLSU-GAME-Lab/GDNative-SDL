@@ -386,6 +386,12 @@
     <ClCompile Include="src\Light2D.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Lightmap.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RadialLight.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -752,6 +758,12 @@
     </ClInclude>
     <ClInclude Include="include\Light2D.h">
       <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lightmap.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RadialLight.h">
+      <Filter>GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,10 +9,13 @@ private:
 	bool flipX, flipY;
 
 public:
-	Light2D(const std::string& strName, const std::string& texName);
+	Light2D(const std::string& texName);
 
-	virtual void drawWidget() override;
-	virtual void perform() override;
+	virtual void drawWidget() override {};
+	virtual void perform() override {};
+
+	void drawLight();
+	void drawLightWidget();
 
 	SDL_FRect getDstRect() const;
 

@@ -21,6 +21,9 @@
 #include "TweenAnimator.h"
 #include "DialogueScreen.h"
 #include "AudioManager.h"
+#include "Lightmap.h"
+#include "RadialLight.h"
+
 LobbyScene::LobbyScene() : AScene(SceneTag::LOBBY_SCENE)
 {
 
@@ -159,6 +162,8 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("SWBSTWindowHolder/But.png", "But");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/So.png", "So");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Then.png", "Then");
+
+	TextureManager::getInstance()->load("radial_light.png", "radial_light");
 }
 
 void LobbyScene::loadDialogueTextures()
@@ -292,6 +297,11 @@ void LobbyScene::createScene()
 	pPlayer->setLeftArrow(pButtonLeft);
 	pPlayer->setRightArrow(pButtonRight);
 
+	Lightmap::initialize();
+	RadialLight* pLight1 = new RadialLight("RadialLight1", { 255, 127, 111, 255 });
+	GameObjectManager::getInstance()->addObject(pLight1);
+	pLight1->setPos(Vector2D(-300, -150));
+	pLight1->setScale(Vector2D(4.0f, 3.0f));
 }
 
 void LobbyScene::createExitMenu()

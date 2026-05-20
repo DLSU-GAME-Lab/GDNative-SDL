@@ -140,6 +140,7 @@
     <ClCompile Include="src\InteractabeGate.cpp" />
     <ClCompile Include="src\InventoryGUI.cpp" />
     <ClCompile Include="src\Light2D.cpp" />
+    <ClCompile Include="src\Lightmap.cpp" />
     <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
     <ClCompile Include="src\PlayerManager.cpp" />
+    <ClCompile Include="src\RadialLight.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -298,6 +300,7 @@
     <ClInclude Include="include\InventoryGUI.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
     <ClInclude Include="include\Light2D.h" />
+    <ClInclude Include="include\Lightmap.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\ObjectiveButton_Controller.h" />
     <ClInclude Include="include\ObjectiveIntro.h" />
@@ -320,6 +323,7 @@
     <ClInclude Include="include\PuzzleHint.h" />
     <ClInclude Include="include\PuzzleLevel1Scene.h" />
     <ClInclude Include="include\PuzzleToken.h" />
+    <ClInclude Include="include\RadialLight.h" />
     <ClInclude Include="include\RendererContext.h" />
     <ClInclude Include="include\RightRoomScene.h" />
     <ClInclude Include="include\RigidBody.h" />

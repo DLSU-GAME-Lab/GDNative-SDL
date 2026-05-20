@@ -327,7 +327,12 @@
     <ClCompile Include="src\ShimmerEffect.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShaderPipeline.cpp" />
+    <ClCompile Include="src\NormalSpriteRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderPipeline.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -651,7 +656,12 @@
     <ClInclude Include="include\ShimmerEffect.h">
       <Filter>Component\Script</Filter>
     </ClInclude>
-    <ClInclude Include="include\ShaderPipeline.h" />
+    <ClInclude Include="include\NormalSpriteRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderPipeline.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="tweeny\include\tween.tcc">

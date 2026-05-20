@@ -164,7 +164,7 @@ Runner::Runner()
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
 	
-	RendererContext::initialize(this->pRenderer, this->pGPUDevice);
+	RendererContext::initialize(this->pRenderer, this->pGPUDevice,this->pWindow);
     SceneTransitionManager::initialize();
 	FontManager::initialize();
 	AudioManager::initialize();

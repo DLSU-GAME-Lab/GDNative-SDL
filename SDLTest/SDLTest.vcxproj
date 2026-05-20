@@ -177,6 +177,7 @@
     <ClCompile Include="src\GUIUtils.cpp" />
     <ClCompile Include="src\InspectorScreen.cpp" />
     <ClCompile Include="src\MathUtils.cpp" />
+    <ClCompile Include="src\NormalSpriteRenderer.cpp" />
     <ClCompile Include="src\PerformanceMetricsScreen.cpp" />
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="include\Level_3_Scene.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\MouseInput.h" />
+    <ClInclude Include="include\NormalSpriteRenderer.h" />
     <ClInclude Include="include\PerformanceMetricsScreen.h" />
     <ClInclude Include="include\MetricsManager.h" />
     <ClInclude Include="include\ButtonInput.h" />

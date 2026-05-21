@@ -13,59 +13,72 @@ void Lightmap::perform()
 {
     drawLightmap();
 
-    SDL_BlendMode customBlend = SDL_ComposeCustomBlendMode(
-            SDL_BLENDFACTOR_ZERO,                // srcColorFactor
-            SDL_BLENDFACTOR_SRC_COLOR,           // dstColorFactor <- multiplies scene by lightmap
-            SDL_BLENDOPERATION_ADD,              // colorOperation
-            SDL_BLENDFACTOR_ONE,                 // srcAlphaFactor
-            SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, // dstAlphaFactor
-            SDL_BLENDOPERATION_ADD               // alphaOperation
-    );
-
-    SDL_SetTextureBlendMode(this->pLightmapTex, customBlend);
-
     if (!SDL_RenderTexture(this->pRenderer, this->pLightmapTex, nullptr, nullptr))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[Lightmap] ERROR: Texture cannot be rendered; %s", SDL_GetError());
     }
+
+    // For testing
+    //for (Light2D* light : lights) light->drawLight();
 }
 
 void Lightmap::addLight(Light2D* light)
 {
-	this->lights.push_back(light);
+    this->lights.push_back(light);
     SDL_Log("[Lightmap] LOG: Light with name '%s' was added to the lightmap.", light->getOwner()->getName().c_str());
 }
 
 void Lightmap::removeLight(Light2D* light)
 {
     SDL_Log("[Lightmap] LOG: Light with name '%s' was removed from the lightmap.", light->getOwner()->getName().c_str());
-	this->lights.erase(std::remove(this->lights.begin(), this->lights.end(), light), this->lights.end());
+    this->lights.erase(std::remove(this->lights.begin(), this->lights.end(), light), this->lights.end());
 }
 
 void Lightmap::drawLightmap()
 {
     if (!this->bUpdateLightmap) return;
 
-    //SDL_DestroyTexture(this->pLightmapTex);
-    //this->pLightmapTex = SDL_CreateTexture(
-    //    this->pRenderer,
-    //    SDL_PIXELFORMAT_RGBA8888,
-    //    SDL_TEXTUREACCESS_TARGET,
-    //    gameWidth,
-    //    gameHeight
-    //);
-
-    if (!SDL_SetRenderTarget(this->pRenderer, this->pLightmapTex))
+    if (bAccumulateLights)
     {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[Lightmap] ERROR: Render target was not set; %s", SDL_GetError());
+        // Pass 1: accumulate all lights onto black texture
+        SDL_SetRenderTarget(this->pRenderer, this->pLightAccumTex);
+        SDL_SetRenderDrawBlendMode(this->pRenderer, SDL_BLENDMODE_NONE);
+        SDL_SetRenderDrawColor(this->pRenderer, 0, 0, 0, 255);
+        SDL_RenderClear(this->pRenderer);
+
+        for (Light2D* light : lights) if (light != nullptr) light->drawLight();
+
+        if (!SDL_SetRenderTarget(this->pRenderer, this->pLightmapTex))
+        {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[Lightmap] ERROR: Render target was not set; %s", SDL_GetError());
+        }
+
+        // Pass 2: combine ambient + accumulated lights onto lightmap
+        SDL_SetRenderTarget(this->pRenderer, this->pLightmapTex);
+        SDL_SetRenderDrawBlendMode(this->pRenderer, SDL_BLENDMODE_NONE);
+        SDL_SetRenderDrawColor(this->pRenderer, color.r, color.g, color.b, color.a);
+        SDL_RenderClear(this->pRenderer);
+
+        // Add the accumulated lights on top of ambient
+        SDL_SetTextureBlendMode(this->pLightAccumTex, SDL_BLENDMODE_ADD);
+        SDL_RenderTexture(this->pRenderer, this->pLightAccumTex, nullptr, nullptr);
+
+        SDL_SetRenderTarget(this->pRenderer, nullptr);
     }
+    else
+    {
+        if (!SDL_SetRenderTarget(this->pRenderer, this->pLightmapTex))
+        {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[Lightmap] ERROR: Render target was not set; %s", SDL_GetError());
+        }
 
-    SDL_SetRenderDrawColor(this->pRenderer, color.r, color.g, color.b, color.a);
-    SDL_RenderClear(this->pRenderer);
+        SDL_SetRenderDrawColor(this->pRenderer, color.r, color.g, color.b, color.a);
+        SDL_RenderClear(this->pRenderer);
 
-    for (Light2D* light : lights) light->drawLight();
+        for (Light2D* light : lights) light->drawLight();
 
-    SDL_SetRenderTarget(this->pRenderer, nullptr);
+        SDL_SetRenderTarget(this->pRenderer, nullptr);
+    }
 }
 
 void Lightmap::setAmbientColor(SDL_Color color)
@@ -83,6 +96,17 @@ Lightmap* Lightmap::P_SHARED_INSTANCE = NULL;
 Lightmap::Lightmap() : ARenderer("Lightmap")
 {
     this->pRenderer = RendererContext::getInstance()->getRenderer();
+
+    SDL_BlendMode customBlend = SDL_ComposeCustomBlendMode(
+        SDL_BLENDFACTOR_ZERO,                // srcColorFactor
+        SDL_BLENDFACTOR_SRC_COLOR,           // dstColorFactor <- multiplies scene by lightmap
+        SDL_BLENDOPERATION_ADD,              // colorOperation
+        SDL_BLENDFACTOR_ONE,                 // srcAlphaFactor
+        SDL_BLENDFACTOR_ONE_MINUS_SRC_ALPHA, // dstAlphaFactor
+        SDL_BLENDOPERATION_ADD               // alphaOperation
+    );
+
+    // Lightmap texture will hold the final combined result of ambient + all lights
     this->pLightmapTex = SDL_CreateTexture(
         this->pRenderer,
         SDL_PIXELFORMAT_RGBA8888,
@@ -90,6 +114,19 @@ Lightmap::Lightmap() : ARenderer("Lightmap")
         gameWidth,
         gameHeight
     );
+
+    SDL_SetTextureBlendMode(this->pLightmapTex, customBlend);
+    // Accumulation texture will hold the combined result of all lights (no ambient)
+    this->pLightAccumTex = SDL_CreateTexture(
+        this->pRenderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        gameWidth,
+        gameHeight
+    );
+
+    SDL_SetTextureBlendMode(this->pLightAccumTex, SDL_BLENDMODE_ADD);
+
 }
 
 void Lightmap::initialize()
@@ -103,6 +140,7 @@ void Lightmap::initialize()
 void Lightmap::destroy()
 {
     SDL_DestroyTexture(P_SHARED_INSTANCE->pLightmapTex);
+    SDL_DestroyTexture(P_SHARED_INSTANCE->pLightAccumTex);
     delete P_SHARED_INSTANCE->pOwner;
 }
 

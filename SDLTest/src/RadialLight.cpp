@@ -2,7 +2,7 @@
 #include "Light2D.h"
 #include "Lightmap.h"
 
-RadialLight::RadialLight(const std::string& strName, SDL_Color color) : AGameObject(strName), color(color)
+RadialLight::RadialLight(const std::string& strName, float radius, SDL_Color color) : AGameObject(strName), radius(radius), color(color)
 {
 
 }
@@ -15,7 +15,7 @@ RadialLight::~RadialLight()
 
 void RadialLight::initialize()
 {
-	Light2D* pLight = new Light2D("radial_light");
+	Light2D* pLight = new Light2D(Light2D::FalloffType::QUADRATIC, radius);
 	pLight->setColor(color);
 	this->attachComponent(pLight);
 	Lightmap::getInstance()->addLight(pLight);
@@ -24,10 +24,18 @@ void RadialLight::initialize()
 
 SDL_Color RadialLight::getColor()
 {
-	return ((Light2D*)findComponentByName("radial_light"))->getColor();
+	return this->pLight->getColor();
 }
 
 void RadialLight::setColor(SDL_Color color)
 {
-	((Light2D*)findComponentByName("radial_light"))->setColor(color);
+	this->pLight->setColor(color);
 }
+
+Light2D::FalloffType RadialLight::getFalloffType()
+{
+	return Light2D::FalloffType();
+}
+
+void RadialLight::setFalloffType(Light2D::FalloffType falloffType)
+{}

@@ -207,7 +207,6 @@ void LobbyScene::createScene()
 	pTween->setTweenPos(Tween2D::from(start.x, start.y).to(end.x, end.y).during(1000).via(tweeny::easing::quadraticInOut));
 	pTween->play();
 	pDiary->attachComponent(pTween);
-
 	GameObjectManager::getInstance()->addObject(pDiary);
 
 	// Left
@@ -298,10 +297,26 @@ void LobbyScene::createScene()
 	pPlayer->setRightArrow(pButtonRight);
 
 	Lightmap::initialize();
-	RadialLight* pLight1 = new RadialLight("RadialLight1", { 255, 127, 111, 255 });
+	// Main lobby light
+	RadialLight* pLight1 = new RadialLight("RadialLight1", 1200, { 255, 191, 191, 255 });
 	GameObjectManager::getInstance()->addObject(pLight1);
-	pLight1->setPos(Vector2D(-300, -150));
-	pLight1->setScale(Vector2D(4.0f, 3.0f));
+	pLight1->setPos(Vector2D(0, 0));
+	pLight1->setScale(Vector2D(1.0f, 0.5f));
+
+	// Left room light
+	RadialLight* pLight2 = new RadialLight("RadialLight2", 1200, { 255, 191, 127, 255 });
+	GameObjectManager::getInstance()->addObject(pLight2);
+	pLight2->setPos(Vector2D(-2400, 0));
+	pLight2->setScale(Vector2D(1.0f, 0.5f));
+
+	// Right room light
+	RadialLight* pLight3 = new RadialLight("RadialLight3", 1200, { 191, 255, 191, 255 });
+	GameObjectManager::getInstance()->addObject(pLight3);
+	pLight3->setPos(Vector2D(2400, 0));
+	pLight3->setScale(Vector2D(1.0f, 0.5f));
+
+	RadialLight* pDiaryLight = new RadialLight("DiaryLight", 400, {255, 255, 255, 255});
+	pDiary->attachChild(pDiaryLight);
 }
 
 void LobbyScene::createExitMenu()

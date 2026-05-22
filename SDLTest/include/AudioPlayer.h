@@ -31,7 +31,10 @@ public:
     void removeListener(IAudioPlayerListener* pListener);
 
 private:
-	void onFinished();
+    SDL_AudioStream* createAudioStream(AudioClip* pClip);
+    void play();
+
+    void onFinished();
 
 	friend class AudioManager;
 };

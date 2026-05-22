@@ -6,7 +6,7 @@
 
 void Lightmap::drawWidget()
 {
-    for (Light2D* light : lights) light->drawLightWidget();
+    for (Light2D* light : lights) if (light != nullptr) light->drawLightWidget();
 }
 
 void Lightmap::perform()
@@ -22,16 +22,19 @@ void Lightmap::perform()
     //for (Light2D* light : lights) light->drawLight();
 }
 
-void Lightmap::addLight(Light2D* light)
+void Lightmap::addLight(Light2D* pLight)
 {
-    this->lights.push_back(light);
-    SDL_Log("[Lightmap] LOG: Light with name '%s' was added to the lightmap.", light->getOwner()->getName().c_str());
+    this->lights.push_back(pLight);
+    SDL_Log("[Lightmap] LOG: Light with name '%s' was added to the lightmap.", pLight->getOwner()->getName().c_str());
 }
 
-void Lightmap::removeLight(Light2D* light)
+void Lightmap::removeLight(Light2D* pLight)
 {
-    SDL_Log("[Lightmap] LOG: Light with name '%s' was removed from the lightmap.", light->getOwner()->getName().c_str());
-    this->lights.erase(std::remove(this->lights.begin(), this->lights.end(), light), this->lights.end());
+    if (std::find(this->lights.begin(), this->lights.end(), pLight) != this->lights.end())
+    {
+        SDL_Log("[Lightmap] LOG: Light with name '%s' was removed from the lightmap.", pLight->getOwner()->getName().c_str());
+        this->lights.erase(std::remove(this->lights.begin(), this->lights.end(), pLight), this->lights.end());
+    }
 }
 
 void Lightmap::drawLightmap()
@@ -75,7 +78,7 @@ void Lightmap::drawLightmap()
         SDL_SetRenderDrawColor(this->pRenderer, color.r, color.g, color.b, color.a);
         SDL_RenderClear(this->pRenderer);
 
-        for (Light2D* light : lights) light->drawLight();
+        for (Light2D* light : lights) if (light != nullptr) light->drawLight();
 
         SDL_SetRenderTarget(this->pRenderer, nullptr);
     }

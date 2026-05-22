@@ -9,7 +9,6 @@ RadialLight::RadialLight(const std::string& strName, float radius, SDL_Color col
 
 RadialLight::~RadialLight()
 {
-	AGameObject::~AGameObject();
 	Lightmap::getInstance()->removeLight((Light2D*)this->findComponentByName("Light2D"));
 }
 

@@ -43,10 +43,8 @@ void AudioManager::load(std::string strPath, std::string strName)
 
     // Use SDL3's SDL_LoadWAV_IO with true for closeio parameter
     if (SDL_LoadWAV_IO(io, 1, &loadedSpec, &audioBuffer, &audioLength)) {
-        // Copy the spec to our mSpec
-        this->mSpec = loadedSpec;
 
-        AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
+        AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength, loadedSpec);
         this->vecAudioClip.push_back(pAudioClip);
         this->mapAudioClip[strName] = pAudioClip;
         SDL_Log("[AudioManager] Loaded audio '%s' (%u bytes) as key '%s'",
@@ -88,41 +86,13 @@ AudioClip* AudioManager::getAudioClip(std::string strName)
 
 void AudioManager::play(AudioPlayer* pPlayer)
 {
-    if (!pPlayer) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                     "[AudioManager] play called with null player");
-        return;
-    }
+    if (!pPlayer || !pPlayer->pClip) return;
 
-    // Ensure the player actually has a clip
-    if (!pPlayer->pClip) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                     "[AudioManager] play called but player has no clip (null).");
-        return;
-    }
+	pPlayer->play();
 
-    // Ensure clip buffer exists
-    Uint8* buf = pPlayer->pClip->getBuffer();
-    Uint32 len = pPlayer->pClip->getLength();
-    if (!buf || len == 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                     "[AudioManager] clip '%s' has empty buffer or zero length",
-                     pPlayer->pClip->getName().c_str());
-        return;
-    }
-
-    // For now, just log that we would play the audio
-    // This avoids SDL3 audio API issues while we debug the scene transition
-    SDL_Log("[AudioManager] Would play audio clip: %s (audio temporarily disabled)",
-            pPlayer->pClip->getName().c_str());
-
-    // Add to playing lists so other code doesn't break
     this->vecPlaying.push_back(pPlayer);
     if (!pPlayer->strKey.empty())
         this->mapPlaying[pPlayer->strKey] = pPlayer;
-
-    SDL_Log("[Audio Manager] LOG: Registered audio clip \"%s\" (playback disabled)",
-            pPlayer->pClip->getName().c_str());
 }
 
 void AudioManager::stop(std::string strKey)
@@ -245,12 +215,6 @@ AudioManager* AudioManager::P_SHARED_INSTANCE = NULL;
 
 AudioManager::AudioManager()
 {
-    // Initialize audio spec with reasonable defaults
-    SDL_zero(this->mSpec);
-    this->mSpec.freq = 44100; // Sample rate
-    this->mSpec.format = SDL_AUDIO_F32; // Audio format
-    this->mSpec.channels = 2; // Stereo
-
     // Initialize volume levels
     for (int i = static_cast<int>(AudioGroupTag::MUSIC);
          i <= static_cast<int>(AudioGroupTag::MASTER); i++)

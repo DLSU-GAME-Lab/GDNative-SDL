@@ -28,6 +28,7 @@ AGameObject::~AGameObject()
     }
    
     vecChildren.clear();
+    SDL_Log("AGameObject destroyed: %s", this->strName.c_str());
 }
 
 void AGameObject::processInput(SDL_Event* eEvent)

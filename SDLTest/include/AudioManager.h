@@ -8,7 +8,6 @@
 class AudioManager
 {
 private:
-    SDL_AudioSpec mSpec;
     std::vector<AudioClip*> vecAudioClip;
     std::unordered_map<std::string, AudioClip*> mapAudioClip;
 

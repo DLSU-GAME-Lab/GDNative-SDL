@@ -49,7 +49,7 @@ public:
     // getters
     SDL_Texture* getTexture();
     SDL_Color getColor() const;
-    SDL_FRect getRect() const;
+    SDL_FRect getRect() const override;
     SDL_FRect getCropRect() const;
     bool getflipX();
     bool getFlipY();

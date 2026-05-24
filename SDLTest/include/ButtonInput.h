@@ -5,7 +5,7 @@
 class ButtonInput : public AGeneralInput
 {
 private:
-	SpriteRenderer* pSprite;
+	ARenderer* pSprite;
 	Vector2D mousePos;
 
 	bool bHolding;
@@ -15,7 +15,7 @@ private:
 	bool bLefttClick;
 
 public:
-	ButtonInput(SpriteRenderer* pSprite);
+	ButtonInput(ARenderer* pSprite);
 	~ButtonInput();
 
 	void onAttach() override;

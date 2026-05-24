@@ -64,11 +64,17 @@ void GemManager::loadResources()
 
 
     TextureManager::getInstance()->load("Square.png", "Selector");
+    TextureManager::getInstance()->load("gems/SP_Gem_Yellow_Norm.png", "YellowNorm");
     TextureManager::getInstance()->load("gems/SP_Gem_Yellow.png", "Yellow");
+    TextureManager::getInstance()->load("gems/SP_Gem_Blue_Norm.png", "BlueNorm");
     TextureManager::getInstance()->load("gems/SP_Gem_Blue.png", "Blue");
+    TextureManager::getInstance()->load("gems/SP_Gem_Green_Norm.png", "GreenNorm");
     TextureManager::getInstance()->load("gems/SP_Gem_Green.png", "Green");
+    TextureManager::getInstance()->load("gems/SP_Gem_Purple_Norm.png", "PurpleNorm");
     TextureManager::getInstance()->load("gems/SP_Gem_Purple.png", "Purple");
+    TextureManager::getInstance()->load("gems/SP_Gem_Red_Norm.png", "RedNorm");
     TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "Red");
+    TextureManager::getInstance()->load("gems/SP_Gem_White_Norm.png", "WhiteNorm");
     TextureManager::getInstance()->load("gems/SP_Gem_White.png", "White");
     TextureManager::getInstance()->load("Box.png", "Crate");
 

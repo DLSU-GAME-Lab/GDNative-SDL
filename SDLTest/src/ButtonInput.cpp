@@ -21,7 +21,7 @@ bool ButtonInput::contains() const
     return SDL_HasRectIntersectionFloat(&spriteRect, &pointRect);
 }
 
-ButtonInput::ButtonInput(SpriteRenderer* pSprite) : AGeneralInput("ButtonInput")
+ButtonInput::ButtonInput(ARenderer* pSprite) : AGeneralInput("ButtonInput")
 {
     this->pSprite = pSprite;
     this->bHolding = false;

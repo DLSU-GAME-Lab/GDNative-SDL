@@ -22,3 +22,8 @@ bool ARenderer::inCameraView(SDL_FRect spriteRect)
 	
 	return SDL_HasRectIntersectionFloat(&camView, &spriteRect);
 }
+
+SDL_FRect ARenderer::getRect() const
+{
+	return { 0, 0, 0, 0 };
+}

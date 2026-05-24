@@ -11,6 +11,7 @@
 class NormalSpriteRenderer : public ARenderer
 {
 public:
+    
     NormalSpriteRenderer(const std::string& diffuseName, const std::string& normalName);
     ~NormalSpriteRenderer();
 
@@ -23,12 +24,13 @@ public:
     void setFlipX(bool flip); 
     void setFlipY(bool flip); 
     void setPivot(Vector2D pivot);
-
+    SDL_FRect getRect() const override;
 private:
     // texture names
     std::string strDiffuseName;
     std::string strNormalName;
-
+    //destRect
+    SDL_FRect mDestRect = {};
     // GPU textures
     SDL_GPUTexture* pDiffuseGPU = nullptr;
     SDL_GPUTexture* pNormalGPU = nullptr;

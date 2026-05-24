@@ -3,6 +3,7 @@
 #include "TweenAnimator.h"
 #include "GemManager.h"
 #include "ShimmerEffect.h"
+#include "NormalSpriteRenderer.h"
 Gem::Gem(std::string strName, GemType EType) : AGameObject(strName)
 {
 	this->EType = EType;
@@ -19,26 +20,37 @@ Gem::~Gem()
 
 void Gem::initialize()
 {
-	const std::string textures[] { "White", "Red", "Yellow", "Green", "Blue", "Purple", "BombS", "Crate" };
-	int typeIndex = static_cast<int>(this->EType);
-	if (typeIndex > 7) typeIndex = 7;
-	SpriteRenderer* pRenderer = new SpriteRenderer(textures[typeIndex]);
-	this->attachComponent(pRenderer);
+    const std::string textures[]{ "White", "Red", "Yellow", "Green", "Blue", "Purple", "BombS", "Crate" };
+    const std::string normalMaps[]{ "WhiteNorm", "RedNorm", "YellowNorm", "GreenNorm", "BlueNorm", "PurpleNorm", "", "" };
 
-	ButtonInput* pInput = new ButtonInput(pRenderer);
-	this->attachComponent(pInput);
+    int typeIndex = static_cast<int>(this->EType);
+    if (typeIndex > 7) typeIndex = 7;
 
-	GemSwapper* pSwapper = new GemSwapper(pInput);
-	this->attachComponent(pSwapper);
+    ButtonInput* pInput = nullptr;
 
-	this->pTween = new TweenAnimator();
-	this->pTween->addListener(this);
-	this->attachComponent(pTween);
+    if (!normalMaps[typeIndex].empty())
+    {
+        NormalSpriteRenderer* pRenderer = new NormalSpriteRenderer(textures[typeIndex], normalMaps[typeIndex]);
+        this->attachComponent(pRenderer);
+        pInput = new ButtonInput(pRenderer);
+        this->attachComponent(pInput);
+    }
+    else
+    {
+        SpriteRenderer* pRenderer = new SpriteRenderer(textures[typeIndex]);
+        this->attachComponent(pRenderer);
+        pInput = new ButtonInput(pRenderer);
+        this->attachComponent(pInput);
+    }
 
-	float offset = (rand() % 100) / 100.0f;
-	ShimmerEffect* pShimmerEffect = new ShimmerEffect(.45f,5, offset);
-	this->attachComponent(pShimmerEffect);
-	pRenderer->setShimmer(true);
+    GemSwapper* pSwapper = new GemSwapper(pInput);
+    this->attachComponent(pSwapper);
+    this->pTween = new TweenAnimator();
+    this->pTween->addListener(this);
+    this->attachComponent(pTween);
+    float offset = (rand() % 100) / 100.0f;
+    ShimmerEffect* pShimmerEffect = new ShimmerEffect(.45f, 5, offset);
+    this->attachComponent(pShimmerEffect);
 }
 
 void Gem::onAnimationFinished()

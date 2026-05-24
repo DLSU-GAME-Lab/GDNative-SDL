@@ -274,7 +274,6 @@ void NormalSpriteRenderer::perform()
 {
     if (!pPipeline || !pPipeline->isValid()) return;
     if (!pDiffuseGPU || !pNormalGPU)         return;
-    if (!pVertexBuffer)                       return;
 
     SDL_GPUDevice* device = RendererContext::getInstance()->getGPUDevice();
     if (!device) return;
@@ -287,24 +286,27 @@ void NormalSpriteRenderer::perform()
     Vector2D pos = owner->getPos();
     pos -= size * pivot;
 
-    SDL_FRect destRect = { pos.x, pos.y, size.x, size.y };
+    mDestRect.x = pos.x;
+    mDestRect.y = pos.y;
+    mDestRect.w = size.x;
+    mDestRect.h = size.y;
 
     if (!owner->getIsScreenObject())
-        destRect = pCam->worldToScreenRect(destRect);
+        mDestRect = pCam->worldToScreenRect(mDestRect);
 
-    if (!inCameraView(destRect)) return;
+    if (!inCameraView(mDestRect)) return;
 
-    // read shimmer phase from ShimmerEffect component if present
-    float phase = 0.0f;
+    // read shimmer phase from ShimmerEffect if present
     ShimmerEffect* pShimmer = (ShimmerEffect*)owner->findComponentByName("ShimmerEffect");
-    if (pShimmer) phase = pShimmer->getPhase();
-    mUniforms.phase = phase;
+    if (pShimmer) mUniforms.phase = pShimmer->getPhase();
 
     fElapsedTime += 0.016f;
     mUniforms.time = fElapsedTime;
 
-    uploadQuad(destRect);
+    // upload quad for this frame
+    uploadQuad(mDestRect);
 
+    // acquire command buffer
     SDL_GPUCommandBuffer* cmd = SDL_AcquireGPUCommandBuffer(device);
 
     SDL_GPUTexture* swapchainTex = nullptr;
@@ -391,4 +393,9 @@ void NormalSpriteRenderer::setFlipY(bool flip)
 void NormalSpriteRenderer::setPivot(Vector2D pivot)
 {
     this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
+}
+
+SDL_FRect NormalSpriteRenderer::getRect() const
+{
+    return mDestRect;
 }

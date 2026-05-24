@@ -172,6 +172,15 @@ Runner::Runner()
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
+
+#ifndef __ANDROID__
+	ShaderPipeline* spritePipeline = new ShaderPipeline(
+		pGPUDevice,
+		"Assets/Shaders/sprite.vert.spv",
+		"Assets/Shaders/sprite.frag.spv"
+	);
+	RendererContext::getInstance()->registerShaderPipeline("sprite", spritePipeline);
+#endif
 #if EDITOR_MODE
 	Editor::EditorModule::initialize();
 #endif

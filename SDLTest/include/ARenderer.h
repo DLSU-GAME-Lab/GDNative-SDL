@@ -14,5 +14,6 @@ public:
     SDL_Renderer* getSDLRenderer();
     void setSDLRenderer(SDL_Renderer* pRenderer);
     bool inCameraView(SDL_FRect spriteRect);
+    virtual SDL_FRect getRect() const;
 };
 

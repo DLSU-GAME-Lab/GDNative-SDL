@@ -132,6 +132,7 @@ void AudioManager::stopAll()
 
 void AudioManager::stopByData(AudioPlayer* pPlayer)
 {
+	pPlayer->stop();
     this->vecPlaying.erase(std::remove(this->vecPlaying.begin(),
                                        this->vecPlaying.end(), pPlayer),
                            this->vecPlaying.end());

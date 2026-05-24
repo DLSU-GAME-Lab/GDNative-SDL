@@ -26,6 +26,7 @@ public:
     AudioPlayer(std::string strClipName, AudioGroupTag ETag);
     AudioPlayer(std::string strClipName, float fVolume);
     AudioPlayer(std::string strClipName, std::string strKey, AudioGroupTag ETag, OnAudioFinished EOnFinished = OnAudioFinished::STOP, float fVolume = 1.0f);
+	~AudioPlayer();
 
     void addListener(IAudioPlayerListener* pListener);
     void removeListener(IAudioPlayerListener* pListener);
@@ -33,6 +34,7 @@ public:
 private:
     SDL_AudioStream* createAudioStream(AudioClip* pClip);
     void play();
+    void stop();
 
     void onFinished();
 

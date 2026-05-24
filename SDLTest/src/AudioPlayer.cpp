@@ -24,6 +24,11 @@ AudioPlayer::AudioPlayer(std::string strClipName, std::string strKey, AudioGroup
 	this->pStream = createAudioStream(this->pClip);
 }
 
+AudioPlayer::~AudioPlayer()
+{
+	if (this->pStream) SDL_DestroyAudioStream(this->pStream);
+}
+
 SDL_AudioStream* AudioPlayer::createAudioStream(AudioClip* pClip)
 {
     if (pClip == nullptr)
@@ -71,9 +76,27 @@ SDL_AudioStream* AudioPlayer::createAudioStream(AudioClip* pClip)
 
 void AudioPlayer::play()
 {
+    if (this->pStream == nullptr || this->pClip == nullptr)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+            "[AudioPlayer] Cannot play audio for player with key '%s': stream or clip is null", this->strKey.c_str());
+        return;
+	}
     // Push the audio data into the stream
     SDL_PutAudioStreamData(this->pStream, this->pClip->getBuffer(), this->pClip->getLength());
     SDL_FlushAudioStream(this->pStream);
+}
+
+void AudioPlayer::stop()
+{
+    if (this->pStream == nullptr || this->pClip == nullptr)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+            "[AudioPlayer] Cannot stop audio for player with key '%s': stream or clip is null", this->strKey.c_str());
+        return;
+    }
+    this->bFinished = true;
+    onFinished();
 }
 
 void AudioPlayer::addListener(IAudioPlayerListener* pListener)

@@ -392,6 +392,69 @@
     <ClCompile Include="src\RadialLight.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
+    <ClCompile Include="src\JumpButtonController.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VirtualJoystick.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ADataAsset.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CollectableGemDataAsset.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GemInputManager.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GemInputPreview.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LobbyTransition.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LevelEndGUI.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LobbyPlayer.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InteractableGate.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PuzzleEnd.cpp">
+      <Filter>GameObject\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StatuePickup.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GemController.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataAssetManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EngineTime.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DialogueScreen.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GemInputScreen.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GemInputToken.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Statue.cpp">
+      <Filter>GameObject\Platformer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ManifestLoader.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -764,6 +827,69 @@
     </ClInclude>
     <ClInclude Include="include\RadialLight.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\JumpButtonController.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VirtualJoystick.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ADataAsset.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollectableGemDataAsset.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GemInputManager.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GemInputPreview.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LobbyTransition.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LevelEndGUI.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LobbyPlayer.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InteractableGate.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PuzzleEnd.h">
+      <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StatuePickup.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GemController.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DataAssetManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EngineTime.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DialogueScreen.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GemInputScreen.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GemInputToken.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Statue.h">
+      <Filter>GameObject\Platformer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ManifestLoader.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

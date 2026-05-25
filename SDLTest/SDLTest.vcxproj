@@ -131,16 +131,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ADataAsset.cpp" />
     <ClCompile Include="src\AInteractable.cpp" />
     <ClCompile Include="src\AudioClip.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\AudioPlayer.cpp" />
+    <ClCompile Include="src\CollectableGemDataAsset.cpp" />
+    <ClCompile Include="src\DataAssetManager.cpp" />
+    <ClCompile Include="src\DialogueScreen.cpp" />
+    <ClCompile Include="src\EngineTime.cpp" />
     <ClCompile Include="src\Gate.cpp" />
+    <ClCompile Include="src\GemController.cpp" />
+    <ClCompile Include="src\GemInputManager.cpp" />
+    <ClCompile Include="src\GemInputPreview.cpp" />
+    <ClCompile Include="src\GemInputScreen.cpp" />
+    <ClCompile Include="src\GemInputToken.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\InteractabeGate.cpp" />
+    <ClCompile Include="src\InteractableGate.cpp" />
     <ClCompile Include="src\InventoryGUI.cpp" />
+    <ClCompile Include="src\JumpButtonController.cpp" />
+    <ClCompile Include="src\LevelEndGUI.cpp" />
     <ClCompile Include="src\Light2D.cpp" />
     <ClCompile Include="src\Lightmap.cpp" />
+    <ClCompile Include="src\LobbyPlayer.cpp" />
+    <ClCompile Include="src\LobbyTransition.cpp" />
+    <ClCompile Include="src\ManifestLoader.cpp" />
     <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
     <ClCompile Include="src\ObjectiveIntro.cpp" />
     <ClCompile Include="src\CollectableGem.cpp" />
@@ -195,6 +211,7 @@
     <ClCompile Include="src\PlayerController.cpp" />
     <ClCompile Include="src\PlayerInput.cpp" />
     <ClCompile Include="src\PlayerManager.cpp" />
+    <ClCompile Include="src\PuzzleEnd.cpp" />
     <ClCompile Include="src\RadialLight.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -221,9 +238,12 @@
     <ClCompile Include="src\SequenceGameManager.cpp" />
     <ClCompile Include="src\SpriteAnimator.cpp" />
     <ClCompile Include="src\SpriteRenderer.cpp" />
+    <ClCompile Include="src\Statue.cpp" />
+    <ClCompile Include="src\StatuePickup.cpp" />
     <ClCompile Include="src\StoryWindow.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
+    <ClCompile Include="src\TextRenderer.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\TileMapRenderer.cpp" />
@@ -233,16 +253,22 @@
     <ClCompile Include="src\UIManager.cpp" />
     <ClCompile Include="src\AUIScreen.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
+    <ClCompile Include="src\VirtualJoystick.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ADataAsset.h" />
     <ClInclude Include="include\AInteractable.h" />
     <ClInclude Include="include\AudioClip.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\AudioPlayer.h" />
     <ClInclude Include="include\CollectableGem.h" />
+    <ClInclude Include="include\CollectableGemDataAsset.h" />
+    <ClInclude Include="include\DataAssetManager.h" />
+    <ClInclude Include="include\DialogueScreen.h" />
     <ClInclude Include="include\DialogueToggle.h" />
     <ClInclude Include="include\AAnimator.h" />
     <ClInclude Include="include\DialogueBox.h" />
+    <ClInclude Include="include\EngineTime.h" />
     <ClInclude Include="include\EnumAudioGroupTag.h" />
     <ClInclude Include="include\EnumOnAnimFinished.h" />
     <ClInclude Include="include\EnumOnAudioFinished.h" />
@@ -260,6 +286,11 @@
     <ClInclude Include="include\CameraController.h" />
     <ClInclude Include="include\Gate.h" />
     <ClInclude Include="include\Gem.h" />
+    <ClInclude Include="include\GemController.h" />
+    <ClInclude Include="include\GemInputManager.h" />
+    <ClInclude Include="include\GemInputPreview.h" />
+    <ClInclude Include="include\GemInputScreen.h" />
+    <ClInclude Include="include\GemInputToken.h" />
     <ClInclude Include="include\IAudioPlayerListener.h" />
     <ClInclude Include="include\ICollisionListener.h" />
     <ClInclude Include="include\AComponent.h" />
@@ -297,10 +328,16 @@
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\InspectorScreen.h" />
     <ClInclude Include="include\InteractabeGate.h" />
+    <ClInclude Include="include\InteractableGate.h" />
     <ClInclude Include="include\InventoryGUI.h" />
+    <ClInclude Include="include\JumpButtonController.h" />
     <ClInclude Include="include\LeftRoomScene.h" />
+    <ClInclude Include="include\LevelEndGUI.h" />
     <ClInclude Include="include\Light2D.h" />
     <ClInclude Include="include\Lightmap.h" />
+    <ClInclude Include="include\LobbyPlayer.h" />
+    <ClInclude Include="include\LobbyTransition.h" />
+    <ClInclude Include="include\ManifestLoader.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\ObjectiveButton_Controller.h" />
     <ClInclude Include="include\ObjectiveIntro.h" />
@@ -320,6 +357,7 @@
     <ClInclude Include="include\PlayerController.h" />
     <ClInclude Include="include\PlayerInput.h" />
     <ClInclude Include="include\PlayerManager.h" />
+    <ClInclude Include="include\PuzzleEnd.h" />
     <ClInclude Include="include\PuzzleHint.h" />
     <ClInclude Include="include\PuzzleLevel1Scene.h" />
     <ClInclude Include="include\PuzzleToken.h" />
@@ -337,9 +375,12 @@
     <ClInclude Include="include\Settings.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
+    <ClInclude Include="include\Statue.h" />
+    <ClInclude Include="include\StatuePickup.h" />
     <ClInclude Include="include\StoryWindow.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
+    <ClInclude Include="include\TextRenderer.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\TileMapRenderer.h" />
@@ -351,6 +392,7 @@
     <ClInclude Include="include\UINames.h" />
     <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
+    <ClInclude Include="include\VirtualJoystick.h" />
     <ClInclude Include="tweeny\include\dispatcher.h" />
     <ClInclude Include="tweeny\include\easing.h" />
     <ClInclude Include="tweeny\include\easingresolve.h" />

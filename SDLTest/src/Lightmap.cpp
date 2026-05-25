@@ -30,6 +30,8 @@ void Lightmap::addLight(Light2D* pLight)
 
 void Lightmap::removeLight(Light2D* pLight)
 {
+    if (this->lights.empty()) return;
+
     if (std::find(this->lights.begin(), this->lights.end(), pLight) != this->lights.end())
     {
         SDL_Log("[Lightmap] LOG: Light with name '%s' was removed from the lightmap.", pLight->getOwner()->getName().c_str());

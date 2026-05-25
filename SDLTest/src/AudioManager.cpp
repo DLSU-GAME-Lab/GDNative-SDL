@@ -15,7 +15,11 @@ void logSDLError(const char* context) {
 
 void AudioManager::load(std::string strPath, std::string strName)
 {
+#if defined(__ANDROID__)
     const std::string assetPath = strPath;
+#else
+    const std::string assetPath = "Assets/" + strPath;
+#endif
     SDL_Log("[AudioManager] Loading audio asset: %s", assetPath.c_str());
 
     // Try to load raw bytes (works for APK assets)

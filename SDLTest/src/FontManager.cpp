@@ -19,7 +19,11 @@ TTF_Font* FontManager::getFont(const std::string fontKey, int fontSize)
 
 void FontManager::loadFont(const std::string fileName, const std::string fontKey, int fontSize)
 {
+#if defined(__ANDROID__)
     const std::string assetPath = "Fonts/" + fileName;
+#else
+    const std::string assetPath = "Assets/Fonts/" + fileName;
+#endif
     std::string fullKey = fontKey + "_" + std::to_string(fontSize);
 
     if (mapFonts.contains(fullKey)) return;

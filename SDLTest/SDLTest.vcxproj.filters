@@ -376,7 +376,6 @@
       <Filter>GameObject\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\InventoryGUI.cpp" />
-    <ClCompile Include="src\ObjectiveButton_Controller.cpp" />
     <ClCompile Include="src\InputManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
@@ -391,6 +390,35 @@
     </ClCompile>
     <ClCompile Include="src\RadialLight.cpp">
       <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StatuePickup.cpp" />
+    <ClCompile Include="src\Statue.cpp" />
+    <ClCompile Include="src\TextRenderer.cpp" />
+    <ClCompile Include="src\VirtualJoystick.cpp" />
+    <ClCompile Include="src\PuzzleEnd.cpp" />
+    <ClCompile Include="src\ManifestLoader.cpp" />
+    <ClCompile Include="src\LobbyTransition.cpp" />
+    <ClCompile Include="src\LobbyPlayer.cpp" />
+    <ClCompile Include="src\LevelEndGUI.cpp" />
+    <ClCompile Include="src\InteractableGate.cpp" />
+    <ClCompile Include="src\GemInputToken.cpp" />
+    <ClCompile Include="src\GemInputPreview.cpp" />
+    <ClCompile Include="src\GemInputScreen.cpp" />
+    <ClCompile Include="src\GemInputManager.cpp" />
+    <ClCompile Include="src\GemController.cpp" />
+    <ClCompile Include="src\EngineTime.cpp" />
+    <ClCompile Include="src\DialogueScreen.cpp" />
+    <ClCompile Include="src\DataAssetManager.cpp" />
+    <ClCompile Include="src\CollectableGemDataAsset.cpp" />
+    <ClCompile Include="src\ADataAsset.cpp" />
+    <ClCompile Include="InteractButtonController.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectiveButton_Controller.cpp">
+      <Filter>Component\Script\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JumpButtonController.cpp">
+      <Filter>Component\Script\Controller</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -737,7 +765,6 @@
       <Filter>GameObject\Platformer</Filter>
     </ClInclude>
     <ClInclude Include="include\InventoryGUI.h" />
-    <ClInclude Include="include\ObjectiveButton_Controller.h" />
     <ClInclude Include="include\IAudioPlayerListener.h">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -764,6 +791,35 @@
     </ClInclude>
     <ClInclude Include="include\RadialLight.h">
       <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ADataAsset.h" />
+    <ClInclude Include="include\CollectableGemDataAsset.h" />
+    <ClInclude Include="include\DataAssetManager.h" />
+    <ClInclude Include="include\DialogueScreen.h" />
+    <ClInclude Include="include\VirtualJoystick.h" />
+    <ClInclude Include="include\TextRenderer.h" />
+    <ClInclude Include="include\StatuePickup.h" />
+    <ClInclude Include="include\Statue.h" />
+    <ClInclude Include="include\PuzzleEnd.h" />
+    <ClInclude Include="include\ManifestLoader.h" />
+    <ClInclude Include="include\LobbyTransition.h" />
+    <ClInclude Include="include\LobbyPlayer.h" />
+    <ClInclude Include="include\LevelEndGUI.h" />
+    <ClInclude Include="include\InteractableGate.h" />
+    <ClInclude Include="include\GemInputToken.h" />
+    <ClInclude Include="include\GemInputScreen.h" />
+    <ClInclude Include="include\GemInputPreview.h" />
+    <ClInclude Include="include\GemInputManager.h" />
+    <ClInclude Include="include\GemController.h" />
+    <ClInclude Include="include\EngineTime.h" />
+    <ClInclude Include="InteractButtonController.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ObjectiveButton_Controller.h">
+      <Filter>Component\Script\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="include\JumpButtonController.h">
+      <Filter>Component\Script\Controller</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

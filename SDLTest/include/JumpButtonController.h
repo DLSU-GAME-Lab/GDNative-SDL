@@ -9,11 +9,11 @@ public:
     JumpButtonController();
 
     void perform() override;
+    void onAttach() override;
 
 private:
     PlayerInput* playerInput = nullptr;
     SpriteRenderer* pRenderer = nullptr;
     bool bJumped = false;
 
-    void onAttach();
 };

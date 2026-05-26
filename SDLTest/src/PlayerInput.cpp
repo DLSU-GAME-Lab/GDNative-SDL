@@ -47,6 +47,11 @@ bool PlayerInput::getInteracted() const
 	return this->bInteracted;
 }
 
+void PlayerInput::setInteracted(bool interacted)
+{
+	this->bInteracted = interacted;
+}
+
 void PlayerInput::onKeyDown(SDL_Keycode key)
 {
 	switch (key)

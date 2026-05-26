@@ -21,6 +21,7 @@ public:
 	Vector2D getMovement() const;
 	bool getJumped() const;
 	bool getInteracted() const;
+	void setInteracted(bool interacted);
 
     void setVirtualMovement(const Vector2D& v);
     void setVirtualJump(bool pressed);

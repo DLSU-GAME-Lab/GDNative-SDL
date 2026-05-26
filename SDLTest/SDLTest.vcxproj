@@ -131,7 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="InteractButtonController.cpp" />
+    <ClCompile Include="src\InteractButtonController.cpp" />
     <ClCompile Include="src\ADataAsset.cpp" />
     <ClCompile Include="src\AInteractable.cpp" />
     <ClCompile Include="src\AudioClip.cpp" />
@@ -394,7 +394,7 @@
     <ClInclude Include="include\AUIScreen.h" />
     <ClInclude Include="include\Vector2D.h" />
     <ClInclude Include="include\VirtualJoystick.h" />
-    <ClInclude Include="InteractButtonController.h" />
+    <ClInclude Include="include\InteractButtonController.h" />
     <ClInclude Include="tweeny\include\dispatcher.h" />
     <ClInclude Include="tweeny\include\easing.h" />
     <ClInclude Include="tweeny\include\easingresolve.h" />

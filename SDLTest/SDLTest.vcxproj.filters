@@ -411,7 +411,7 @@
     <ClCompile Include="src\DataAssetManager.cpp" />
     <ClCompile Include="src\CollectableGemDataAsset.cpp" />
     <ClCompile Include="src\ADataAsset.cpp" />
-    <ClCompile Include="InteractButtonController.cpp">
+    <ClCompile Include="src\InteractButtonController.cpp">
       <Filter>Component\Script\Controller</Filter>
     </ClCompile>
     <ClCompile Include="src\ObjectiveButton_Controller.cpp">
@@ -812,7 +812,7 @@
     <ClInclude Include="include\GemInputManager.h" />
     <ClInclude Include="include\GemController.h" />
     <ClInclude Include="include\EngineTime.h" />
-    <ClInclude Include="InteractButtonController.h">
+    <ClInclude Include="include\InteractButtonController.h">
       <Filter>Component\Script\Controller</Filter>
     </ClInclude>
     <ClInclude Include="include\ObjectiveButton_Controller.h">

@@ -92,44 +92,44 @@ SpriteRenderer::~SpriteRenderer() {
 void SpriteRenderer::perform() {
     // O(1): All operations are per-sprite math and rendering.
     // Real runtime cost dominated by GPU draw call.
-    AGameObject* owner = this->getOwner();
-    Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
-    this->dAngle = -owner->getRot();
+        AGameObject* owner = this->getOwner();
+        Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
+        this->dAngle = -owner->getRot();
 
-    SDL_FRect srcRect = {};
-    srcRect.x = this->mCropRect.x * this->texSize.x;
-    srcRect.y = this->mCropRect.y * this->texSize.y;
-    srcRect.w = this->mCropRect.w * this->texSize.x;
-    srcRect.h = this->mCropRect.h * this->texSize.y;
+        SDL_FRect srcRect = {};
+        srcRect.x = this->mCropRect.x * this->texSize.x;
+        srcRect.y = this->mCropRect.y * this->texSize.y;
+        srcRect.w = this->mCropRect.w * this->texSize.x;
+        srcRect.h = this->mCropRect.h * this->texSize.y;
 
-    Vector2D scale = owner->getScale();
-    Vector2D size = Vector2D(srcRect.w, srcRect.h) * scale;
-    Vector2D pos = owner->getPos();
-    pos -= size * this->pivot;
+        Vector2D scale = owner->getScale();
+        Vector2D size = Vector2D(srcRect.w, srcRect.h) * scale;
+        Vector2D pos = owner->getPos();
+        pos -= size * this->pivot;
 
-    mDestRect.x = pos.x;
-    mDestRect.y = pos.y;
-    mDestRect.w = size.x;
-    mDestRect.h = size.y;
+        mDestRect.x = pos.x;
+        mDestRect.y = pos.y;
+        mDestRect.w = size.x;
+        mDestRect.h = size.y;
 
-    if (!owner->getIsScreenObject())
-    {
-        mDestRect = pCam->worldToScreenRect(mDestRect);
-        this->dAngle += pCam->getRot();
-    }
+        if (!owner->getIsScreenObject())
+        {
+            mDestRect = pCam->worldToScreenRect(mDestRect);
+            this->dAngle += pCam->getRot();
+        }
 
-    if (pCam->isInView(mDestRect))
-    {
-        RendererContext::getInstance()->draw(
-            this->pTexture,
-            this->mColor,
-            &srcRect,
-            &mDestRect,
-            this->dAngle,
-            this->flipX,
-            this->flipY
-        );
-    }
+        if (pCam->isInView(mDestRect))
+        {
+            RendererContext::getInstance()->draw(
+                this->pTexture,
+                this->mColor,
+                &srcRect,
+                &mDestRect,
+                this->dAngle,
+                this->flipX,
+                this->flipY
+            );
+        }
 }
 
 void SpriteRenderer::drawWidget()
@@ -224,4 +224,5 @@ Vector2D SpriteRenderer::getPivot()
 {
     return this->pivot;
 }
+
 

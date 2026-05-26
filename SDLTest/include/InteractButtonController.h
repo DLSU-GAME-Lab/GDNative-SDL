@@ -1,6 +1,7 @@
 #pragma once
 #include "AComponent.h"
 #include "PlayerInput.h"
+#include "AInteractable.h"
 #include "SpriteRenderer.h"
 class InteractButtonController:public AComponent
 {
@@ -12,7 +13,6 @@ public:
 private:
 	PlayerInput* playerInput = nullptr;
 	SpriteRenderer* pRenderer = nullptr;
-	bool bIsVisible = false;
 	bool bInteracted = false;
 };
 

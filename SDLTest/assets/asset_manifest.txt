@@ -245,7 +245,11 @@ GUI/button6.png
 GUI/Circle.png
 GUI/colorless_grab_gem.PNG
 GUI/green_grab_gem.PNG
+GUI/interact button.png
 GUI/inventory.png
+GUI/joystick_inner.png
+GUI/joystick_outer.png
+GUI/jump button.png
 GUI/library_intro/Set1.PNG
 GUI/library_intro/Set3.PNG
 GUI/library_intro/Set4.PNG
@@ -283,6 +287,7 @@ lobby_transition_lamps.png
 monoblock_revised.png
 platformer/gate.png
 platformer/trees.png
+radial_light.png
 right_room/blue_dragon.PNG
 right_room/book1.png
 right_room/book2.png

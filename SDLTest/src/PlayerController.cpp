@@ -3,7 +3,7 @@
 #include "AInteractable.h"
 #include "AudioManager.h"
 #include "InputManager.h"
-
+#include "GameObjectManager.h"
 // TODO: Update Player controller to use new input system
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
 	: AComponent("PlayerController", ComponentType::SCRIPT)
@@ -71,6 +71,7 @@ void PlayerController::onCollisionEnter(ACollider* pCollider)
 	{
 		std::cout << "collectable detected." << std::endl;
 		this->pQMark->setEnabled(true);
+		GameObjectManager::getInstance()->findObjectByName("InteractBtn")->setEnabled(true);
 	}
 	else if (pCollider)
 	{
@@ -91,6 +92,8 @@ void PlayerController::onCollisionExit(ACollider * pCollider)
 	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
 	{
 		this->pQMark->setEnabled(false);
+		GameObjectManager::getInstance()->findObjectByName("InteractBtn")->setEnabled(false);
+
 	}
 }
 

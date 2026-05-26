@@ -29,6 +29,7 @@
 #include "JumpButtonController.h"
 #include "VirtualJoystick.h"
 #include "PlayerManager.h"
+#include "InteractButtonController.h"
 
 PlatformerLevel1Scene::PlatformerLevel1Scene() : AScene(SceneTag::PLATFORMER_LEVEL_1_SCENE)
 {
@@ -611,7 +612,8 @@ void PlatformerLevel1Scene::onLoadObjects()
     pInteractBtn->setPos(Vector2D(1550, 900));
     pInteractBtn->setScale(Vector2D(.15f));
     GameObjectManager::getInstance()->addObject(pInteractBtn);
-
+	pInteractBtn->attachComponent(new InteractButtonController());
+	pInteractBtn->setEnabled(false);	// start disabled, enabled when player can interact
     // -- Virtual Joystick --
     Sprite* pJoyBase = new Sprite("VirtualJoystickBase", "joystick_base", Vector2D(200.0f, 900.0f), Vector2D(0.25f));
     pJoyBase->setIsScreenObject(true);

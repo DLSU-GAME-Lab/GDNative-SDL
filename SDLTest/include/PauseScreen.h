@@ -17,6 +17,7 @@ class PauseScreen:public AGameObject, EventListener, IAnimatorListener
 private:
 	EventKey EKey;
 	bool bListenerEnabled;
+	bool bIsTransitioning;
 public:
 	PauseScreen(std::string strName);
 	~PauseScreen();

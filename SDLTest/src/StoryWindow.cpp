@@ -22,6 +22,7 @@ void StoryWindow::initialize()
 	pTransBGR->setColor({ 250, 227, 150, 127 });
 
 	Background* pParentBG = new Background("ParentBG", "Square", Vector2D( 5,1.25f));
+	pParentBG->setIsScreenObject(true);
 	pParentBG->setPos(Vector2D(0, 200));
 	this->attachChild(pParentBG);
 	SpriteRenderer* pParentBGR = (SpriteRenderer*)pParentBG->findComponentByName("SpriteRenderer");

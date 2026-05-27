@@ -42,7 +42,16 @@ void InteractButtonController::onAttach()
 
 void InteractButtonController::perform()
 {
-  
+        if (!this->playerInput || !this->pRenderer) return;
+        if (!this->pOwner->getEnabled()) return;  
+
+        if (this->bJustEnabled)
+        {
+            this->bJustEnabled = false;
+            this->playerInput->setInteracted(false);
+            return;
+        }
+
         Uint64 fingerId = 0;
         float x, y = 0.0f;
         bool isAnyFingerInRect = InputManager::getInstance()->isAnyFingerInRect(this->pRenderer->getRect(), fingerId);

@@ -119,6 +119,13 @@ void PlatformerLevel1Scene::onLoadResources()
 	AudioManager::getInstance()->load("sounds/SFX/Pickup_Gem.wav", "Pickup");
 
 	DataAssetManager::getInstance()->addDataAsset("CollectableGemDataAsset", new CollectableGemDataAsset());
+	CollectableGemDataAsset* pDataAsset = (CollectableGemDataAsset*)DataAssetManager::getInstance()->getDataAsset("CollectableGemDataAsset");
+	//uncomment to test ending
+	//pDataAsset->setGemPickedUp("Gem_Cyan", true);
+	//pDataAsset->setGemPickedUp("Gem_Green", true);
+	//pDataAsset->setGemPickedUp("Gem_Red", true);
+	//pDataAsset->setGemPickedUp("Gem_Purple", true);
+	//pDataAsset->setGemPickedUp("Gem_Orange", true);
 }
 
 void PlatformerLevel1Scene::onLoadObjects()
@@ -522,18 +529,18 @@ void PlatformerLevel1Scene::onLoadObjects()
 	pLabelBG->setEnabled(false);
 
 	// attach TextRenderer to label and load text
-	Text* pObjLabel = new Text("ObjectiveLabelText", "JainiPurva-Regular.ttf", 30, 0.f, false);
+	Text* pObjLabel = new Text("ObjectiveLabelText", "JainiPurva-Regular.ttf", 35, 0.f, false);
 
 	// Attach label as child of the GUI button so it moves with it
 	pObjectiveButton->attachChild(pObjLabel);
 	pObjLabel->setMessage("Objective: Find gems");
+	pObjLabel->setIsScreenObject(true);
 
 	// Local position relative to the button (tweak x so it sits to the right)
-	pObjLabel->setPos(Vector2D(70.0f, 0.0f)); // move right of the collapsed arrow
+	pObjLabel->setLocalPos(Vector2D(70.0f, 0.0f)); // move right of the collapsed arrow
 
 	// keep it screen-space and visible initially
-	pObjLabel->setIsScreenObject(true);
-	pObjLabel->setScale(Vector2D(1.0f, 10.0f));
+	pObjLabel->setScale(Vector2D(1.0f, 1.f));
 
 	// Hide label initially (will be enabled by controller on expand)
 	pLabelBG->setEnabled(false);
@@ -711,6 +718,8 @@ void PlatformerLevel1Scene::onUnloadResources()
 
 void PlatformerLevel1Scene::onUnloadObjects()
 {
+	EventBroadcaster::getInstance()->unregisterAllListeners();
 	AudioManager::getInstance()->stopAll();
 	AScene::onUnloadObjects();
+
 }

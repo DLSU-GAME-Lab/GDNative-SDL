@@ -10,9 +10,16 @@ public:
 	// Inherited via AComponent
 	void perform() override;
 	void onAttach() override;
+	bool getJustEnabled() const {
+		return bJustEnabled;
+	}
+	void setJustEnabled(bool justEnabled) {
+		bJustEnabled = justEnabled;
+	}
 private:
 	PlayerInput* playerInput = nullptr;
 	SpriteRenderer* pRenderer = nullptr;
 	bool bInteracted = false;
+	bool bJustEnabled = false;
 };
 

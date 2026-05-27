@@ -45,14 +45,14 @@ void PlatformerPickupGUI::initialize()
 	pTransBack->attachChild(pGem);
 	pGem->setPos(Vector2D(1250, 600));
 
-	Text* pTitle = new Text("Title", "JainiPurva-Regular.ttf",45, 0, false);
+	Text* pTitle = new Text("Title", "JainiPurva-Regular.ttf",75, 0, false);
 	pTitle->setIsScreenObject(true);
 	pGem->attachChild(pTitle);
 	pTitle->setMessage("Character");
 	pTitle->setPos(Vector2D(1250, 450));
 	pTitle->setScale(Vector2D(1, 1));
 
-	Text* pText = new Text("Text", "JainiPurva-Regular.ttf", 30, 0, false);
+	Text* pText = new Text("Text", "JainiPurva-Regular.ttf", 45, 0, false);
 	std::string message = this->pDataAsset->getGemText("Gem_Red");
 	pText->setIsScreenObject(true);
 	pGem->attachChild(pText);

@@ -146,13 +146,17 @@ void PuzzleLevel1Scene::onLoadObjects()
 
 
 	PuzzleHint* pHint = new PuzzleHint("PuzzleHintWindow");
+	pHint->setIsScreenObject(true);
 	pHint->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pHint);
 
 	PauseScreen* pPauseScreen = new PauseScreen("PauseScreen");
+	pPauseScreen->setIsScreenObject(true);
+	pPauseScreen->setPos(Vector2D(0, 0));
+
 	GameObjectManager::getInstance()->addObject(pPauseScreen);
 	pPauseScreen->setEnabled(true);
-	 
+	std::cout << pPauseScreen->getPos().x << " " << pPauseScreen->getPos().y << "\n";
 	ObjectiveIntro* pObjectiveIntro = new ObjectiveIntro("L1_Obj", "Obejctive:\nForm the Bakunawa!\nRelics to sequence: 3");
 	pObjectiveIntro->setIsScreenObject(true);
 	pObjectiveIntro->setPos(Vector2D(0,0));

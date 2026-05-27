@@ -4,6 +4,7 @@
 #include "AudioManager.h"
 #include "InputManager.h"
 #include "GameObjectManager.h"
+#include "InteractButtonController.h"
 // TODO: Update Player controller to use new input system
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
 	: AComponent("PlayerController", ComponentType::SCRIPT)
@@ -71,7 +72,11 @@ void PlayerController::onCollisionEnter(ACollider* pCollider)
 	{
 		std::cout << "collectable detected." << std::endl;
 		this->pQMark->setEnabled(true);
-		GameObjectManager::getInstance()->findObjectByName("InteractBtn")->setEnabled(true);
+        this->pInput->setInteracted(false);
+        AGameObject* pBtn = GameObjectManager::getInstance()->findObjectByName("InteractBtn");
+        pBtn->setEnabled(true);
+        InteractButtonController* pCtrl = (InteractButtonController*)pBtn->findComponentByName("InteractButtonController");
+        if (pCtrl) pCtrl->setJustEnabled(true); 
 	}
 	else if (pCollider)
 	{
@@ -79,12 +84,16 @@ void PlayerController::onCollisionEnter(ACollider* pCollider)
 	}
 }
 
-void PlayerController::onCollisionContinue(ACollider * pCollider)
+void PlayerController::onCollisionContinue(ACollider* pCollider)
 {
-	if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
-	{
-		if (this->pInput->getInteracted()) pCollectable->onInteract();
-	}
+    if (AInteractable* pCollectable = dynamic_cast<AInteractable*>(pCollider))
+    {
+        if (this->pInput->getInteracted())
+        {
+            pCollectable->onInteract();
+            this->pInput->setInteracted(false); 
+        }
+    }
 }
 
 void PlayerController::onCollisionExit(ACollider * pCollider)

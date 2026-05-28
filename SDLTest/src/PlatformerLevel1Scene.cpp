@@ -720,6 +720,7 @@ void PlatformerLevel1Scene::onUnloadObjects()
 {
 	EventBroadcaster::getInstance()->unregisterAllListeners();
 	AudioManager::getInstance()->stopAll();
+
 	AScene::onUnloadObjects();
 
 }

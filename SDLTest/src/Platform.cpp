@@ -10,7 +10,6 @@ Platform::Platform(const std::string& strName, Vector2D fVecTranslate, Vector2D 
 }
 Platform::~Platform()
 {
-	AGameObject::~AGameObject();
 }
 
 void Platform::initialize()

@@ -15,7 +15,6 @@ AGameObject(strName)
 
 Text::~Text()
 {
-	AGameObject::~AGameObject();
 }
 
 void Text::setMessage(const std::string& strMessage)

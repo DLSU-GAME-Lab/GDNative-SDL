@@ -137,6 +137,12 @@ void GemInputScreen::initialize()
 	ButtonInput* pSubmitInput = (ButtonInput*)pSubmit->findComponentByName("ButtonInput");
 	GemInputManager::getInstance()->addSubmitButton(pSubmitInput);
 
+	Text* pSubmitText = new Text("SubmitText", "JainiPurva-Regular.ttf", 70, 0.f, false);
+	pSubmit->attachChild(pSubmitText);
+	pSubmitText->setScale(Vector2D(1, 1));
+	pSubmitText->setLocalPos(Vector2D(0, -75));
+	pSubmitText->setMessage("Submit");
+
 	GemInputPreview* pPreview = new GemInputPreview();
 	this->attachChild(pPreview);
 	if (!pPreview->isListenerEnabled())

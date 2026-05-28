@@ -121,11 +121,11 @@ void PlatformerLevel1Scene::onLoadResources()
 	DataAssetManager::getInstance()->addDataAsset("CollectableGemDataAsset", new CollectableGemDataAsset());
 	CollectableGemDataAsset* pDataAsset = (CollectableGemDataAsset*)DataAssetManager::getInstance()->getDataAsset("CollectableGemDataAsset");
 	//uncomment to test ending
-	//pDataAsset->setGemPickedUp("Gem_Cyan", true);
-	//pDataAsset->setGemPickedUp("Gem_Green", true);
-	//pDataAsset->setGemPickedUp("Gem_Red", true);
-	//pDataAsset->setGemPickedUp("Gem_Purple", true);
-	//pDataAsset->setGemPickedUp("Gem_Orange", true);
+	pDataAsset->setGemPickedUp("Gem_Cyan", true);
+	pDataAsset->setGemPickedUp("Gem_Green", true);
+	pDataAsset->setGemPickedUp("Gem_Red", true);
+	pDataAsset->setGemPickedUp("Gem_Purple", true);
+	pDataAsset->setGemPickedUp("Gem_Orange", true);
 }
 
 void PlatformerLevel1Scene::onLoadObjects()

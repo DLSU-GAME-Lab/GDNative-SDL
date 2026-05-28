@@ -7,6 +7,8 @@
 #include "SceneSwitcher.h"
 #include "GUIButton.h"
 #include "Sprite.h"
+#include "Text.h"
+#include "Settings.h"
 LevelEndGUI::LevelEndGUI(std::string strName):AGameObject(strName)
 {
 	this->EKey = EventKey::END_LEVEL;
@@ -44,11 +46,23 @@ void LevelEndGUI::initialize()
 	pExit->attachComponent(pExitSwitch);
 	pTransBack->attachChild(pExit);
 
+	Text* pExitText = new Text("ExitText", "JainiPurva-Regular.ttf", 40, 0.f, false);
+	pExit->attachChild(pExitText);
+	pExitText->setMessage("Return to Hub");
+	pExitText->setScale(Vector2D(1, 1));
+
 	Sprite* pTextHolder = new Sprite("pTextHolder", "Tablet");
 	pTextHolder->setIsScreenObject(true);
 	pTextHolder->setPos(Vector2D(1500, 450));
 	pTextHolder->setScale(Vector2D(.075, .075));
 	pTransBack->attachChild(pTextHolder);
+
+	Text* pClearText = new Text("ClearText", "JainiPurva-Regular.ttf", 120, 0.f, false);
+	pTextHolder->attachChild(pClearText);
+	pClearText->setMessage("Cleared");
+	pClearText->setColor(colorWhite);
+	pClearText->setScale(Vector2D(1, 1));
+
 
 	pTransBack->setEnabled(false);
 	pAnimSprite->setEnabled(false);

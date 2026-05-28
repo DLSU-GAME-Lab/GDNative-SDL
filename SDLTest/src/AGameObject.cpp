@@ -31,6 +31,7 @@ AGameObject::~AGameObject()
     for (AGameObject* pChild : this->vecChildren)
         if (pChild) delete pChild;
     this->vecChildren.clear();
+
     SDL_Log("AGameObject destroyed: %s", this->strName.c_str());
 }
 

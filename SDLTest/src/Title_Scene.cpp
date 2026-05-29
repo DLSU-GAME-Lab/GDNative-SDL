@@ -11,6 +11,9 @@
 #include "SceneSwitcher.h"
 #include "Sprite.h"
 #include "AudioManager.h"
+#include "TweenAnimator.h"
+#include "Lightmap.h"
+#include "RadialLight.h"
 
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
@@ -106,38 +109,68 @@ void Title_Scene::loadSceneTextures()
 void Title_Scene::createButtons()
 {
     GUIButton* pStartButton = new GUIButton("Start_Button", "Start_Button");
-    //GUIUtils::setGUIMidLeft(pStartButton, Vector2D(20.0f, 0.0f));
     pStartButton->setPos(Vector2D(0, 0));
-    pStartButton->setScale(Vector2D(0.25f, 0.25f));
+    pStartButton->setScale(Vector2D(0.2f, 0.2f));
+
+    GUIButton* pResetButton = new GUIButton("Reset_Button", "Start_Button");
+    pResetButton->setPos(Vector2D(0, 0));
+    pResetButton->setScale(Vector2D(0.2f, 0.2f));
 
     SceneSwitcher* pSceneSwitcher = new SceneSwitcher(SceneTag::LOBBY_SCENE);
     pStartButton->attachComponent(pSceneSwitcher);
     GameObjectManager::getInstance()->addObject(pStartButton);
 
-    Text* pStartText = new Text("Start_Text", "Maragsa.otf", 90, 0.f, false);
+    GameObjectManager::getInstance()->addObject(pResetButton);
+
+    SDL_Color color = { 127, 31, 31, 255 };
+
+    Text* pStartText = new Text("Start_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
     pStartButton->attachChild(pStartText);
-    pStartText->setMessage("Start Game");
+    pStartText->setMessage("START");
+    pStartText->setColor(color);
     pStartText->setScale(Vector2D(1,1));
-    pStartButton->setPos(Vector2D(-580, -150));
+    pStartButton->setPos(Vector2D(-580, -100));
+
+    Text* pResetText = new Text("Reset_Text", "JainiPurva-Regular.ttf", 90, 0.f, false);
+    pResetButton->attachChild(pResetText);
+    pResetText->setMessage("RESET");
+    pResetText->setColor(color);
+    pResetText->setScale(Vector2D(1,1));
+    pResetButton->setPos(Vector2D(-580, -300));
 
 }
 
 void Title_Scene::createScene()
 { 
     Background* pBackground = new Background("Title_Background", "Title_Background", Vector2D(1.f, 1.f));
+    pBackground->setPos(Vector2D(-120.0f, 0.0f));
     GameObjectManager::getInstance()->addObject(pBackground);
 
-    AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", Vector2D(-50.f, -240), Vector2D(1.f, 1.f), 0.f, 8);
+    AnimatedSprite* pLibrarian = new AnimatedSprite("Librarian", "Librarian", Vector2D(-50.f, -90.f), Vector2D(1.f, 1.f), 0.f, 8);
     GameObjectManager::getInstance()->addObject(pLibrarian);
 
-    AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy", Vector2D(-100.f, -150.f), Vector2D(1.f, 1.f), 0.f, 8);
+    AnimatedSprite* pFairy = new AnimatedSprite("Fairy", "Fairy", Vector2D(-100.f, 50.f), Vector2D(1.f, 1.f), 0.f, 8);
     GameObjectManager::getInstance()->addObject(pFairy);
 
-    AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-300, 60.f), Vector2D(1.f, 1.f), 0.f, 8);
+    AnimatedSprite* pPlayer = new AnimatedSprite("Player", "Player", Vector2D(-100.f, 0.f), Vector2D(.9f, .9f), 0.f, 8);
     GameObjectManager::getInstance()->addObject(pPlayer);
 
-    Sprite* pLogo = new Sprite("Game_Logo", "Title_Banner", Vector2D(-550, 200), Vector2D(1.f, 1.f), 0.f, false);
+    Lightmap::initialize();
+    Lightmap::getInstance()->setAmbientColor({51, 46, 41, 255});
+    RadialLight* pLight = new RadialLight("Light", 1000);
+    pLight->setPos(Vector2D(540, 0));
+    GameObjectManager::getInstance()->addObject(pLight);
+
+    Sprite* pLogo = new Sprite("Game_Logo", "Title_Banner", Vector2D(-550, 250), Vector2D(1.f, 1.f), 0.f, false);
     GameObjectManager::getInstance()->addObject(pLogo);
+
+    Vector2D start = Vector2D(-550, 250);
+    Vector2D end = Vector2D(-550, 300);
+    TweenAnimator* pTween = new TweenAnimator();
+    pTween->setAnimationType(AnimationType::YOYO);
+    pTween->setTweenPos(Tween2D::from(start.x, start.y).to(end.x, end.y).during(3000).via(tweeny::easing::quadraticInOut));
+    pTween->play();
+    pLogo->attachComponent(pTween);
 
     Sprite* pDLSULogo = new Sprite("DLSU_Logos", "DLSU_Logos", Vector2D(580, -420), Vector2D(.75f, .75f), 0.f, false);
     GameObjectManager::getInstance()->addObject(pDLSULogo);

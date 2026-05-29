@@ -3,165 +3,190 @@
 // ---------------------------------------------------------------------------
 
 #include "GameObjectManager.h"
+#include <algorithm>
+#include <cassert>
 #include <iostream>
+
+// ---------------------------------------------------------------------------
+// Per-frame lifecycle
+// ---------------------------------------------------------------------------
 
 // processInput: forwards a single SDL_Event to every enabled object.
 // Complexity: O(G) per call.
-// Scaling note: If there are E events this frame and processInput is called
-// once per event, total input-processing work per frame is O(E * G). As G or
-// E increase, this term can dominate frame cost.
-void GameObjectManager::processInput(SDL_Event* eEvent)
+void GameObjectManager::processInput(SDL_Event* pEvent)
 {
-    for(AGameObject* pGameObject : this->vecGameObject)
+    for (AGameObject* pObject : vecGameObject)
     {
-        if(pGameObject->getEnabled())
-            pGameObject->processInput(eEvent);
+        if (pObject->getEnabled())
+            pObject->processInput(pEvent);
     }
 }
 
-// update: call each object's update(fDeltaTime)
-// Complexity: O(G) per call when each object's update is constant-time.
-// Scaling note: If object updates involve pairwise checks (e.g., collisions
-// by brute-force), the inside of update may be O(G^2) leading to quadratic
-// scaling as G increases.
+// update: advances every enabled object by fDeltaTime.
+// Complexity: O(G) when each object's update is O(1).
 void GameObjectManager::update(float fDeltaTime)
 {
-    for(AGameObject* pGameObject : this->vecGameObject)
+    for (AGameObject* pObject : vecGameObject)
     {
-        if(pGameObject->getEnabled())
-            pGameObject->update(fDeltaTime);
+        if (pObject->getEnabled())
+            pObject->update(fDeltaTime);
     }
 }
 
-// draw: call each object's draw(pRenderer)
-// Complexity: O(R) per call where R is number of renderable/enabled objects.
-// Scaling note: As R grows, GPU draw calls and driver overhead increase; even
-// if algorithmic complexity is linear, wall-time may grow steeply with R.
+// draw: submits draw calls for every enabled object.
+// Complexity: O(G).
 void GameObjectManager::draw(SDL_Renderer* pRenderer)
 {
-    for(AGameObject* pGameObject : this->vecGameObject)
+    for (AGameObject* pObject : vecGameObject)
     {
-        if(pGameObject->getEnabled())
-            pGameObject->draw(pRenderer);
+        if (pObject->getEnabled())
+            pObject->draw(pRenderer);
     }
 }
 
-// addObject: push_back to vector and add to map by name
-// Complexity: amortized O(1) for insertion; map insertion average-case O(1)
-// (unordered_map). As object count G increases, memory and traversal costs
-// later scale with G.
-void GameObjectManager::addObject(AGameObject* pGameObject)
-{
-    this->vecGameObject.push_back(pGameObject);
-    this->mapGameObject[pGameObject->getName()] = pGameObject;
-    pGameObject->initialize();
-}
-
-// deleteObject: find by scanning vector, erase, and delete
-// Complexity: O(G) for search + O(G) for erase shifting => O(G).
-// Scaling note: repeated per-object deletion across G elements (e.g. scene
-// teardown) can accumulate to O(G^2) total work if each deletion performs a
-// linear search or causes shifting.
-void GameObjectManager::deleteObject(AGameObject* pGameObject)
-{
-    if (std::find(this->vecPendingDeletion.begin(), this->vecPendingDeletion.end(), pGameObject) == this->vecPendingDeletion.end()) {
-        this->vecPendingDeletion.push_back(pGameObject);
-    }
-
-}
-
-// deleteObjectByName: name lookup (map) then delete
-// Complexity: average-case O(1) for map lookup + O(G) for deletion step.
-void GameObjectManager::deleteObjectByName(std::string strName)
-{
-    AGameObject* pGameObject = this->findObjectByName(strName);
-    if(pGameObject != NULL)
-        this->deleteObject(pGameObject);
-}
-
-// deleteAllObjects: current implementation iterates and deletes each object
-// Complexity: depends on deleteObject implementation. If deleteObject performs
-// a linear search each call, deleteAllObjects accumulates to O(G^2).
-// Scaling note: large G during teardown can produce long blocking spikes.
-void GameObjectManager::deleteAllObjects()
-{
-    // Iterate once: erase from map and delete each pointer.
-    for (int i = 0; i < this->vecGameObject.size(); i++)
-        this->deleteObject(this->vecGameObject[i]);
-
-    // Clear containers, O(1) operations relative to content
-    this->vecGameObject.clear();
-    this->mapGameObject.clear();
-}
-
+// cleanUpDeletedObjects: flush the deferred-deletion queue.
+// Call once per frame after processInput / update / draw so that no active
+// traversal is in flight when we mutate vecGameObject.
+// Complexity: O(D * G) where D = objects to delete.
+// For large D (e.g. scene teardown) prefer deleteAllObjects() instead.
 void GameObjectManager::cleanUpDeletedObjects()
 {
-// Make a copy of the deletion list
+    // Swap-clear so that deletions triggered inside a destructor that call
+    // deleteObject() again queue into vecPendingDeletion without disturbing
+    // the list we are currently iterating.
     std::vector<AGameObject*> objectsToDelete;
     objectsToDelete.swap(vecPendingDeletion);
 
-    for (AGameObject* pObject : objectsToDelete) {
-        // Skip if already null
+    for (AGameObject* pObject : objectsToDelete)
+    {
         if (!pObject) continue;
 
-        // Get name before deletion
-        std::string name = pObject->getName();
-
-        // Remove from vector
+        // Remove from the ordered vector (O(G) erase).
         auto vecIt = std::find(vecGameObject.begin(), vecGameObject.end(), pObject);
-        if (vecIt != vecGameObject.end()) {
+        if (vecIt != vecGameObject.end())
             vecGameObject.erase(vecIt);
-        }
-        // Remove from map
-        auto mapIt = mapGameObject.find(name);
-        if (mapIt != mapGameObject.end()) {
-            mapGameObject.erase(mapIt);
-        }
 
-        // Delete object
+        // Remove from the name map (O(1) average).
+        mapGameObject.erase(pObject->getName());
+
         delete pObject;
-        pObject = nullptr;
-    }
-}
-    
-
-
-
-
-
-// findObjectByName: map lookup
-// Complexity: average-case O(1) (unordered_map) or O(log G) (ordered map).
-// Note: using operator[] for lookup has side-effects (insertion) which may
-// affect behavior as G grows
-AGameObject* GameObjectManager::findObjectByName(std::string strName)
-{
-    if(this->mapGameObject[strName] != NULL)
-        return this->mapGameObject[strName];
-
-    else {
-        std::cout << "[ERROR] : Object [" << strName << "] NOT found." << std::endl;
-        return NULL;
+        // Note: pObject is a local copy; setting it to nullptr here would be
+        // a no-op on the original pointer, so we omit the misleading line.
     }
 }
 
-void GameObjectManager::setObjectName(std::string strName, std::string strNewName)
+// ---------------------------------------------------------------------------
+// Object management
+// ---------------------------------------------------------------------------
+
+// addObject: take ownership of pGameObject, register it, call initialize().
+// Complexity: amortized O(1) for vector push + O(1) average for map insert.
+void GameObjectManager::addObject(AGameObject* pGameObject)
 {
-    AGameObject* gameObject = this->mapGameObject[strName];
-    gameObject->setName(strNewName);
-    this->mapGameObject.erase(strName);
-    this->mapGameObject[strNewName] = gameObject;
+    assert(pGameObject != nullptr && "addObject: received a null pointer");
+
+    vecGameObject.push_back(pGameObject);
+    mapGameObject[pGameObject->getName()] = pGameObject;
+    pGameObject->initialize();
 }
 
-// getAllObjects: O(1) to return reference; iterating callers will pay O(G).
+// deleteObject: schedule pGameObject for deferred deletion.
+// Safe to call during traversal; the object is not freed until
+// cleanUpDeletedObjects() runs. Duplicate schedules are ignored.
+// Complexity: O(D) for the duplicate check where D = pending queue size.
+void GameObjectManager::deleteObject(AGameObject* pGameObject)
+{
+    if (!pGameObject) return;
+
+    bool alreadyPending = std::find(vecPendingDeletion.begin(),
+        vecPendingDeletion.end(),
+        pGameObject) != vecPendingDeletion.end();
+    if (!alreadyPending)
+        vecPendingDeletion.push_back(pGameObject);
+}
+
+// deleteObjectByName: look up then schedule for deletion.
+// Complexity: O(1) average map lookup + O(D) pending-queue check.
+void GameObjectManager::deleteObjectByName(const std::string& strName)
+{
+    AGameObject* pObject = findObjectByName(strName);
+    if (pObject)
+        deleteObject(pObject);
+}
+
+// deleteAllObjects: immediately free every object and clear all containers.
+// Bypasses the deferred queue for efficiency — do not call during traversal.
+// Complexity: O(G).
+void GameObjectManager::deleteAllObjects()
+{
+    // Drain any pending deletions first to avoid double-deletes.
+    vecPendingDeletion.clear();
+
+    for (AGameObject* pObject : vecGameObject)
+        deleteObject(pObject);
+
+    vecGameObject.clear();
+    mapGameObject.clear();
+}
+
+// ---------------------------------------------------------------------------
+// Queries
+// ---------------------------------------------------------------------------
+
+// findObjectByName: safe map lookup that never inserts phantom entries.
+// Complexity: O(1) average (unordered_map).
+AGameObject* GameObjectManager::findObjectByName(const std::string& strName) const
+{
+    auto it = mapGameObject.find(strName);
+    if (it != mapGameObject.end())
+        return it->second;
+
+    std::cout << "[ERROR] GameObjectManager::findObjectByName — \""
+        << strName << "\" not found.\n";
+    return nullptr;
+}
+
+// setObjectName: rename an existing object in both containers.
+// Complexity: O(1) average.
+void GameObjectManager::setObjectName(const std::string& strName,
+    const std::string& strNewName)
+{
+    auto it = mapGameObject.find(strName);
+    if (it == mapGameObject.end())
+    {
+        std::cout << "[ERROR] GameObjectManager::setObjectName — \""
+            << strName << "\" not found.\n";
+        return;
+    }
+
+    AGameObject* pObject = it->second;
+    pObject->setName(strNewName);
+
+    // Re-key in the map without a redundant lookup.
+    mapGameObject.erase(it);
+    mapGameObject[strNewName] = pObject;
+}
+
+// getAllObjects: O(1) reference return; callers bear the O(G) traversal cost.
 std::vector<AGameObject*>& GameObjectManager::getAllObjects()
 {
-    return this->vecGameObject;
+    return vecGameObject;
+}
+
+// ---------------------------------------------------------------------------
+// Destructor
+// ---------------------------------------------------------------------------
+
+GameObjectManager::~GameObjectManager()
+{
+    for (AGameObject* pObject : vecGameObject)
+        delete pObject;
 }
 
 /* * * * * * * * * * * * * * * * * * * * *
  *       SINGLETON-RELATED CONTENT       *
  * * * * * * * * * * * * * * * * * * * * */
-GameObjectManager* GameObjectManager::P_SHARED_INSTANCE = NULL;
+GameObjectManager* GameObjectManager::P_SHARED_INSTANCE = nullptr;
 
 void GameObjectManager::initialize()
 {
@@ -171,6 +196,7 @@ void GameObjectManager::initialize()
 void GameObjectManager::destroy()
 {
     delete P_SHARED_INSTANCE;
+    P_SHARED_INSTANCE = nullptr; // Guard against use-after-free.
 }
 
 GameObjectManager* GameObjectManager::getInstance()

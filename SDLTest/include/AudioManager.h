@@ -35,10 +35,6 @@ public:
 	float getVolume(AudioGroupTag ETag);
     bool isPlaying(std::string strKey);
 
-private:
-    void stopByData(AudioPlayer* pPlayer);
-    static void audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal);
-
 	friend class AudioPlayer;
 
     /* * * * * * * * * * * * * * * * * * * * *

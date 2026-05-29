@@ -105,7 +105,12 @@ void AudioManager::stop(std::string strKey)
         return;
 
     AudioPlayer* player = this->mapPlaying[strKey];
-    player->bCleanUp = true;
+    player->stop();
+
+    this->vecPlaying.erase(std::remove(this->vecPlaying.begin(),
+        this->vecPlaying.end(), player),
+        this->vecPlaying.end());
+
     this->vecToDestroy.push_back(player);
 
     SDL_Log("[Audio Manager] LOG: Stopping player \"%s\" playing the clip \"%s\"",
@@ -118,13 +123,14 @@ void AudioManager::stopAll()
 
     // First, stop all playing audio
     for (auto& player : this->vecPlaying) {
-        if (player) {
+        if (player)
+        {
             player->bCleanUp = true;
+            player->stop();
         }
     }
 
-    // Then clean up in update()
-    this->update();
+    this->cleanUp();
 
     // Clear remaining references
     this->vecPlaying.clear();
@@ -134,25 +140,6 @@ void AudioManager::stopAll()
     SDL_Log("[Audio Manager] LOG: All audio streams stopped");
 }
 
-void AudioManager::stopByData(AudioPlayer* pPlayer)
-{
-	pPlayer->stop();
-    this->vecPlaying.erase(std::remove(this->vecPlaying.begin(),
-                                       this->vecPlaying.end(), pPlayer),
-                           this->vecPlaying.end());
-}
-
-void AudioManager::audioStreamCallback(void* pData, SDL_AudioStream* pStream,
-                                       int nExtra, int nTotal)
-{
-    // This callback is currently not used since we're not actually playing audio
-    // Keep it as a stub for now
-    AudioPlayer* pPlayer = static_cast<AudioPlayer*>(pData);
-    if (pPlayer) {
-        pPlayer->fProgress = (float)nExtra / (float)nTotal;
-    }
-}
-
 void AudioManager::update()
 {
     // Since we're not actually playing audio, just clean up any players marked for deletion
@@ -160,6 +147,7 @@ void AudioManager::update()
         if (pPlayer && pPlayer->bCleanUp) {
             this->vecToDestroy.push_back(pPlayer);
         }
+        else pPlayer->updateProgress();
     }
 
     cleanUp();
@@ -174,8 +162,6 @@ void AudioManager::cleanUp()
 
         if (!p->strKey.empty() && this->mapPlaying.contains(p->strKey))
             this->mapPlaying.erase(p->strKey);
-
-        stopByData(p); // remove from vecPlaying
 
         delete p;
     }

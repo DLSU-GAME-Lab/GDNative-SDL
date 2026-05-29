@@ -162,8 +162,6 @@ void LobbyScene::loadSceneTextures()
 	TextureManager::getInstance()->load("SWBSTWindowHolder/But.png", "But");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/So.png", "So");
 	TextureManager::getInstance()->load("SWBSTWindowHolder/Then.png", "Then");
-
-	TextureManager::getInstance()->load("radial_light.png", "radial_light");
 }
 
 void LobbyScene::loadDialogueTextures()
@@ -261,6 +259,33 @@ void LobbyScene::createScene()
 	Sprite* pBambooRight = new Sprite("Bamboo_Right", "Bamboo", Vector2D(1420.0f, 60.0f), Vector2D(1.2f), 0.0f, true);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBambooRight);
 
+	// ========== [LIGHTS] ========== //
+
+	Lightmap::initialize();
+	Lightmap::getInstance()->setAmbientColor({ 20, 20, 60, 255 });
+	// Main lobby light
+	RadialLight* pLight1 = new RadialLight("RadialLight1", 1200, { 255, 191, 191, 255 });
+	GameObjectManager::getInstance()->addObject(pLight1);
+	pLight1->setPos(Vector2D(0, 0));
+	pLight1->setScale(Vector2D(1.0f, 0.5f));
+
+	// Left room light
+	RadialLight* pLight2 = new RadialLight("RadialLight2", 1200, { 255, 191, 127, 255 });
+	GameObjectManager::getInstance()->addObject(pLight2);
+	pLight2->setPos(Vector2D(-2400, 0));
+	pLight2->setScale(Vector2D(1.0f, 0.5f));
+
+	// Right room light
+	RadialLight* pLight3 = new RadialLight("RadialLight3", 1200, { 191, 255, 191, 255 });
+	GameObjectManager::getInstance()->addObject(pLight3);
+	pLight3->setPos(Vector2D(2400, 0));
+	pLight3->setScale(Vector2D(1.0f, 0.5f));
+
+	RadialLight* pDiaryLight = new RadialLight("DiaryLight", 400, { 255, 255, 255, 255 });
+	pDiary->attachChild(pDiaryLight);
+
+	// ========== [GUI] ========== //
+
 	// GUI Buttons
 	EmptyObject* pButtonHolder = new EmptyObject("Button_Holder");
 	pButtonHolder->setIsScreenObject(true);
@@ -295,28 +320,6 @@ void LobbyScene::createScene()
 	pPlayer->setGUI(pButtonHolder);
 	pPlayer->setLeftArrow(pButtonLeft);
 	pPlayer->setRightArrow(pButtonRight);
-
-	Lightmap::initialize();
-	// Main lobby light
-	RadialLight* pLight1 = new RadialLight("RadialLight1", 1200, { 255, 191, 191, 255 });
-	GameObjectManager::getInstance()->addObject(pLight1);
-	pLight1->setPos(Vector2D(0, 0));
-	pLight1->setScale(Vector2D(1.0f, 0.5f));
-
-	// Left room light
-	RadialLight* pLight2 = new RadialLight("RadialLight2", 1200, { 255, 191, 127, 255 });
-	GameObjectManager::getInstance()->addObject(pLight2);
-	pLight2->setPos(Vector2D(-2400, 0));
-	pLight2->setScale(Vector2D(1.0f, 0.5f));
-
-	// Right room light
-	RadialLight* pLight3 = new RadialLight("RadialLight3", 1200, { 191, 255, 191, 255 });
-	GameObjectManager::getInstance()->addObject(pLight3);
-	pLight3->setPos(Vector2D(2400, 0));
-	pLight3->setScale(Vector2D(1.0f, 0.5f));
-
-	RadialLight* pDiaryLight = new RadialLight("DiaryLight", 400, {255, 255, 255, 255});
-	pDiary->attachChild(pDiaryLight);
 }
 
 void LobbyScene::createExitMenu()

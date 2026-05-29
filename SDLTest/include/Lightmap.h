@@ -8,7 +8,7 @@ class Lightmap : public ARenderer
 private:
 	SDL_Texture* pLightmapTex = nullptr;
 	SDL_Texture* pLightAccumTex = nullptr;
-    SDL_Color color = {20, 20, 60, 255};
+    SDL_Color color = {0, 0, 0, 255};
 	std::vector<Light2D*> lights;
     bool bUpdateLightmap = true;
 	bool bAccumulateLights = false;

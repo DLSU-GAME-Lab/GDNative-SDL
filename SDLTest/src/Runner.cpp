@@ -306,8 +306,8 @@ void Runner::processEvents(SDL_Event* eEvent)
 // linear to quadratic depending on object internals.
 void Runner::update(float fDeltaTime)
 {
-	GameObjectManager::getInstance()->update(fDeltaTime);
 	AudioManager::getInstance()->update();
+	GameObjectManager::getInstance()->update(fDeltaTime);
 	SceneTransitionManager::getInstance()->update();
 	GameObjectManager::getInstance()->cleanUpDeletedObjects();
 }

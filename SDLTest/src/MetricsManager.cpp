@@ -513,6 +513,9 @@ void MetricsManager::update() {
     float instFPS = static_cast<float>(1.0 / dt);
     fps = static_cast<float>((fps * (1.0 - fpsSmoothingAlpha)) + (instFPS * fpsSmoothingAlpha));
 
+    if (fps < minFPS) minFPS = fps;
+    if (fps > maxFPS) maxFPS = fps;
+
     // history
     fpsHistory[offset] = fps;
     cpuHistory[offset] = static_cast<float>(cpuUsage);

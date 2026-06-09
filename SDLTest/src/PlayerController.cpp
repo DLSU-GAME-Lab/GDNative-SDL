@@ -5,7 +5,7 @@
 #include "InputManager.h"
 #include "GameObjectManager.h"
 #include "InteractButtonController.h"
-// TODO: Update Player controller to use new input system
+
 PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite, SpriteAnimator* pAnimator, RigidBody* pRigidBody)
 	: AComponent("PlayerController", ComponentType::SCRIPT)
 {
@@ -30,7 +30,6 @@ void PlayerController::onAttach()
 	this->pQMark = this->pOwner->findChildByName("Q_Mark");
 }
 
-// TODO: Remove the pRigidBody calls and make this purely for animation updates
 void PlayerController::perform()
 {
 	if (this->pInput == NULL || this->pSprite == NULL) return;
@@ -60,9 +59,13 @@ void PlayerController::perform()
         }
     }
 
-    if (!this->pRigidBody->getGrounded() && this->pAnimator->getCurrentAnimation()->getName() != "idle")
+    if (!this->pRigidBody->getGrounded())
     {
-        this->pAnimator->play("fall");
+        Animation* pCurrent = this->pAnimator->getCurrentAnimation();
+        if (pCurrent != nullptr && pCurrent->getName() != "idle")
+        {
+            this->pAnimator->play("fall");
+        }
     }
 }
 

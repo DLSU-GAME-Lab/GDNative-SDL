@@ -33,7 +33,21 @@ void RigidBody::onCollisionContinue(ACollider* pCollider)
 void RigidBody::onCollisionExit(ACollider* pCollider)
 {
 	BoxCollider::onCollisionExit(pCollider);
-	this->bGrounded = this->bCollideBottom;
+	this->bGrounded = false;
+	for (ACollider* pOther : this->getCollidedWith())
+	{
+		if (pOther == pCollider) continue;
+		// Re-evaluate downward contact against any remaining collider
+		SDL_FRect myBounds = this->getGlobalBounds();
+		SDL_FRect otherBounds = pOther->getGlobalBounds();
+		float myBottom = myBounds.y;
+		float otherTop = otherBounds.y + otherBounds.h;
+		if (myBottom <= otherTop && myBottom >= otherBounds.y)
+		{
+			this->bGrounded = true;
+			break;
+		}
+	}
 }
 
 void RigidBody::cleanCollisions()
@@ -51,15 +65,6 @@ void RigidBody::physicsUpdate()
 	Vector2D dragForce = (fDrag * 0.5f) * fWeight * -velocity;
 	Vector2D totalForce = this->force + dragForce;
 
-	//this->fTicks += this->fDeltaTime;
-	//if (this->fTicks >= 2.0f)
-	//{
-	//	this->fTicks = 0.0f;
-	//	std::cout << "Velocity: " << velocity << " Current Force: " << force << " Drag Force: " << dragForce << std::endl;
-	//	std::cout << "Total Force: " << totalForce << std::endl;
-	//}
-
-	//this->force = totalForce;
 	this->velocity += this->force * this->fDeltaTime;
 
 	if (this->force.SqrMagnitude() < 0.01f)
@@ -76,7 +81,6 @@ void RigidBody::physicsLateUpdate()
 {
 	if (this->intersection != Vector2D::Zero())
 	{
-
 		if (this->intersection.x != 0.0f)
 		{
 			this->force.x = 0.0f;

@@ -124,20 +124,11 @@ void PlayerInput::updateValues(bool virtualControls)
     if (bHoldingLeft && !bHoldingRight) keyX = -1.0f;
     else if (bHoldingRight && !bHoldingLeft) keyX = 1.0f;
     this->movement = Vector2D(keyX, 0.0f);
-
-    //SDL_Log("Player Movement: %.2f", this->movement.x);
-    // joystick overrides keyboard when active
-//    if (bHoldingLeft || bHoldingRight)
-//        this->movement = Vector2D(keyX, 0.0f);
-//    else
-//        this->movement = this->virtualMovement;
 }
 
 void PlayerInput::setVirtualMovement(const Vector2D& v)
 {
     this->virtualMovement = v;
-    //SDL_Log("Virtual Movement: %.2f", this->virtualMovement.x);
-    //this->updateValues(true);
 }
 
 void PlayerInput::setVirtualJump(bool pressed)

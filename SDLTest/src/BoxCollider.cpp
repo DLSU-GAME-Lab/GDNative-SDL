@@ -146,7 +146,7 @@ SDL_FRect BoxCollider::getGlobalBounds()
 	bounds.w = this->size.x * scale.x;
 	bounds.h = this->size.y * scale.y;
 	bounds.x = this->offset.x + pos.x - (bounds.w * 0.5f);
-	bounds.y = this->offset.x + pos.y - (bounds.h * 0.5f);
+	bounds.y = this->offset.y + pos.y - (bounds.h * 0.5f);
 
 	return bounds;
 }

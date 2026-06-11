@@ -4,7 +4,7 @@
 
 RigidBody::RigidBody() : BoxCollider("RigidBody")
 {
-	this->fWeight = 1.0f;
+	this->fWeight = 1;
 	this->fDrag = 0.0f;
 	this->bGravityEnabled = false;
 	this->bGrounded = false;

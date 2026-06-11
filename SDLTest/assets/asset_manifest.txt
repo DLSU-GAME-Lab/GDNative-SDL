@@ -104,19 +104,19 @@ animations/low_order_success/frame21.PNG
 animations/low_order_success/frame22.PNG
 animations/low_order_success/frame23.PNG
 animations/low_order_success/frame24.PNG
-animations/pause_animation/frame (01).PNG
-animations/pause_animation/frame (02).PNG
-animations/pause_animation/frame (03).PNG
-animations/pause_animation/frame (04).PNG
-animations/pause_animation/frame (05).PNG
-animations/pause_animation/frame (06).PNG
-animations/pause_animation/frame (07).PNG
-animations/pause_animation/frame (08).PNG
-animations/pause_animation/frame (09).PNG
-animations/pause_animation/frame (10).PNG
-animations/pause_animation/frame (11).PNG
-animations/pause_animation/frame (12).PNG
-animations/pause_animation/frame (13).PNG
+animations/pause_animation/frame01.PNG
+animations/pause_animation/frame02.PNG
+animations/pause_animation/frame03.PNG
+animations/pause_animation/frame04.PNG
+animations/pause_animation/frame05.PNG
+animations/pause_animation/frame06.PNG
+animations/pause_animation/frame07.PNG
+animations/pause_animation/frame08.PNG
+animations/pause_animation/frame09.PNG
+animations/pause_animation/frame10.PNG
+animations/pause_animation/frame11.PNG
+animations/pause_animation/frame12.PNG
+animations/pause_animation/frame13.PNG
 animations/peek_story_animation/Normal1.PNG
 animations/peek_story_animation/Normal2.PNG
 animations/peek_story_animation/TransitionToNormalUp.PNG

@@ -3,7 +3,7 @@
 class RigidBody : public BoxCollider
 {
 private:
-    const float F_GRAVITY = 9.81f;
+    const float F_GRAVITY = 7.5f;
 
     float fWeight;
     float fDrag;

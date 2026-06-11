@@ -14,7 +14,7 @@ PlayerController::PlayerController(PlayerInput* pInput, SpriteRenderer* pSprite,
 	this->pAnimator = pAnimator;
 	this->pRigidBody = pRigidBody;
 	this->fMoveSpeed = 100.0f;
-	this->fJumpForce = 100.0f;
+	this->fJumpForce = 150.f;
 	this->pQMark = NULL;
 
 	this->pRigidBody->setListener(this);
@@ -32,12 +32,16 @@ void PlayerController::onAttach()
 
 void PlayerController::perform()
 {
-	if (this->pInput == NULL || this->pSprite == NULL) return;
+    if (this->pInput == NULL || this->pSprite == NULL) return;
 
     if (bMoving)
     {
         this->bMoving = false;
-        this->pRigidBody->setVelocity(Vector2D(fMoveDirection, 0.0f) * this->fMoveSpeed * this->fDeltaTime);
+
+        // Preserve existing Y velocity (jump/gravity), only override X
+        Vector2D currentVel = this->pRigidBody->getVelocity();
+        this->pRigidBody->setVelocity(Vector2D(fMoveDirection * this->fMoveSpeed * this->fDeltaTime, currentVel.y));
+
         this->pSprite->setFlipX(fMoveDirection < 0.0f);
         if (this->pRigidBody->getGrounded()) this->pAnimator->play("run");
     }
@@ -51,7 +55,8 @@ void PlayerController::perform()
         this->bJumped = false;
         if (this->pRigidBody->getGrounded())
         {
-            this->pRigidBody->addForce(Vector2D(0.0f, this->fJumpForce), true);
+            Vector2D currentVel = this->pRigidBody->getVelocity();
+            this->pRigidBody->addForce(Vector2D(currentVel.x, this->fJumpForce), true);
             this->pAnimator->play("jump");
 
             AudioManager::getInstance()->play(new AudioPlayer("Jump", AudioGroupTag::SFX));

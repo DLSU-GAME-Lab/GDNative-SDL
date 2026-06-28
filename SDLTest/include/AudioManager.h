@@ -8,7 +8,6 @@
 class AudioManager
 {
 private:
-    SDL_AudioSpec mSpec;
     std::vector<AudioClip*> vecAudioClip;
     std::unordered_map<std::string, AudioClip*> mapAudioClip;
 
@@ -36,10 +35,6 @@ public:
 	float getVolume(AudioGroupTag ETag);
     bool isPlaying(std::string strKey);
 
-private:
-    void stopByData(AudioPlayer* pPlayer);
-    static void audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal);
-
 	friend class AudioPlayer;
 
     /* * * * * * * * * * * * * * * * * * * * *
@@ -57,7 +52,6 @@ private:
 public:
     static void initialize();
     static void destroy();
-
     static AudioManager* getInstance();
     /* * * * * * * * * * * * * * * * * * * * */
 };

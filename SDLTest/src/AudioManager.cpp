@@ -1,36 +1,72 @@
 #include "AudioManager.h"
 #include <iostream>
+#include <cstdio>
+#include <fstream>
+#include "ManifestLoader.h"
 
+#if defined(__ANDROID__)
+#include <spdlog/spdlog.h>
+#endif
+
+// Helper function to log SDL errors
+void logSDLError(const char* context)
+{
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s: %s", context, SDL_GetError());
+}
 
 void AudioManager::load(std::string strPath, std::string strName)
 {
-    Uint8* audioBuffer = nullptr;
-    Uint32 audioLength = 0;
-    SDL_AudioSpec spec{};
-
-    #ifdef __ANDROID__
-    if (strPath.rfind("Assets/", 0) == 0)
-        strPath = strPath.substr(strlen("Assets/"));
+#if defined(__ANDROID__)
+    const std::string assetPath = strPath;
 #else
-    if (strPath.rfind("Assets/", 0) != 0)
-        strPath = "Assets/" + strPath;
+    const std::string assetPath = "Assets/" + strPath;
 #endif
+    SDL_Log("[AudioManager] Loading audio asset: %s", assetPath.c_str());
 
-    std::cout << "[DEBUG] Loading Audio Clip from: " << strPath << std::endl;
-
-    // returns bool (true = success)
-    if (!SDL_LoadWAV(strPath.c_str(), &spec, &audioBuffer, &audioLength)) {
-        std::cerr << "[ERROR] SDL_LoadWAV failed for [" << strPath
-                  << "]: " << SDL_GetError() << std::endl;
+    // Try to load raw bytes (works for APK assets)
+    size_t size = 0;
+    void* data = SDL_LoadFile(assetPath.c_str(), &size);
+    if (!data || size <= 0)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[AudioManager] SDL_LoadFile failed for %s: %s",
+            assetPath.c_str(), SDL_GetError());
+        if (data) SDL_free(data);
         return;
     }
 
-    AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength);
-    this->vecAudioClip.push_back(pAudioClip);
-    this->mapAudioClip[strName] = pAudioClip;
+    // For SDL3, we use SDL_IOStream
+    SDL_IOStream* io = SDL_IOFromConstMem(data, (int)size);
+    if (!io)
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+            "[AudioManager] Failed to create IOStream for %s", assetPath.c_str());
+        SDL_free(data);
+        return;
+    }
 
-    std::cout << "[DEBUG] Loaded audio '" << strName
-              << "' size=" << audioLength << " bytes" << std::endl;
+    SDL_AudioSpec loadedSpec;
+    Uint8* audioBuffer = nullptr;
+    Uint32 audioLength = 0;
+
+    // Use SDL3's SDL_LoadWAV_IO with true for closeio parameter
+    if (SDL_LoadWAV_IO(io, 1, &loadedSpec, &audioBuffer, &audioLength))
+    {
+
+        AudioClip* pAudioClip = new AudioClip(strName, audioBuffer, audioLength, loadedSpec);
+        this->vecAudioClip.push_back(pAudioClip);
+        this->mapAudioClip[strName] = pAudioClip;
+        SDL_Log("[AudioManager] Loaded audio '%s' (%u bytes) as key '%s'",
+            assetPath.c_str(), audioLength, strName.c_str());
+    }
+    else
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+            "[AudioManager] SDL_LoadWAV_IO failed for %s: %s",
+            assetPath.c_str(), SDL_GetError());
+    }
+
+    // Note: Don't free audioBuffer here - it's owned by AudioClip
+    // SDL_LoadWAV_IO will free the io stream automatically when closeio is true
 }
 
 void AudioManager::unload(std::string strName)
@@ -55,163 +91,128 @@ AudioClip* AudioManager::getAudioClip(std::string strName)
     if (this->mapAudioClip.contains(strName))
         return this->mapAudioClip[strName];
 
-	return NULL;
+    return NULL;
 }
 
 void AudioManager::play(AudioPlayer* pPlayer)
 {
-    if (!pPlayer) {
-        std::cerr << "[AudioManager] play() called with null player" << std::endl;
-        return;
-    }
-    if (!pPlayer->pClip) {
-        std::cerr << "[AudioManager] play() player has null clip (key=" << pPlayer->strKey << ")" << std::endl;
-        return;
-    }
+    if (!pPlayer || !pPlayer->pClip) return;
 
-    // local snapshot to avoid race with unload
-    const Uint8* clipBuf = pPlayer->pClip->getBuffer();
-    const Uint32  clipLen = pPlayer->pClip->getLength();
-    if (!clipBuf || clipLen == 0) {
-        std::cerr << "[AudioManager] play() clip buffer empty for '" << pPlayer->pClip->getName() << "'" << std::endl;
-        return;
-    }
+    pPlayer->play();
 
     this->vecPlaying.push_back(pPlayer);
-    if (!pPlayer->strKey.empty()) this->mapPlaying[pPlayer->strKey] = pPlayer;
-
-    SDL_AudioStream* pStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &mSpec, audioStreamCallback, pPlayer);
-    pPlayer->pStream = pStream;
-    if (!pPlayer->pStream) {
-        std::cerr << "[AudioManager] SDL_OpenAudioDeviceStream failed: " << SDL_GetError() << std::endl;
-        return;
-    }
-
-    if (!SDL_PutAudioStreamData(pPlayer->pStream, clipBuf, clipLen)) {
-        std::cerr << "[AudioManager] SDL_PutAudioStreamData failed: " << SDL_GetError() << std::endl;
-    }
-
-    if (pPlayer->ETag != AudioGroupTag::NONE)
-        SDL_SetAudioStreamGain(pPlayer->pStream, AudioManager::getInstance()->getVolume(pPlayer->ETag));
-
-    if (SDL_ResumeAudioStreamDevice(pPlayer->pStream))
-        std::cout << "[Audio Manager] LOG: Playing audio clip \"" << pPlayer->pClip->getName() << "\"" << std::endl;
+    if (!pPlayer->strKey.empty())
+        this->mapPlaying[pPlayer->strKey] = pPlayer;
 }
 
 void AudioManager::stop(std::string strKey)
 {
-    if (!this->mapPlaying.contains(strKey)) return;
-    this->mapPlaying[strKey]->bCleanUp = true;
-    this->vecToDestroy.push_back(this->mapPlaying[strKey]);
-    std::cout << "[Audio Manager] LOG: Stopping player \"" << strKey << "\" playing the clip \"" << this->mapPlaying[strKey]->pClip->getName() << "\"" << std::endl;
+    if (!this->mapPlaying.contains(strKey))
+        return;
+
+    AudioPlayer* player = this->mapPlaying[strKey];
+    player->stop();
+
+    this->vecPlaying.erase(std::remove(this->vecPlaying.begin(),
+        this->vecPlaying.end(), player),
+        this->vecPlaying.end());
+
+    this->vecToDestroy.push_back(player);
+
+    SDL_Log("[Audio Manager] LOG: Stopping player \"%s\" playing the clip \"%s\"",
+        strKey.c_str(), player->pClip->getName().c_str());
 }
 
 void AudioManager::stopAll()
 {
-    std::cout << "[Audio Manager] LOG: Stopping all audio streams" << std::endl;
-    for (int i = this->vecPlaying.size() - 1; i >= 0; i--)
+    SDL_Log("[Audio Manager] LOG: Stopping all audio streams");
+
+    // Stop all active players and queue them for destruction.
+    for (auto& player : this->vecPlaying)
     {
-        this->vecPlaying[i]->bCleanUp = true;
-        SDL_DestroyAudioStream(this->vecPlaying[i]->pStream);
-        delete this->vecPlaying[i];
-	}
+        if (player)
+        {
+            player->bCleanUp = true;
+            player->stop();
+            this->vecToDestroy.push_back(player);
+        }
+    }
+    // Clear the live lists before cleanUp() so the erase-remove inside it is a
+    // no-op — avoids an O(n²) scan over an already-conceptually-empty list.
     this->vecPlaying.clear();
     this->mapPlaying.clear();
-}
 
-void AudioManager::stopByData(AudioPlayer* pPlayer)
-{
-	this->vecPlaying.erase(std::remove(this->vecPlaying.begin(), this->vecPlaying.end(), pPlayer), this->vecPlaying.end());
-}
+    this->cleanUp();  // deletes all queued players and clears vecToDestroy
 
-void AudioManager::audioStreamCallback(void* pData, SDL_AudioStream* pStream, int nExtra, int nTotal)
-{
-    AudioPlayer* pPlayer = static_cast<AudioPlayer*>(pData);
-    pPlayer->fProgress = (float)nExtra / (float)nTotal;
-    if (pPlayer->bCleanUp) return;
-
-    if (pPlayer->fProgress == 1.0f && !pPlayer->bFinished)
-    {
-        pPlayer->bFinished = true;
-    }
+    SDL_Log("[Audio Manager] LOG: All audio streams stopped");
 }
 
 void AudioManager::update()
 {
-    for (auto pPlayer : this->vecPlaying)
+    // Iterate a snapshot so that cleanUp() can safely mutate vecPlaying below.
+    std::vector<AudioPlayer*> snapshot = this->vecPlaying;
+    for (auto pPlayer : snapshot)
     {
-		if (!pPlayer->bFinished) continue;
+        if (!pPlayer) continue;
 
-        switch (pPlayer->EOnFinished)
-        {
-        case OnAudioFinished::STOP:
-			pPlayer->bCleanUp = true;
+        if (pPlayer->bCleanUp)
             this->vecToDestroy.push_back(pPlayer);
-            break;
-        case OnAudioFinished::PAUSE:
-            SDL_PauseAudioStreamDevice(pPlayer->pStream);
-            break;
-        case OnAudioFinished::LOOP:
-            pPlayer->bFinished = false;
-            pPlayer->fProgress = 0.0f;
-            SDL_PutAudioStreamData(pPlayer->pStream, pPlayer->pClip->getBuffer(), pPlayer->pClip->getLength());
-            //SDL_ResumeAudioStreamDevice(pPlayer->pStream);
-            break;
-        case OnAudioFinished::FUNC:
-            pPlayer->onFinished();
-            break;
-        default:
-            break;
-        }
-	}
+        else
+            pPlayer->updateProgress();
+    }
 
-	cleanUp();
+    cleanUp();
 }
+
 void AudioManager::cleanUp()
 {
-    for (int i = this->vecToDestroy.size() - 1; i >= 0; i--)
+    for (int i = (int)this->vecToDestroy.size() - 1; i >= 0; --i)
     {
-        if (this->mapPlaying.contains(this->vecToDestroy[i]->strKey))
-            this->mapPlaying.erase(this->vecToDestroy[i]->strKey);
-		stopByData(this->vecToDestroy[i]);
-		SDL_DestroyAudioStream(this->vecToDestroy[i]->pStream);
-		delete this->vecToDestroy[i];
+        AudioPlayer* p = this->vecToDestroy[i];
+        if (!p) continue;
+
+        // FIX: remove from vecPlaying so no dangling pointer remains after delete.
+        // Without this, the next update() iterates a freed pointer -> SIGSEGV.
+        this->vecPlaying.erase(
+            std::remove(this->vecPlaying.begin(), this->vecPlaying.end(), p),
+            this->vecPlaying.end());
+
+        if (!p->strKey.empty() && this->mapPlaying.contains(p->strKey))
+            this->mapPlaying.erase(p->strKey);
+
+        delete p;
     }
     this->vecToDestroy.clear();
 }
 
 void AudioManager::setVolume(std::string strKey, float fVolume)
 {
-    if (this->mapPlaying.contains(strKey))
-        SDL_SetAudioStreamGain(this->mapPlaying[strKey]->pStream, fVolume);
+    SDL_Log("[AudioManager] setVolume for key %s (audio disabled)", strKey.c_str());
 }
 
 void AudioManager::setVolume(AudioGroupTag ETag, float fVolume)
 {
-	this->mapGroupVolumes[ETag] = fVolume;
-    for (auto pPlayer : this->vecPlaying)
-    {
-        if (pPlayer->ETag == ETag)
-        {
-            SDL_SetAudioStreamGain(pPlayer->pStream, fVolume);
-        }
-	}
+    this->mapGroupVolumes[ETag] = fVolume;
+    SDL_Log("[AudioManager] setVolume for tag %d to %.2f (audio disabled)",
+        (int)ETag, fVolume);
 }
 
 float AudioManager::getVolume(std::string strKey)
 {
-    if (this->mapPlaying.contains(strKey))
-        return SDL_GetAudioStreamGain(this->mapPlaying[strKey]->pStream);
-    else return -1.0f;
+    // Return default volume since audio is disabled
+    return 0.5f;
 }
 
 float AudioManager::getVolume(AudioGroupTag ETag)
 {
-    return this->mapGroupVolumes[ETag];
+    if (this->mapGroupVolumes.contains(ETag))
+        return this->mapGroupVolumes[ETag];
+    return 0.5f;
 }
 
 bool AudioManager::isPlaying(std::string strKey)
 {
+    // Since we're not actually playing, check if it's in our map
     return this->mapPlaying.contains(strKey);
 }
 
@@ -222,34 +223,56 @@ AudioManager* AudioManager::P_SHARED_INSTANCE = NULL;
 
 AudioManager::AudioManager()
 {
-    this->mSpec.freq = 44100; // Sample rate
-    this->mSpec.format = SDL_AUDIO_F32; // Audio format
-    this->mSpec.channels = 2; // Stereo
-
-    for (int i = static_cast<int>(AudioGroupTag::MUSIC); i <= static_cast<int>(AudioGroupTag::MASTER); i++)
+    // Initialize volume levels
+    for (int i = static_cast<int>(AudioGroupTag::MUSIC);
+        i <= static_cast<int>(AudioGroupTag::MASTER); i++)
     {
         this->mapGroupVolumes[static_cast<AudioGroupTag>(i)] = 0.5f;
-	}
+    }
+
+    SDL_Log("[AudioManager] Initialized (audio playback disabled for debugging)");
 }
 
 AudioManager::~AudioManager()
 {
-    
+    stopAll();
+
+    // Clean up all audio clips
+    for (auto& clip : this->vecAudioClip)
+    {
+        if (clip)
+        {
+            delete clip;
+        }
+    }
+    this->vecAudioClip.clear();
+    this->mapAudioClip.clear();
 }
 
 void AudioManager::initialize()
 {
-    P_SHARED_INSTANCE = new AudioManager();
+    if (!P_SHARED_INSTANCE)
+    {
+        P_SHARED_INSTANCE = new AudioManager();
+    }
 }
 
 void AudioManager::destroy()
 {
-    P_SHARED_INSTANCE->stopAll();
-    delete P_SHARED_INSTANCE;
+    if (P_SHARED_INSTANCE)
+    {
+        P_SHARED_INSTANCE->stopAll();
+        delete P_SHARED_INSTANCE;
+        P_SHARED_INSTANCE = NULL;
+    }
 }
 
 AudioManager* AudioManager::getInstance()
 {
+    if (!P_SHARED_INSTANCE)
+    {
+        initialize();
+    }
     return P_SHARED_INSTANCE;
 }
 /* * * * * * * * * * * * * * * * * * * * */

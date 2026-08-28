@@ -56,7 +56,7 @@ android {
     compileSdkVersion 35
 
     defaultConfig {
-        applicationId "org.main.babaylan_tales"
+        applicationId "org.main.gem_hunter_match_sdl"
         minSdkVersion 21
         targetSdkVersion 35
         versionCode 1

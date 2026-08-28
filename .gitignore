@@ -68,8 +68,8 @@ bld/
 [Ll]ogs/
 
 # Symlink files
-android-project/app/jni/src/
-android-project/app/jni/include/
+android-project/app/jni/src
+android-project/app/jni/include
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

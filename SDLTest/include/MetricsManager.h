@@ -18,15 +18,20 @@
 //                             context, a Vulkan device, etc.), setGPUFrameTime() is still available
 //                             to feed in a real timer-query result instead.
 //   - FPS                  -> instantaneous (smoothed) + running min / max / average
-//   - Memory usage (RSS)   -> process working set (Windows) / VmRSS (Android & other Linux-based)
+//   - Memory usage        -> app-owned memory footprint, NOT total RSS: private bytes (Windows) /
+//                            RssAnon + RssShmem + VmSwap (Android & other Linux-based). RSS also counts
+//                            file-backed mapped pages (libs, assets, driver caches) which vary wildly
+//                            between devices and ROMs and are reclaimable, so it is reported separately
+//                            as RssMB and is not used for the main "Memory" number.
 //
 // Every update() call buffers one row of the above into memory; the buffer is auto-flushed to a
 // single CSV file periodically (see setAutoFlushFrameCount), on destroy(), and on demand via
 // exportCSV(). This keeps per-frame logging cheap without doing a disk write every single frame.
 //
 // On Windows: uses QueryPerformanceCounter, GetProcessTimes/GetSystemTimes, GetProcessMemoryInfo.
-// On other platforms (Android/Linux-based): uses std::chrono and /proc/self/stat, /proc/stat,
-// /proc/self/status - all available to a normal (non-rooted) process on Android, no JNI required.
+// On other platforms (Android/Linux-based): uses std::chrono, clock_gettime(CLOCK_PROCESS_CPUTIME_ID)
+// and /proc/self/status (+ mallinfo) - all available to a normal (non-rooted) process on Android,
+// no JNI required. (/proc/stat is NOT used: Android 8+ blocks it for apps, so CPU% read as 0.)
 //
 // IMPORTANT (Android CSV path): a native Android process has no writable relative working
 // directory, so the default "metrics_export.csv" will silently fail to open there. Call
@@ -71,6 +76,11 @@ private:
         double gpuFrameTimeMs = 0.0;
         double cpuUsagePercent = 0.0;
         double memoryMB = 0.0;
+        double anonMB = 0.0;        // Linux/Android: RssAnon (heap/stack). Windows: private bytes
+        double fileMB = 0.0;        // Linux/Android: RssFile (mapped libs/assets). Windows: 0
+        double shmemMB = 0.0;       // Linux/Android: RssShmem (shared/GPU-driver buffers). Windows: 0
+        double nativeHeapMB = 0.0;  // Linux/Android: malloc heap in use (mallinfo). Windows: 0
+        double rssMB = 0.0;         // total RSS / working set (includes file-backed pages)
     };
 
     // FPS tracking
@@ -107,6 +117,11 @@ private:
 
     // Memory tracking
     SIZE_T memoryUsage = 0; // bytes (working set)
+    size_t memAnonBytes = 0;       // private bytes (PrivateUsage)
+    size_t memFileBytes = 0;       // unused on Windows
+    size_t memShmemBytes = 0;      // unused on Windows
+    size_t memNativeHeapBytes = 0; // unused on Windows
+    size_t memFootprintBytes = 0;  // reported "Memory": private bytes
 
     // Load Time tracking
     double loadTimeSec = 0.0;
@@ -137,6 +152,12 @@ private:
     std::string csvFilename = "metrics_export.csv";
     bool csvHeaderWritten = false;
 
+    // If a flush fails (bad path, locked file, ...) rows stay buffered. Retry only every
+    // autoFlushFrameCount frames instead of every frame, and cap the buffer so a permanently
+    // failing path can never turn into unbounded memory growth.
+    size_t nextFlushRetryFrame = 0;
+    static constexpr size_t kMaxBufferedRows = 5000;
+
     void appendFrameRecord();
     void flushToDisk(const std::string& filename);
 
@@ -151,7 +172,7 @@ public:
     // path from Java/Kotlin (Context.getExternalFilesDir(null) or getFilesDir()) down via JNI.
     // On Windows this is optional; without it, the relative default resolves against whatever
     // the process's current working directory happens to be at launch.
-    void setCSVPath(const std::string& path) { csvFilename = path; }
+    void setCSVPath(const std::string& path) { csvFilename = path; csvHeaderWritten = false; nextFlushRetryFrame = 0; }
 
     // Flushes any buffered per-frame rows to `filename` (creates the file / header if needed).
     // Pass nothing (or "") to flush to whatever path is already configured (via setCSVPath(),
@@ -176,7 +197,8 @@ public:
     double getCPUFrameTime() const { return cpuFrameTimeMs; } // ms
     double getGPUFrameTime() const { return gpuFrameTimeMs; } // ms
     double getCPUUsagePercent() const { return cpuUsagePercent; }
-    SIZE_T getMemoryUsage() const { return memoryUsage; } // bytes
+    SIZE_T getMemoryUsage() const { return (SIZE_T)memFootprintBytes; } // bytes, app-owned footprint
+    SIZE_T getRssUsage() const { return memoryUsage; }                  // bytes, working set
     double getInputLag() const { return inputLagMs; }
     double getLoadTime() const { return loadTimeSec; }
 
@@ -230,6 +252,11 @@ private:
         double gpuFrameTimeMs = 0.0;
         double cpuUsagePercent = 0.0;
         double memoryMB = 0.0;
+        double anonMB = 0.0;        // Linux/Android: RssAnon (heap/stack). Windows: private bytes
+        double fileMB = 0.0;        // Linux/Android: RssFile (mapped libs/assets). Windows: 0
+        double shmemMB = 0.0;       // Linux/Android: RssShmem (shared/GPU-driver buffers). Windows: 0
+        double nativeHeapMB = 0.0;  // Linux/Android: malloc heap in use (mallinfo). Windows: 0
+        double rssMB = 0.0;         // total RSS / working set (includes file-backed pages)
     };
 
     static MetricsManager* P_SHARED_INSTANCE;
@@ -255,17 +282,29 @@ private:
     std::chrono::steady_clock::time_point gpuFrameStart;
     bool gpuFrameTimingActive = false;
 
-    // Process CPU usage percent (bonus stat), from /proc/self/stat + /proc/stat
-    unsigned long long prevProcTicks = 0;
-    unsigned long long prevSysTicks = 0;
+    // Process CPU usage percent (bonus stat): delta of process CPU time (all threads) over the
+    // wall-clock delta, divided by core count = percent of total machine capacity.
+    long long prevProcCpuNs = 0;
+    long long prevWallNs = 0;
     bool cpuInitialized = false;
     double cpuUsagePercent = 0.0;
-    const double cpuSmoothingAlpha = 0.15;
-    long clockTicksPerSec = 100;
+    const double cpuSmoothingAlpha = 0.3; // applied per /proc sample, not per frame
     unsigned int logicalProcessorCount = 1;
 
-    // Memory tracking (RSS, bytes) - from /proc/self/status
-    size_t memoryUsage = 0;
+    // CPU%/memory are sampled at this interval instead of every frame (fewer file reads,
+    // less measurement overhead, steadier CPU% numbers)
+    const double procSampleIntervalSec = 0.25;
+    std::chrono::steady_clock::time_point lastProcSample;
+    bool procSampledOnce = false;
+
+    // Memory tracking (bytes) - from /proc/self/status (+ mallinfo for the native heap)
+    size_t memoryUsage = 0;         // VmRSS (total)
+    size_t memAnonBytes = 0;        // RssAnon  - heap / stacks / anonymous mappings
+    size_t memFileBytes = 0;        // RssFile  - mapped libraries / files
+    size_t memShmemBytes = 0;       // RssShmem - shared memory (often graphics buffers)
+    size_t memNativeHeapBytes = 0;  // malloc heap in use (your C/C++ allocations)
+    size_t memSwapBytes = 0;        // VmSwap - anon pages pushed out to zRAM/swap
+    size_t memFootprintBytes = 0;   // reported "Memory": RssAnon + RssShmem + VmSwap (excludes file-backed)
 
     // Load/time tracking
     double loadTimeSec = 0.0;
@@ -299,9 +338,15 @@ private:
     std::string csvFilename = "metrics_export.csv";
     bool csvHeaderWritten = false;
 
+    // If a flush fails (bad path, locked file, ...) rows stay buffered. Retry only every
+    // autoFlushFrameCount frames instead of every frame, and cap the buffer so a permanently
+    // failing path can never turn into unbounded memory growth.
+    size_t nextFlushRetryFrame = 0;
+    static constexpr size_t kMaxBufferedRows = 5000;
+
     void appendFrameRecord();
     void flushToDisk(const std::string& filename);
-    void updateProcessCpuAndMemory(); // reads /proc/self/stat, /proc/stat, /proc/self/status
+    void updateProcessCpuAndMemory(); // process CPU time, /proc/self/status, mallinfo
 
 public:
     void update();               // call every frame
@@ -313,7 +358,7 @@ public:
     // On Android there is no usable relative working directory (the process's cwd is typically
     // "/", which your app cannot write to), so you MUST pass an absolute path obtained from
     // Java/Kotlin via JNI - see the usage note below.
-    void setCSVPath(const std::string& path) { csvFilename = path; }
+    void setCSVPath(const std::string& path) { csvFilename = path; csvHeaderWritten = false; nextFlushRetryFrame = 0; }
 
     // Flushes any buffered per-frame rows to `filename` (creates the file / header if needed).
     // Pass nothing (or "") to flush to whatever path is already configured (via setCSVPath(),
@@ -337,7 +382,8 @@ public:
     double getCPUFrameTime() const { return cpuFrameTimeMs; }
     double getGPUFrameTime() const { return gpuFrameTimeMs; }
     double getCPUUsagePercent() const { return cpuUsagePercent; }
-    size_t getMemoryUsage() const { return memoryUsage; }
+    size_t getMemoryUsage() const { return memFootprintBytes; } // bytes, app-owned footprint
+    size_t getRssUsage() const { return memoryUsage; }          // bytes, total VmRSS incl. file-backed
     double getInputLag() const { return inputLagMs; }
     double getLoadTime() const { return loadTimeSec; }
 

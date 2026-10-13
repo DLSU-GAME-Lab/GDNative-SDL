@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <mutex>
 #include <unistd.h>
+#include <ctime>
+#include <malloc.h>
 #if defined(__ANDROID__)
 #include <android/log.h>
 #endif
@@ -145,6 +147,8 @@ void MetricsManager::update() {
     PROCESS_MEMORY_COUNTERS_EX pmc;
     if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc))) {
         memoryUsage = pmc.WorkingSetSize;
+        memAnonBytes = pmc.PrivateUsage;
+        memFootprintBytes = pmc.PrivateUsage;
     }
 
     // --- history buffers (GUI plots) ---
@@ -172,7 +176,7 @@ void MetricsManager::logMetrics() {
         << " | CPUFrameTime(ms)=" << cpuFrameTimeMs
         << " | GPUFrameTime(ms)=" << gpuFrameTimeMs
         << " | CPU(total%)=" << cpuUsagePercent
-        << " | Mem=" << (memoryUsage / 1024.0 / 1024.0) << " MB"
+        << " | Mem=" << (memFootprintBytes / 1024.0 / 1024.0) << " MB"
         << std::endl;
 }
 
@@ -210,7 +214,7 @@ void MetricsManager::drawGUI() {
         }
 
         if (showMemory && ImGui::BeginTabItem("Memory")) {
-            ImGui::Text("Memory Usage: %.2f MB", memoryUsage / 1024.0 / 1024.0);
+            ImGui::Text("Memory: %.2f MB (RSS %.2f MB)", memFootprintBytes / 1024.0 / 1024.0, memoryUsage / 1024.0 / 1024.0);
             ImGui::EndTabItem();
         }
 
@@ -246,11 +250,17 @@ void MetricsManager::appendFrameRecord() {
     rec.cpuFrameTimeMs = cpuFrameTimeMs;
     rec.gpuFrameTimeMs = gpuFrameTimeMs;
     rec.cpuUsagePercent = cpuUsagePercent;
-    rec.memoryMB = memoryUsage / 1024.0 / 1024.0;
+    rec.memoryMB = memFootprintBytes / 1024.0 / 1024.0;
+    rec.rssMB = memoryUsage / 1024.0 / 1024.0;
+    rec.anonMB = memAnonBytes / 1024.0 / 1024.0;
+    rec.fileMB = memFileBytes / 1024.0 / 1024.0;
+    rec.shmemMB = memShmemBytes / 1024.0 / 1024.0;
+    rec.nativeHeapMB = memNativeHeapBytes / 1024.0 / 1024.0;
 
     frameLog.push_back(rec);
 
-    if (frameLog.size() >= autoFlushFrameCount) {
+    // after a failed flush, wait until nextFlushRetryFrame instead of retrying every frame
+    if (frameLog.size() >= autoFlushFrameCount && frameCount >= nextFlushRetryFrame) {
         flushToDisk(csvFilename);
     }
 }
@@ -270,11 +280,18 @@ void MetricsManager::flushToDisk(const std::string& filename) {
     std::ofstream out(filename, std::ios::app);
     if (!out.is_open()) {
         mmLogError("[MetricsManager] Failed to open " + filename + " for CSV export");
+        // Keep the rows for a later retry, but back off and never let the buffer grow unbounded.
+        nextFlushRetryFrame = frameCount + autoFlushFrameCount;
+        if (frameLog.size() > kMaxBufferedRows) {
+            size_t drop = frameLog.size() - kMaxBufferedRows;
+            frameLog.erase(frameLog.begin(), frameLog.begin() + (std::ptrdiff_t)drop);
+            mmLogError("[MetricsManager] Dropped " + std::to_string(drop) + " oldest buffered row(s): CSV path is not writable");
+        }
         return;
     }
 
     if (needsHeader) {
-        out << "Frame,TimeSec,FPS,AvgFPS,MinFPS,MaxFPS,CPUFrameTimeMs,GPUFrameTimeMs,CPUUsagePercent,MemoryMB\n";
+        out << "Frame,TimeSec,FPS,AvgFPS,MinFPS,MaxFPS,CPUFrameTimeMs,GPUFrameTimeMs,CPUUsagePercent,MemoryMB,AnonMB,FileMB,ShmemMB,NativeHeapMB,RssMB\n";
         csvHeaderWritten = true;
     }
 
@@ -282,7 +299,8 @@ void MetricsManager::flushToDisk(const std::string& filename) {
     for (const auto& r : frameLog) {
         out << r.frameIndex << "," << r.timeSec << "," << r.fps << "," << r.avgFPS << ","
             << r.minFPS << "," << r.maxFPS << "," << r.cpuFrameTimeMs << "," << r.gpuFrameTimeMs
-            << "," << r.cpuUsagePercent << "," << r.memoryMB << "\n";
+            << "," << r.cpuUsagePercent << "," << r.memoryMB << "," << r.anonMB << "," << r.fileMB
+            << "," << r.shmemMB << "," << r.nativeHeapMB << "," << r.rssMB << "\n";
     }
 
     out.close();
@@ -291,7 +309,8 @@ void MetricsManager::flushToDisk(const std::string& filename) {
 }
 
 void MetricsManager::exportCSV(const std::string& filename) {
-    if (!filename.empty()) csvFilename = filename;
+    if (!filename.empty()) { csvFilename = filename; csvHeaderWritten = false; }
+    nextFlushRetryFrame = 0; // explicit export always tries immediately
     flushToDisk(csvFilename);
 }
 
@@ -344,12 +363,8 @@ MetricsManager::MetricsManager() {
     offset = 0;
     historyCount = 0;
 
-#if defined(_SC_CLK_TCK)
-    long ticks = sysconf(_SC_CLK_TCK);
-    clockTicksPerSec = (ticks > 0) ? ticks : 100;
-#endif
-#if defined(_SC_NPROCESSORS_ONLN)
-    long cores = sysconf(_SC_NPROCESSORS_ONLN);
+#if defined(_SC_NPROCESSORS_CONF)
+    long cores = sysconf(_SC_NPROCESSORS_CONF);
     logicalProcessorCount = (cores > 0) ? (unsigned int)cores : 1u;
 #endif
 }
@@ -407,72 +422,69 @@ void MetricsManager::markInputHandled() {
     inputTimestamp = 0;
 }
 
-// Reads process CPU% (via /proc/self/stat + /proc/stat) and RSS memory (via /proc/self/status).
-// Both are readable by an app for its own PID on Android without any special permissions.
+// Reads process CPU% and memory. Called at most every procSampleIntervalSec (see update()).
+//  - CPU%: process CPU time (all threads) / wall time / core count, i.e. percent of total machine
+//    capacity like the Windows build. No /proc access needed (Android 8+ blocks /proc/stat for
+//    apps, which is why the previous implementation always reported 0).
+//  - Memory: one pass over /proc/self/status (readable for the app's own PID): VmRSS and its
+//    breakdown RssAnon / RssFile / RssShmem, plus the malloc heap in use via mallinfo().
 void MetricsManager::updateProcessCpuAndMemory() {
-    // --- CPU: process ticks (utime+stime) vs system-wide ticks ---
+    // --- CPU ---
     {
-        std::ifstream statFile("/proc/self/stat");
-        if (statFile.is_open()) {
-            std::string line;
-            std::getline(statFile, line);
+        timespec ts{};
+        if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == 0) {
+            long long procNs = (long long)ts.tv_sec * 1000000000LL + (long long)ts.tv_nsec;
+            long long wallNs = duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count();
 
-            // fields after the last ')' are: state ppid pgrp session tty_nr tpgid flags
-            // minflt cminflt majflt cmajflt utime stime ...
-            size_t closeParen = line.find_last_of(')');
-            unsigned long long utime = 0, stime = 0;
-            if (closeParen != std::string::npos) {
-                std::istringstream iss(line.substr(closeParen + 1));
-                std::string token;
-                // skip: state ppid pgrp session tty_nr tpgid flags minflt cminflt majflt cmajflt (11 tokens)
-                for (int i = 0; i < 11 && (iss >> token); ++i) {}
-                iss >> utime >> stime;
-            }
-            unsigned long long procTicks = utime + stime;
-
-            unsigned long long sysTicks = 0;
-            std::ifstream cpuStat("/proc/stat");
-            if (cpuStat.is_open()) {
-                std::string cpuLabel;
-                unsigned long long user=0, nice=0, system=0, idle=0, iowait=0, irq=0, softirq=0, steal=0;
-                cpuStat >> cpuLabel >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal;
-                sysTicks = user + nice + system + idle + iowait + irq + softirq + steal;
-            }
-
-            if (cpuInitialized) {
-                unsigned long long procDelta = (procTicks >= prevProcTicks) ? (procTicks - prevProcTicks) : 0ULL;
-                unsigned long long sysDelta = (sysTicks >= prevSysTicks) ? (sysTicks - prevSysTicks) : 0ULL;
-
-                double cpuPctTotal = 0.0;
-                if (sysDelta > 0) cpuPctTotal = (double)procDelta * 100.0 / (double)sysDelta;
-
-                cpuUsagePercent = (1.0 - cpuSmoothingAlpha) * cpuUsagePercent + cpuSmoothingAlpha * cpuPctTotal;
+            if (cpuInitialized && wallNs > prevWallNs) {
+                double pct = double(procNs - prevProcCpuNs) * 100.0 /
+                             (double(wallNs - prevWallNs) * (double)logicalProcessorCount);
+                if (pct < 0.0) pct = 0.0;
+                if (pct > 100.0) pct = 100.0;
+                cpuUsagePercent = (1.0 - cpuSmoothingAlpha) * cpuUsagePercent + cpuSmoothingAlpha * pct;
             }
             else {
                 cpuUsagePercent = 0.0;
             }
 
-            prevProcTicks = procTicks;
-            prevSysTicks = sysTicks;
+            prevProcCpuNs = procNs;
+            prevWallNs = wallNs;
             cpuInitialized = true;
         }
     }
 
-    // --- Memory: VmRSS from /proc/self/status ---
+    // --- Memory: VmRSS + breakdown from /proc/self/status ---
     {
         std::ifstream statusFile("/proc/self/status");
         if (statusFile.is_open()) {
+            auto bytesAfter = [](const std::string& line, size_t prefixLen) -> size_t {
+                std::istringstream iss(line.substr(prefixLen));
+                unsigned long long kb = 0;
+                iss >> kb;
+                return (size_t)(kb * 1024ULL);
+            };
+
             std::string line;
             while (std::getline(statusFile, line)) {
-                if (line.compare(0, 6, "VmRSS:") == 0) {
-                    std::istringstream iss(line.substr(6));
-                    unsigned long long kb = 0;
-                    iss >> kb;
-                    memoryUsage = (size_t)(kb * 1024ULL);
-                    break;
-                }
+                if (line.compare(0, 6, "VmRSS:") == 0)          memoryUsage    = bytesAfter(line, 6);
+                else if (line.compare(0, 8, "RssAnon:") == 0)   memAnonBytes    = bytesAfter(line, 8);
+                else if (line.compare(0, 8, "RssFile:") == 0)   memFileBytes    = bytesAfter(line, 8);
+                else if (line.compare(0, 9, "RssShmem:") == 0)  memShmemBytes   = bytesAfter(line, 9);
+                else if (line.compare(0, 7, "VmSwap:") == 0) { memSwapBytes     = bytesAfter(line, 7); break; }
             }
+
+            // "Memory" = what the app itself owns: anon + shared + whatever was swapped out.
+            // File-backed pages are excluded (device/ROM dependent, reclaimable). On kernels too
+            // old to report RssAnon/RssShmem (< 4.5) fall back to total VmRSS.
+            if (memAnonBytes == 0 && memShmemBytes == 0) memFootprintBytes = memoryUsage;
+            else memFootprintBytes = memAnonBytes + memShmemBytes + memSwapBytes;
         }
+    }
+
+    // --- Native (malloc) heap in use ---
+    {
+        struct mallinfo mi = mallinfo();
+        memNativeHeapBytes = (size_t)(unsigned int)mi.uordblks;
     }
 }
 
@@ -497,8 +509,12 @@ void MetricsManager::update() {
         if (instFpsF > maxFPS) maxFPS = instFpsF;
     }
 
-    // --- CPU % + memory (bonus stats) ---
-    updateProcessCpuAndMemory();
+    // --- CPU % + memory (bonus stats) - sampled at an interval, not every frame ---
+    if (!procSampledOnce || duration<double>(now - lastProcSample).count() >= procSampleIntervalSec) {
+        updateProcessCpuAndMemory();
+        lastProcSample = now;
+        procSampledOnce = true;
+    }
 
     // --- history buffers (GUI plots) ---
     fpsHistory[offset] = fps;
@@ -525,7 +541,7 @@ void MetricsManager::logMetrics() {
         << " cpuFrameTime(ms): " << cpuFrameTimeMs
         << " gpuFrameTime(ms): " << gpuFrameTimeMs
         << " cpu%: " << cpuUsagePercent
-        << " mem(MB): " << (memoryUsage / 1024.0 / 1024.0);
+        << " mem(MB): " << (memFootprintBytes / 1024.0 / 1024.0);
     mmLogInfo(oss.str());
 }
 
@@ -563,7 +579,7 @@ void MetricsManager::drawGUI() {
         }
 
         if (showMemory && ImGui::BeginTabItem("Memory")) {
-            ImGui::Text("Memory Usage: %.2f MB", memoryUsage / 1024.0 / 1024.0);
+            ImGui::Text("Memory: %.2f MB (RSS %.2f MB)", memFootprintBytes / 1024.0 / 1024.0, memoryUsage / 1024.0 / 1024.0);
             ImGui::EndTabItem();
         }
 
@@ -596,11 +612,17 @@ void MetricsManager::appendFrameRecord() {
     rec.cpuFrameTimeMs = cpuFrameTimeMs;
     rec.gpuFrameTimeMs = gpuFrameTimeMs;
     rec.cpuUsagePercent = cpuUsagePercent;
-    rec.memoryMB = memoryUsage / 1024.0 / 1024.0;
+    rec.memoryMB = memFootprintBytes / 1024.0 / 1024.0;
+    rec.rssMB = memoryUsage / 1024.0 / 1024.0;
+    rec.anonMB = memAnonBytes / 1024.0 / 1024.0;
+    rec.fileMB = memFileBytes / 1024.0 / 1024.0;
+    rec.shmemMB = memShmemBytes / 1024.0 / 1024.0;
+    rec.nativeHeapMB = memNativeHeapBytes / 1024.0 / 1024.0;
 
     frameLog.push_back(rec);
 
-    if (frameLog.size() >= autoFlushFrameCount) {
+    // after a failed flush, wait until nextFlushRetryFrame instead of retrying every frame
+    if (frameLog.size() >= autoFlushFrameCount && frameCount >= nextFlushRetryFrame) {
         flushToDisk(csvFilename);
     }
 }
@@ -620,11 +642,18 @@ void MetricsManager::flushToDisk(const std::string& filename) {
     std::ofstream out(filename, std::ios::app);
     if (!out.is_open()) {
         mmLogError("[MetricsManager] Failed to open " + filename + " for CSV export");
+        // Keep the rows for a later retry, but back off and never let the buffer grow unbounded.
+        nextFlushRetryFrame = frameCount + autoFlushFrameCount;
+        if (frameLog.size() > kMaxBufferedRows) {
+            size_t drop = frameLog.size() - kMaxBufferedRows;
+            frameLog.erase(frameLog.begin(), frameLog.begin() + (std::ptrdiff_t)drop);
+            mmLogError("[MetricsManager] Dropped " + std::to_string(drop) + " oldest buffered row(s): CSV path is not writable");
+        }
         return;
     }
 
     if (needsHeader) {
-        out << "Frame,TimeSec,FPS,AvgFPS,MinFPS,MaxFPS,CPUFrameTimeMs,GPUFrameTimeMs,CPUUsagePercent,MemoryMB\n";
+        out << "Frame,TimeSec,FPS,AvgFPS,MinFPS,MaxFPS,CPUFrameTimeMs,GPUFrameTimeMs,CPUUsagePercent,MemoryMB,AnonMB,FileMB,ShmemMB,NativeHeapMB,RssMB\n";
         csvHeaderWritten = true;
     }
 
@@ -632,7 +661,8 @@ void MetricsManager::flushToDisk(const std::string& filename) {
     for (const auto& r : frameLog) {
         out << r.frameIndex << "," << r.timeSec << "," << r.fps << "," << r.avgFPS << ","
             << r.minFPS << "," << r.maxFPS << "," << r.cpuFrameTimeMs << "," << r.gpuFrameTimeMs
-            << "," << r.cpuUsagePercent << "," << r.memoryMB << "\n";
+            << "," << r.cpuUsagePercent << "," << r.memoryMB << "," << r.anonMB << "," << r.fileMB
+            << "," << r.shmemMB << "," << r.nativeHeapMB << "," << r.rssMB << "\n";
     }
 
     out.close();
@@ -641,7 +671,10 @@ void MetricsManager::flushToDisk(const std::string& filename) {
 }
 
 void MetricsManager::exportCSV(const std::string& filename) {
-    if (!filename.empty()) csvFilename = filename;
+    // may be called from a JNI/UI thread (onPause/onStop) while update() runs on the render thread
+    std::lock_guard<std::mutex> lock(mtx);
+    if (!filename.empty()) { csvFilename = filename; csvHeaderWritten = false; }
+    nextFlushRetryFrame = 0; // explicit export always tries immediately
     flushToDisk(csvFilename);
 }
 

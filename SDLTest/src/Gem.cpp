@@ -35,10 +35,10 @@ void Gem::initialize()
 	this->pTween->addListener(this);
 	this->attachComponent(pTween);
 
-	float offset = (rand() % 100) / 100.0f;
-	ShimmerEffect* pShimmerEffect = new ShimmerEffect(.45f,5, offset);
-	this->attachComponent(pShimmerEffect);
-	pRenderer->setShimmer(true);
+//	float offset = (rand() % 100) / 100.0f;
+//	ShimmerEffect* pShimmerEffect = new ShimmerEffect(.45f,5, offset);
+//	this->attachComponent(pShimmerEffect);
+//	pRenderer->setShimmer(true);
 }
 
 void Gem::onAnimationFinished()

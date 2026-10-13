@@ -171,6 +171,17 @@ Runner::Runner()
 	UIManager::initialize(this->pWindow, this->pRenderer);
 	std::cout << "[Runner] Initializing MetricsManager..." << std::endl;
 	MetricsManager::initialize();
+#if defined(__ANDROID__)
+	const char* storagePath = SDL_GetAndroidExternalStoragePath();
+	if (!storagePath) {
+		storagePath = SDL_GetAndroidInternalStoragePath(); // fall back if external is unavailable
+	}
+	if (storagePath) {
+		MetricsManager::getInstance()->setCSVPath(std::string(storagePath) + "/metrics_export.csv");
+	} else {
+		// SDL_GetError() will tell you why both failed - log it via your own logging
+	}
+#endif
 	std::cout << "[Runner] MetricsManager initialized." << std::endl;
 #if EDITOR_MODE
 	Editor::EditorModule::initialize();
@@ -370,9 +381,11 @@ void Runner::render()
 	MetricsManager::getInstance()->drawGUI();
 	UIManager::getInstance()->drawAllUI(this->pRenderer);
 
+	MetricsManager::getInstance()->beginGPUFrame();
 	// present the frame. This call may block until GPU / vsync flush depending
 	// on renderer configuration - it's expensive in time but constant in ops.
 	SDL_RenderPresent(this->pRenderer); // O(1) but expensive in time
+	MetricsManager::getInstance()->endGPUFrame();
 }
 
 void Runner::registerScenes()

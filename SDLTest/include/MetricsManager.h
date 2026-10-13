@@ -1,61 +1,84 @@
 #pragma once
 
-// Cross-platform metrics manager header
-// - Windows-only includes / members are guarded by _WIN32
-// - POSIX / Android uses portable types (clock_gettime, /proc, sysconf)
+// Cross-platform MetricsManager header
+//
+// Collects per-frame performance metrics, Unity-Profiler style:
+//   - CPU frame time (ms)  -> wall-clock time between update() calls (main-thread frame time)
+//   - GPU frame time (ms)  -> measured internally by timing your present/swap call: wrap
+//                             beginGPUFrame() / endGPUFrame() directly around SDL_RenderPresent()
+//                             (or whatever call flips the frame). This is NOT a true isolated
+//                             GPU-only timestamp query (that would require reaching into whatever
+//                             graphics API SDL_Renderer picked underneath, which isn't reliably
+//                             accessible when only plain SDL3 is used). It's a lightweight, zero-
+//                             dependency proxy: when the frame is GPU-bound, the present call
+//                             takes measurably longer (driver/vsync/swapchain wait), so timing it
+//                             gives a reasonable per-frame GPU-cost signal without issuing any
+//                             queries, touching any graphics API, or adding any per-frame overhead
+//                             beyond two clock reads. If you later gain direct API access (a GL
+//                             context, a Vulkan device, etc.), setGPUFrameTime() is still available
+//                             to feed in a real timer-query result instead.
+//   - FPS                  -> instantaneous (smoothed) + running min / max / average
+//   - Memory usage (RSS)   -> process working set (Windows) / VmRSS (Android & other Linux-based)
+//
+// Every update() call buffers one row of the above into memory; the buffer is auto-flushed to a
+// single CSV file periodically (see setAutoFlushFrameCount), on destroy(), and on demand via
+// exportCSV(). This keeps per-frame logging cheap without doing a disk write every single frame.
+//
+// On Windows: uses QueryPerformanceCounter, GetProcessTimes/GetSystemTimes, GetProcessMemoryInfo.
+// On other platforms (Android/Linux-based): uses std::chrono and /proc/self/stat, /proc/stat,
+// /proc/self/status - all available to a normal (non-rooted) process on Android, no JNI required.
+//
+// IMPORTANT (Android CSV path): a native Android process has no writable relative working
+// directory, so the default "metrics_export.csv" will silently fail to open there. Call
+// setCSVPath() once, right after initialize(), with an absolute path obtained from Java/Kotlin:
+//
+//   // Java/Kotlin side, e.g. in onCreate():
+//   String metricsDir = getExternalFilesDir(null).getAbsolutePath();
+//   nativeSetMetricsPath(metricsDir + "/metrics_export.csv"); // your own JNI bridge method
+//
+//   // C++ side, in the JNI function you expose for nativeSetMetricsPath:
+//   MetricsManager::getInstance()->setCSVPath(pathFromJava);
+//
+// getExternalFilesDir(null) requires no special permission and is visible over adb / a file
+// manager for debugging, but is wiped on uninstall; use getFilesDir() instead for an internal,
+// non-user-visible location if that's preferred.
+
+#if defined(_WIN32) || defined(_WIN64)
+
+#define NOMINMAX
+#include <windows.h>
+#include <psapi.h>
 
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <cfloat>
-#include <thread>
-#include <sstream>
 #include <vector>
-#include <unordered_map>
-#include <algorithm>
-#include <cstdint>
-#include <cstddef>
-
-#ifdef _WIN32
-#ifndef NOMINMAX
-  #define NOMINMAX
-  #endif
-  #include <windows.h>
-  #include <psapi.h>
-  #include <pdh.h>
-  #include <tlhelp32.h>
-#else
-// POSIX / Android includes
-#include <time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <string.h>
-#endif
 
 class MetricsManager {
 private:
     static MetricsManager* P_SHARED_INSTANCE;
 
-    // FPS tracking
-    unsigned long frameCount = 0;
-    float fps = 0.0f;
+    // one buffered row of per-frame data, written out to CSV
+    struct FrameRecord {
+        unsigned long long frameIndex = 0;
+        double timeSec = 0.0;
+        float fps = 0.0f;
+        float avgFPS = 0.0f;
+        float minFPS = 0.0f;
+        float maxFPS = 0.0f;
+        double cpuFrameTimeMs = 0.0;
+        double gpuFrameTimeMs = 0.0;
+        double cpuUsagePercent = 0.0;
+        double memoryMB = 0.0;
+    };
 
-#ifdef _WIN32
-    // Windows high-resolution counters
-    LARGE_INTEGER qpcLastTime{};          // 1s bucket reference (optional)
-    LARGE_INTEGER qpcLastFrameTime{};     // per-frame last time
-    LARGE_INTEGER qpcLastThreadSampleTime{}; // last time threads were sampled
+    // FPS tracking
+    unsigned long long frameCount = 0;
+    float fps = 0.0f;
+    LARGE_INTEGER qpcLastFrameTime{};
+    LARGE_INTEGER qpcAppStart{};
     double qpcFrequency = 0.0;
-#else
-    // POSIX: store times in nanoseconds (CLOCK_MONOTONIC)
-    int64_t qpcLastTimeNs = 0;
-    int64_t qpcLastFrameTimeNs = 0;
-    int64_t qpcLastThreadSampleTimeNs = 0;
-    double qpcFrequency = 1.0;
-#endif
 
     // FPS stats
     float avgFPS = 0.0f;
@@ -65,71 +88,33 @@ private:
     // FPS smoothing
     const double fpsSmoothingAlpha = 0.12; // 0..1 (0 = no smoothing, 1 = instant)
 
-    // Thread sampling throttle (seconds)
-    double threadSampleIntervalSec = 0.20; // default 200 ms
+    // CPU frame time (ms) - wall time between update() calls, Unity-profiler "CPU" style
+    double cpuFrameTimeMs = 0.0;
 
-    // CPU tracking (process-wide):
-#ifdef _WIN32
-    // FILETIME based approach (Windows)
-    FILETIME prevSysIdle{}, prevSysKernel{}, prevSysUser{};
+    // GPU frame time (ms) - measured internally by timing the present/swap call, see
+    // beginGPUFrame()/endGPUFrame(); setGPUFrameTime() remains available as a manual override.
+    double gpuFrameTimeMs = 0.0;
+    LARGE_INTEGER qpcGpuFrameStart{};
+    bool gpuFrameTimingActive = false;
+
+    // Process-wide CPU usage percent (bonus stat alongside frame time), FILETIME based
+    FILETIME prevSysKernel{}, prevSysUser{};
     FILETIME prevProcKernel{}, prevProcUser{};
     bool cpuInitialized = false;
-#else
-    // POSIX: store previous total/idle counters (in jiffies or nanoseconds) as uint64_t
-    uint64_t prevTotalJiffies = 0;
-    uint64_t prevIdleJiffies = 0;
-    bool cpuInitialized = false;
-#endif
-    double cpuUsage = 0.0;          // percent of total machine capacity (0..100)
-    double cpuUsagePerCore = 0.0;   // scaled so 100 = one logical core fully used
+    double cpuUsagePercent = 0.0; // percent of total machine capacity (0..100)
+    const double cpuSmoothingAlpha = 0.15;
     unsigned int logicalProcessorCount = 1;
 
-    const double cpuSmoothingAlpha = 0.15; // small smoothing to avoid jitter
-
-    // PDH per-core (Windows-only; stubbed out on POSIX)
-#ifdef _WIN32
-    PDH_HQUERY hPdhQuery = NULL;
-    std::vector<PDH_HCOUNTER> coreCounters;
-#endif
-    std::vector<float> corePercentages;
-    std::vector<std::vector<float>> coreHistory; // per-core ring buffers
-    bool pdhInitialized = false;
-
-    // Per-thread (app-only) CPU tracking
-    struct ThreadStat {
-#ifdef _WIN32
-        DWORD tid = 0;
-#else
-        uint32_t tid = 0;
-#endif
-        unsigned long long prevTotal = 0;
-        float usage = 0.0f;               // percent (100% ~= one core)
-        std::vector<float> history;       // HISTORY_SIZE entries
-    };
-    std::unordered_map<uint32_t, ThreadStat> threadStats; // keyed by TID
-    bool threadStatsInitialized = false;
-
-    // Memory tracking (portable)
-    size_t memoryUsage = 0;
-
-    // GPU tracking (external only, set 0 here)
-    double gpuUsage = 0.0;
+    // Memory tracking
+    SIZE_T memoryUsage = 0; // bytes (working set)
 
     // Load Time tracking
     double loadTimeSec = 0.0;
-#ifdef _WIN32
     LARGE_INTEGER loadStart{};
-#else
-    int64_t loadStartNs = 0;
-#endif
 
-    // INPUT Lag tracking
+    // Input lag tracking
     double inputLagMs = 0.0;
-#ifdef _WIN32
     LONGLONG inputTimestamp = 0;
-#else
-    int64_t inputTimestampNs = 0;
-#endif
 
     // Toggles
     bool showFPS = true;
@@ -138,45 +123,71 @@ private:
     bool showGPU = true;
     bool showInputLag = true;
     bool showLoadTime = true;
-    bool showThreads = true; // toggle thread view
 
-    // History buffers
+    // History buffers (for GUI plots only)
     static const int HISTORY_SIZE = 100;
     float fpsHistory[HISTORY_SIZE] = {};
     float cpuHistory[HISTORY_SIZE] = {};
     int offset = 0;
-    int historyCount = 0; // how many entries we've filled (<= HISTORY_SIZE)
+    int historyCount = 0;
 
-    // PDH helpers (Windows-only)
-#ifdef _WIN32
-    bool initPDH();
-    void cleanupPDH();
-    void updatePDH(); // reads per-core counters and writes into corePercentages & coreHistory[][offset]
-#else
-    // On POSIX/Android these are no-ops / stubs you must implement in the .cpp
-    bool initPDH() { return false; }
-    void cleanupPDH() {}
-    void updatePDH() {}
-#endif
+    // Per-frame CSV log buffer
+    std::vector<FrameRecord> frameLog;
+    size_t autoFlushFrameCount = 300; // ~5s at 60fps; auto-flush buffer to disk at this size
+    std::string csvFilename = "metrics_export.csv";
+    bool csvHeaderWritten = false;
 
-    // Thread helpers (POSIX implementation will inspect /proc/self/task)
-    void updateThreadStats(double sampleIntervalSeconds); // updates threadStats and per-thread histories
-    void pruneDeadThreads(const std::vector<uint32_t>& liveTids); // removes entries no longer present
+    void appendFrameRecord();
+    void flushToDisk(const std::string& filename);
 
 public:
     void update();
     void logMetrics();
     void drawGUI();
-    void exportCSV(const std::string& filename = "metrics_export.csv");
+
+    // Sets the path future CSV rows (auto-flush and exportCSV()) are written to, WITHOUT writing
+    // anything immediately. Call this once, right after initialize(), before any frames run -
+    // on Android there is no usable relative working directory, so you must pass an absolute
+    // path from Java/Kotlin (Context.getExternalFilesDir(null) or getFilesDir()) down via JNI.
+    // On Windows this is optional; without it, the relative default resolves against whatever
+    // the process's current working directory happens to be at launch.
+    void setCSVPath(const std::string& path) { csvFilename = path; }
+
+    // Flushes any buffered per-frame rows to `filename` (creates the file / header if needed).
+    // Pass nothing (or "") to flush to whatever path is already configured (via setCSVPath(),
+    // or the last exportCSV() call) instead of resetting it back to the relative default -
+    // calling exportCSV() with no args is safe and will NOT clobber a path you set earlier.
+    // Also called automatically every `autoFlushFrameCount` frames and on destroy().
+    void exportCSV(const std::string& filename = "");
+
+    // Convenience alias for exportCSV() with no args - flushes now, to the current path.
+    // On Android, call this from your JNI bridge for onPause()/onStop(), since the OS can kill
+    // the process at any time without your native destructors running, silently dropping
+    // whatever hasn't hit autoFlushFrameCount yet.
+    void flush() { exportCSV(); }
+
+    void setAutoFlushFrameCount(size_t frames) { autoFlushFrameCount = frames; }
 
     // getters
     float getFPS() const { return fps; }
-    double getCPUUsage() const { return cpuUsage; } // total percent
-    double getCPUUsagePerCore() const { return cpuUsagePerCore; } // per-core scaled percent
-    size_t getMemoryUsage() const { return memoryUsage; }
-    double getGPUUsage() const { return gpuUsage; } // always 0 in code, real gpu logged externally
+    float getAvgFPS() const { return avgFPS; }
+    float getMinFPS() const { return minFPS; }
+    float getMaxFPS() const { return maxFPS; }
+    double getCPUFrameTime() const { return cpuFrameTimeMs; } // ms
+    double getGPUFrameTime() const { return gpuFrameTimeMs; } // ms
+    double getCPUUsagePercent() const { return cpuUsagePercent; }
+    SIZE_T getMemoryUsage() const { return memoryUsage; } // bytes
     double getInputLag() const { return inputLagMs; }
     double getLoadTime() const { return loadTimeSec; }
+
+    // Wrap these directly around your present/swap call (e.g. SDL_RenderPresent()) to measure
+    // GPU frame time internally, once per frame - see header comment above for what this measures.
+    void beginGPUFrame();
+    void endGPUFrame();
+
+    // Manual override: feed in a real timer-query result instead, if you ever get direct
+    // graphics-API access. Whichever was called most recently (this or endGPUFrame()) wins.
+    void setGPUFrameTime(double ms) { gpuFrameTimeMs = ms; }
 
     // helpers for load time
     void startLoadTimer();
@@ -195,3 +206,166 @@ private:
     MetricsManager() {}
     ~MetricsManager() {}
 };
+
+#else // ---------------- non-Windows (Android / other Linux-based) fallback ----------------
+
+#include <chrono>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <cfloat>
+#include <vector>
+#include <mutex>
+
+class MetricsManager {
+private:
+    struct FrameRecord {
+        unsigned long long frameIndex = 0;
+        double timeSec = 0.0;
+        float fps = 0.0f;
+        float avgFPS = 0.0f;
+        float minFPS = 0.0f;
+        float maxFPS = 0.0f;
+        double cpuFrameTimeMs = 0.0;
+        double gpuFrameTimeMs = 0.0;
+        double cpuUsagePercent = 0.0;
+        double memoryMB = 0.0;
+    };
+
+    static MetricsManager* P_SHARED_INSTANCE;
+
+    // FPS tracking
+    unsigned long long frameCount = 0;
+    float fps = 0.0f;
+    std::chrono::steady_clock::time_point lastFrameTime;
+    std::chrono::steady_clock::time_point appStartTime;
+
+    // FPS stats
+    float avgFPS = 0.0f;
+    float minFPS = FLT_MAX;
+    float maxFPS = 0.0f;
+    const double fpsSmoothingAlpha = 0.12;
+
+    // CPU frame time (ms) - wall time between update() calls
+    double cpuFrameTimeMs = 0.0;
+
+    // GPU frame time (ms) - measured internally by timing the present/swap call, see
+    // beginGPUFrame()/endGPUFrame(); setGPUFrameTime() remains available as a manual override.
+    double gpuFrameTimeMs = 0.0;
+    std::chrono::steady_clock::time_point gpuFrameStart;
+    bool gpuFrameTimingActive = false;
+
+    // Process CPU usage percent (bonus stat), from /proc/self/stat + /proc/stat
+    unsigned long long prevProcTicks = 0;
+    unsigned long long prevSysTicks = 0;
+    bool cpuInitialized = false;
+    double cpuUsagePercent = 0.0;
+    const double cpuSmoothingAlpha = 0.15;
+    long clockTicksPerSec = 100;
+    unsigned int logicalProcessorCount = 1;
+
+    // Memory tracking (RSS, bytes) - from /proc/self/status
+    size_t memoryUsage = 0;
+
+    // Load/time tracking
+    double loadTimeSec = 0.0;
+    std::chrono::steady_clock::time_point loadStart;
+
+    // Input lag
+    double inputLagMs = 0.0;
+    long long inputTimestamp = 0;
+
+    // History buffers (for GUI plots only)
+    static const int HISTORY_SIZE = 100;
+    float fpsHistory[HISTORY_SIZE] = {};
+    float cpuHistory[HISTORY_SIZE] = {};
+    int offset = 0;
+    int historyCount = 0;
+
+    // concurrency
+    std::mutex mtx;
+
+    // UI toggles
+    bool showFPS      = true;
+    bool showCPU      = true;
+    bool showMemory   = true;
+    bool showGPU      = true;
+    bool showInputLag = true;
+    bool showLoadTime = true;
+
+    // Per-frame CSV log buffer
+    std::vector<FrameRecord> frameLog;
+    size_t autoFlushFrameCount = 300;
+    std::string csvFilename = "metrics_export.csv";
+    bool csvHeaderWritten = false;
+
+    void appendFrameRecord();
+    void flushToDisk(const std::string& filename);
+    void updateProcessCpuAndMemory(); // reads /proc/self/stat, /proc/stat, /proc/self/status
+
+public:
+    void update();               // call every frame
+    void logMetrics();           // dump simple metrics to stdout
+    void drawGUI();              // optional, stub so imgui calls compile
+
+    // Sets the path future CSV rows (auto-flush and exportCSV()) are written to, WITHOUT writing
+    // anything immediately. Call this once, right after initialize(), before any frames run.
+    // On Android there is no usable relative working directory (the process's cwd is typically
+    // "/", which your app cannot write to), so you MUST pass an absolute path obtained from
+    // Java/Kotlin via JNI - see the usage note below.
+    void setCSVPath(const std::string& path) { csvFilename = path; }
+
+    // Flushes any buffered per-frame rows to `filename` (creates the file / header if needed).
+    // Pass nothing (or "") to flush to whatever path is already configured (via setCSVPath(),
+    // or the last exportCSV() call) instead of resetting it back to the relative default -
+    // calling exportCSV() with no args is safe and will NOT clobber a path you set earlier.
+    void exportCSV(const std::string& filename = "");
+
+    // Convenience alias for exportCSV() with no args - flushes now, to the current path.
+    // Call this from your JNI bridge for onPause()/onStop(), since Android can kill the
+    // process at any time without your native destructors running, silently dropping
+    // whatever hasn't hit autoFlushFrameCount yet.
+    void flush() { exportCSV(); }
+
+    void setAutoFlushFrameCount(size_t frames) { autoFlushFrameCount = frames; }
+
+    // getters
+    float getFPS() const { return fps; }
+    float getAvgFPS() const { return avgFPS; }
+    float getMinFPS() const { return minFPS; }
+    float getMaxFPS() const { return maxFPS; }
+    double getCPUFrameTime() const { return cpuFrameTimeMs; }
+    double getGPUFrameTime() const { return gpuFrameTimeMs; }
+    double getCPUUsagePercent() const { return cpuUsagePercent; }
+    size_t getMemoryUsage() const { return memoryUsage; }
+    double getInputLag() const { return inputLagMs; }
+    double getLoadTime() const { return loadTimeSec; }
+
+    // Wrap these directly around your present/swap call (e.g. SDL_RenderPresent()) to measure
+    // GPU frame time internally, once per frame - see header comment above for what this measures.
+    void beginGPUFrame();
+    void endGPUFrame();
+
+    // Manual override: feed in a real timer-query result instead, if you ever get direct
+    // graphics-API access. Whichever was called most recently (this or endGPUFrame()) wins.
+    void setGPUFrameTime(double ms) { gpuFrameTimeMs = ms; }
+
+    // load time helpers
+    void startLoadTimer();
+    void endLoadTimer();
+
+    // input lag helpers
+    void recordInputEvent();
+    void markInputHandled();
+
+    // singleton
+    static void initialize();
+    static void destroy();
+    static MetricsManager* getInstance();
+
+private:
+    MetricsManager();
+    ~MetricsManager();
+};
+
+#endif // _WIN32

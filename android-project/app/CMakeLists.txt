@@ -91,7 +91,7 @@ file(MAKE_DIRECTORY ${SDL_TTF_INSTALL_DIR}/include)
 # ================= Add SDL3 via ExternalProject =============================
 ExternalProject_Add(external_sdl3
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG release-3.2.22
+        GIT_TAG release-3.4.18
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
         PREFIX ${CMAKE_BINARY_DIR}/external/SDL3
@@ -106,6 +106,8 @@ ExternalProject_Add(external_sdl3
         -DSDL_STATIC=OFF
         -DSDL_ANDROID=ON
         -DSDL_VULKAN=ON
+        -DSDL_GPU=ON
+        -DSDL_RENDER_GPU=ON
         -DSDL_HAPTIC=OFF
         -DSDL_POWER=OFF
         -DSDL_OPENGL=ON
@@ -152,7 +154,7 @@ add_dependencies(SDL3 external_sdl3)
 # ================= SDL3_image ExternalProject ==================
 ExternalProject_Add(external_sdl3_image
         GIT_REPOSITORY  https://github.com/libsdl-org/SDL_image.git
-        GIT_TAG release-3.2.2
+        GIT_TAG release-3.4.8
         GIT_SHALLOW FALSE
         GIT_PROGRESS TRUE
         PREFIX ${CMAKE_BINARY_DIR}/external/SDL3_image
@@ -162,18 +164,22 @@ ExternalProject_Add(external_sdl3_image
         -DANDROID_STL=c++_shared
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         -DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
-        -DSDL3IMAGE_INSTALL=ON
-        -DSDL3IMAGE_DEPS_SHARED=OFF
-        -DSDL3IMAGE_VENDORED=ON
-        -DSDL3IMAGE_BUILD_SHARED_LIBS=ON
-        -DSDL3IMAGE_JPG_SHARED=OFF
-        -DSDL3IMAGE_PNG_SHARED=OFF
-        -DSDL3IMAGE_TIF_SHARED=OFF
-        -DSDL3IMAGE_WEBP_SHARED=OFF
-        -DSDL3IMAGE_JPG=ON
-        -DSDL3IMAGE_PNG=ON
-        -DSDL3IMAGE_SAMPLES=OFF
-        -DSDL3IMAGE_TESTS=OFF
+        -DSDLIMAGE_INSTALL=ON
+        -DSDLIMAGE_VENDORED=ON
+        -DSDLIMAGE_DEPS_SHARED=OFF
+        -DSDLIMAGE_SAMPLES=OFF
+        -DSDLIMAGE_TESTS=OFF
+        -DSDLIMAGE_PNG=ON
+        -DSDLIMAGE_JPG=ON
+        -DSDLIMAGE_AVIF=OFF
+        -DSDLIMAGE_JXL=OFF
+        -DSDLIMAGE_TIF=OFF
+        -DSDLIMAGE_WEBP=OFF
+        -DSDLIMAGE_BUILD_SHARED_LIBS=ON
+        -DSDLIMAGE_JPG_SHARED=OFF
+        -DSDLIMAGE_PNG_SHARED=OFF
+        -DSDLIMAGE_TIF_SHARED=OFF
+        -DSDLIMAGE_WEBP_SHARED=OFF
         -DSDL3_DIR=${SDL3_INSTALL_DIR}/lib/cmake/SDL3
         -DCMAKE_PREFIX_PATH=${SDL3_INSTALL_DIR}
         UPDATE_COMMAND ""

@@ -1,5 +1,5 @@
 # SDL3_image CMake configuration file:
-# This file is meant to be placed in a cmake subfolder of  SDL3_image-devel-3.2.4-VC.zip
+# This file is meant to be placed in a cmake subfolder of  SDL3_image-devel-3.4.8-VC.zip
 
 include(FeatureSummary)
 set_package_properties(SDL3_image PROPERTIES
@@ -7,7 +7,7 @@ set_package_properties(SDL3_image PROPERTIES
     DESCRIPTION "SDL_image is an image file loading library"
 )
 
-cmake_minimum_required(VERSION 3.0...3.28)
+cmake_minimum_required(VERSION 3.0...4.0)
 
 # Copied from `configure_package_config_file`
 macro(check_required_components _NAME)
@@ -40,10 +40,17 @@ set(SDLIMAGE_XPM   TRUE)
 set(SDLIMAGE_XV    TRUE)
 set(SDLIMAGE_WEBP  TRUE)
 
+set(SDLIMAGE_PNG_LIBPNG   TRUE)
+
+set(SDLIMAGE_AVIF_SHARED  TRUE)
+set(SDLIMAGE_JXL_SHARED   TRUE)
+set(SDLIMAGE_PNG_SHARED   TRUE)
+set(SDLIMAGE_WEBP_SHARED  TRUE)
+
 set(SDLIMAGE_JPG_SAVE FALSE)
 set(SDLIMAGE_PNG_SAVE FALSE)
 
-set(SDLIMAGE_VENDORED  FALSE)
+set(SDLIMAGE_VENDORED  TRUE)
 
 set(SDLIMAGE_BACKEND_IMAGEIO   FALSE)
 set(SDLIMAGE_BACKEND_STB       TRUE)

@@ -88,10 +88,14 @@ set(SDL_TTF_INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/SDL_ttf")
 file(MAKE_DIRECTORY ${SDL_TTF_INSTALL_DIR}/lib)
 file(MAKE_DIRECTORY ${SDL_TTF_INSTALL_DIR}/include)
 
+set(SDL3_MIXER_INSTALL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/SDL3_mixer")
+file(MAKE_DIRECTORY ${SDL3_MIXER_INSTALL_DIR}/lib)
+file(MAKE_DIRECTORY ${SDL3_MIXER_INSTALL_DIR}/include)
+
 # ================= Add SDL3 via ExternalProject =============================
 ExternalProject_Add(external_sdl3
         GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG release-3.2.22
+        GIT_TAG release-3.4.18
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
         PREFIX ${CMAKE_BINARY_DIR}/external/SDL3
@@ -106,6 +110,8 @@ ExternalProject_Add(external_sdl3
         -DSDL_STATIC=OFF
         -DSDL_ANDROID=ON
         -DSDL_VULKAN=ON
+        -DSDL_GPU=ON
+        -DSDL_RENDER_GPU=ON
         -DSDL_HAPTIC=OFF
         -DSDL_POWER=OFF
         -DSDL_OPENGL=ON
@@ -152,7 +158,7 @@ add_dependencies(SDL3 external_sdl3)
 # ================= SDL3_image ExternalProject ==================
 ExternalProject_Add(external_sdl3_image
         GIT_REPOSITORY  https://github.com/libsdl-org/SDL_image.git
-        GIT_TAG release-3.2.2
+        GIT_TAG release-3.4.8
         GIT_SHALLOW FALSE
         GIT_PROGRESS TRUE
         PREFIX ${CMAKE_BINARY_DIR}/external/SDL3_image
@@ -162,18 +168,22 @@ ExternalProject_Add(external_sdl3_image
         -DANDROID_STL=c++_shared
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         -DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
-        -DSDL3IMAGE_INSTALL=ON
-        -DSDL3IMAGE_DEPS_SHARED=OFF
-        -DSDL3IMAGE_VENDORED=ON
-        -DSDL3IMAGE_BUILD_SHARED_LIBS=ON
-        -DSDL3IMAGE_JPG_SHARED=OFF
-        -DSDL3IMAGE_PNG_SHARED=OFF
-        -DSDL3IMAGE_TIF_SHARED=OFF
-        -DSDL3IMAGE_WEBP_SHARED=OFF
-        -DSDL3IMAGE_JPG=ON
-        -DSDL3IMAGE_PNG=ON
-        -DSDL3IMAGE_SAMPLES=OFF
-        -DSDL3IMAGE_TESTS=OFF
+        -DSDLIMAGE_INSTALL=ON
+        -DSDLIMAGE_VENDORED=ON
+        -DSDLIMAGE_DEPS_SHARED=OFF
+        -DSDLIMAGE_SAMPLES=OFF
+        -DSDLIMAGE_TESTS=OFF
+        -DSDLIMAGE_PNG=ON
+        -DSDLIMAGE_JPG=ON
+        -DSDLIMAGE_AVIF=OFF
+        -DSDLIMAGE_JXL=OFF
+        -DSDLIMAGE_TIF=OFF
+        -DSDLIMAGE_WEBP=OFF
+        -DSDLIMAGE_BUILD_SHARED_LIBS=ON
+        -DSDLIMAGE_JPG_SHARED=OFF
+        -DSDLIMAGE_PNG_SHARED=OFF
+        -DSDLIMAGE_TIF_SHARED=OFF
+        -DSDLIMAGE_WEBP_SHARED=OFF
         -DSDL3_DIR=${SDL3_INSTALL_DIR}/lib/cmake/SDL3
         -DCMAKE_PREFIX_PATH=${SDL3_INSTALL_DIR}
         UPDATE_COMMAND ""
@@ -242,6 +252,62 @@ target_include_directories(sdl3_ttf_wrapper INTERFACE "${SDL_TTF_INSTALL_DIR}/in
 target_link_libraries(sdl3_ttf_wrapper INTERFACE SDL3 SDL3_ttf)
 add_dependencies(sdl3_ttf_wrapper external_sdl_ttf)
 
+# ================= SDL3_mixer ExternalProject ==================
+ExternalProject_Add(external_sdl3_mixer
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+        GIT_TAG release-3.2.4
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+        PREFIX ${CMAKE_BINARY_DIR}/external/SDL3_mixer
+        CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${SDL3_MIXER_INSTALL_DIR}
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+        -DANDROID_STL=c++_shared
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}
+        -DSDLMIXER_INSTALL=ON
+        -DSDLMIXER_VENDORED=ON
+        -DSDLMIXER_DEPS_SHARED=OFF
+        -DSDLMIXER_SAMPLES=OFF
+        -DSDLMIXER_EXAMPLES=OFF
+        -DSDLMIXER_TESTS=OFF
+        # WAV is built in. OGG uses the bundled stb_vorbis, so no extra downloads are needed.
+        -DSDLMIXER_VORBIS=ON
+        -DSDLMIXER_VORBIS_STB=ON
+        -DSDLMIXER_VORBIS_VORBISFILE=OFF
+        -DSDLMIXER_VORBIS_TREMOR=OFF
+        -DSDLMIXER_MP3=OFF
+        -DSDLMIXER_FLAC=OFF
+        -DSDLMIXER_OPUS=OFF
+        -DSDLMIXER_MIDI=OFF
+        -DSDLMIXER_GME=OFF
+        -DSDLMIXER_MOD_XMP=OFF
+        -DSDLMIXER_WAVPACK=OFF
+        -DSDL3_DIR=${SDL3_INSTALL_DIR}/lib/cmake/SDL3
+        -DCMAKE_PREFIX_PATH=${SDL3_INSTALL_DIR}
+        UPDATE_COMMAND ""
+        BUILD_BYPRODUCTS ${SDL3_MIXER_INSTALL_DIR}/lib/libSDL3_mixer.so
+        DEPENDS external_sdl3
+        CMAKE_CACHE_ARGS
+        -DCMAKE_TOOLCHAIN_FILE:PATH=${CMAKE_TOOLCHAIN_FILE}
+        -DANDROID_PLATFORM:STRING=${ANDROID_PLATFORM}
+        -DANDROID_ABI:STRING=${ANDROID_ABI}
+)
+
+# Import SDL3_mixer as IMPORTED
+add_library(SDL3_mixer SHARED IMPORTED GLOBAL)
+set_target_properties(SDL3_mixer PROPERTIES
+    IMPORTED_LOCATION "${SDL3_MIXER_INSTALL_DIR}/lib/libSDL3_mixer.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${SDL3_MIXER_INSTALL_DIR}/include"
+)
+add_dependencies(SDL3_mixer external_sdl3_mixer)
+
+# Interface wrapper for mixer
+add_library(sdl3_mixer_wrapper INTERFACE)
+target_include_directories(sdl3_mixer_wrapper INTERFACE ${SDL3_MIXER_INSTALL_DIR}/include)
+target_link_libraries(sdl3_mixer_wrapper INTERFACE SDL3 SDL3_mixer)
+add_dependencies(sdl3_mixer_wrapper external_sdl3_mixer)
+
 # ================= ImGui ==================
 FetchContent_Declare(imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui.git
@@ -274,7 +340,7 @@ target_include_directories(spdlog_headers INTERFACE
 # ------------------- single external_prebuild target -------------------
 add_custom_target(external_prebuild
     COMMENT "Build external SDL projects and copy .so files to Gradle merged_jni_libs"
-    DEPENDS external_sdl3 external_sdl3_image external_sdl_ttf
+    DEPENDS external_sdl3 external_sdl3_image external_sdl_ttf external_sdl3_mixer
 )
 
 # ensure merged jni out exists before copying
@@ -293,6 +359,9 @@ add_custom_command(TARGET external_prebuild POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${SDL_TTF_INSTALL_DIR}/lib/libSDL3_ttf.so"
         "${MERGED_JNI_OUT}/libSDL3_ttf.so"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${SDL3_MIXER_INSTALL_DIR}/lib/libSDL3_mixer.so"
+        "${MERGED_JNI_OUT}/libSDL3_mixer.so"
     COMMENT "Copied SDL .so files to ${MERGED_JNI_OUT}"
 )
 

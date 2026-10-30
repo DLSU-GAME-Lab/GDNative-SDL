@@ -6,25 +6,36 @@ find_library(log log)
 find_library(android android)
 find_library(GLESv3-lib GLESv3)
 
-file(GLOB SOURCES 
-	"${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
-        "${imgui_SOURCE_DIR}/imgui.cpp"
-    	"${imgui_SOURCE_DIR}/imgui_draw.cpp"
-    	"${imgui_SOURCE_DIR}/imgui_tables.cpp"
-    	"${imgui_SOURCE_DIR}/imgui_widgets.cpp"
-    	"${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp"
-    	"${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
-	"${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp"
+file(GLOB SOURCES
+		"${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+		"${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+		"${imgui_SOURCE_DIR}/imgui.cpp"
+		"${imgui_SOURCE_DIR}/imgui_draw.cpp"
+		"${imgui_SOURCE_DIR}/imgui_tables.cpp"
+		"${imgui_SOURCE_DIR}/imgui_widgets.cpp"
+		"${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp"
+		"${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
+		"${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp"
 )
 
 add_library(${CMAKE_PROJECT_NAME} SHARED
-        ${SOURCES}
+		${SOURCES}
+)
+
+# Force the output name to "main" so the produced library is libmain.so
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME "main")
+
+# Copy the produced .so into the Gradle merged_jni folder so Gradle can package it
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		$<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+		${MERGED_JNI_OUT}/$<TARGET_FILE_NAME:${CMAKE_PROJECT_NAME}>
+		COMMENT "Copying $<TARGET_FILE:${CMAKE_PROJECT_NAME}> -> ${MERGED_JNI_OUT}"
 )
 
 # Expose your local include dir
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+		${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # Tweeny (header-only)
@@ -34,25 +45,27 @@ set(TWEENY_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../SDLTest/tweeny/incl
 # The following variables (SDL3_INSTALL_DIR etc.) are defined in the top-level CMake
 # and are visible here because add_subdirectory(jni) is used.
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    ${imgui_SOURCE_DIR}
-    ${imgui_SOURCE_DIR}/backends
-    ${SDL3_INSTALL_DIR}/include
-    ${SDL3_IMAGE_INSTALL_DIR}/include
-    ${SDL_TTF_INSTALL_DIR}/include
-    ${TWEENY_INCLUDE_DIR}
+		${imgui_SOURCE_DIR}
+		${imgui_SOURCE_DIR}/backends
+		${SDL3_INSTALL_DIR}/include
+		${SDL3_IMAGE_INSTALL_DIR}/include
+		${SDL_TTF_INSTALL_DIR}/include
+		${SDL3_MIXER_INSTALL_DIR}/include
+		${TWEENY_INCLUDE_DIR}
 )
 
 # Link against the imported SDL (and image/ttf) targets directly.
 # Also link against ImGui headers (interface), spdlog headers (interface), and platform libs.
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE
-    SDL3
-    SDL3_image
-    SDL3_ttf
-    imgui_headers
-    spdlog_headers
-    ${android}
-    ${log}
-    ${GLESv3-lib}
+		SDL3
+		SDL3_image
+		SDL3_ttf
+		SDL3_mixer
+		imgui_headers
+		spdlog_headers
+		${android}
+		${log}
+		${GLESv3-lib}
 )
 
 # Ensure the external_prebuild target (which builds SDL and copies .so files) runs before your native library builds.

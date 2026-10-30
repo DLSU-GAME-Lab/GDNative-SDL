@@ -15,10 +15,7 @@ public class Babaylan_Tales extends SDLActivity {
     }
     @Override
     public String[] getLibraries() {
-        return new String[]{
-                "Babaylan_Tales" // This is the name of the native library that will be loaded
-        };
-
+        return new String[] { "SDL3", "main" };
     }
 }
 

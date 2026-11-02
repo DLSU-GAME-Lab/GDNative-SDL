@@ -9,9 +9,8 @@ class Runner
 {
 private:
     //Window
-    SDL_Window* pWindow;
-    SDL_Renderer* pRenderer;
-    SDL_GPUDevice* pGPUDevice;
+    SDL_Window* pWindow = nullptr;
+    SDL_Renderer* pRenderer = nullptr;   // GPU renderer (owns its GPU device) or plain fallback renderer
     uint64_t ticks;
     float fWindowScale;
     std::string strWindowTitle;

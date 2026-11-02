@@ -6,7 +6,7 @@
 #include "GUIButton.h"
 #include "SceneSwitcher.h"
 #include "Sprite.h"
-EndScreen::EndScreen(std::string strName):AGameObject(strName)
+EndScreen::EndScreen(std::string strName) :AGameObject(strName)
 {
 	this->bEnabled = true;
 	this->EKey = EventKey::GAME_END;
@@ -23,16 +23,16 @@ EndScreen::~EndScreen()
 void EndScreen::initialize()
 {
 
-	this->pWinBanner = new Sprite("VictoryRibbon", "Victory_Ribbon", Vector2D(0, 150), Vector2D(0.6f), 0.f, false);
+	this->pWinBanner = new Sprite("VictoryRibbon", "Victory_Ribbon", Vector2D(304, 390), Vector2D(0.6f), 0.f, false);
 	this->pWinBanner->setEnabled(false);
 	this->attachChild(this->pWinBanner);
 
-	this->pLoseBanner = new Sprite("DefeatRibbon", "Defeat_Ribbon", Vector2D(0, 150), Vector2D(0.6f), 0.f, false);
+	this->pLoseBanner = new Sprite("DefeatRibbon", "Defeat_Ribbon", Vector2D(304, 390), Vector2D(0.6f), 0.f, false);
 	this->pLoseBanner->setEnabled(false);
 	this->attachChild(this->pLoseBanner);
 
 	GUIButton* pReturn = new GUIButton("ReturnButton", "Green_Button", false);
-	pReturn->setPos(Vector2D(0, -100));
+	pReturn->setPos(Vector2D(304, 640));
 	this->attachChild(pReturn);
 	SceneSwitcher* pSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
 	pReturn->attachComponent(pSwitcher);
@@ -40,21 +40,24 @@ void EndScreen::initialize()
 	Text* pVictoryText = new Text("VictoryText", "CurseCasual.ttf", 90, 0, false);
 	pVictoryText->setMessage("Victory");
 	pVictoryText->setColor(SDL_Color(255, 223, 0, 255));
+	pVictoryText->setIsScreenObject(true);
 	pWinBanner->attachChild(pVictoryText);
-	pVictoryText->setPos(Vector2D(0, 170));
+	pVictoryText->setPos(Vector2D(304, 370));
 
 	Text* pDefeatText = new Text("DefeatText", "CurseCasual.ttf", 90, 0, false);
 	pDefeatText->setMessage("Defeat");
 	pDefeatText->setColor(SDL_Color(255, 223, 0, 255));
+	pDefeatText->setIsScreenObject(true);
 	pLoseBanner->attachChild(pDefeatText);
-	pDefeatText->setPos(Vector2D(0, 170));
+	pDefeatText->setPos(Vector2D(304, 370));
 
 	Text* pReturnText = new Text("ReturnText", "CurseCasual.ttf", 45, 0, false);
 	pReturnText->setMessage("Level Select");
 	pReturnText->setColor(SDL_Color(255, 255, 255, 255));
+	pReturnText->setIsScreenObject(true);
 	pReturn->attachChild(pReturnText);
 	EventBroadcaster::getInstance()->registerListener(this);
-	pReturnText->setPos(Vector2D(0, -100));
+	pReturnText->setPos(Vector2D(304, 640));
 
 
 }

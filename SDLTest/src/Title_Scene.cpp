@@ -13,8 +13,7 @@
 #include "Settings.h"
 Title_Scene::Title_Scene()
     : AScene(SceneTag::TITLE_SCENE)
-{
-}
+{}
 
 void Title_Scene::onLoadResources()
 {
@@ -42,52 +41,65 @@ void Title_Scene::onLoadObjects()
 
     BubbleManager::initialize(100);
 
-    Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
+    Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(304, 870), Vector2D(2, 2), 0.0f, false);
+    pObjectBG->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
 
-    Sprite* pMermaid = new Sprite("Mermaid", "Mermaid",Vector2D(0, 320), Vector2D(0.7f), 0.0f, false);
+    Sprite* pMermaid = new Sprite("Mermaid", "Mermaid", Vector2D(304, 220), Vector2D(0.7f), 0.0f, false);
+    pMermaid->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pMermaid);
 
-    Sprite* pLogo = new Sprite("Title_Logo", "Title_Logo",Vector2D(0, 150), Vector2D(0.3f), 0.0f, false);
+    Sprite* pLogo = new Sprite("Title_Logo", "Title_Logo", Vector2D(304, 390), Vector2D(0.3f), 0.0f, false);
+    pLogo->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pLogo);
 
-    Sprite* pYellow = new Sprite("Yellow", "Yellow", Vector2D(-270, 300), Vector2D(0.25f), -45, false);
+    Sprite* pYellow = new Sprite("Yellow", "Yellow", Vector2D(34, 240), Vector2D(0.25f), -45, false);
+    pYellow->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pYellow);
 
-    Sprite* pFish = new Sprite("Blue", "Blue", Vector2D(-250, 150), Vector2D(0.25f), 25.0f, false);
+    Sprite* pFish = new Sprite("Blue", "Blue", Vector2D(54, 390), Vector2D(0.25f), 25.0f, false);
+    pFish->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pFish);
 
-    Sprite* pPurple = new Sprite("Purple", "Purple", Vector2D(220, 460), Vector2D(0.25f), 45.0f, false);
+    Sprite* pPurple = new Sprite("Purple", "Purple", Vector2D(524, 80), Vector2D(0.25f), 45.0f, false);
+    pPurple->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pPurple);
 
-    Sprite* pRed = new Sprite("Red", "Red", Vector2D(250, 150), Vector2D(0.25f), 0.0f, false);
+    Sprite* pRed = new Sprite("Red", "Red", Vector2D(554, 390), Vector2D(0.25f), 0.0f, false);
+    pRed->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pRed);
 
-    Sprite* pWhite = new Sprite("White", "White", Vector2D(-220, 450), Vector2D(0.25f), 0.0f, false);
+    Sprite* pWhite = new Sprite("White", "White", Vector2D(84, 90), Vector2D(0.25f), 0.0f, false);
+    pWhite->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pWhite);
 
-    Sprite* pGreen = new Sprite("Green", "Green", Vector2D(250, 270), Vector2D(0.25f), 0.0f, false);
+    Sprite* pGreen = new Sprite("Green", "Green", Vector2D(554, 270), Vector2D(0.25f), 0.0f, false);
+    pGreen->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pGreen);
 
-    Sprite* pLevelSelect = new Sprite("Level_Select", "Button_Container", Vector2D(0, -290), Vector2D(2.5f), 0.0f, false);
+    Sprite* pLevelSelect = new Sprite("Level_Select", "Button_Container", Vector2D(304, 830), Vector2D(2.5f), 0.0f, false);
+    pLevelSelect->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelSelect);
 
 
     GUIButton* pLevelOne = new GUIButton("Level_1_Button", "Level_Button");
-    pLevelOne->setPos(Vector2D(-120, -220));
+    pLevelOne->setIsScreenObject(true);
+    pLevelOne->setPos(Vector2D(184, 760));
     pLevelOne->setScale(Vector2D(0.7f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelOne);
     SceneSwitcher* pLevelOneSwitcher = new SceneSwitcher(SceneTag::LEVEL_1_SCENE);
     pLevelOne->attachComponent(pLevelOneSwitcher);
 
-	Text* pLevelOneText = new Text("Level_1_Text","CurseCasual.ttf",75);
+    Text* pLevelOneText = new Text("Level_1_Text", "CurseCasual.ttf", 75);
     pLevelOneText->setMessage("1");
     pLevelOneText->setColor(colorWhite);
+    pLevelOneText->setIsScreenObject(true);
     pLevelOne->attachChild(pLevelOneText);
-    pLevelOneText->setLocalPos(Vector2D(0, 10));
+    pLevelOneText->setLocalPos(Vector2D(0, -10));
 
     GUIButton* pLevelTwo = new GUIButton("Level_2_Button", "Level_Button");
-    pLevelTwo->setPos(Vector2D(0, -220));
+    pLevelTwo->setIsScreenObject(true);
+    pLevelTwo->setPos(Vector2D(304, 760));
     pLevelTwo->setScale(Vector2D(0.7f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelTwo);
     SceneSwitcher* pLevelTwoSwitcher = new SceneSwitcher(SceneTag::LEVEL_2_SCENE);
@@ -96,11 +108,13 @@ void Title_Scene::onLoadObjects()
     Text* pLevelTwoText = new Text("Level_2_Text", "CurseCasual.ttf", 75);
     pLevelTwoText->setMessage("2");
     pLevelTwoText->setColor(colorWhite);
+    pLevelTwoText->setIsScreenObject(true);
     pLevelTwo->attachChild(pLevelTwoText);
-    pLevelTwoText->setLocalPos(Vector2D(0, 10));
+    pLevelTwoText->setLocalPos(Vector2D(0, -10));
 
     GUIButton* pLevelThree = new GUIButton("Level_3_Button", "Level_Button");
-    pLevelThree->setPos(Vector2D(120, -220));
+    pLevelThree->setIsScreenObject(true);
+    pLevelThree->setPos(Vector2D(424, 760));
     pLevelThree->setScale(Vector2D(0.7f));
     GameObjectManager::getInstance()->addObject((AGameObject*)pLevelThree);
     SceneSwitcher* pLevelThreeSwitcher = new SceneSwitcher(SceneTag::LEVEL_3_SCENE);
@@ -109,11 +123,12 @@ void Title_Scene::onLoadObjects()
     Text* pLevelThreeText = new Text("Level_3_Text", "CurseCasual.ttf", 75);
     pLevelThreeText->setMessage("3");
     pLevelThreeText->setColor(colorWhite);
+    pLevelThreeText->setIsScreenObject(true);
     pLevelThree->attachChild(pLevelThreeText);
-    pLevelThreeText->setLocalPos(Vector2D(0, 10));
+    pLevelThreeText->setLocalPos(Vector2D(0, -10));
 
     if (!AudioManager::getInstance()->isPlaying("BGM"))
-	    AudioManager::getInstance()->play(new AudioPlayer("Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
+        AudioManager::getInstance()->play(new AudioPlayer("Music", "BGM", AudioGroupTag::MUSIC, OnAudioFinished::LOOP));
 }
 
 void Title_Scene::onUnloadResources()

@@ -5,6 +5,7 @@ static float gameHeight = 1080;
 static float gameWidth = 608;
 static int gameFPS = 60;
 static int frameDelay = 1000 / gameFPS;
+static bool useGPURenderer = true;
 static SDL_Color colorBlack{ 0,0,0,255 };
 static SDL_Color colorWhite{ 255,255,255,255 };
 static SDL_Color colorRed{ 255,0,0,255 };

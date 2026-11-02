@@ -3,7 +3,7 @@
 #include "EndScreen.h"
 #include "AudioManager.h"
 #include "Settings.h"
-TurnCounter::TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, Vector2D fVecScale):AGameObject(strName)
+TurnCounter::TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, Vector2D fVecScale) :AGameObject(strName)
 {
 	this->nTurnsLeft = nTurnsLeft;
 	this->EKey = EventKey::COUNTER_SUBTRACT;
@@ -14,12 +14,11 @@ TurnCounter::TurnCounter(std::string strName, int nTurnsLeft, Vector2D fVecPos, 
 }
 
 TurnCounter::~TurnCounter()
-{
-}
+{}
 
 void TurnCounter::onEventTrigger(std::unordered_map<std::string, void*> mapParameter)
 {
-	if(this->bCounterEnabled)
+	if (this->bCounterEnabled)
 	{
 		this->updateCounter(1);
 	}
@@ -50,12 +49,14 @@ void TurnCounter::initialize()
 	Text* pTitleText = new Text(this->strName + "Text", "CurseCasual.ttf", 35, 0, false);
 	pTitleText->setMessage("Turns Left: ");
 	pTitleText->setColor(colorWhite);
+	pTitleText->setIsScreenObject(true);
 	this->attachChild(pTitleText);
-	pTitleText->setPos(this->fVecPos + Vector2D(0, 30));
+	pTitleText->setPos(this->fVecPos + Vector2D(0, -30));
 
 	Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 35, 0, false);
 	pCounterText->setColor(colorWhite);
 	pCounterText->setMessage(std::to_string(this->nTurnsLeft));
+	pCounterText->setIsScreenObject(true);
 	this->attachChild(pCounterText);
 	pCounterText->setPos(this->fVecPos);
 	EventBroadcaster::getInstance()->registerListener(this);

@@ -11,9 +11,8 @@
 #include "GUIUtils.h"
 #include "StoreGUI.h"
 
-Level_3_Scene::Level_3_Scene():AScene(SceneTag::LEVEL_3_SCENE)
-{
-}
+Level_3_Scene::Level_3_Scene() :AScene(SceneTag::LEVEL_3_SCENE)
+{}
 
 void Level_3_Scene::onLoadResources()
 {
@@ -23,7 +22,7 @@ void Level_3_Scene::onLoadResources()
 }
 
 void Level_3_Scene::onLoadObjects()
-{ 
+{
 	this->loadEmptyObjects();
 	StoreManager::initialize();
 
@@ -31,16 +30,18 @@ void Level_3_Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	BubbleManager::initialize(100);
 
-	Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
+	Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(304, 870), Vector2D(2, 2), 0.0f, false);
+	pObjectBG->setIsScreenObject(true);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
-	
+
 	Sprite* pLevelContainer = new Sprite("Level_Container", "Level_Container", Vector2D(0, 0), Vector2D(1.5f, 1.5f), 0.0f, false);
+	pLevelContainer->setIsScreenObject(true);
 	GUIUtils::setGUIMidCenter(pLevelContainer, Vector2D(0, 50));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLevelContainer);
 
 	this->loadGUI();
 
-	GemManager::initialize(12, 14, 45.0f, 0.15f, Vector2D(23.0f, -76.0f));
+	GemManager::initialize(12, 14, 45.0f, 0.15f, Vector2D(327.0f, 616.0f));
 
 	std::vector< std::vector<Uint8>> rowBlocks;
 
@@ -68,6 +69,7 @@ void Level_3_Scene::onLoadObjects()
 	GemManager::getInstance()->spawnGems();
 
 	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
+	pStoreGUI->setIsScreenObject(true);
 	pStoreGUI->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pStoreGUI);
 }
@@ -119,6 +121,7 @@ void Level_3_Scene::loadGUI()
 	pWhiteTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pWhiteTracker);
 	EndScreen* pEndScreen = new EndScreen("EndScreen");
+	pEndScreen->setIsScreenObject(true);
 	pEndScreen->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pEndScreen);
 }

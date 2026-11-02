@@ -2,9 +2,9 @@
 #include "GameObjectManager.h"
 #include "TextureManager.h"
 #include "Settings.h"
-Tracker::Tracker(std::string strName, std::string strImageName, GemType EGem, int nTargetDestroy):AGameObject(strName)
+Tracker::Tracker(std::string strName, std::string strImageName, GemType EGem, int nTargetDestroy) :AGameObject(strName)
 {
-	this->setIsScreenObject(true);
+    this->setIsScreenObject(true);
     this->nTargetLeft = this->nTargetDestroy = nTargetDestroy;
     this->strImageName = strImageName;
     this->fVecTranslate = Vector2D(0, 0);
@@ -14,8 +14,7 @@ Tracker::Tracker(std::string strName, std::string strImageName, GemType EGem, in
 }
 
 Tracker::~Tracker()
-{
-}
+{}
 void Tracker::initialize()
 {
     SpriteRenderer* pSpriteRenderer = new SpriteRenderer(this->strImageName);
@@ -24,9 +23,10 @@ void Tracker::initialize()
     Text* pCounterText = new Text(this->strName, "CurseCasual.ttf", 200, 0, false);
     pCounterText->setMessage(std::to_string(this->nTargetLeft));
     pCounterText->setColor(colorWhite);
+    pCounterText->setIsScreenObject(true);
     this->attachChild(pCounterText);
     pCounterText->setLocalPos(Vector2D(60, 22));
-    pCounterText->setScale(Vector2D(1));
+    pCounterText->setLocalScale(Vector2D(1));
 
 }
 
@@ -57,7 +57,3 @@ GemType Tracker::getGemType()
 {
     return this->EGem;
 }
-
-
-
-

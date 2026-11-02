@@ -1,12 +1,12 @@
 // Detect EditorModule.h
 #if defined(__has_include)
-	#if __has_include("EditorModule.h")
-		#define EDITOR_MODULE_AVAILABLE 1
-	#else
-		#define EDITOR_MODULE_AVAILABLE 0
-	#endif
+#if __has_include("EditorModule.h")
+#define EDITOR_MODULE_AVAILABLE 1
 #else
-	#define EDITOR_MODULE_AVAILABLE 0
+#define EDITOR_MODULE_AVAILABLE 0
+#endif
+#else
+#define EDITOR_MODULE_AVAILABLE 0
 #endif
 
 // Toggle editor mode (set to 1 to enable, 0 to disable)
@@ -32,6 +32,7 @@
 #include "AudioManager.h"
 #include "CameraManager.h"
 #include "RendererContext.h"
+#include "ShaderManager.h"
 
 // metrics
 #include "MetricsManager.h"
@@ -59,6 +60,11 @@ Runner::Runner()
 		SDL_MICRO_VERSION << " |----------|\n";
 	std::cout << "|===========================================|\n";
 
+	{
+		int rv = SDL_GetVersion();
+		SDL_Log("SDL runtime: %d.%d.%d", SDL_VERSIONNUM_MAJOR(rv), SDL_VERSIONNUM_MINOR(rv), SDL_VERSIONNUM_MICRO(rv));
+	}
+
 	int screenWidth, screenHeight;
 	SDL_DisplayID dispID = SDL_GetPrimaryDisplay();
 	SDL_DisplayMode dispMode = *SDL_GetDesktopDisplayMode(dispID);
@@ -73,99 +79,103 @@ Runner::Runner()
 	int windowHeight = gameHeight;
 	int windowWidth = gameWidth;
 
-    // SDL3 on Android typically runs in fullscreen
-    Uint32 windowFlags = SDL_WINDOW_RESIZABLE;
+	// SDL3 on Android typically runs in fullscreen
+	Uint32 windowFlags = SDL_WINDOW_RESIZABLE;
 	CameraManager::initialize();
 	// Use logical size
 	CameraManager::getInstance()->setWindowSize(gameWidth, gameHeight);
 #ifdef __ANDROID__
-    windowFlags |= SDL_WINDOW_FULLSCREEN;
-    windowWidth = 0;  // Let SDL choose appropriate size
-    windowHeight = 0; // Let SDL choose appropriate size
+	windowFlags |= SDL_WINDOW_FULLSCREEN;
+	windowWidth = 0;  // Let SDL choose appropriate size
+	windowHeight = 0; // Let SDL choose appropriate size
 #endif
 
-    // --- Create Window ---
-    pWindow = SDL_CreateWindow(
-            strWindowTitle.c_str(),
-            windowWidth,
-            windowHeight,
-            windowFlags
-    );
+	// --- Create Window ---
+	pWindow = SDL_CreateWindow(
+		strWindowTitle.c_str(),
+		windowWidth,
+		windowHeight,
+		windowFlags
+	);
 
-    if (!pWindow) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                     "SDL_CreateWindow failed: %s", SDL_GetError());
-    } else {
-        SDL_Log("Window created: %dx%d", gameWidth, gameHeight);
-    }
-
-    // --- Create Renderer ---
-    pRenderer = SDL_CreateRenderer(pWindow, NULL);
-    if (!pRenderer) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                     "SDL_CreateRenderer failed: %s", SDL_GetError());
-    } else {
-        SDL_Log("Renderer created successfully");
-    }
-#ifndef __ANDROID__
-	// --- Create GPU Device ---
-	pGPUDevice = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, true, "vulkan");
-	if (!pGPUDevice)
+	if (!pWindow)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-			"SDL_GPUDevice failed: %s", SDL_GetError());
+			"SDL_CreateWindow failed: %s", SDL_GetError());
 	}
 	else
 	{
-		SDL_Log("GPU Device created successfully");
+		SDL_Log("Window created: %dx%d", gameWidth, gameHeight);
 	}
 
-	if (SDL_ClaimWindowForGPUDevice(pGPUDevice, pWindow) == false)
+	// --- Create Renderer ---
+	// GPU renderer = required for custom fragment shaders (SDL 3.4+). If it
+	// can't be created (no Vulkan, e.g. Android < 7.0), fall back to SDL's
+	// normal renderer: the game runs as before with the CPU shimmer.
+	pRenderer = nullptr;
+	if (useGPURenderer)
+	{
+		SDL_SetHint(SDL_HINT_GPU_DRIVER, "vulkan");        // we ship SPIR-V only
+		pRenderer = SDL_CreateGPURenderer(NULL, pWindow);  // renderer creates AND owns the GPU device
+		if (pRenderer)
+		{
+			SDL_Log("GPU renderer created");
+		}
+		else
+		{
+			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
+				"GPU renderer unavailable (%s), falling back", SDL_GetError());
+		}
+	}
+	if (!pRenderer) pRenderer = SDL_CreateRenderer(pWindow, NULL);
+	if (!pRenderer)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-			"SDL_ClaimWindowForGPUDevice failed: %s", SDL_GetError());
+			"SDL_CreateRenderer failed: %s", SDL_GetError());
 	}
 	else
 	{
-		SDL_Log("Window claimed for GPU Device successfully");
+		SDL_Log("Renderer created successfully");
 	}
-#endif // !__ANDROID__	
 
-    // --- Get actual window size (important for Android) ---
-    int actualWidth, actualHeight;
-    SDL_GetWindowSize(pWindow, &actualWidth, &actualHeight);
-    SDL_Log("Actual window size: %dx%d", actualWidth, actualHeight);
+	// --- Get actual window size (important for Android) ---
+	int actualWidth, actualHeight;
+	SDL_GetWindowSize(pWindow, &actualWidth, &actualHeight);
+	SDL_Log("Actual window size: %dx%d", actualWidth, actualHeight);
 
-    // --- Logical presentation ---
-    if (!SDL_SetRenderLogicalPresentation(
-            pRenderer,
-            gameWidth,
-            gameHeight,
-            SDL_LOGICAL_PRESENTATION_LETTERBOX))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                     "SDL_SetRenderLogicalPresentation failed: %s",
-                     SDL_GetError());
-    } else {
+	// --- Logical presentation ---
+	if (!SDL_SetRenderLogicalPresentation(
+		pRenderer,
+		gameWidth,
+		gameHeight,
+		SDL_LOGICAL_PRESENTATION_LETTERBOX))
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+			"SDL_SetRenderLogicalPresentation failed: %s",
+			SDL_GetError());
+	}
+	else
+	{
 
 		int actualPixelW, actualPixelH;
 		SDL_GetWindowSizeInPixels(pWindow, &actualPixelW, &actualPixelH);
 		SDL_Log("Actual pixel size: %d x %d", actualPixelW, actualPixelH);
-		CameraManager::getInstance()->setActualWindowSize(actualPixelW, actualPixelH);	
-    }
+		CameraManager::getInstance()->setActualWindowSize(actualPixelW, actualPixelH);
+	}
 	SDL_FRect letterboxRect;
 
 	SDL_GetRenderLogicalPresentationRect(pRenderer, &letterboxRect);
 	CameraManager::getInstance()->setLetterboxRect(letterboxRect.x, letterboxRect.y, letterboxRect.w, letterboxRect.h);
 
-    //initialize systems
+	//initialize systems
 	std::cout << "[Runner] Initializing systems..." << std::endl;
 	GameObjectManager::initialize();
 	SceneManager::initialize();
 	TextureManager::initialize(this->pRenderer);
-	
-	RendererContext::initialize(this->pRenderer, this->pGPUDevice);
-    SceneTransitionManager::initialize();
+	ShaderManager::initialize(this->pRenderer);
+
+	RendererContext::initialize(this->pRenderer);
+	SceneTransitionManager::initialize();
 	FontManager::initialize();
 	AudioManager::initialize();
 	UIManager::initialize(this->pWindow, this->pRenderer);
@@ -173,12 +183,16 @@ Runner::Runner()
 	MetricsManager::initialize();
 #if defined(__ANDROID__)
 	const char* storagePath = SDL_GetAndroidExternalStoragePath();
-	if (!storagePath) {
+	if (!storagePath)
+	{
 		storagePath = SDL_GetAndroidInternalStoragePath(); // fall back if external is unavailable
 	}
-	if (storagePath) {
+	if (storagePath)
+	{
 		MetricsManager::getInstance()->setCSVPath(std::string(storagePath) + "/metrics_export.csv");
-	} else {
+	}
+	else
+	{
 		// SDL_GetError() will tell you why both failed - log it via your own logging
 	}
 #endif
@@ -201,6 +215,7 @@ Runner::~Runner()
 #endif
 	AudioManager::destroy();
 	UIManager::destroy();
+	ShaderManager::destroy();   // before TextureManager: materials reference textures
 	TextureManager::destroy();
 	CameraManager::destroy();
 	SceneManager::destroy();
@@ -209,7 +224,6 @@ Runner::~Runner()
 	MetricsManager::destroy();
 	RendererContext::destroy();
 
-	SDL_DestroyGPUDevice(this->pGPUDevice);
 	SDL_DestroyRenderer(this->pRenderer);
 	SDL_DestroyWindow(this->pWindow);
 }
@@ -288,12 +302,12 @@ void Runner::run()
 				MetricsManager::getInstance()->recordInputEvent();
 			}
 
-            if (e.type == SDL_EVENT_FINGER_DOWN || e.type == SDL_EVENT_FINGER_UP ||
-                e.type == SDL_EVENT_FINGER_MOTION)
-            {
-                SDL_Log("Touch event: type=%d, x=%.2f, y=%.2f",
-                        e.type, e.tfinger.x, e.tfinger.y);
-            }
+			if (e.type == SDL_EVENT_FINGER_DOWN || e.type == SDL_EVENT_FINGER_UP ||
+				e.type == SDL_EVENT_FINGER_MOTION)
+			{
+				SDL_Log("Touch event: type=%d, x=%.2f, y=%.2f",
+					e.type, e.tfinger.x, e.tfinger.y);
+			}
 		}
 
 		// ---------- TIMING ----------
@@ -362,7 +376,7 @@ void Runner::update(float fDeltaTime)
 // can dominate wall-clock time (expensive constants) especially as R grows.
 void Runner::render()
 {
-    // pick a clear color once (optional)
+	// pick a clear color once (optional)
 	// clear the screen to black (RGB = 0,0,0, fully opaque) before drawing sprites.
 	SDL_SetRenderDrawColor(pRenderer, 0, 0, 0, 255); // O(1)
 	SDL_RenderClear(pRenderer); // O(1)
@@ -402,10 +416,10 @@ void Runner::registerScenes()
 
 	// --- load time tracking --- 
 	// // start timer before load, end after load completes 
-	MetricsManager::getInstance()->startLoadTimer(); 
+	MetricsManager::getInstance()->startLoadTimer();
 
 	//load initial scene
-	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE); 
-	
+	SceneManager::getInstance()->loadScene(SceneTag::TITLE_SCENE);
+
 	MetricsManager::getInstance()->endLoadTimer();
 }

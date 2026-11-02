@@ -1,13 +1,17 @@
 // ---------------------------------------------------------------------------
 // Responsibilities: per-object transform and texture draw.
+// Identical in Babaylan Tales and Gem Hunter Match.
 // ---------------------------------------------------------------------------
 
 #include <iostream>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
+#include "RendererContext.h"
 #include "AGameObject.h"
 #include "Settings.h"
 #include "ShimmerEffect.h"
+#include "ShaderManager.h"
+
 // Constructor: texture lookup may be O(T) where T is number of
 // textures stored under a name (small in typical cases). Overall O(1) prep.
 SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Color color)
@@ -21,50 +25,55 @@ SpriteRenderer::SpriteRenderer(const std::string& textureName, SDL_Color color)
     this->pivot = Vector2D(0.5f, 0.5f);
     this->mColor = color;
     this->bNineSlice = false;
+    this->nBorder = 0;
     this->bShimmer = false;
-	this->nBorder = 0;
+
     auto textures = TextureManager::getInstance()->getTexture(textureName);
 
-    if (!textures.empty()) {
+    if (!textures.empty())
+    {
         pTexture = textures[0]; // O(1) fetch from vector
     }
-    else {
+    else
+    {
         std::cerr << "[ERROR] : Texture not found: " << textureName << std::endl;
     }
 
-   
-    if (pTexture) {
+
+    if (pTexture)
+    {
         float fw, fh;
-        if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
+        if (SDL_GetTextureSize(pTexture, &fw, &fh))
+        {
             this->texSize = Vector2D(fw, fh);
         }
     }
-    else {
+    else
+    {
         this->texSize = Vector2D(0.0f, 0.0f);
     }
 
     this->mCropRect = { 0, 0, 1, 1 };
 
-    //SDL_Point anchor = { texW / 2,texH / 2 };
     mDestRect.x = 0;
     mDestRect.y = 0;
     mDestRect.w = this->texSize.x;
     mDestRect.h = this->texSize.y;
-
-    //mDestRect.x = anchor.x - (mDestRect.w / 2);
-    //mDestRect.y = anchor.y - (mDestRect.h / 2);
 }
 
 // Initialize: texture lookup may be O(T) where T is number of
 // textures stored under a name (small in typical cases). Overall O(1) prep.
-void SpriteRenderer::initialize() {
+void SpriteRenderer::initialize()
+{
     // O(T): retrieves texture, updates size, registers sprite.
     auto textures = TextureManager::getInstance()->getTexture(m_textureKey);
-    if (!textures.empty()) {
+    if (!textures.empty())
+    {
         pTexture = textures[0];
 
         float fw, fh;
-        if (SDL_GetTextureSize(pTexture, &fw, &fh)) {
+        if (SDL_GetTextureSize(pTexture, &fw, &fh))
+        {
             this->texSize = Vector2D(fw, fh);
         }
 
@@ -73,26 +82,21 @@ void SpriteRenderer::initialize() {
 
         std::cout << "[SpriteRenderer] Initialized with texture: " << m_textureKey << std::endl;
     }
-    else {
+    else
+    {
         std::cerr << "[SpriteRenderer ERROR] Texture not found during initialize: "
             << m_textureKey << std::endl;
     }
 
 }
 
-// Destructor: deregisters from RenderSystem — deregistration cost is O(S).
-SpriteRenderer::~SpriteRenderer() {
-    // O(R): deregistration scans list in RenderSystem.
-    // unregister when destroyed
+SpriteRenderer::~SpriteRenderer()
+{}
 
-}
-
-// perform: per-sprite O(1) math and single GPU draw call. As number of sprites R
-// increases, total cost per-frame increases linearly (O(R)). GPU cost per
-// perform is a significant constant-time cost in wall-time.
-void SpriteRenderer::perform() {
-    // O(1): All operations are per-sprite math and rendering.
-    // Real runtime cost dominated by GPU draw call.
+// perform: per-sprite O(1) math and a single draw call (two when shimmering on
+// the CPU fallback). Total cost per frame grows linearly with the number of sprites.
+void SpriteRenderer::perform()
+{
     AGameObject* owner = this->getOwner();
     Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
     this->dAngle = -owner->getRot();
@@ -119,77 +123,118 @@ void SpriteRenderer::perform() {
         this->dAngle += pCam->getRot();
     }
 
-    if (this->inCameraView(mDestRect))
+    if (!pTexture || !this->inCameraView(mDestRect))
+        return;
+
+    ShaderManager* pShaders = ShaderManager::getInstance();
+    ShimmerEffect* pShimmer = nullptr;
+    if (bShimmer)
+        pShimmer = (ShimmerEffect*)owner->findComponentByName("ShimmerEffect");
+
+    if (bShimmer && pShimmer && pShaders && pShaders->isSupported())
     {
-        // GPU draw call: theoretical O(1), but expensive constant cost.
-        if (pTexture)
+        // GPU path: the sprite itself is drawn through the shimmer shader, only
+        // while a shimmer pass is running. Nine-slice stays plain (each slice has
+        // its own uv range, so a sweep would tear).
+        ShaderMaterial* pMat = (pShimmer->isShimmering() && !bNineSlice)
+            ? pShaders->getShimmerMaterial(m_normalMapKey) : nullptr;
+
+        if (pMat)
         {
-            SDL_SetTextureColorMod(pTexture, mColor.r, mColor.g, mColor.b);
-            SDL_SetTextureAlphaMod(pTexture, mColor.a);
+            ShimmerUniforms u = m_shimmerStyle;
+            u.phase = pShimmer->getPhase();
+            u.flipX = this->flipX ? -1.0f : 1.0f;
+            u.flipY = this->flipY ? -1.0f : 1.0f;
+            pMat->setShimmerUniforms(u);
 
-            if (bNineSlice)
-            {
-                int b = nBorder;
-                float tw = texSize.x, th = texSize.y;
-                float W = mDestRect.w, H = mDestRect.h;
-                float x = mDestRect.x, y = mDestRect.y;
-
-                float srcX[3] = { 0,        (float)b,      tw - b };
-                float srcY[3] = { 0,        (float)b,      th - b };
-                float srcW[3] = { (float)b, tw - 2.0f * b, (float)b };
-                float srcH[3] = { (float)b, th - 2.0f * b, (float)b };
-
-                float dstX[3] = { x,        x + b,         x + W - b };
-                float dstY[3] = { y,        y + b,          y + H - b };
-                float dstW[3] = { (float)b, W - 2.0f * b,  (float)b };
-                float dstH[3] = { (float)b, H - 2.0f * b,  (float)b };
-
-                for (int row = 0; row < 3; row++)
-                    for (int col = 0; col < 3; col++)
-                    {
-                        SDL_FRect src = { srcX[col], srcY[row], srcW[col], srcH[row] };
-                        SDL_FRect dst = { dstX[col], dstY[row], dstW[col], dstH[row] };
-                        SDL_RenderTexture(pRenderer, pTexture, &src, &dst);
-                    }
-            }
-            else
-            {
-                // your existing flip/rotate logic unchanged
-                if (this->flipX && this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle - 180.0f, NULL, SDL_FLIP_NONE);
-                else if (this->flipX) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_HORIZONTAL);
-                else if (this->flipY) SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_VERTICAL);
-                else SDL_RenderTextureRotated(pRenderer, pTexture, &srcRect, &mDestRect, this->dAngle, NULL, SDL_FLIP_NONE);
-            }
-            if (bShimmer) {
-                ShimmerEffect* pShimmer = (ShimmerEffect*)getOwner()->findComponentByName("ShimmerEffect");
-                if (pShimmer) {
-                    float phase = pShimmer->getPhase();
-                    float stripeCenter = mDestRect.x + phase * (mDestRect.w + 30.0f) - 15.0f;
-                    float halfW = mDestRect.w * 0.18f;
-
-                    SDL_SetRenderDrawBlendMode(pRenderer, SDL_BLENDMODE_BLEND);
-
-                    for (float sx = stripeCenter - halfW; sx <= stripeCenter + halfW; sx += 1.0f) {
-                        if (sx < mDestRect.x || sx > mDestRect.x + mDestRect.w) continue;
-
-                        float dist = SDL_fabsf(sx - stripeCenter) / halfW;
-                        float falloff = 1.0f - dist * dist;
-                        Uint8 alpha = (Uint8)(falloff * 160);
-
-                        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, alpha);
-                        SDL_RenderLine(pRenderer,
-                            sx, mDestRect.y + 2,
-                            sx, mDestRect.y + mDestRect.h - 2);
-                    }
-                }
-            }
+            pMat->bind(pRenderer);
+            drawSprite(srcRect);
+            ShaderMaterial::unbind(pRenderer);
         }
-
-        // additional log
-        else if (SDL_RenderTexture(pRenderer, pTexture, &srcRect, &mDestRect) < 0)
+        else
         {
-            SDL_Log("SDL_RenderTexture failed: %s", SDL_GetError());
+            drawSprite(srcRect);
         }
+    }
+    else
+    {
+        // Plain draw, plus the original CPU shimmer when shaders are unavailable.
+        drawSprite(srcRect);
+        if (bShimmer) drawShimmerCPU();
+    }
+}
+
+// Draws through RendererContext so colour, flips and rotation behave exactly as
+// they did before. Takes srcRect by value so we can hand RendererContext a
+// pointer regardless of its const-ness.
+void SpriteRenderer::drawSprite(SDL_FRect srcRect)
+{
+    RendererContext* pCtx = RendererContext::getInstance();
+
+    if (bNineSlice)
+    {
+        int b = nBorder;
+        float tw = texSize.x, th = texSize.y;
+        float W = mDestRect.w, H = mDestRect.h;
+        float x = mDestRect.x, y = mDestRect.y;
+
+        float srcX[3] = { 0,        (float)b,      tw - b };
+        float srcY[3] = { 0,        (float)b,      th - b };
+        float srcW[3] = { (float)b, tw - 2.0f * b, (float)b };
+        float srcH[3] = { (float)b, th - 2.0f * b, (float)b };
+
+        float dstX[3] = { x,        x + b,         x + W - b };
+        float dstY[3] = { y,        y + b,          y + H - b };
+        float dstW[3] = { (float)b, W - 2.0f * b,  (float)b };
+        float dstH[3] = { (float)b, H - 2.0f * b,  (float)b };
+
+        for (int row = 0; row < 3; row++)
+            for (int col = 0; col < 3; col++)
+            {
+                SDL_FRect src = { srcX[col], srcY[row], srcW[col], srcH[row] };
+                SDL_FRect dst = { dstX[col], dstY[row], dstW[col], dstH[row] };
+                pCtx->draw(this->pTexture, this->mColor, &src, &dst, 0.0f, false, false);
+            }
+    }
+    else
+    {
+        pCtx->draw(
+            this->pTexture,
+            this->mColor,
+            &srcRect,
+            &mDestRect,
+            (float)this->dAngle,
+            this->flipX,
+            this->flipY
+        );
+    }
+}
+
+// Original CPU shimmer from Gem Hunter, kept verbatim as the fallback when the
+// GPU renderer (and therefore shaders) isn't available.
+void SpriteRenderer::drawShimmerCPU()
+{
+    ShimmerEffect* pShimmer = (ShimmerEffect*)getOwner()->findComponentByName("ShimmerEffect");
+    if (!pShimmer) return;
+
+    float phase = pShimmer->getPhase();
+    float stripeCenter = mDestRect.x + phase * (mDestRect.w + 30.0f) - 15.0f;
+    float halfW = mDestRect.w * 0.18f;
+
+    SDL_SetRenderDrawBlendMode(pRenderer, SDL_BLENDMODE_BLEND);
+
+    for (float sx = stripeCenter - halfW; sx <= stripeCenter + halfW; sx += 1.0f)
+    {
+        if (sx < mDestRect.x || sx > mDestRect.x + mDestRect.w) continue;
+
+        float dist = SDL_fabsf(sx - stripeCenter) / halfW;
+        float falloff = 1.0f - dist * dist;
+        Uint8 alpha = (Uint8)(falloff * 160);
+
+        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, alpha);
+        SDL_RenderLine(pRenderer,
+            sx, mDestRect.y + 2,
+            sx, mDestRect.y + mDestRect.h - 2);
     }
 }
 
@@ -213,12 +258,14 @@ void SpriteRenderer::setTexture(SDL_Texture* pTexture)
     this->pTexture = pTexture;
 }
 
-void SpriteRenderer::setPosition(float x, float y) {
+void SpriteRenderer::setPosition(float x, float y)
+{
     mDestRect.x = x;
     mDestRect.y = y;
 }
 
-void SpriteRenderer::setSize(float w, float h) {
+void SpriteRenderer::setSize(float w, float h)
+{
     mDestRect.w = w;
     mDestRect.h = h;
 }
@@ -244,11 +291,6 @@ void SpriteRenderer::setPivot(Vector2D pivot)
     this->pivot = Vector2D(SDL_clamp(pivot.x, 0, 1), SDL_clamp(pivot.y, 0, 1));
 }
 
-void SpriteRenderer::setColor(SDL_Color color)
-{
-    this->mColor = color;
-}
-
 //Set crop based on percentage (0.0f - 1.0f)
 void SpriteRenderer::setCropRect(SDL_FRect mCropRect)
 {
@@ -258,23 +300,24 @@ void SpriteRenderer::setCropRect(SDL_FRect mCropRect)
 void SpriteRenderer::setNineSlice(bool bEnabled, int nBorder)
 {
     this->bNineSlice = bEnabled;
-	this->nBorder = nBorder;
+    this->nBorder = nBorder;
 }
 
-void SpriteRenderer::setShimmer(bool bEnabled)
+void SpriteRenderer::setShimmer(bool bEnabled, const std::string& normalMapKey)
 {
-	this->bShimmer = bEnabled;
+    this->bShimmer = bEnabled;
+    this->m_normalMapKey = normalMapKey;
+}
+
+void SpriteRenderer::setShimmerStyle(const ShimmerUniforms& style)
+{
+    this->m_shimmerStyle = style;
 }
 
 
 SDL_Texture* SpriteRenderer::getTexture()
 {
     return this->pTexture;
-}
-
-SDL_Color SpriteRenderer::getColor() const
-{
-    return this->mColor;
 }
 
 SDL_FRect SpriteRenderer::getRect() const
@@ -306,4 +349,3 @@ Vector2D SpriteRenderer::getPivot()
 {
     return this->pivot;
 }
-

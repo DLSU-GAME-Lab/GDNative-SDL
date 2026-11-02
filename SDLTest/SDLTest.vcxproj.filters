@@ -324,6 +324,15 @@
     <ClCompile Include="src\ShimmerEffect.cpp">
       <Filter>Component\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextRenderer.cpp">
+      <Filter>Component\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ManifestLoader.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -646,6 +655,15 @@
     </ClInclude>
     <ClInclude Include="include\ShimmerEffect.h">
       <Filter>Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextRenderer.h">
+      <Filter>Component\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ManifestLoader.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

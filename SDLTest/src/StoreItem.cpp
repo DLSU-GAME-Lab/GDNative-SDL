@@ -29,9 +29,9 @@ void StoreItem::initialize()
 	pItemSprite->setLocalPos(Vector2D(-200, 0));
 	pItemSprite->setScale(Vector2D(.75, .75));
 	std::string strMessage;
-	if(this->getName() == "Coins")
+	if (this->getName() == "Coins")
 	{
-		 strMessage = "Coinsx100";
+		strMessage = "Coinsx100";
 	}
 	else
 	{
@@ -41,6 +41,7 @@ void StoreItem::initialize()
 
 	Text* pNameText = new Text("CoinText", "CurseCasual.ttf", 35);
 	pNameText->setMessage(strMessage);
+	pNameText->setIsScreenObject(true);
 	pItemBackground->attachChild(pNameText);
 	pNameText->setLocalPos(Vector2D(-75, 0));
 	pNameText->setScale(Vector2D(1, 1));
@@ -53,6 +54,7 @@ void StoreItem::initialize()
 
 	Text* pPriceText = new Text("PriceText", "CurseCasual.ttf", 25);
 	pPriceText->setMessage(std::to_string(this->nPrice));
+	pPriceText->setIsScreenObject(true);
 	pItemBackground->attachChild(pPriceText);
 	pPriceText->setLocalPos(Vector2D(75, 0));
 	pPriceText->setScale(Vector2D(1, 1));
@@ -65,8 +67,9 @@ void StoreItem::initialize()
 
 	Text* pBuyText = new Text("CoinText", "CurseCasual.ttf", 35);
 	pBuyText->setMessage("Buy");
+	pBuyText->setIsScreenObject(true);
 	pBuyButton->attachChild(pBuyText);
 	pBuyText->setLocalPos(Vector2D(0, 0));
 	pBuyText->setScale(Vector2D(1, 1));
-	
+
 }

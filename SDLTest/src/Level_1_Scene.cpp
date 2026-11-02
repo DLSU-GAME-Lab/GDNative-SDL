@@ -11,9 +11,8 @@
 #include "EndScreen.h"
 #include "GUIUtils.h"
 #include "StoreGUI.h"
-Level_1_Scene::Level_1_Scene():AScene(SceneTag::LEVEL_1_SCENE)
-{
-}
+Level_1_Scene::Level_1_Scene() :AScene(SceneTag::LEVEL_1_SCENE)
+{}
 
 void Level_1_Scene::onLoadResources()
 {
@@ -31,15 +30,17 @@ void Level_1_Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	BubbleManager::initialize(100);
 
-	Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
+	Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(304, 870), Vector2D(2, 2), 0.0f, false);
+	pObjectBG->setIsScreenObject(true);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
 
 	Sprite* pLevelContainer = new Sprite("Level_Container", "Level_Container", Vector2D(0, 0), Vector2D(2, 2), 0.0f, false);
+	pLevelContainer->setIsScreenObject(true);
 	GUIUtils::setGUIMidCenter(pLevelContainer, Vector2D(0, 40));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLevelContainer);
 
 
-	GemManager::initialize(9, 10, 60.0f, 0.2f, Vector2D(30.0f, -74.0f));
+	GemManager::initialize(9, 10, 60.0f, 0.2f, Vector2D(334.0f, 614.0f));
 	std::vector<Uint8> r0Cols = { 0, 8 };
 	std::vector<Uint8> r9Cols = { 3, 4, 5 };
 
@@ -54,6 +55,7 @@ void Level_1_Scene::onLoadObjects()
 	this->loadGUI();
 
 	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
+	pStoreGUI->setIsScreenObject(true);
 	pStoreGUI->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pStoreGUI);
 }
@@ -61,7 +63,7 @@ void Level_1_Scene::onLoadObjects()
 void Level_1_Scene::onUnloadResources()
 {
 	GemManager::unloadResources();
-	
+
 	FontManager::getInstance()->unloadAllFonts();
 }
 
@@ -112,6 +114,7 @@ void Level_1_Scene::loadGUI()
 	TrackerManager::getInstance()->registerTracker(pWhiteTracker);
 
 	EndScreen* pEndScreen = new EndScreen("EndScreen");
+	pEndScreen->setIsScreenObject(true);
 	pEndScreen->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pEndScreen);
 

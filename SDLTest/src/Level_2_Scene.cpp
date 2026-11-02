@@ -10,9 +10,8 @@
 #include "StoreManager.h"
 #include "GUIUtils.h"
 #include "StoreGUI.h"
-Level_2_Scene::Level_2_Scene():AScene(SceneTag::LEVEL_2_SCENE)
-{
-}
+Level_2_Scene::Level_2_Scene() :AScene(SceneTag::LEVEL_2_SCENE)
+{}
 
 void Level_2_Scene::onLoadResources()
 {
@@ -30,16 +29,18 @@ void Level_2_Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pBackground);
 	BubbleManager::initialize(100);
 
-	Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(0, -330), Vector2D(2, 2), 0.0f, false);
+	Sprite* pObjectBG = new Sprite("Design_BG", "Design_BG", Vector2D(304, 870), Vector2D(2, 2), 0.0f, false);
+	pObjectBG->setIsScreenObject(true);
 	GameObjectManager::getInstance()->addObject((AGameObject*)pObjectBG);
 
 	Sprite* pLevelContainer = new Sprite("Level_Container", "Level_Container", Vector2D(0, 0), Vector2D(2, 2), 0.0f, false);
+	pLevelContainer->setIsScreenObject(true);
 	GUIUtils::setGUIMidCenter(pLevelContainer, Vector2D(9, 40));
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLevelContainer);
 
 	this->loadGUI();
 
-	GemManager::initialize(10, 8, 60.0f, 0.2f, Vector2D(30.0f, -72.0f));
+	GemManager::initialize(10, 8, 60.0f, 0.2f, Vector2D(334.0f, 612.0f));
 
 	std::vector<Uint8> r0Cols = { 4, 5 };
 	std::vector<Uint8> r0r6Cols = { 0, 1, 8, 9 };
@@ -63,6 +64,7 @@ void Level_2_Scene::onLoadObjects()
 	GemManager::getInstance()->spawnGems();
 
 	StoreGUI* pStoreGUI = new StoreGUI("StoreGUI");
+	pStoreGUI->setIsScreenObject(true);
 	pStoreGUI->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pStoreGUI);
 }
@@ -115,6 +117,7 @@ void Level_2_Scene::loadGUI()
 	TrackerManager::getInstance()->registerTracker(pWhiteTracker);
 
 	EndScreen* pEndScreen = new EndScreen("EndScreen");
+	pEndScreen->setIsScreenObject(true);
 	pEndScreen->setEnabled(false);
 	GameObjectManager::getInstance()->addObject(pEndScreen);
 }

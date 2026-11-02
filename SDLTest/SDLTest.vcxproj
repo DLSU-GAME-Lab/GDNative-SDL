@@ -143,6 +143,7 @@
     <ClCompile Include="src\Level_1_Scene.cpp" />
     <ClCompile Include="src\Level_2_Scene.cpp" />
     <ClCompile Include="src\Level_3_Scene.cpp" />
+    <ClCompile Include="src\ManifestLoader.cpp" />
     <ClCompile Include="src\MouseInput.cpp" />
     <ClCompile Include="src\DialogueToggle.cpp" />
     <ClCompile Include="src\AAnimator.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="src\MetricsManager.cpp" />
     <ClCompile Include="src\ButtonInput.cpp" />
     <ClCompile Include="src\PhysicsSystem.cpp" />
+    <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\ShimmerEffect.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
@@ -202,6 +204,7 @@
     <ClCompile Include="src\StoreItem.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Text.cpp" />
+    <ClCompile Include="src\TextRenderer.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\TileMap.cpp" />
     <ClCompile Include="src\TileMapRenderer.cpp" />
@@ -279,6 +282,7 @@
     <ClInclude Include="include\Level_1_Scene.h" />
     <ClInclude Include="include\Level_2_Scene.h" />
     <ClInclude Include="include\Level_3_Scene.h" />
+    <ClInclude Include="include\ManifestLoader.h" />
     <ClInclude Include="include\MathUtils.h" />
     <ClInclude Include="include\MouseInput.h" />
     <ClInclude Include="include\PerformanceMetricsScreen.h" />
@@ -294,6 +298,7 @@
     <ClInclude Include="include\SceneTransitionManager.h" />
     <ClInclude Include="include\Scroller.h" />
     <ClInclude Include="include\Settings.h" />
+    <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\ShimmerEffect.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
@@ -301,6 +306,7 @@
     <ClInclude Include="include\StoreItem.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Text.h" />
+    <ClInclude Include="include\TextRenderer.h" />
     <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\TileMap.h" />
     <ClInclude Include="include\TileMapRenderer.h" />

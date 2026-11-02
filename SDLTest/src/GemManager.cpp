@@ -72,17 +72,17 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("gems/SP_Gem_White.png", "White");
     TextureManager::getInstance()->load("Box.png", "Crate");
 
-	AudioManager::getInstance()->load("sounds/SFX/Swap_SFX.wav", "Swap");
-	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_1.wav", "Match_1");
-	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_2.wav", "Match_2");
-	AudioManager::getInstance()->load("sounds/SFX/Match_SFX_3.wav", "Match_3");
-	AudioManager::getInstance()->load("sounds/SFX/Bomb_SFX.wav", "Bomb_SFX");
-	AudioManager::getInstance()->load("sounds/SFX/Box_Break.wav", "Break_SFX");
+    AudioManager::getInstance()->load("sounds/SFX/Swap_SFX.wav", "Swap");
+    AudioManager::getInstance()->load("sounds/SFX/Match_SFX_1.wav", "Match_1");
+    AudioManager::getInstance()->load("sounds/SFX/Match_SFX_2.wav", "Match_2");
+    AudioManager::getInstance()->load("sounds/SFX/Match_SFX_3.wav", "Match_3");
+    AudioManager::getInstance()->load("sounds/SFX/Bomb_SFX.wav", "Bomb_SFX");
+    AudioManager::getInstance()->load("sounds/SFX/Box_Break.wav", "Break_SFX");
 
-	AudioManager::getInstance()->load("sounds/SFX/Win_SFX.wav", "Win_SFX");
-	AudioManager::getInstance()->load("sounds/SFX/Win_Laugh.wav", "Win_Laugh");
-	AudioManager::getInstance()->load("sounds/SFX/Lose_SFX.wav", "Lose_SFX");
-	AudioManager::getInstance()->load("sounds/SFX/Lose_Sigh.wav", "Lose_Sigh");
+    AudioManager::getInstance()->load("sounds/SFX/Win_SFX.wav", "Win_SFX");
+    AudioManager::getInstance()->load("sounds/SFX/Win_Laugh.wav", "Win_Laugh");
+    AudioManager::getInstance()->load("sounds/SFX/Lose_SFX.wav", "Lose_SFX");
+    AudioManager::getInstance()->load("sounds/SFX/Lose_Sigh.wav", "Lose_Sigh");
 }
 
 void GemManager::unloadResources()
@@ -135,21 +135,21 @@ void GemManager::loadGUI()
     GUIUtils::setGUIBotCenter(pLowerUIContainer, Vector2D(-20));
     GameObjectManager::getInstance()->addObject(pLowerUIContainer);
 
-	std::vector<Vector2D> boosterPositions;
+    std::vector<Vector2D> boosterPositions;
 
     for (int i = 0; i < 4; i++)
     {
         Sprite* pBooster = new Sprite("Booster_" + std::to_string(i), "UI_Booster", Vector2D(0, 0), Vector2D(0.7f), 0.0f, false);
-		boosterPositions.push_back(Vector2D(80 + (i * 130), -70));
+        boosterPositions.push_back(Vector2D(80 + (i * 130), -70));
         GUIUtils::setGUIBotLeft(pBooster, boosterPositions[i]);
         GameObjectManager::getInstance()->addObject(pBooster);
     }
 
-	const Vector2D posOffset(-6, -2);
+    const Vector2D posOffset(-6, -2);
     Sprite* pBombPowerup = new Sprite("Bomb_Powerup", "BombS", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pBombPowerup, boosterPositions[0] + posOffset);
     GameObjectManager::getInstance()->addObject(pBombPowerup);
-    StoreManager::getInstance()->addStoreItem("Bomb_Powerup",50,"BombS");
+    StoreManager::getInstance()->addStoreItem("Bomb_Powerup", 50, "BombS");
 
     Sprite* pVertPowerup = new Sprite("Vert_Powerup", "Eliminate_Vert", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pVertPowerup, boosterPositions[1] + posOffset);
@@ -171,7 +171,7 @@ void GemManager::loadGUI()
     GUIButton* pSettings = new GUIButton("Settings", "Settings");
     GUIUtils::setGUIBotRight(pSettings, Vector2D(-40, -90));
     pSettings->setScale(Vector2D(.5f, .5f));
-	GUIToggle* pShopToggle = new GUIToggle(EventKey::SHOP_TOGGLE);
+    GUIToggle* pShopToggle = new GUIToggle(EventKey::SHOP_TOGGLE);
     pSettings->attachComponent(pShopToggle);
     GameObjectManager::getInstance()->addObject(pSettings);
     //SceneSwitcher* pTitleSwitcher = new SceneSwitcher(SceneTag::TITLE_SCENE);
@@ -201,7 +201,8 @@ void GemManager::loadGUI()
     GUIUtils::setGUITopRight(pUIMovesPanel, Vector2D(-100, 80));
     GameObjectManager::getInstance()->addObject(pUIMovesPanel);
 
-    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(210, 450), Vector2D(1, 1));
+    TurnCounter* pTurnCount = new TurnCounter("TurnCounter", 20, Vector2D(514, 90), Vector2D(1, 1));
+    pTurnCount->setIsScreenObject(true);
     GameObjectManager::getInstance()->addObject(pTurnCount);
 
 }
@@ -215,8 +216,8 @@ void GemManager::setSelected(Gem* pGem)
     {
         // first selection
         this->pSelected[0] = this->getDataFromGem(pGem);
-		this->pSelector->setEnabled(true);
-		this->pSelector->setLocalPos(pGem->getPos());
+        this->pSelector->setEnabled(true);
+        this->pSelector->setLocalPos(pGem->getPos());
         return;
     }
 
@@ -227,7 +228,7 @@ void GemManager::setSelected(Gem* pGem)
         if (this->pSelected == NULL) return;
 
         std::cout << "selected 0: " << this->pSelected[0]->gem->getName() <<
-                    " selected 1: " << this->pSelected[1]->gem->getName() << "\n";
+            " selected 1: " << this->pSelected[1]->gem->getName() << "\n";
 
         // ensure they are adjacent (distance check)
         Vector2D pos0 = getGemDataPosition(*this->pSelected[0]);
@@ -433,7 +434,7 @@ bool GemManager::checkBombs()
                     continue;
 
                 this->markForRemoval(pGem);
-			}
+            }
             return true;
         }
     }
@@ -452,7 +453,7 @@ void GemManager::markForRemoval(Gem* pGem)
 void GemManager::cascadeDown()
 {
 
-	//// iterate top-to-bottom so gems fall into lowest available cells first
+    //// iterate top-to-bottom so gems fall into lowest available cells first
  //   for (int r = 0; r < this->data.size() - 1; r++)
  //   {
  //       for (int c = 0; c < this->data[r].size(); c++)
@@ -478,14 +479,14 @@ void GemManager::cascadeDown()
 
  //               if (!leftBlocked && !rightBlocked)
  //               {
-	//				cOffset += bool(rand() % 2) ? -1 : 1;
+    //				cOffset += bool(rand() % 2) ? -1 : 1;
  //               }
  //               else if (!leftBlocked) cOffset -= 1;
  //               else if (!rightBlocked) cOffset += 1;
  //               else continue; // both sides blocked; cannot move
  //           }
 
-	//		if (cOffset < 0 || cOffset >= this->data[r].size()) continue;
+    //		if (cOffset < 0 || cOffset >= this->data[r].size()) continue;
  //           // move object pointer up and update its world position
  //           this->data[indexBelow][cOffset].gem = this->data[r][c].gem;
  //           this->setTween(this->data[r][c], Vector2D(0.0f), true);
@@ -511,11 +512,11 @@ void GemManager::cascadeDown()
                         indexAbove = -1;
                         break;
                     }
-                    if (this->data[indexAbove][c].gem != NULL) 
+                    if (this->data[indexAbove][c].gem != NULL)
                     {
                         if ((int)this->data[indexAbove][c].gem->getType() >= (int)GemType::CRATE_0)
                             indexAbove = -1;
-                        
+
                         break;
                     }
                     --indexAbove;
@@ -641,6 +642,7 @@ void GemManager::placeGem(GemType EType, Uint8 r, Uint8 c)
 {
     Gem* pGem = new Gem("gem_" + std::to_string(this->nGemNum), EType);
     this->nGemNum++;
+    pGem->setIsScreenObject(true);
     this->data[r][c].gem = pGem;
 
     pGem->setPos(this->getGemDataPosition(this->data[0][c]));
@@ -648,7 +650,7 @@ void GemManager::placeGem(GemType EType, Uint8 r, Uint8 c)
     pGem->setGridPosition(r, c);
     GameObjectManager::getInstance()->addObject(pGem);
 
-    this->setTween(this->data[r][c], Vector2D(0.0f, this->fGemSize), true);
+    this->setTween(this->data[r][c], Vector2D(0.0f, -this->fGemSize), true);
 }
 
 void GemManager::spawnGems()
@@ -670,13 +672,13 @@ void GemManager::spawnGems()
                         this->bSpawnBombsAuto) &&
                         randChance < 2)
                     {
-						if (this->bSpawnBombsAuto &&
+                        if (this->bSpawnBombsAuto &&
                             randChance == 0)
                             gemType = GemType::BOMB;
-						else if (this->bSpawnCratesAuto &&
+                        else if (this->bSpawnCratesAuto &&
                             randChance == 1)
                             gemType = GemType::CRATE_2;
-					}
+                    }
                     else
                         gemType = GemType(rand() % 6);
 
@@ -705,7 +707,7 @@ void GemManager::spawnGems()
                 }
 
                 // safe to spawn gem now
-				this->placeGem(gemType, r, c);
+                this->placeGem(gemType, r, c);
                 //pause after each row
             }
         }
@@ -714,8 +716,8 @@ void GemManager::spawnGems()
 
 void GemManager::updateBoard()
 {
-	const bool hasBombs = this->checkBombs();
-	const bool hasMatches = this->checkMatches();
+    const bool hasBombs = this->checkBombs();
+    const bool hasMatches = this->checkMatches();
     if (hasBombs || hasMatches)
     {
         EventBroadcaster::getInstance()->broadcast(EventKey::COUNTER_SUBTRACT);
@@ -729,7 +731,7 @@ void GemManager::updateBoard()
                     if (gemData != NULL)
                     {
                         // Checks for crates around the gems being removed
-						std::vector<Gem*> pAdjGems = this->getAdjacentGems(*gemData);
+                        std::vector<Gem*> pAdjGems = this->getAdjacentGems(*gemData);
                         for (auto pAdjGem : pAdjGems)
                         {
                             if (pAdjGem != NULL)
@@ -739,11 +741,11 @@ void GemManager::updateBoard()
                                 {
                                     pAdjGem->setType(GemType(typeNum - 1));
                                     AudioManager::getInstance()->play(new AudioPlayer("Break_SFX", AudioGroupTag::SFX));
-									std::cout << "Crate downgraded to type " << (typeNum - 1) << "\n";
+                                    std::cout << "Crate downgraded to type " << (typeNum - 1) << "\n";
                                 }
                                 else if (pAdjGem->getType() == GemType::CRATE_0)
                                 {
-									GemData* adjGemData = getDataFromGem(pAdjGem);
+                                    GemData* adjGemData = getDataFromGem(pAdjGem);
                                     adjGemData->gem = NULL;
                                     AudioManager::getInstance()->play(new AudioPlayer("Break_SFX", AudioGroupTag::SFX));
                                     GameObjectManager::getInstance()->deleteObject(pAdjGem);
@@ -760,7 +762,7 @@ void GemManager::updateBoard()
             if (hasBombs)
             {
                 AudioManager::getInstance()->play(new AudioPlayer("Bomb_SFX", AudioGroupTag::SFX));
-			}
+            }
             else
             {
                 std::string sfxName = "Match_";
@@ -771,7 +773,8 @@ void GemManager::updateBoard()
             this->cascadeDown();
             this->spawnGems();
 
-        } while (this->checkMatches());
+        }
+        while (this->checkMatches());
         AGameObject* pHolder = GameObjectManager::getInstance()->findObjectByName("EndScreen");
         GameObjectManager::getInstance()->sortObjectToEnd(pHolder);
     }
@@ -793,7 +796,7 @@ void GemManager::setBlocked(Uint8 r, Uint8 c, bool bBlocked)
     this->data[r][c].blocked = bBlocked;
 }
 
-void GemManager::setBlocked(Uint8 r, const std::vector<Uint8>&cols, bool bBlocked)
+void GemManager::setBlocked(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked)
 {
     if (r > this->data.size() || cols.empty()) return;
     for (Uint8 c : cols)
@@ -818,7 +821,7 @@ Vector2D GemManager::getGemDataPosition(GemData gemData)
     Vector2D cellSize = Vector2D(this->fGemSize);
     Vector2D gridSize = Vector2D(this->nWidth, this->nHeight);
     Vector2D pos = cellSize * (Vector2D(gemData.c, gemData.r) - (gridSize * 0.5f));
-    pos.y *= -1.0f;
+    // screen space: y grows downward, so no flip
     pos += pOwner->getPos();
     return pos;
 }
@@ -847,8 +850,9 @@ GemManager::GemManager(Uint8 w, Uint8 h, float fGemSize, float fGemScale) : ACom
     this->bSpawnCratesAuto = false;
     this->bSpawnBombsAuto = false;
     this->pSelector = new Sprite("Selector", "Selector", Vector2D(0.0f), Vector2D(0.12f));
-	this->pSelector->setEnabled(false);
-	GameObjectManager::getInstance()->addObject(this->pSelector);
+    this->pSelector->setIsScreenObject(true);
+    this->pSelector->setEnabled(false);
+    GameObjectManager::getInstance()->addObject(this->pSelector);
 }
 
 void GemManager::initialize(Uint8 w, Uint8 h, float fGemSize, float fGemScale, Vector2D offset)

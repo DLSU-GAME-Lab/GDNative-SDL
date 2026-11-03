@@ -2,28 +2,6 @@
 #include "TextureManager.h"
 #include <cstring>
 
-// ------------------------------- ShaderMaterial -----------------------------
-ShaderMaterial::~ShaderMaterial()
-{
-    if (pState) SDL_DestroyGPURenderState(pState);
-}
-
-bool ShaderMaterial::setFragmentUniforms(Uint32 slot, const void* data, Uint32 size)
-{
-    return pState && SDL_SetGPURenderStateFragmentUniforms(pState, slot, data, size);
-}
-
-bool ShaderMaterial::bind(SDL_Renderer* pRenderer)
-{
-    return pState && SDL_SetGPURenderState(pRenderer, pState);
-}
-
-void ShaderMaterial::unbind(SDL_Renderer* pRenderer)
-{
-    SDL_SetGPURenderState(pRenderer, NULL);
-}
-
-// ------------------------------- ShaderManager ------------------------------
 static std::string resolveAssetPath(std::string path)
 {
 #ifdef __ANDROID__
@@ -51,8 +29,8 @@ bool ShaderManager::init(SDL_Renderer* renderer)
         return false;
     }
 
-    // Slot 0 = the sprite SDL draws, slot 1 = normal map. One uniform block.
-    pShimmerShader = loadFragmentShader("shaders/sprite_shimmer.frag.spv", 2, 1);
+    // Slot 0 = the sprite SDL draws, slot 1 = normal map, slot 2 = mask. One uniform block.
+    pShimmerShader = loadFragmentShader("shaders/sprite_shimmer.frag.spv", 3, 1);
     if (!pShimmerShader) return false;
 
     SDL_GPUSamplerCreateInfo si;
@@ -76,6 +54,15 @@ bool ShaderManager::init(SDL_Renderer* renderer)
     if (!pFlatNormal || !SDL_UpdateTexture(pFlatNormal, NULL, flat, 4))
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[ShaderManager] flat normal texture failed: %s", SDL_GetError());
+        return false;
+    }
+
+    // White mask for sprites with no mask, so the whole sprite can shimmer.
+    const Uint8 white[4] = { 255, 255, 255, 255 };
+    pFlatMask = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STATIC, 1, 1);
+    if (!pFlatMask || !SDL_UpdateTexture(pFlatMask, NULL, white, 4))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[ShaderManager] flat mask texture failed: %s", SDL_GetError());
         return false;
     }
 
@@ -114,26 +101,31 @@ SDL_GPUShader* ShaderManager::loadFragmentShader(const std::string& path, int nu
     return shader;
 }
 
-ShaderMaterial* ShaderManager::createShimmerMaterial(SDL_Texture* pNormalTexture)
+ShaderMaterial* ShaderManager::createShimmerMaterial(SDL_Texture* pNormalTexture, SDL_Texture* pMaskTexture)
 {
-    SDL_GPUTexture* gpuTex = (SDL_GPUTexture*)SDL_GetPointerProperty(
+    SDL_GPUTexture* gpuNormal = (SDL_GPUTexture*)SDL_GetPointerProperty(
         SDL_GetTextureProperties(pNormalTexture), SDL_PROP_TEXTURE_GPU_TEXTURE_POINTER, NULL);
-    if (!gpuTex)
+    SDL_GPUTexture* gpuMask = (SDL_GPUTexture*)SDL_GetPointerProperty(
+        SDL_GetTextureProperties(pMaskTexture), SDL_PROP_TEXTURE_GPU_TEXTURE_POINTER, NULL);
+    if (!gpuNormal || !gpuMask)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[ShaderManager] Texture has no GPU texture pointer");
         return nullptr;
     }
 
-    SDL_GPUTextureSamplerBinding binding;
-    SDL_zero(binding);
-    binding.texture = gpuTex;
-    binding.sampler = pLinearSampler;
+    // bound after the sprite SDL draws: [0] = slot 1 (normal map), [1] = slot 2 (mask)
+    SDL_GPUTextureSamplerBinding bindings[2];
+    SDL_zero(bindings);
+    bindings[0].texture = gpuNormal;
+    bindings[0].sampler = pLinearSampler;
+    bindings[1].texture = gpuMask;
+    bindings[1].sampler = pLinearSampler;
 
     SDL_GPURenderStateCreateInfo ci;
     SDL_zero(ci);
     ci.fragment_shader = pShimmerShader;
-    ci.num_sampler_bindings = 1;
-    ci.sampler_bindings = &binding;
+    ci.num_sampler_bindings = 2;
+    ci.sampler_bindings = bindings;
 
     SDL_GPURenderState* state = SDL_CreateGPURenderState(pRenderer, &ci);
     if (!state)
@@ -148,7 +140,7 @@ ShaderMaterial* ShaderManager::createShimmerMaterial(SDL_Texture* pNormalTexture
     return mat;
 }
 
-ShaderMaterial* ShaderManager::getShimmerMaterial(const std::string& normalMapKey)
+ShaderMaterial* ShaderManager::getShimmerMaterial(const std::string& normalMapKey, const std::string& maskKey)
 {
     if (!bSupported) return nullptr;
 
@@ -159,23 +151,38 @@ ShaderMaterial* ShaderManager::getShimmerMaterial(const std::string& normalMapKe
         if (!normalTex) return nullptr;     // missing normal map: caller draws plain
     }
 
-    auto it = mapShimmer.find(normalTex);
+    SDL_Texture* maskTex = pFlatMask;
+    if (!maskKey.empty())
+    {
+        maskTex = TextureManager::getInstance()->get(maskKey);
+        if (!maskTex) return nullptr;       // missing mask: caller draws plain
+    }
+
+    auto key = std::make_pair(normalTex, maskTex);
+    auto it = mapShimmer.find(key);
     if (it != mapShimmer.end()) return it->second.get();
 
-    ShaderMaterial* mat = createShimmerMaterial(normalTex);
+    ShaderMaterial* mat = createShimmerMaterial(normalTex, maskTex);
     if (!mat) return nullptr;
-    mapShimmer[normalTex].reset(mat);
+    mapShimmer[key].reset(mat);
     return mat;
 }
 
 void ShaderManager::onTextureDestroyed(SDL_Texture* pTexture)
 {
-    mapShimmer.erase(pTexture);   // destroys the render state that references it
+    // destroys every render state that references it, as the normal map or the mask
+    for (auto it = mapShimmer.begin(); it != mapShimmer.end(); )
+    {
+        if (it->first.first == pTexture || it->first.second == pTexture)
+            it = mapShimmer.erase(it);
+        else
+            ++it;
+    }
 }
 
 void ShaderManager::shutdown()
 {
-    SDL_SetGPURenderState(pRenderer, NULL);
+    if (pDevice) SDL_SetGPURenderState(pRenderer, NULL);   // only a GPU renderer has a render state
     mapShimmer.clear();
     if (pDevice)
     {
@@ -183,9 +190,11 @@ void ShaderManager::shutdown()
         if (pShimmerShader) SDL_ReleaseGPUShader(pDevice, pShimmerShader);
     }
     if (pFlatNormal) SDL_DestroyTexture(pFlatNormal);
+    if (pFlatMask) SDL_DestroyTexture(pFlatMask);
     pLinearSampler = nullptr;
     pShimmerShader = nullptr;
     pFlatNormal = nullptr;
+    pFlatMask = nullptr;
 }
 
 /* * * * * * * * * * * * * * * * * * * * *
@@ -197,6 +206,7 @@ void ShaderManager::initialize(SDL_Renderer* pRenderer)
 {
     P_SHARED_INSTANCE = new ShaderManager();
     P_SHARED_INSTANCE->bSupported = P_SHARED_INSTANCE->init(pRenderer);
+    if (!P_SHARED_INSTANCE->bSupported) P_SHARED_INSTANCE->shutdown();   // release whatever init() created before failing
 }
 
 void ShaderManager::destroy()

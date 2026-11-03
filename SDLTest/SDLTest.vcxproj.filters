@@ -73,6 +73,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Singleton\Shaders">
+      <UniqueIdentifier>{ca5a0745-e774-4dde-becb-dea3f1d8e922}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -321,17 +324,17 @@
     <ClCompile Include="src\StoreItem.cpp">
       <Filter>GameObject\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShimmerEffect.cpp">
-      <Filter>Component\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
     <ClCompile Include="src\TextRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\ManifestLoader.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp">
+      <Filter>Singleton\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderMaterial.cpp">
+      <Filter>Singleton\Shaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -653,17 +656,17 @@
     <ClInclude Include="include\StoreItem.h">
       <Filter>GameObject\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="include\ShimmerEffect.h">
-      <Filter>Component\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ShaderManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
     <ClInclude Include="include\TextRenderer.h">
       <Filter>Component\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="include\ManifestLoader.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderManager.h">
+      <Filter>Singleton\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderMaterial.h">
+      <Filter>Singleton\Shaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

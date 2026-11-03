@@ -4,15 +4,20 @@
 #include "TweenAnimator.h"
 #include "IAnimatorListener.h"
 
+class SpriteRenderer;
+
 class Gem : public AGameObject, public IAnimatorListener
 {
 private:
 	GemType EType;
 	TweenAnimator* pTween;
+	SpriteRenderer* pSprite;
 	bool bActive;
 
 	Uint8 r;
 	Uint8 c;
+
+	void applyAppearance();
 
 public:
 	Gem(std::string strName, GemType EType);
@@ -29,4 +34,3 @@ public:
 	void setGridPosition(Uint8 r, Uint8 c);
 	TweenAnimator* getTweenAnimator() const;
 };
-

@@ -50,6 +50,7 @@ RendererContext* RendererContext::getInstance()
 void RendererContext::destroy()
 {
     delete P_SHARED_INSTANCE;
+    P_SHARED_INSTANCE = NULL;
 }
 
 SDL_Renderer* RendererContext::getRenderer()

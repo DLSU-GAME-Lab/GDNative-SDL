@@ -10,61 +10,23 @@
 #include <SDL3/SDL.h>
 #include <string>
 #include <unordered_map>
+#include <map>
+#include <utility>
 #include <memory>
-
-// Must match `ShimmerParams` in shaders/sprite_shimmer.frag (std140, 48 bytes).
-struct ShimmerUniforms
-{
-    // vec4 a
-    float phase = 0.0f;   // 0..1, driven by ShimmerEffect
-    float intensity = 0.6f;   // glint brightness
-    float shininess = 24.0f;  // specular exponent (higher = tighter highlight)
-    float bandWidth = 0.30f;  // gaussian width of the sweep, in uv units
-    // vec4 lightColor
-    float lightR = 1.0f;
-    float lightG = 1.0f;
-    float lightB = 1.0f;
-    float normalStrength = 1.0f; // scales normal-map xy (0 = flat)
-    // vec4 b
-    float flipX = 1.0f;   // +1 / -1
-    float flipY = 1.0f;   // +1 / -1
-    float lightHeight = 0.35f;  // light z above the sprite (lower = more dramatic)
-    float greenSign = 1.0f;   // +1 OpenGL-style normal maps, -1 DirectX-style
-};
-static_assert(sizeof(ShimmerUniforms) == 48, "ShimmerUniforms must match the shader's std140 block");
-
-class ShaderMaterial
-{
-public:
-    ~ShaderMaterial();
-
-    // Uniform data is copied; safe to call every frame.
-    bool setFragmentUniforms(Uint32 slot, const void* data, Uint32 size);
-    bool setShimmerUniforms(const ShimmerUniforms& u) { return setFragmentUniforms(0, &u, sizeof(u)); }
-
-    // Draw calls issued between bind() and unbind() use this material.
-    bool bind(SDL_Renderer* pRenderer);
-    static void unbind(SDL_Renderer* pRenderer);
-
-private:
-    friend class ShaderManager;
-    ShaderMaterial() = default;
-    ShaderMaterial(const ShaderMaterial&) = delete;
-    ShaderMaterial& operator=(const ShaderMaterial&) = delete;
-
-    SDL_GPURenderState* pState = nullptr;
-};
+#include "ShaderMaterial.h"
 
 class ShaderManager
 {
 public:
     bool isSupported() const { return bSupported; }
 
-    // Shimmer material for a normal map registered in TextureManager under
-    // `normalMapKey`. An empty key uses a built-in flat normal (plain glint).
-    // Returns nullptr if unsupported or the named texture doesn't exist.
+    // Shimmer material for a normal map and a mask registered in TextureManager
+    // under `normalMapKey` / `maskKey`. The mask uses its red channel and limits
+    // where the glint shows. An empty normal key uses a built-in flat normal
+    // (plain glint), an empty mask key uses a built-in white mask (whole sprite).
+    // Returns nullptr if unsupported or a named texture doesn't exist.
     // Do not cache the pointer across frames/scene loads; look it up each time.
-    ShaderMaterial* getShimmerMaterial(const std::string& normalMapKey);
+    ShaderMaterial* getShimmerMaterial(const std::string& normalMapKey, const std::string& maskKey = "");
 
     // TextureManager calls this right before destroying a texture, so no
     // material keeps a dangling GPU texture.
@@ -76,14 +38,16 @@ private:
     SDL_GPUShader* pShimmerShader = nullptr;
     SDL_GPUSampler* pLinearSampler = nullptr;
     SDL_Texture* pFlatNormal = nullptr;  // 1x1 (0.5, 0.5, 1.0)
+    SDL_Texture* pFlatMask = nullptr;    // 1x1 white
     bool            bSupported = false;
 
-    std::unordered_map<SDL_Texture*, std::unique_ptr<ShaderMaterial>> mapShimmer;
+    // one material per (normal map, mask) pair
+    std::map<std::pair<SDL_Texture*, SDL_Texture*>, std::unique_ptr<ShaderMaterial>> mapShimmer;
 
     bool init(SDL_Renderer* pRenderer);
     void shutdown();
     SDL_GPUShader* loadFragmentShader(const std::string& path, int numSamplers, int numUniformBuffers);
-    ShaderMaterial* createShimmerMaterial(SDL_Texture* pNormalTexture);
+    ShaderMaterial* createShimmerMaterial(SDL_Texture* pNormalTexture, SDL_Texture* pMaskTexture);
 
     /* * * * * * * * * * * * * * * * * * * * *
      *       SINGLETON-RELATED CONTENT       *

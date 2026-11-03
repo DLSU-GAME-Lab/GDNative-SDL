@@ -4,12 +4,12 @@
 // ---------------------------------------------------------------------------
 
 #include <iostream>
+#include <cmath>
 #include "SpriteRenderer.h"
 #include "TextureManager.h"
 #include "RendererContext.h"
 #include "AGameObject.h"
 #include "Settings.h"
-#include "ShimmerEffect.h"
 #include "ShaderManager.h"
 
 // Constructor: texture lookup may be O(T) where T is number of
@@ -93,8 +93,8 @@ void SpriteRenderer::initialize()
 SpriteRenderer::~SpriteRenderer()
 {}
 
-// perform: per-sprite O(1) math and a single draw call (two when shimmering on
-// the CPU fallback). Total cost per frame grows linearly with the number of sprites.
+// perform: per-sprite O(1) math and a single draw call. Total cost per frame
+// grows linearly with the number of sprites.
 void SpriteRenderer::perform()
 {
     AGameObject* owner = this->getOwner();
@@ -126,41 +126,32 @@ void SpriteRenderer::perform()
     if (!pTexture || !this->inCameraView(mDestRect))
         return;
 
-    ShaderManager* pShaders = ShaderManager::getInstance();
-    ShimmerEffect* pShimmer = nullptr;
-    if (bShimmer)
-        pShimmer = (ShimmerEffect*)owner->findComponentByName("ShimmerEffect");
-
-    if (bShimmer && pShimmer && pShaders && pShaders->isSupported())
+    // The shimmer runs through the shader only while a sweep is active. Without
+    // shader support the sprite is drawn plain.
+    ShaderMaterial* pMat = nullptr;
+    float fPhase = 0.0f;
+    if (bShimmer && !bNineSlice && this->getShimmerPhase(fPhase))
     {
-        // GPU path: the sprite itself is drawn through the shimmer shader, only
-        // while a shimmer pass is running. Nine-slice stays plain (each slice has
-        // its own uv range, so a sweep would tear).
-        ShaderMaterial* pMat = (pShimmer->isShimmering() && !bNineSlice)
-            ? pShaders->getShimmerMaterial(m_normalMapKey) : nullptr;
+        ShaderManager* pShaders = ShaderManager::getInstance();
+        if (pShaders && pShaders->isSupported())
+            pMat = pShaders->getShimmerMaterial(m_normalMapKey, m_maskMapKey);
+    }
 
-        if (pMat)
-        {
-            ShimmerUniforms u = m_shimmerStyle;
-            u.phase = pShimmer->getPhase();
-            u.flipX = this->flipX ? -1.0f : 1.0f;
-            u.flipY = this->flipY ? -1.0f : 1.0f;
-            pMat->setShimmerUniforms(u);
+    if (pMat)
+    {
+        ShimmerUniforms u = m_shimmerStyle;
+        u.phase = fPhase;
+        u.flipX = this->flipX ? -1.0f : 1.0f;
+        u.flipY = this->flipY ? -1.0f : 1.0f;
+        pMat->setShimmerUniforms(u);
 
-            pMat->bind(pRenderer);
-            drawSprite(srcRect);
-            ShaderMaterial::unbind(pRenderer);
-        }
-        else
-        {
-            drawSprite(srcRect);
-        }
+        pMat->bind(pRenderer);
+        drawSprite(srcRect);
+        ShaderMaterial::unbind(pRenderer);
     }
     else
     {
-        // Plain draw, plus the original CPU shimmer when shaders are unavailable.
         drawSprite(srcRect);
-        if (bShimmer) drawShimmerCPU();
     }
 }
 
@@ -210,34 +201,6 @@ void SpriteRenderer::drawSprite(SDL_FRect srcRect)
     }
 }
 
-// Original CPU shimmer from Gem Hunter, kept verbatim as the fallback when the
-// GPU renderer (and therefore shaders) isn't available.
-void SpriteRenderer::drawShimmerCPU()
-{
-    ShimmerEffect* pShimmer = (ShimmerEffect*)getOwner()->findComponentByName("ShimmerEffect");
-    if (!pShimmer) return;
-
-    float phase = pShimmer->getPhase();
-    float stripeCenter = mDestRect.x + phase * (mDestRect.w + 30.0f) - 15.0f;
-    float halfW = mDestRect.w * 0.18f;
-
-    SDL_SetRenderDrawBlendMode(pRenderer, SDL_BLENDMODE_BLEND);
-
-    for (float sx = stripeCenter - halfW; sx <= stripeCenter + halfW; sx += 1.0f)
-    {
-        if (sx < mDestRect.x || sx > mDestRect.x + mDestRect.w) continue;
-
-        float dist = SDL_fabsf(sx - stripeCenter) / halfW;
-        float falloff = 1.0f - dist * dist;
-        Uint8 alpha = (Uint8)(falloff * 160);
-
-        SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, alpha);
-        SDL_RenderLine(pRenderer,
-            sx, mDestRect.y + 2,
-            sx, mDestRect.y + mDestRect.h - 2);
-    }
-}
-
 void SpriteRenderer::drawWidget()
 {
     Camera* pCam = CameraManager::getInstance()->getCurrentCamera();
@@ -256,6 +219,27 @@ void SpriteRenderer::drawWidget()
 void SpriteRenderer::setTexture(SDL_Texture* pTexture)
 {
     this->pTexture = pTexture;
+}
+
+// Looks the texture up by key so initialize() keeps the new texture too, and
+// refreshes texSize because perform() builds the source rect from it.
+void SpriteRenderer::setTextureKey(const std::string& textureKey)
+{
+    auto textures = TextureManager::getInstance()->getTexture(textureKey);
+    if (textures.empty())
+    {
+        std::cerr << "[SpriteRenderer ERROR] Texture not found: " << textureKey << std::endl;
+        return;
+    }
+
+    this->m_textureKey = textureKey;
+    this->pTexture = textures[0];
+
+    float fw, fh;
+    if (SDL_GetTextureSize(this->pTexture, &fw, &fh))
+    {
+        this->texSize = Vector2D(fw, fh);
+    }
 }
 
 void SpriteRenderer::setPosition(float x, float y)
@@ -303,10 +287,33 @@ void SpriteRenderer::setNineSlice(bool bEnabled, int nBorder)
     this->nBorder = nBorder;
 }
 
-void SpriteRenderer::setShimmer(bool bEnabled, const std::string& normalMapKey)
+void SpriteRenderer::setShimmer(bool bEnabled, const std::string& normalMapKey, const std::string& maskKey)
 {
     this->bShimmer = bEnabled;
     this->m_normalMapKey = normalMapKey;
+    this->m_maskMapKey = maskKey;
+}
+
+void SpriteRenderer::setShimmerTiming(float fSpeed, float fCooldown, float fOffset)
+{
+    this->m_fShimmerSpeed = fSpeed;
+    this->m_fShimmerCooldown = fCooldown;
+    this->m_fShimmerOffset = fOffset;
+}
+
+// Sweep timing comes from the clock, so no component is needed. Every cycle is one
+// sweep (1 / speed seconds) followed by the cooldown. Returns false while resting.
+bool SpriteRenderer::getShimmerPhase(float& fPhase) const
+{
+    if (m_fShimmerSpeed <= 0.0f) return false;
+
+    double dSweep = 1.0 / m_fShimmerSpeed;
+    double dCycle = dSweep + m_fShimmerCooldown;
+    double dTime = std::fmod((double)SDL_GetTicks() / 1000.0 + m_fShimmerOffset, dCycle);
+    if (dTime >= dSweep) return false;
+
+    fPhase = (float)(dTime / dSweep);
+    return true;
 }
 
 void SpriteRenderer::setShimmerStyle(const ShimmerUniforms& style)

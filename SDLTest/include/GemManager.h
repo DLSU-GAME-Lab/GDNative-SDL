@@ -42,7 +42,7 @@ public:
     static void loadGUI();
 
     void setSelected(Gem* pGem);
-    
+
     void placeGem(GemType EType, Uint8 r, Uint8 c);
     void spawnGems();
     void updateBoard();
@@ -51,8 +51,8 @@ public:
     void setBlocked(Uint8 r, Uint8 c, bool bBlocked);
     void setBlocked(Uint8 r, const std::vector<Uint8>& cols, bool bBlocked);
 
-	void setSpawnCratesAuto(bool bSpawnCratesAuto);
-	void setSpawnBombsAuto(bool bSpawnBombsAuto);
+    void setSpawnCratesAuto(bool bSpawnCratesAuto);
+    void setSpawnBombsAuto(bool bSpawnBombsAuto);
 
 private:
     Vector2D getGemDataPosition(GemData gemData);
@@ -80,7 +80,7 @@ private:
 private:
     GemManager(Uint8 w, Uint8 h, float fCellSize, float fGemScale);
     GemManager(const GemManager&);
-    GemManager& operator = (const GemManager&) {};
+    GemManager& operator = (const GemManager&) { return *this; }
 
 public:
     static void initialize(Uint8 w, Uint8 h, float fCellSize, float fGemScale, Vector2D offset);
@@ -90,4 +90,3 @@ public:
     /* * * * * * * * * * * * * * * * * * * * */
 
 };
-

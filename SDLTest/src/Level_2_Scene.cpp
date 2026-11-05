@@ -18,6 +18,11 @@ void Level_2_Scene::onLoadResources()
 	TextureManager::getInstance()->load("levels/Level_2.png", "Level_Container");
 	FontManager::getInstance()->loadFont("CurseCasual.ttf", "Curse45", 45);
 	GemManager::loadResources();
+
+	TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "SP_Gem_Red");
+	TextureManager::getInstance()->load("gems/SP_Gem_Blue.png", "SP_Gem_Blue");
+	TextureManager::getInstance()->load("gems/SP_Gem_Purple.png", "SP_Gem_Purple");
+	TextureManager::getInstance()->load("gems/SP_Gem_White.png", "SP_Gem_White");
 }
 
 void Level_2_Scene::onLoadObjects()
@@ -40,7 +45,7 @@ void Level_2_Scene::onLoadObjects()
 
 	this->loadGUI();
 
-	GemManager::initialize(10, 8, 60.0f, 0.2f, Vector2D(334.0f, 612.0f));
+	GemManager::initialize(10, 8, 60.0f, 0.1f, Vector2D(334.0f, 612.0f));
 
 	std::vector<Uint8> r0Cols = { 4, 5 };
 	std::vector<Uint8> r0r6Cols = { 0, 1, 8, 9 };
@@ -71,6 +76,11 @@ void Level_2_Scene::onLoadObjects()
 
 void Level_2_Scene::onUnloadResources()
 {
+	TextureManager::getInstance()->unload("SP_Gem_Red");
+	TextureManager::getInstance()->unload("SP_Gem_Blue");
+	TextureManager::getInstance()->unload("SP_Gem_Purple");
+	TextureManager::getInstance()->unload("SP_Gem_White");
+
 	GemManager::unloadResources();
 	FontManager::getInstance()->unloadAllFonts();
 }

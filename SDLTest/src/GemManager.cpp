@@ -63,6 +63,7 @@ void GemManager::loadResources()
     TextureManager::getInstance()->load("gems/mine.png", "BombS");
     TextureManager::getInstance()->load("gems/mine_n.png", "BombS_Normal");
     TextureManager::getInstance()->load("gems/mine_mask.png", "BombS_Mask");
+    TextureManager::getInstance()->load("Small_Bomb.png", "Small_Bomb");
 
 
     TextureManager::getInstance()->load("Square.png", "Selector");
@@ -130,6 +131,7 @@ void GemManager::unloadResources()
     TextureManager::getInstance()->unload("BombS");
     TextureManager::getInstance()->unload("BombS_Normal");
     TextureManager::getInstance()->unload("BombS_Mask");
+    TextureManager::getInstance()->unload("Small_Bomb");
 
     TextureManager::getInstance()->unload("Selector");
     TextureManager::getInstance()->unload("Yellow");
@@ -192,10 +194,10 @@ void GemManager::loadGUI()
     }
 
     const Vector2D posOffset(-6, -2);
-    Sprite* pBombPowerup = new Sprite("Bomb_Powerup", "BombS", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
+    Sprite* pBombPowerup = new Sprite("Bomb_Powerup", "Small_Bomb", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pBombPowerup, boosterPositions[0] + posOffset);
     GameObjectManager::getInstance()->addObject(pBombPowerup);
-    StoreManager::getInstance()->addStoreItem("Bomb_Powerup", 50, "BombS");
+    StoreManager::getInstance()->addStoreItem("Bomb_Powerup", 50, "Small_Bomb");
 
     Sprite* pVertPowerup = new Sprite("Vert_Powerup", "Eliminate_Vert", Vector2D(0, 0), Vector2D(0.4f), 0.0f, false);
     GUIUtils::setGUIBotLeft(pVertPowerup, boosterPositions[1] + posOffset);

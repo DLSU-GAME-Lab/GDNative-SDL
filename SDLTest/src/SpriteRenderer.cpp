@@ -126,15 +126,23 @@ void SpriteRenderer::perform()
     if (!pTexture || !this->inCameraView(mDestRect))
         return;
 
-    // The shimmer runs through the shader only while a sweep is active. Without
-    // shader support the sprite is drawn plain.
+    // A sprite with a normal map always runs through the shader so it stays lit, the
+    // sweep is added only while it is active (phase -1 = no sweep). Without a normal
+    // map the shader runs only during a sweep. Without shader support the sprite is
+    // drawn plain.
     ShaderMaterial* pMat = nullptr;
-    float fPhase = 0.0f;
-    if (bShimmer && !bNineSlice && this->getShimmerPhase(fPhase))
+    float fPhase = -1.0f;
+    if (bShimmer && !bNineSlice)
     {
-        ShaderManager* pShaders = ShaderManager::getInstance();
-        if (pShaders && pShaders->isSupported())
-            pMat = pShaders->getShimmerMaterial(m_normalMapKey, m_maskMapKey);
+        bool bSweeping = this->getShimmerPhase(fPhase);
+        if (!bSweeping) fPhase = -1.0f;
+
+        if (bSweeping || !m_normalMapKey.empty())
+        {
+            ShaderManager* pShaders = ShaderManager::getInstance();
+            if (pShaders && pShaders->isSupported())
+                pMat = pShaders->getShimmerMaterial(m_normalMapKey, m_maskMapKey);
+        }
     }
 
     if (pMat)

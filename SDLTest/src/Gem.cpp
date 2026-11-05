@@ -5,7 +5,7 @@
 #include "TextureManager.h"
 #include "SpriteRenderer.h"
 #include <cstdlib>
-// texture key of a gem type, crates show State_1..3 (CRATE_0..2) as they take damage
+// texture key of a gem type, crates show State_3..1 (CRATE_0..2) as they take damage
 // and fall back to the plain "Crate" art while the state art isn't loaded
 static std::string getTextureKey(GemType EType)
 {
@@ -15,8 +15,9 @@ static std::string getTextureKey(GemType EType)
 
 	if (typeIndex >= crateIndex)
 	{
-		int nState = typeIndex - crateIndex + 1;
-		if (nState > 3) nState = 3;
+		int nOffset = typeIndex - crateIndex;
+		if (nOffset > 2) nOffset = 2;
+		int nState = 3 - nOffset;
 		std::string strState = "State_" + std::to_string(nState);
 		return TextureManager::getInstance()->get(strState) ? strState : "Crate";
 	}

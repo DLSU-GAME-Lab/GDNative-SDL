@@ -19,6 +19,11 @@ void Level_1_Scene::onLoadResources()
 	TextureManager::getInstance()->load("levels/Level_1.png", "Level_Container");
 	FontManager::getInstance()->loadFont("CurseCasual.ttf", "Curse45", 45);
 	GemManager::loadResources();
+
+	TextureManager::getInstance()->load("gems/SP_Gem_Red.png", "SP_Gem_Red");
+	TextureManager::getInstance()->load("gems/SP_Gem_Blue.png", "SP_Gem_Blue");
+	TextureManager::getInstance()->load("gems/SP_Gem_Purple.png", "SP_Gem_Purple");
+	TextureManager::getInstance()->load("gems/SP_Gem_White.png", "SP_Gem_White");
 }
 
 void Level_1_Scene::onLoadObjects()
@@ -40,7 +45,7 @@ void Level_1_Scene::onLoadObjects()
 	GameObjectManager::getInstance()->addObject((AGameObject*)pLevelContainer);
 
 
-	GemManager::initialize(9, 10, 60.0f, 0.2f, Vector2D(334.0f, 614.0f));
+	GemManager::initialize(9, 10, 60.0f, 0.1f, Vector2D(334.0f, 614.0f));
 	std::vector<Uint8> r0Cols = { 0, 8 };
 	std::vector<Uint8> r9Cols = { 3, 4, 5 };
 
@@ -62,6 +67,11 @@ void Level_1_Scene::onLoadObjects()
 
 void Level_1_Scene::onUnloadResources()
 {
+	TextureManager::getInstance()->unload("SP_Gem_Red");
+	TextureManager::getInstance()->unload("SP_Gem_Blue");
+	TextureManager::getInstance()->unload("SP_Gem_Purple");
+	TextureManager::getInstance()->unload("SP_Gem_White");
+
 	GemManager::unloadResources();
 
 	FontManager::getInstance()->unloadAllFonts();
@@ -84,30 +94,28 @@ void Level_1_Scene::loadEmptyObjects()
 
 void Level_1_Scene::loadGUI()
 {
-
-
 	GemManager::loadGUI();
 	StoreManager::getInstance()->addStoreItem("Coins x100", 0, "BombS");
 	StoreManager::getInstance()->printStoreItems();
-	Tracker* pRedTracker = new Tracker("Red_Tracker", "Red", GemType::RED, 8);
+	Tracker* pRedTracker = new Tracker("Red_Tracker", "SP_Gem_Red", GemType::RED, 8);
 	GameObjectManager::getInstance()->addObject(pRedTracker);
 	GUIUtils::setGUITopLeft(pRedTracker, Vector2D(110, 25));
 	pRedTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pRedTracker);
 
-	Tracker* pBlueTracker = new Tracker("Blue_Tracker", "Blue", GemType::BLUE, 8);
+	Tracker* pBlueTracker = new Tracker("Blue_Tracker", "SP_Gem_Blue", GemType::BLUE, 8);
 	GameObjectManager::getInstance()->addObject(pBlueTracker);
 	GUIUtils::setGUITopLeft(pBlueTracker, Vector2D(20, 25));
 	pBlueTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pBlueTracker);
 
-	Tracker* pPurpleTracker = new Tracker("Purple_Tracker", "Purple", GemType::PURPLE, 8);
+	Tracker* pPurpleTracker = new Tracker("Purple_Tracker", "SP_Gem_Purple", GemType::PURPLE, 8);
 	GameObjectManager::getInstance()->addObject(pPurpleTracker);
 	GUIUtils::setGUITopLeft(pPurpleTracker, Vector2D(110, 75));
 	pPurpleTracker->setScale(Vector2D(.15, .15));
 	TrackerManager::getInstance()->registerTracker(pPurpleTracker);
 
-	Tracker* pWhiteTracker = new Tracker("White_Tracker", "White", GemType::WHITE, 8);
+	Tracker* pWhiteTracker = new Tracker("White_Tracker", "SP_Gem_White", GemType::WHITE, 8);
 	GameObjectManager::getInstance()->addObject(pWhiteTracker);
 	GUIUtils::setGUITopLeft(pWhiteTracker, Vector2D(20, 75));
 	pWhiteTracker->setScale(Vector2D(.15, .15));

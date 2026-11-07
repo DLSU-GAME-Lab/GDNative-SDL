@@ -3,9 +3,13 @@
 // ShaderManager: owns custom fragment shaders + SDL_GPURenderState "materials"
 // for the SDL GPU renderer (SDL 3.4+).
 //
+// Game-independent: nothing in here knows about a game's art, scenes or gems.
+// Shaders are opt-in per sprite, so a scene that never asks for one pays
+// nothing (the SPIR-V is only loaded the first time a material is requested).
+//
 // If the renderer is NOT a GPU renderer (creation failed / old Android device
-// without Vulkan), isSupported() is false and callers must use their CPU
-// fallback. Nothing here is ever required for the game to run.
+// without Vulkan), isSupported() is false and callers must draw plain. Nothing
+// here is ever required for the game to run.
 // ---------------------------------------------------------------------------
 #include <SDL3/SDL.h>
 #include <string>
@@ -18,7 +22,26 @@
 class ShaderManager
 {
 public:
-    bool isSupported() const { return bSupported; }
+    // Creates the renderer for a window: the GPU renderer when bUseGPU is set
+    // (required for custom shaders), the normal SDL renderer otherwise or when
+    // the GPU renderer can't be created. Replaces the renderer block in Runner.
+    static SDL_Renderer* createRenderer(SDL_Window* pWindow, bool bUseGPU);
+
+    // Naming convention shared by every game: a texture loaded as "<name>" finds
+    // its normal map as "<name>_Normal" and its mask as "<name>_Mask".
+    static const char* normalSuffix() { return "_Normal"; }
+    static const char* maskSuffix() { return "_Mask"; }
+
+    bool isSupported() const { return bSupported && bEnabled && !bShimmerFailed; }
+
+    // Lets a scene switch shaders off (and on again): sprites are drawn plain
+    // while disabled. Does not free anything.
+    void setEnabled(bool bEnabled) { this->bEnabled = bEnabled; }
+
+    // Style used by every sprite that did not set its own, so a game or a scene
+    // tunes the look in one place.
+    void setDefaultStyle(const ShimmerUniforms& style) { this->defaultStyle = style; }
+    const ShimmerUniforms& getDefaultStyle() const { return defaultStyle; }
 
     // Shimmer material for a normal map and a mask registered in TextureManager
     // under `normalMapKey` / `maskKey`. The mask uses its red channel and limits
@@ -39,12 +62,18 @@ private:
     SDL_GPUSampler* pLinearSampler = nullptr;
     SDL_Texture* pFlatNormal = nullptr;  // 1x1 (0.5, 0.5, 1.0)
     SDL_Texture* pFlatMask = nullptr;    // 1x1 white
-    bool            bSupported = false;
+    bool            bSupported = false;       // GPU renderer with SPIR-V support
+    bool            bEnabled = true;          // scene-level switch
+    bool            bShimmerLoaded = false;   // shader + helper textures created
+    bool            bShimmerFailed = false;   // loading failed once, not retried
+    ShimmerUniforms defaultStyle;
 
     // one material per (normal map, mask) pair
     std::map<std::pair<SDL_Texture*, SDL_Texture*>, std::unique_ptr<ShaderMaterial>> mapShimmer;
 
     bool init(SDL_Renderer* pRenderer);
+    bool loadShimmerResources();
+    void releaseResources();
     void shutdown();
     SDL_GPUShader* loadFragmentShader(const std::string& path, int numSamplers, int numUniformBuffers);
     ShaderMaterial* createShimmerMaterial(SDL_Texture* pNormalTexture, SDL_Texture* pMaskTexture);

@@ -111,23 +111,8 @@ Runner::Runner()
 	// --- Create Renderer ---
 	// GPU renderer = required for custom fragment shaders (SDL 3.4+). If it
 	// can't be created (no Vulkan, e.g. Android < 7.0), fall back to SDL's
-	// normal renderer: the game runs as before with the CPU shimmer.
-	pRenderer = nullptr;
-	if (useGPURenderer)
-	{
-		SDL_SetHint(SDL_HINT_GPU_DRIVER, "vulkan");        // we ship SPIR-V only
-		pRenderer = SDL_CreateGPURenderer(NULL, pWindow);  // renderer creates AND owns the GPU device
-		if (pRenderer)
-		{
-			SDL_Log("GPU renderer created");
-		}
-		else
-		{
-			SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
-				"GPU renderer unavailable (%s), falling back", SDL_GetError());
-		}
-	}
-	if (!pRenderer) pRenderer = SDL_CreateRenderer(pWindow, NULL);
+	// normal renderer: the game runs as before and sprites are drawn plain.
+	pRenderer = ShaderManager::createRenderer(pWindow, useGPURenderer);
 	if (!pRenderer)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,

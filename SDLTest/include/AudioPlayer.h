@@ -9,29 +9,31 @@
 
 // ---------------------------------------------------------------------------
 // AudioPlayer
-// Wraps an SDL_AudioStream for a single AudioClip. Supports play/stop,
+// Plays a single AudioClip on its own SDL_mixer track. Supports play/stop,
 // progress tracking, completion callbacks, and an observer listener list.
 //
 // Ownership model:
 //   - AudioPlayer does NOT own the AudioClip; it borrows a pointer from
 //     AudioManager (which is the clip's owner).
-//   - AudioPlayer DOES own the SDL_AudioStream and the SDL_AudioDeviceID
-//     it opens; both are destroyed in the destructor.
+//   - AudioPlayer DOES own its MIX_Track, which it creates on the first
+//     play() and destroys in the destructor. All tracks share the one mixer
+//     (and the one audio device) owned by AudioManager.
 //   - AudioPlayer does NOT own its IAudioPlayerListener pointers.
+//
+// Looping is done by the mixer itself (OnAudioFinished::LOOP plays the clip
+// with infinite loops), so it is gapless and needs no polling.
 // ---------------------------------------------------------------------------
 class AudioPlayer
 {
 private:
     std::string         strKey;
     AudioClip* pClip;          // Borrowed; not freed by this class.
-    SDL_AudioStream* pStream;        // Owned; freed in destructor.
-    SDL_AudioDeviceID   nDeviceID;      // Owned; closed in destructor.
+    MIX_Track* pTrack;         // Owned; created on first play, freed in destructor.
 
     AudioGroupTag       ETag;
     OnAudioFinished     EOnFinished;
     float               fVolume;        // [0.0, 1.0]
-    float               fProgress;      // [0.0, 1.0], updated per callback.
-    Uint32              nBytesQueued;   // Running total of bytes fed to stream.
+    float               fProgress;      // [0.0, 1.0], updated by AudioManager::update().
     bool                bFinished;
     bool                bCleanUp;
 
@@ -51,7 +53,7 @@ public:
 
     ~AudioPlayer();
 
-    // Non-copyable; streams and device IDs are unique resources.
+    // Non-copyable; a track is a unique resource.
     AudioPlayer(const AudioPlayer&) = delete;
     AudioPlayer& operator=(const AudioPlayer&) = delete;
 
@@ -66,7 +68,8 @@ public:
     const std::string& getKey()      const { return strKey; }
     AudioGroupTag      getTag()      const { return ETag; }
 
-    // Sets the gain on the bound SDL_AudioStream ([0.0, 1.0]).
+    // Sets this player's volume ([0.0, 1.0]). The group volumes set on
+    // AudioManager are applied on top of it.
     void setVolume(float fVol);
     float getVolume() const { return fVolume; }
 
@@ -75,16 +78,17 @@ public:
     void removeListener(IAudioPlayerListener* pListener);
 
 private:
-    // Creates, configures, and returns a bound SDL_AudioStream.
-    // Also opens and stores the audio device in nDeviceID.
-    // Returns nullptr on any failure; errors are logged via SDL_LogError.
-    SDL_AudioStream* createAudioStream(AudioClip* pClip);
+    // Creates the track on the shared mixer if it doesn't exist yet.
+    bool ensureTrack();
 
-    // Updates fProgress from the number of bytes left in the stream.
+    // Pushes volume * group volume to the track.
+    void applyGain();
+
+    // Updates fProgress from the track position and handles the clip having
+    // ended (stop / pause / func). Called by AudioManager::update().
     void updateProgress();
 
-    // Notifies all listeners and (if LOOP) restarts playback.
-    // Called from the callback when fProgress reaches 1.0, and from stop().
+    // Notifies all listeners. Called when playback finishes and from stop().
     void onFinished();
 
     friend class AudioManager;

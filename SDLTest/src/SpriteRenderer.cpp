@@ -134,7 +134,7 @@ void SpriteRenderer::perform()
     float fPhase = -1.0f;
     if (bShimmer && !bNineSlice)
     {
-        bool bSweeping = this->getShimmerPhase(fPhase);
+        bool bSweeping = bSweep && this->getShimmerPhase(fPhase);
         if (!bSweeping) fPhase = -1.0f;
 
         if (bSweeping || !m_normalMapKey.empty())
@@ -147,7 +147,7 @@ void SpriteRenderer::perform()
 
     if (pMat)
     {
-        ShimmerUniforms u = m_shimmerStyle;
+        ShimmerUniforms u = bHasStyle ? m_shimmerStyle : ShaderManager::getInstance()->getDefaultStyle();
         u.phase = fPhase;
         u.flipX = this->flipX ? -1.0f : 1.0f;
         u.flipY = this->flipY ? -1.0f : 1.0f;
@@ -298,8 +298,36 @@ void SpriteRenderer::setNineSlice(bool bEnabled, int nBorder)
 void SpriteRenderer::setShimmer(bool bEnabled, const std::string& normalMapKey, const std::string& maskKey)
 {
     this->bShimmer = bEnabled;
+    this->bSweep = true;
     this->m_normalMapKey = normalMapKey;
     this->m_maskMapKey = maskKey;
+}
+
+void SpriteRenderer::setLit(bool bEnabled, const std::string& normalMapKey, const std::string& maskKey)
+{
+    this->bShimmer = bEnabled;
+    this->bSweep = false;
+    this->m_normalMapKey = normalMapKey;
+    this->m_maskMapKey = maskKey;
+}
+
+bool SpriteRenderer::setShimmerFromTexture(const std::string& textureKey, bool bSweep)
+{
+    TextureManager* pTextures = TextureManager::getInstance();
+    std::string strNormal = textureKey + ShaderManager::normalSuffix();
+    std::string strMask = textureKey + ShaderManager::maskSuffix();
+
+    if (!pTextures->get(strNormal))
+    {
+        this->bShimmer = false;
+        return false;
+    }
+
+    this->bShimmer = true;
+    this->bSweep = bSweep;
+    this->m_normalMapKey = strNormal;
+    this->m_maskMapKey = pTextures->get(strMask) ? strMask : "";
+    return true;
 }
 
 void SpriteRenderer::setShimmerTiming(float fSpeed, float fCooldown, float fOffset)
@@ -327,6 +355,7 @@ bool SpriteRenderer::getShimmerPhase(float& fPhase) const
 void SpriteRenderer::setShimmerStyle(const ShimmerUniforms& style)
 {
     this->m_shimmerStyle = style;
+    this->bHasStyle = true;
 }
 
 

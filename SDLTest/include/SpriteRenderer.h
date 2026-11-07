@@ -30,6 +30,8 @@ private:
     // shaders are unavailable. The normal map and the mask are looked up by key
     // every frame, never held by pointer.
     bool            bShimmer = false;
+    bool            bSweep = true;       // false = static lighting only, no moving glint
+    bool            bHasStyle = false;   // false = use ShaderManager's default style
     std::string     m_normalMapKey;
     std::string     m_maskMapKey;
     ShimmerUniforms m_shimmerStyle;
@@ -70,10 +72,16 @@ public:
     // in TextureManager (empty normal map = plain moving glint, empty mask = the
     // whole sprite can shimmer). The mask uses its red channel.
     void setShimmer(bool bEnabled, const std::string& normalMapKey = "", const std::string& maskKey = "");
+    // static lighting only (no moving glint), for sprites that just need to look lit
+    void setLit(bool bEnabled, const std::string& normalMapKey, const std::string& maskKey = "");
+    // looks the normal map and the mask up by convention ("<textureKey>_Normal" /
+    // "<textureKey>_Mask"). Returns false and turns the effect off when there is no
+    // normal map. bSweep = false gives static lighting only.
+    bool setShimmerFromTexture(const std::string& textureKey, bool bSweep = true);
     // speed = sweeps per second while active (0.45 = a sweep every 2.2s of motion),
     // cooldown = seconds of rest between sweeps, offset = seconds, to desync sprites
     void setShimmerTiming(float fSpeed, float fCooldown, float fOffset = 0.0f);
-    void setShimmerStyle(const ShimmerUniforms& style);   // phase/flip are overwritten per frame
+    void setShimmerStyle(const ShimmerUniforms& style);   // phase/flip are overwritten per frame, replaces ShaderManager's default style for this sprite
 
     // getters
     SDL_Texture* getTexture();

@@ -73,16 +73,7 @@ void Gem::applyAppearance()
 	std::string strTexture = getTextureKey(this->EType);
 	this->pSprite->setTextureKey(strTexture);
 
-	std::string strNormal = strTexture + "_Normal";
-	std::string strMask = strTexture + "_Mask";
-	if (TextureManager::getInstance()->get(strNormal))
-	{
-		this->pSprite->setShimmer(true, strNormal, TextureManager::getInstance()->get(strMask) ? strMask : "");
-	}
-	else
-	{
-		this->pSprite->setShimmer(false);
-	}
+	this->pSprite->setShimmerFromTexture(strTexture);
 }
 
 void Gem::onAnimationFinished()

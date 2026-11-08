@@ -1,19 +1,29 @@
 #pragma once
 
 #include "AudioPlayer.h"
+#include <SDL3_mixer/SDL_mixer.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
+// ---------------------------------------------------------------------------
+// AudioManager
+// Owns the SDL_mixer mixer (one audio device for the whole game), the loaded
+// clips and the players that are currently playing.
+// ---------------------------------------------------------------------------
 class AudioManager
 {
 private:
+    MIX_Mixer* pMixer;
+
     std::vector<AudioClip*> vecAudioClip;
     std::unordered_map<std::string, AudioClip*> mapAudioClip;
 
     std::vector<AudioPlayer*> vecPlaying;
     std::unordered_map<std::string, AudioPlayer*> mapPlaying;
     std::unordered_map<AudioGroupTag, float> mapGroupVolumes;
+    std::unordered_set<AudioGroupTag> setGroupApplied;   // groups whose volume was set explicitly
 
     std::vector<AudioPlayer*> vecToDestroy;
 
@@ -35,6 +45,13 @@ public:
 	float getVolume(AudioGroupTag ETag);
     bool isPlaying(std::string strKey);
 
+    // The shared mixer, nullptr when the audio device could not be opened.
+    MIX_Mixer* getMixer() const;
+
+    // Group volume x master volume for a player of this group. A group only
+    // counts once its volume was set with setVolume(AudioGroupTag, ...).
+    float getGroupGain(AudioGroupTag ETag) const;
+
 	friend class AudioPlayer;
 
     /* * * * * * * * * * * * * * * * * * * * *
@@ -47,7 +64,7 @@ private:
     AudioManager();
     ~AudioManager();
     AudioManager(const AudioManager&) {};
-    AudioManager& operator=(const AudioManager&) {};
+    AudioManager& operator=(const AudioManager&) { return *this; }
 
 public:
     static void initialize();
@@ -55,4 +72,3 @@ public:
     static AudioManager* getInstance();
     /* * * * * * * * * * * * * * * * * * * * */
 };
-

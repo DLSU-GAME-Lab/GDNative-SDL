@@ -19,8 +19,9 @@ AudioPlayer::AudioPlayer(const std::string& strClipName, float fVolume)
     : AudioPlayer(strClipName, "", AudioGroupTag::NONE, OnAudioFinished::STOP, fVolume)
 {}
 
-// Primary constructor — all members initialised here via member-initialiser
-// list so every field has a defined value before the body runs.
+// Primary constructor - all members initialised here via member-initialiser
+// list so every field has a defined value before the body runs. The track is
+// created on the first play(), so a player that is never played holds nothing.
 AudioPlayer::AudioPlayer(const std::string& strClipName,
     const std::string& strKey,
     AudioGroupTag      ETag,
@@ -28,95 +29,56 @@ AudioPlayer::AudioPlayer(const std::string& strClipName,
     float              fVolume)
     : strKey(strKey)
     , pClip(AudioManager::getInstance()->getAudioClip(strClipName))
-    , pStream(nullptr)
-    , nDeviceID(0)
+    , pTrack(nullptr)
     , ETag(ETag)
     , EOnFinished(EOnFinished)
     , fVolume(fVolume)
     , fProgress(0.0f)
-    , nBytesQueued(0)
     , bFinished(false)
     , bCleanUp(false)
-{
-    // createAudioStream sets nDeviceID as a side-effect.
-    pStream = createAudioStream(pClip);
-
-    // Apply initial volume to the stream if it was created successfully.
-    if (pStream)
-        SDL_SetAudioStreamGain(pStream, fVolume);
-}
-
-// FIX: destructor now also closes the audio device that was opened in
-// createAudioStream. The original only destroyed the stream, leaking the
-// SDL_AudioDeviceID handle.
-AudioPlayer::~AudioPlayer()
-{
-    if (pStream)
-    {
-        SDL_DestroyAudioStream(pStream);
-        pStream = nullptr;
-    }
-    if (nDeviceID != 0)
-    {
-        SDL_CloseAudioDevice(nDeviceID);
-        nDeviceID = 0;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Stream creation
-// ---------------------------------------------------------------------------
-
-// FIX: the original opened a new SDL_AudioDeviceID but never stored it,
-// making it impossible to close later — a resource leak on every AudioPlayer.
-// nDeviceID is now stored as a member so the destructor can close it.
-SDL_AudioStream* AudioPlayer::createAudioStream(AudioClip* pClip)
 {
     if (!pClip)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-            "[AudioPlayer] createAudioStream: AudioClip is null (key='%s')",
-            strKey.c_str());
-        return nullptr;
+            "[AudioPlayer] clip '%s' is not loaded (key='%s')",
+            strClipName.c_str(), strKey.c_str());
     }
+}
 
-    Uint8* buf = pClip->getBuffer();
-    Uint32         len = pClip->getLength();
-    SDL_AudioSpec  spec = pClip->getSpec();
+AudioPlayer::~AudioPlayer()
+{
+    if (pTrack)
+    {
+        MIX_DestroyTrack(pTrack);   // also stops it
+        pTrack = nullptr;
+    }
+}
 
-    if (!buf || len == 0)
+// ---------------------------------------------------------------------------
+// Track creation
+// ---------------------------------------------------------------------------
+
+bool AudioPlayer::ensureTrack()
+{
+    if (pTrack) return true;
+
+    MIX_Mixer* pMixer = AudioManager::getInstance()->getMixer();
+    if (!pMixer)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-            "[AudioPlayer] createAudioStream: AudioClip has empty buffer (key='%s')",
-            strKey.c_str());
-        return nullptr;
+            "[AudioPlayer] no mixer available (key='%s')", strKey.c_str());
+        return false;
     }
 
-    // Open the default playback device.
-    nDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &spec);
-    if (nDeviceID == 0)
+    pTrack = MIX_CreateTrack(pMixer);
+    if (!pTrack)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-            "[AudioPlayer] SDL_OpenAudioDevice failed: %s", SDL_GetError());
-        return nullptr;
+            "[AudioPlayer] MIX_CreateTrack failed: %s", SDL_GetError());
+        return false;
     }
 
-    // Query the device's native format so the stream can resample/convert.
-    SDL_AudioSpec deviceSpec{};
-    SDL_GetAudioDeviceFormat(nDeviceID, &deviceSpec, nullptr);
-
-    SDL_AudioStream* pNewStream = SDL_CreateAudioStream(&spec, &deviceSpec);
-    if (!pNewStream)
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-            "[AudioPlayer] SDL_CreateAudioStream failed: %s", SDL_GetError());
-        SDL_CloseAudioDevice(nDeviceID);
-        nDeviceID = 0;
-        return nullptr;
-    }
-
-    SDL_BindAudioStream(nDeviceID, pNewStream);
-    return pNewStream;
+    return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -125,33 +87,53 @@ SDL_AudioStream* AudioPlayer::createAudioStream(AudioClip* pClip)
 
 void AudioPlayer::play()
 {
-    if (!pStream || !pClip)
+    if (!pClip || !pClip->getAudio())
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-            "[AudioPlayer] play: stream or clip is null (key='%s')", strKey.c_str());
+            "[AudioPlayer] play: clip is null (key='%s')", strKey.c_str());
         return;
     }
+
+    if (!ensureTrack()) return;
 
     // Reset state for fresh playback (supports replaying after stop).
     bFinished = false;
     bCleanUp = false;
     fProgress = 0.0f;
-    nBytesQueued = 0;
 
-    SDL_PutAudioStreamData(this->pStream, this->pClip->getBuffer(), this->pClip->getLength());
+    if (!MIX_SetTrackAudio(pTrack, pClip->getAudio()))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+            "[AudioPlayer] MIX_SetTrackAudio failed: %s", SDL_GetError());
+        return;
+    }
+
+    this->applyGain();
+
+    // LOOP loops inside the mixer (-1 = forever), everything else plays once.
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetNumberProperty(props, MIX_PROP_PLAY_LOOPS_NUMBER,
+        EOnFinished == OnAudioFinished::LOOP ? -1 : 0);
+
+    if (!MIX_PlayTrack(pTrack, props))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+            "[AudioPlayer] MIX_PlayTrack failed: %s", SDL_GetError());
+    }
+    SDL_DestroyProperties(props);
 }
 
 void AudioPlayer::stop()
 {
-    if (!pStream)
+    if (!pTrack)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-            "[AudioPlayer] stop: stream is null (key='%s')", strKey.c_str());
+            "[AudioPlayer] stop: track is null (key='%s')", strKey.c_str());
         return;
     }
 
-    // Drain any data still queued in the stream so playback stops immediately.
-    SDL_ClearAudioStream(pStream);
+    // Stop right away (0 fade-out frames).
+    MIX_StopTrack(pTrack, 0);
 
     bFinished = true;
     onFinished();
@@ -164,34 +146,42 @@ void AudioPlayer::stop()
 void AudioPlayer::setVolume(float fVol)
 {
     fVolume = fVol;
-    if (pStream)
-        SDL_SetAudioStreamGain(pStream, fVolume);
+    this->applyGain();
+}
+
+void AudioPlayer::applyGain()
+{
+    if (!pTrack) return;
+
+    float fGain = fVolume * AudioManager::getInstance()->getGroupGain(ETag);
+    if (fGain < 0.0f) fGain = 0.0f;
+    MIX_SetTrackGain(pTrack, fGain);
 }
 
 // ---------------------------------------------------------------------------
 // Progress tracking
 // ---------------------------------------------------------------------------
 
-// FIX: updateProgress was entirely commented out in the original, leaving
-// fProgress permanently at 0.0f. The callback check (fProgress < 1.0f)
-// therefore never triggered completion logic. Progress is now computed from
-// bytes still queued in the stream vs. the total clip length.
+// Playing or paused tracks only report their progress. Once the mixer has
+// stopped the track by itself (the clip ran out), the finish behaviour runs.
+// A looping track never stops by itself, so LOOP only gets here if the mixer
+// could not loop the input, in which case it is simply restarted.
 void AudioPlayer::updateProgress()
 {
-    if (!pClip || pClip->getLength() == 0) return;
+    if (!pTrack || !pClip || bFinished) return;
 
-    int nQueued = SDL_GetAudioStreamQueued(pStream);
-    if (nQueued < 0) nQueued = 0;
+    if (MIX_TrackPlaying(pTrack) || MIX_TrackPaused(pTrack))
+    {
+        Sint64 nDuration = MIX_GetAudioDuration(pClip->getAudio());
+        Sint64 nPosition = MIX_GetTrackPlaybackPosition(pTrack);
+        if (nDuration > 0 && nPosition >= 0)
+        {
+            fProgress = static_cast<float>(nPosition % nDuration) / static_cast<float>(nDuration);
+        }
+        return;
+    }
 
-    Uint32 totalBytes = pClip->getLength();
-
-    // fProgress = fraction of the clip that has been *consumed*.
-    float fConsumed = static_cast<float>(totalBytes - static_cast<Uint32>(nQueued));
-    fProgress = fConsumed / static_cast<float>(totalBytes);
-    if (fProgress < 0.0f) fProgress = 0.0f;
-    if (fProgress > 1.0f) fProgress = 1.0f;
-
-    if (fProgress < 1.0f) return;
+    fProgress = 1.0f;
 
     switch (EOnFinished)
     {
@@ -205,7 +195,6 @@ void AudioPlayer::updateProgress()
         break;
 
     case OnAudioFinished::LOOP:
-        // Reset state and queue the clip again for seamless looping.
         play();
         break;
 
@@ -214,7 +203,6 @@ void AudioPlayer::updateProgress()
         stop();
         break;
     }
-
 }
 
 // ---------------------------------------------------------------------------

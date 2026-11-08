@@ -131,6 +131,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AGame.cpp" />
+    <ClCompile Include="src\BabaylanTayles.cpp" />
     <ClCompile Include="src\InteractButtonController.cpp" />
     <ClCompile Include="src\ADataAsset.cpp" />
     <ClCompile Include="src\AInteractable.cpp" />
@@ -214,6 +216,8 @@
     <ClCompile Include="src\PlayerManager.cpp" />
     <ClCompile Include="src\PuzzleEnd.cpp" />
     <ClCompile Include="src\RadialLight.cpp" />
+    <ClCompile Include="src\ShaderManager.cpp" />
+    <ClCompile Include="src\ShaderMaterial.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\AComponent.cpp" />
     <ClCompile Include="src\AGameObject.cpp" />
@@ -258,10 +262,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ADataAsset.h" />
+    <ClInclude Include="include\AGame.h" />
     <ClInclude Include="include\AInteractable.h" />
     <ClInclude Include="include\AudioClip.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\AudioPlayer.h" />
+    <ClInclude Include="include\BabaylanTayles.h" />
     <ClInclude Include="include\CollectableGem.h" />
     <ClInclude Include="include\CollectableGemDataAsset.h" />
     <ClInclude Include="include\DataAssetManager.h" />
@@ -374,6 +380,8 @@
     <ClInclude Include="include\Scroller.h" />
     <ClInclude Include="include\SequenceGameManager.h" />
     <ClInclude Include="include\Settings.h" />
+    <ClInclude Include="include\ShaderManager.h" />
+    <ClInclude Include="include\ShaderMaterial.h" />
     <ClInclude Include="include\SpriteAnimator.h" />
     <ClInclude Include="include\SpriteRenderer.h" />
     <ClInclude Include="include\Statue.h" />

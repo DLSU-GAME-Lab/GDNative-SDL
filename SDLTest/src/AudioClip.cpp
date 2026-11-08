@@ -1,16 +1,14 @@
 #include "AudioClip.h"
 
-AudioClip::AudioClip(std::string strName, Uint8* buffer, Uint32 length, SDL_AudioSpec spec)
+AudioClip::AudioClip(std::string strName, MIX_Audio* pAudio)
 {
 	this->strName = strName;
-	this->buffer = buffer;
-	this->length = length;
-	this->spec = spec;
+	this->pAudio = pAudio;
 }
 
 AudioClip::~AudioClip()
 {
-	SDL_free(this->buffer);
+	MIX_DestroyAudio(this->pAudio);
 }
 
 std::string AudioClip::getName() const
@@ -18,17 +16,15 @@ std::string AudioClip::getName() const
 	return this->strName;
 }
 
-Uint8* AudioClip::getBuffer() const
+MIX_Audio* AudioClip::getAudio() const
 {
-	return this->buffer;
+	return this->pAudio;
 }
 
-Uint32 AudioClip::getLength() const
+Sint64 AudioClip::getDurationMS() const
 {
-	return this->length;
-}
+	Sint64 nFrames = MIX_GetAudioDuration(this->pAudio);
+	if (nFrames < 0) return -1;
 
-SDL_AudioSpec AudioClip::getSpec() const
-{
-	return this->spec;
+	return MIX_AudioFramesToMS(this->pAudio, nFrames);
 }

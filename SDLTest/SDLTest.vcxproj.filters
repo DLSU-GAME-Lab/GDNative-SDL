@@ -76,6 +76,12 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{97957f03-926b-4312-a1a4-90d2caebeb94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Singleton\Shaders">
+      <UniqueIdentifier>{6e5a5935-d0fc-41d5-869b-bdd64291d878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Singleton\Camera">
+      <UniqueIdentifier>{80487ec9-46fb-4797-9bdd-66ad49702a45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Runner.cpp">
@@ -85,9 +91,6 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObjectManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\AComponent.cpp">
@@ -147,9 +150,6 @@
     <ClCompile Include="src\EditorModule.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
-    <ClCompile Include="src\Camera.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="src\SceneTransitionManager.cpp">
       <Filter>Singleton</Filter>
     </ClCompile>
@@ -180,9 +180,6 @@
     <ClCompile Include="src\SpriteRenderer.cpp">
       <Filter>Component\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="src\FontManager.cpp">
-      <Filter>Singleton</Filter>
-    </ClCompile>
     <ClCompile Include="src\EventBroadcaster.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -209,9 +206,6 @@
     </ClCompile>
     <ClCompile Include="src\TileMapRenderer.cpp">
       <Filter>Component\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CameraManager.cpp">
-      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\ARenderer.cpp">
       <Filter>Component\Renderer</Filter>
@@ -397,9 +391,6 @@
     <ClCompile Include="src\VirtualJoystick.cpp">
       <Filter>Component\Script\Controller</Filter>
     </ClCompile>
-    <ClCompile Include="src\ADataAsset.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
     <ClCompile Include="src\CollectableGemDataAsset.cpp">
       <Filter>Component</Filter>
     </ClCompile>
@@ -432,9 +423,6 @@
     </ClCompile>
     <ClCompile Include="src\GemController.cpp">
       <Filter>Component\Script\Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DataAssetManager.cpp">
-      <Filter>Singleton</Filter>
     </ClCompile>
     <ClCompile Include="src\EngineTime.cpp">
       <Filter>Singleton</Filter>
@@ -483,15 +471,42 @@
     <ClCompile Include="src\JumpButtonController.cpp">
       <Filter>Component\Script\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="src\AGame.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BabaylanTayles.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp">
+      <Filter>Singleton\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderMaterial.cpp">
+      <Filter>Singleton\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Singleton\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CameraManager.cpp">
+      <Filter>Singleton\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ADataAsset.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DataAssetManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FontManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
       <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="include\GameObjectManager.h">
-      <Filter>Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TextureManager.h">
       <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\AComponent.h">
@@ -566,9 +581,6 @@
     <ClInclude Include="include\EditorModule.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="include\Camera.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="include\SceneTransitionManager.h">
       <Filter>Singleton</Filter>
     </ClInclude>
@@ -598,9 +610,6 @@
     </ClInclude>
     <ClInclude Include="include\SpriteRenderer.h">
       <Filter>Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FontManager.h">
-      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\EventBroadcaster.h">
       <Filter>System</Filter>
@@ -658,9 +667,6 @@
     </ClInclude>
     <ClInclude Include="include\TileMapRenderer.h">
       <Filter>Component\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="include\CameraManager.h">
-      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\ARenderer.h">
       <Filter>Component\Renderer</Filter>
@@ -860,9 +866,6 @@
     <ClInclude Include="include\VirtualJoystick.h">
       <Filter>Component\Script\Controller</Filter>
     </ClInclude>
-    <ClInclude Include="include\ADataAsset.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="include\CollectableGemDataAsset.h">
       <Filter>Component</Filter>
     </ClInclude>
@@ -895,9 +898,6 @@
     </ClInclude>
     <ClInclude Include="include\GemController.h">
       <Filter>Component\Script\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DataAssetManager.h">
-      <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="include\EngineTime.h">
       <Filter>Singleton</Filter>
@@ -948,6 +948,36 @@
     </ClInclude>
     <ClInclude Include="include\InventoryGUI.h">
       <Filter>GameObject\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AGame.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BabaylanTayles.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderManager.h">
+      <Filter>Singleton\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderMaterial.h">
+      <Filter>Singleton\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Camera.h">
+      <Filter>Singleton\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CameraManager.h">
+      <Filter>Singleton\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ADataAsset.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DataAssetManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FontManager.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextureManager.h">
+      <Filter>Singleton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -5,29 +5,17 @@
 #include "EmptyObject.h"
 #include "PhysicsSystem.h"
 
+class AGame;
+
+// Identical in Babaylan Tayles and Gem Hunter Match. Everything that differs
+// between the games lives in the game's AGame subclass.
 class Runner
 {
 private:
     //Window
     SDL_Window* pWindow = nullptr;
     SDL_Renderer* pRenderer = nullptr;   // GPU renderer (owns its GPU device) or plain fallback renderer
-    uint64_t ticks;
-    float fWindowScale;
-    std::string strWindowTitle;
-
-
-    //FPS
-    long lFrameTime;
-    static const int MIN_FRAME_TIME = 16;
-
-    unsigned long lFPSTime;
-    int nNumOfFPS, nFPS;
-
-    // ImGui init tracking (to avoid double-init / double-shutdown)
-    // Defaults set to false to avoid "not initialized" warnings.
-    bool imGuiContextCreated = false;
-    bool imGuiPlatformInitialized = false;
-    bool imGuiRendererInitialized = false;
+    AGame* pGame = nullptr;        // the game's own class, owned
 
 public:
     Runner();

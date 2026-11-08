@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AGame.cpp" />
     <ClCompile Include="src\AudioClip.cpp" />
     <ClCompile Include="src\AudioManager.cpp" />
     <ClCompile Include="src\AudioPlayer.cpp" />
@@ -138,6 +139,7 @@
     <ClCompile Include="src\BubbleManager.cpp" />
     <ClCompile Include="src\EndScreen.cpp" />
     <ClCompile Include="src\EngineTime.cpp" />
+    <ClCompile Include="src\GemHunterMatch.cpp" />
     <ClCompile Include="src\GemManager.cpp" />
     <ClCompile Include="src\GemSwapper.cpp" />
     <ClCompile Include="src\Level_1_Scene.cpp" />
@@ -219,6 +221,7 @@
     <ClCompile Include="src\StoreManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AGame.h" />
     <ClInclude Include="include\AudioClip.h" />
     <ClInclude Include="include\AudioManager.h" />
     <ClInclude Include="include\AudioPlayer.h" />
@@ -244,6 +247,7 @@
     <ClInclude Include="include\AButton.h" />
     <ClInclude Include="include\CameraController.h" />
     <ClInclude Include="include\Gem.h" />
+    <ClInclude Include="include\GemHunterMatch.h" />
     <ClInclude Include="include\GemManager.h" />
     <ClInclude Include="include\GemSwapper.h" />
     <ClInclude Include="include\IAudioPlayerListener.h" />

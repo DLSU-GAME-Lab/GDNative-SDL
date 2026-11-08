@@ -336,6 +336,12 @@
     <ClCompile Include="src\ShaderMaterial.cpp">
       <Filter>Singleton\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\AGame.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GemHunterMatch.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Runner.h">
@@ -667,6 +673,12 @@
     </ClInclude>
     <ClInclude Include="include\ShaderMaterial.h">
       <Filter>Singleton\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AGame.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GemHunterMatch.h">
+      <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
